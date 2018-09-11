@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyVersion>1.6.0.0</AssemblyVersion>
+    <SignAssembly>false</SignAssembly>
+    <RootNamespace>PerCederberg.Grammatica</RootNamespace>
+    <Company>http://grammatica.percederberg.net/</Company>
+    <Copyright>2003-2015 Per Cederberg</Copyright>
+    <Description>Nuget package of Per Cederbergs Grammatica Run-Time Library</Description>
+    <PackageId>PerCederberg.Grammatica</PackageId>
+    <Authors>Per Cederberg</Authors>
+    <AssemblyName>PerCederberg.Grammatica</AssemblyName>
+    <Product>Grammatica</Product>
+    <PackageProjectUrl>https://grammatica.percederberg.net/</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/cederberg/grammatica/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageTags>Parser</PackageTags>
+    <RepositoryUrl>https://github.com/eskaufel/grammatica</RepositoryUrl>
+  </PropertyGroup>
+
+</Project>
