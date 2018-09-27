@@ -11,8 +11,7 @@ namespace Yale.Core
     {
         public MethodImport(MethodInfo importMethod, IExpressionOptions options) : base(options)
         {
-            if (importMethod == null) throw new ArgumentNullException(nameof(importMethod));
-            Target = importMethod;
+            Target = importMethod ?? throw new ArgumentNullException(nameof(importMethod));
         }
 
         protected override void AddMembers(string memberName, MemberTypes memberType, ICollection<MemberInfo> destination)

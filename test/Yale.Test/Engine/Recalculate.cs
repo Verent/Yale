@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 
-namespace Yale.Test.Core
+namespace Yale.Test.Engine
 {
     [TestClass]
     public class Recalculate
@@ -13,12 +13,12 @@ namespace Yale.Test.Core
 
 
         [TestMethod]
-        public void Core_ValueUpdated_ReturnsUpdatedValue()
+        public void AutoRecalculate_ValueUpdated_ReturnsUpdatedValue()
         {
             _instance.SetValue("a", 10);
             _instance.AddExpression<int>("b", "a");
+            
             _instance.SetValue("a", 20);
-
             var result = _instance.GetResult("b");
 
             Assert.AreEqual(20, result);

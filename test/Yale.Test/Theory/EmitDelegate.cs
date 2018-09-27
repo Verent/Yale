@@ -1,20 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Yale.Test.Concepts
+namespace Yale.Test.Theory
 {
     [TestClass]
     public class Emit
     {
         private const string Key = "Hei";
         private const string Value = "Hello";
-
-        public Emit()
-        {
-        }
 
         internal delegate object MyMethod();
 
@@ -55,13 +51,13 @@ namespace Yale.Test.Concepts
         [TestMethod]
         public void CreateDynamicMethodThatCallsAStaticMethod()
         {
-            var value = 2;
+            const int value = 2;
             var dynamicMethod = new DynamicMethod("my_method", typeof(int), null);
             var ilGenerator = dynamicMethod.GetILGenerator();
 
             var staticMethodInfo = typeof(Emit).GetMethod("StaticMethodThatReturnInt", BindingFlags.Public | BindingFlags.Static);
             ilGenerator.Emit(OpCodes.Ldc_I4, value);
-            ilGenerator.Emit(OpCodes.Call, staticMethodInfo);
+            ilGenerator.Emit(OpCodes.Call, staticMethodInfo ?? throw new InvalidOperationException());
             ilGenerator.Emit(OpCodes.Ret);
             var result = dynamicMethod.Invoke(null, null);
 
@@ -82,7 +78,7 @@ namespace Yale.Test.Concepts
             var ilGenerator = dynamicMethod.GetILGenerator();
 
             var methodInfo = typeof(InternalClassForTest).GetMethod("GetValue", BindingFlags.Public | BindingFlags.Instance);
-            Assert.AreEqual(false, methodInfo.IsStatic);
+            Assert.AreEqual(false, methodInfo != null && methodInfo.IsStatic);
 
             ilGenerator.Emit(OpCodes.Ldarg_0); //Load instance (InternalClassForTest) that has the method
             ilGenerator.Emit(OpCodes.Ldstr, Key); //Load method arguments
@@ -101,7 +97,7 @@ namespace Yale.Test.Concepts
                 _values.Add(Key, Value);
             }
 
-            private Dictionary<string, object> _values = new Dictionary<string, object>();
+            private readonly Dictionary<string, object> _values = new Dictionary<string, object>();
 
             public object GetValue(string key)
             {

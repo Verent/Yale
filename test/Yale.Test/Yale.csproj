@@ -50,13 +50,18 @@
     <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="ParallelExtensionsExtras, Version=1.2.3.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ParallelExtensionsExtras.1.2.0.0\lib\net40\ParallelExtensionsExtras.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Concepts\EmitDelegate.cs" />
-    <Compile Include="Engines\Flee\CalcEngineTestFixture.cs" />
-    <Compile Include="Engines\ComputeInstanceTests.cs" />
+    <Compile Include="Engine\DependencyManager.cs" />
+    <Compile Include="Engine\Expression.cs" />
+    <Compile Include="Theory\EmitDelegate.cs" />
+    <Compile Include="Engine\Flee\CalcEngineTestFixture.cs" />
+    <Compile Include="Engine\ComputeInstanceTests.cs" />
     <Compile Include="ExpressionTests\Double.cs" />
     <Compile Include="ExpressionTests\Old\ExpressionBuildingTest.cs" />
     <Compile Include="ExpressionTests\Old\Benchmarks.cs" />
@@ -67,7 +72,7 @@
     <Compile Include="ExpressionTests\String.cs" />
     <Compile Include="Core\Import.cs" />
     <Compile Include="Parser\Core.cs" />
-    <Compile Include="Core\Value.cs" />
+    <Compile Include="Engine\Recalculate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

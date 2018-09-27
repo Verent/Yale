@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -33,6 +34,8 @@ namespace Yale.Engine
 
             _options = ComputeInstanceOptions.Default;
             _nameNodeMap = new Dictionary<string, IExpressionResult>(StringComparer.OrdinalIgnoreCase);
+
+            BindToValuesEvents();
         }
 
         public ComputeInstance(ComputeInstanceOptions options)
@@ -42,7 +45,51 @@ namespace Yale.Engine
                 ComputeInstance = this
             };
             _options = options ?? throw new ArgumentNullException(nameof(options));
+
+            BindToValuesEvents();
         }
+
+        private void BindToValuesEvents()
+        {
+            if (_options.AutoRecalculate)
+            {
+                Values.PropertyChanged += RecalculateValues;
+            }
+            else
+            {
+                Values.PropertyChanged += TagResultsAsDirty;
+            }
+        }
+
+        private void TagResultsAsDirty(object sender, PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void RecalculateValues(object sender, PropertyChangedEventArgs e)
+        {
+            RecalculateDependents(e.PropertyName);
+        }
+
+        private void RecalculateDependents(string key)
+        {
+            foreach (var dependent in _dependencies.GetDependents(key))
+            {
+                RecalculateNodeAndDependents(dependent);
+            }
+        }
+
+        private void RecalculateNodeAndDependents(string key)
+        {
+            var node = _nameNodeMap[key];
+            node.Recalculate();
+
+            foreach (var dependent in _dependencies.GetDependents(key))
+            {
+                RecalculateDependents(dependent);
+            }
+        }
+
 
         /// <summary>
         /// Adds a value to that engine that is not to be parsed.
@@ -108,7 +155,7 @@ namespace Yale.Engine
 
         public T GetResult<T>(string key)
         {
-            return ((ExpressionResult<T>)_nameNodeMap[key]).Result;
+            return (T) _nameNodeMap[key].ResultAsObject;
         }
 
         public Type ExpressionType(string expressionKey)
@@ -140,7 +187,8 @@ namespace Yale.Engine
 
         internal void AddDependency(string expressionKey, string dependsOn)
         {
-            if(ContainsExpression(dependsOn) == false) throw new InvalidOperationException("Can not depend an an expression that is not added to the instance");
+            if(ContainsExpression(dependsOn) == false && 
+               Values.ContainsKey(dependsOn) == false) throw new InvalidOperationException("Can not depend an an expression that is not added to the instance");
 
             _dependencies.AddDependency(expressionKey, dependsOn);
         }
@@ -154,8 +202,6 @@ namespace Yale.Engine
         internal void EmitLoad(string expressionKey, YaleIlGenerator ilGenerator)
         {
             var propertyInfo = typeof(ExpressionContext).GetProperty("ComputeInstance");
-            
-            //Todo: Add unit test to make sure this never is null;
             ilGenerator.Emit(OpCodes.Callvirt, propertyInfo.GetGetMethod());
 
             //Find and load expression result

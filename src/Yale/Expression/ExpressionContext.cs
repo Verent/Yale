@@ -34,7 +34,7 @@ namespace Yale.Expression
 
         public string ExpressionName { get; }
 
-        //Todo: What does the StringComparer do in a HashSet?
+        //Todo: What does the StringComparer do in this HashSet? Remove this construct?
         private readonly HashSet<string> _referencedValues = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         internal void AddReferencedVariable(string name)
