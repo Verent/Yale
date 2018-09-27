@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 using Yale.Expression;
 
@@ -8,7 +8,7 @@ using Yale.Expression;
 // ReSharper disable once ClassTooBig
 // ReSharper disable TooManyDeclarations
 
-namespace Yale.Test.Engines
+namespace Yale.Test.Engine
 {
     [TestClass]
     public class ComputeInstanceTests

@@ -54,7 +54,13 @@ namespace Yale.Engine.Internal
         public string[] GetDependents(string key)
         {
             var dependents = new List<string>();
-            GetDependentsRecursive(key, dependents);
+            if (Nodes.ContainsKey(key) == false) return dependents.ToArray();
+
+            foreach (var pair in Nodes[key].Dependents)
+            {
+                GetDependentsRecursive(pair, dependents);
+            }
+
             return dependents.ToArray();
         }
 

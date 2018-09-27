@@ -39,16 +39,18 @@ namespace Yale.Expression.Elements.MemberElements
                 return;
             }
 
+            var computeInstance = Context.ComputeInstance;
             // Value lookup
             if (Context.Values.TryGetValue(MemberName, out IValue value))
             {
                 _valueType = value.VariableType;
+                computeInstance?.AddDependency(Context.ExpressionName, MemberName);
                 AddReferencedVariable(Previous);
+
                 return;
             }
 
             // Expression lookup from compute instance
-            var computeInstance = Context.ComputeInstance;
             if (computeInstance?.ContainsExpression(MemberName) == true)
             {
                 computeInstance.AddDependency(Context.ExpressionName, MemberName);
