@@ -18,10 +18,13 @@ namespace Yale.Engine
         public ExpressionBuilder Builder { get; }
         private readonly DependencyManager _dependencies = new DependencyManager();
 
+        /// <summary>
+        /// Variables available in expressions
+        /// </summary>
         private ValueCollection Values => Builder.Values;
 
         /// <summary>
-        /// Map of name to node
+        /// Expression results
         /// </summary>
         private readonly Dictionary<string, IExpressionResult> _nameNodeMap = new Dictionary<string, IExpressionResult>();
 
@@ -49,9 +52,11 @@ namespace Yale.Engine
             BindToValuesEvents();
         }
 
+        #region Recalculate
+
         private void BindToValuesEvents()
         {
-            if (_options.AutoRecalculate)
+            if (_options.AutoRecalculate && _options.LazyRecalculate == false)
             {
                 Values.PropertyChanged += RecalculateValues;
             }
@@ -63,17 +68,26 @@ namespace Yale.Engine
 
         private void TagResultsAsDirty(object sender, PropertyChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            foreach (var dependent in _dependencies.GetDependents(e.PropertyName))
+            {
+                TagNodeAndDependentsAsDirty(dependent);
+            }
+        }
+
+        private void TagNodeAndDependentsAsDirty(string key)
+        {
+            var node = _nameNodeMap[key];
+            node.Dirty = true;
+
+            foreach (var dependent in _dependencies.GetDependents(key))
+            {
+                RecalculateNodeAndDependents(dependent);
+            }
         }
 
         private void RecalculateValues(object sender, PropertyChangedEventArgs e)
         {
-            RecalculateDependents(e.PropertyName);
-        }
-
-        private void RecalculateDependents(string key)
-        {
-            foreach (var dependent in _dependencies.GetDependents(key))
+            foreach (var dependent in _dependencies.GetDependents(e.PropertyName))
             {
                 RecalculateNodeAndDependents(dependent);
             }
@@ -86,14 +100,26 @@ namespace Yale.Engine
 
             foreach (var dependent in _dependencies.GetDependents(key))
             {
-                RecalculateDependents(dependent);
+                RecalculateNodeAndDependents(dependent);
             }
         }
 
+        private void RecalculateIfNeeded(string key)
+        {
+            if (_nameNodeMap.TryGetValue(key, out var node) && node.Dirty)
+            {
+                foreach (var dependent in _dependencies.GetDirectPrecedents(key))
+                {
+                    RecalculateIfNeeded(dependent);
+                }
+                node.Recalculate();
+            }
+        }
+
+        #endregion Recalculate
 
         /// <summary>
-        /// Adds a value to that engine that is not to be parsed.
-        /// Any expressions will be stored as strings.
+        /// Adds a value to this compute instance. This can be referenced in expressions.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
@@ -104,7 +130,7 @@ namespace Yale.Engine
         }
 
         /// <summary>
-        /// Returns the current value registered to a key in this instance.
+        /// Returns the current value registered to a variable in this instance.
         /// </summary>
         /// <param name="key"></param>
         public object GetValue(string key)
@@ -113,7 +139,7 @@ namespace Yale.Engine
         }
 
         /// <summary>
-        /// Returns the current value registered to a key in this instance.
+        /// Returns the current value registered to a variable in this instance.
         /// </summary>
         /// <param name="key"></param>
         public T GetValue<T>(string key)
@@ -121,9 +147,6 @@ namespace Yale.Engine
             return (T)GetValue(key);
         }
 
-        /// <summary>
-        /// Return the number of values added to this compute instance.
-        /// </summary>
         public int ValueCount => Values.Count;
 
         /// <summary>
@@ -138,7 +161,7 @@ namespace Yale.Engine
         }
 
         /// <summary>
-        /// Add an expression that follows the Flee syntax
+        /// Add an expression
         /// </summary>
         /// <param name="key"></param>
         /// <param name="expression"></param>
@@ -148,17 +171,36 @@ namespace Yale.Engine
             _nameNodeMap.Add(key, new ExpressionResult<T>(key, result));
         }
 
+        /// <summary>
+        /// Get expression result
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public object GetResult(string key)
         {
+            if (_options.AutoRecalculate)
+            {
+                RecalculateIfNeeded(key);
+            }
             return _nameNodeMap[key].ResultAsObject;
         }
 
+        /// <summary>
+        /// Get expression result
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public T GetResult<T>(string key)
         {
-            return (T) _nameNodeMap[key].ResultAsObject;
+            return (T)GetResult(key);
         }
 
-        public Type ExpressionType(string expressionKey)
+        /// <summary>
+        /// Get the object type of an expression result
+        /// </summary>
+        /// <param name="expressionKey"></param>
+        /// <returns></returns>
+        public Type ResultType(string expressionKey)
         {
             return _nameNodeMap[expressionKey].ResultType;
         }
@@ -185,14 +227,15 @@ namespace Yale.Engine
 
         public string DependencyGraph => _dependencies.DependencyGraph;
 
+        #region Dependencies
+
         internal void AddDependency(string expressionKey, string dependsOn)
         {
-            if(ContainsExpression(dependsOn) == false && 
-               Values.ContainsKey(dependsOn) == false) throw new InvalidOperationException("Can not depend an an expression that is not added to the instance");
+            if (ContainsExpression(dependsOn) == false &&
+                Values.ContainsKey(dependsOn) == false) throw new InvalidOperationException("Can not depend an an expression that is not added to the instance");
 
             _dependencies.AddDependency(expressionKey, dependsOn);
         }
-
 
         /// <summary>
         /// Create the IL used to load the result from another expression
@@ -202,16 +245,19 @@ namespace Yale.Engine
         internal void EmitLoad(string expressionKey, YaleIlGenerator ilGenerator)
         {
             var propertyInfo = typeof(ExpressionContext).GetProperty("ComputeInstance");
+            // ReSharper disable once PossibleNullReferenceException
             ilGenerator.Emit(OpCodes.Callvirt, propertyInfo.GetGetMethod());
 
             //Find and load expression result
             var members = typeof(ComputeInstance).FindMembers(MemberTypes.Method, BindingFlags.Instance | BindingFlags.Public, Type.FilterNameIgnoreCase, "GetResult");
             var methodInfo = members.Cast<MethodInfo>().First(method => method.IsGenericMethod);
-            var resultType = ExpressionType(expressionKey);
+            var resultType = ResultType(expressionKey);
             methodInfo = methodInfo.MakeGenericMethod(resultType);
 
             ilGenerator.Emit(OpCodes.Ldstr, expressionKey);
             ilGenerator.Emit(OpCodes.Call, methodInfo);
         }
+
+        #endregion Dependencies
     }
 }

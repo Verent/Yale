@@ -54,7 +54,7 @@ namespace Yale.Expression.Elements.MemberElements
             if (computeInstance?.ContainsExpression(MemberName) == true)
             {
                 computeInstance.AddDependency(Context.ExpressionName, MemberName);
-                _calcEngineReferenceType = computeInstance.ExpressionType(MemberName);
+                _calcEngineReferenceType = computeInstance.ResultType(MemberName);
                 return;
             }
 

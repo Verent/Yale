@@ -6,7 +6,7 @@ using System.Reflection;
 using Yale.Core.Interface;
 
 namespace Yale.Core
-{
+{   
     public sealed class ValueCollection : INotifyPropertyChanged
     {
         private readonly IDictionary<string, IValue> _values = new Dictionary<string, IValue>();
@@ -19,6 +19,7 @@ namespace Yale.Core
         public int Count => _values.Keys.Count;
         public bool IsReadOnly => false;
 
+        // ReSharper disable once MethodNameNotMeaningful
         public void Add(string key, object value)
         {
             _values.Add(key, new Value(value));

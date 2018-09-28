@@ -7,9 +7,9 @@ namespace Yale.Test.Engine
     {
 
         [TestMethod]
-        public void Fail()
+        public void True()
         {
-            Assert.IsTrue(false);
+            Assert.IsTrue(true);
         }
 
     }

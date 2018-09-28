@@ -58,9 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine\DependencyManager.cs" />
-    <Compile Include="Engine\Expression.cs" />
     <Compile Include="Theory\EmitDelegate.cs" />
-    <Compile Include="Engine\Flee\CalcEngineTestFixture.cs" />
     <Compile Include="Engine\ComputeInstanceTests.cs" />
     <Compile Include="ExpressionTests\Double.cs" />
     <Compile Include="ExpressionTests\Old\ExpressionBuildingTest.cs" />
@@ -68,7 +66,7 @@
     <Compile Include="ExpressionTests\Old\Core.cs" />
     <Compile Include="ExpressionTests\Boolean.cs" />
     <Compile Include="ExpressionTests\Integer.cs" />
-    <Compile Include="ExpressionTests\Reference.cs" />
+    <Compile Include="ExpressionTests\Identifier.cs" />
     <Compile Include="ExpressionTests\String.cs" />
     <Compile Include="Core\Import.cs" />
     <Compile Include="Parser\Core.cs" />
