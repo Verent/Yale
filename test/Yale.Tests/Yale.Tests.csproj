@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="TestScripts\CheckedTests.txt" />
+    <None Remove="TestScripts\IndividualTests.xml" />
+    <None Remove="TestScripts\InvalidExpressions.txt" />
+    <None Remove="TestScripts\LongBranchLogicalTest.txt" />
+    <None Remove="TestScripts\SimpleCalcEngineTests.txt" />
+    <None Remove="TestScripts\ValidCasts.txt" />
+    <None Remove="TestScripts\ValidExpressions.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TestScripts\CheckedTests.txt" />
+    <Content Include="TestScripts\IndividualTests.xml" />
+    <Content Include="TestScripts\InvalidExpressions.txt" />
+    <Content Include="TestScripts\LongBranchLogicalTest.txt" />
+    <Content Include="TestScripts\SimpleCalcEngineTests.txt" />
+    <Content Include="TestScripts\ValidCasts.txt" />
+    <Content Include="TestScripts\ValidExpressions.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Yale\Yale.csproj" />
+  </ItemGroup>
+
+</Project>
