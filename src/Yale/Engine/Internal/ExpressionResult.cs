@@ -24,7 +24,10 @@ namespace Yale.Engine.Internal
         public void Recalculate()
         {
             Result = Expression.Evaluate();
+            Dirty = false;
         }
+
+        public bool Dirty { get; set; }
 
         public Expression<T> GetExpression()
         {

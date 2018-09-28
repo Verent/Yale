@@ -11,5 +11,11 @@ namespace Yale.Engine.Interface
         Type ResultType { get; }
 
         void Recalculate();
+
+        /// <summary>
+        /// ExpressionResult is dirty when any of the expressions or values used in the expression has changed
+        /// and the result has not been recalculated
+        /// </summary>
+        bool Dirty { get; set; }
     }
 }
