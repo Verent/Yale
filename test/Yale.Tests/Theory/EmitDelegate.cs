@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Yale.Test.Theory
+namespace Yale.Tests.Theory
 {
     [TestClass]
     public class Emit

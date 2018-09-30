@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 
-namespace Yale.Test.Engine
+namespace Yale.Tests.Engine
 {
     [TestClass]
     public class Recalculate

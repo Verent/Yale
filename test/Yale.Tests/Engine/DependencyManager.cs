@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Yale.Test.Engine
+namespace Yale.Tests.Engine
 {
     [TestClass]
     public class DependencyManager

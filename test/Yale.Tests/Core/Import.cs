@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 
-namespace Yale.Test.Core
+namespace Yale.Tests.Core
 {
     [TestClass]
     public class Import
@@ -21,6 +21,7 @@ namespace Yale.Test.Core
 
             Assert.AreEqual(Math.E, result);
         }
+
 
         [TestMethod]
         public void Parse_ValidImportedMethod_Executes()

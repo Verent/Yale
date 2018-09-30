@@ -2,7 +2,7 @@
 using Yale.Engine;
 using Yale.Expression;
 
-namespace Yale.Test.Parser
+namespace Yale.Tests.Parser
 {
     [TestClass]
     public class Core

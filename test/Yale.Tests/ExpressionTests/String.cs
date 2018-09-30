@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 
-namespace Yale.Test.ExpressionTests
+namespace Yale.Tests.ExpressionTests
 {
     [TestClass]
     public class String
@@ -10,7 +9,7 @@ namespace Yale.Test.ExpressionTests
         private readonly ComputeInstance _instance = new ComputeInstance();
 
         [TestMethod]
-        public void String_AddExpression_ReturnCorrect()
+        public void AddExpression_ReturnCorrect()
         {
             _instance.AddExpression("a", "\"hi\"");
             var result = _instance.GetResult("a");
@@ -22,6 +21,19 @@ namespace Yale.Test.ExpressionTests
             var result2 = _instance.GetResult<string>("b");
             Assert.AreEqual(typeof(string), result2.GetType());
             Assert.AreEqual("hi", result2);
+        }
+
+
+        [TestMethod]
+        public void Concatenation()
+        {
+            _instance.AddExpression("a", "\"abc\" + \"def\"");
+            var result = _instance.GetResult("a");
+            Assert.AreEqual(typeof(string), result.GetType());
+            // ReSharper disable once StringLiteralTypo
+            const string expected = "abcdef";
+            Assert.AreEqual(expected, result);
+
         }
     }
 }

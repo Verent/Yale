@@ -11,8 +11,6 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements.MemberElements
 {
-    //Todo:remove the obsolete tag?
-    [Obsolete("Represents a function call")]
     internal class FunctionCallElement : MemberElement
     {
         private readonly ArgumentList _arguments;

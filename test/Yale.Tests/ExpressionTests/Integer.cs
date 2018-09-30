@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 
-namespace Yale.Test.ExpressionTests
+namespace Yale.Tests.ExpressionTests
 {
     [TestClass]
     public class Integer
@@ -140,6 +140,16 @@ namespace Yale.Test.ExpressionTests
             var result2 = _instance.GetResult<int>("b");
             Assert.AreEqual(typeof(int), result2.GetType());
             Assert.AreEqual(2, result2);
+        }
+
+
+        [TestMethod]
+        public void IntegerNegation()
+        {
+            _instance.AddExpression("a", "-6 + 10");
+            var result = _instance.GetResult("a");
+
+            Assert.AreEqual(4, result);
         }
     }
 }
