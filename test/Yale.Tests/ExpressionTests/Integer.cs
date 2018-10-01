@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using Yale.Engine;
 
 namespace Yale.Tests.ExpressionTests
@@ -8,7 +8,6 @@ namespace Yale.Tests.ExpressionTests
     public class Integer
     {
         private readonly ComputeInstance _instance = new ComputeInstance();
-
 
         [TestMethod]
         public void IntegerEqualsInteger_IsInteger()
@@ -32,7 +31,7 @@ namespace Yale.Tests.ExpressionTests
         [DataRow("2", "/", "2", 1)]
         [DataRow("10", "/", "3", 3)]
         [DataRow("10", "%", "3", 1)]
-        [DataRow("10", "/", "3.0", 10/3.0)]
+        [DataRow("10", "/", "3.0", 10 / 3.0)]
         [DataRow("10", "*", "3.0", 30.0)]
         [DataRow("10", "+", "3.1", 13.1)]
         [DataRow("10", "-", "3.1", 6.9)]
@@ -45,8 +44,6 @@ namespace Yale.Tests.ExpressionTests
             Assert.AreEqual(expectedResult.GetType(), result.GetType());
             Assert.AreEqual(expectedResult, result);
         }
-
-
 
         [TestMethod]
         public void IntegerPowerInteger_IsInteger()
@@ -70,7 +67,6 @@ namespace Yale.Tests.ExpressionTests
         //    //Int64
         //    Assert.ThrowsException<OverflowException>(() => _instance.AddExpression("a", "21474836001^234123"));
         //}
-
 
         [TestMethod]
         public void IntegerAdditionInteger_IsInteger()
@@ -142,7 +138,6 @@ namespace Yale.Tests.ExpressionTests
             Assert.AreEqual(2, result2);
         }
 
-
         [TestMethod]
         public void IntegerNegation()
         {
@@ -150,6 +145,21 @@ namespace Yale.Tests.ExpressionTests
             var result = _instance.GetResult("a");
 
             Assert.AreEqual(4, result);
+        }
+
+        [TestMethod]
+        public void IntegerLiterals()
+        {
+            //Unsigned 32/64 bit
+            _instance.AddExpression("e1", "100U + 100LU");
+            var result = _instance.GetResult("e1");
+            Assert.AreEqual(typeof(UInt64), result.GetType());
+            Assert.AreEqual((ulong)200, (UInt64)result);
+            //Signed 32/64 bit
+            _instance.AddExpression("e2", "100 + 100L");
+            result = _instance.GetResult("e2");
+            Assert.AreEqual(typeof(Int64), result.GetType());
+            Assert.AreEqual((long)200, (Int64)result);
         }
     }
 }

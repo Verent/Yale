@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 
 namespace Yale.Tests.ExpressionTests
@@ -9,7 +10,7 @@ namespace Yale.Tests.ExpressionTests
         private readonly ComputeInstance _instance = new ComputeInstance();
 
         [TestMethod]
-        public void AddExpression_ReturnCorrect()
+        public void Basic()
         {
             _instance.AddExpression("a", "\"hi\"");
             var result = _instance.GetResult("a");
@@ -30,10 +31,16 @@ namespace Yale.Tests.ExpressionTests
             _instance.AddExpression("a", "\"abc\" + \"def\"");
             var result = _instance.GetResult("a");
             Assert.AreEqual(typeof(string), result.GetType());
-            // ReSharper disable once StringLiteralTypo
             const string expected = "abcdef";
             Assert.AreEqual(expected, result);
+        }
 
+        [TestMethod]
+        public void Contains()
+        {
+            _instance.AddExpression("a", "\"def\".Contains(\"ef\")");
+            var result = _instance.GetResult<bool>("a");
+            Assert.IsTrue(result);
         }
     }
 }
