@@ -13,7 +13,7 @@ namespace Yale.Expression.Elements.Base.Literals
         /// <param name="image"></param>
         /// <param name="isHex"></param>
         /// <param name="negated"></param>
-        /// <param name="context"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
         public static LiteralElement Create(string image, bool isHex, bool negated, ExpressionBuilderOptions options)
         {
