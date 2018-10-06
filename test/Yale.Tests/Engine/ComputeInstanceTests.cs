@@ -279,8 +279,7 @@ namespace Yale.Tests.Engine
             _instance.AddExpression<bool>("a", "true");
             var expression = _instance.GetExpression<bool>("a");
 
-            Assert.AreEqual("true", expression.ExpressionText);
-            Assert.AreEqual(typeof(bool), expression.ResultType);
+            Assert.AreEqual("true", expression);
         }
 
         //[TestMethod]

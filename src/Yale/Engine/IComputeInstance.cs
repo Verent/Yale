@@ -2,7 +2,7 @@
 
 namespace Yale.Engine
 {
-    internal interface IEngine
+    internal interface IComputeInstance
     {
         void SetValue(string key, object value);
 
@@ -16,7 +16,7 @@ namespace Yale.Engine
 
         bool ContainsExpression(string key);
 
-        Expression<T> GetExpression<T>(string key);
+        string GetExpression<T>(string key);
 
         int ExpressionCount { get; }
 

@@ -12,7 +12,7 @@ using Yale.Parser.Internal;
 
 namespace Yale.Engine
 {
-    public class ComputeInstance : IEngine
+    public class ComputeInstance : IComputeInstance
     {
         private readonly ComputeInstanceOptions _options;
         public ExpressionBuilder Builder { get; }
@@ -205,10 +205,10 @@ namespace Yale.Engine
             return _nameNodeMap[expressionKey].ResultType;
         }
 
-        public Expression<T> GetExpression<T>(string key)
+        public string GetExpression<T>(string key)
         {
             var result = (ExpressionResult<T>)_nameNodeMap[key];
-            return result.Expression;
+            return result.Expression.ExpressionText;
         }
 
         /// <summary>
