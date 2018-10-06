@@ -1,7 +1,10 @@
 ﻿using PerCederberg.Grammatica.Runtime;
 using System.Diagnostics;
+
 // ReSharper disable CyclomaticComplexity
 // ReSharper disable MethodTooLong
+
+using GrammaticaToken = PerCederberg.Grammatica.Runtime.Token;
 
 namespace Yale.Parser
 {
@@ -23,193 +26,193 @@ namespace Yale.Parser
             switch ((Token)node.Id)
             {
                 case Token.ADD:
-                    EnterAdd((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterAdd((GrammaticaToken)node);
                     break;
 
                 case Token.SUB:
-                    EnterSub((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterSub((GrammaticaToken)node);
                     break;
 
                 case Token.MUL:
-                    EnterMul((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterMul((GrammaticaToken)node);
                     break;
 
                 case Token.DIV:
-                    EnterDiv((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterDiv((GrammaticaToken)node);
                     break;
 
                 case Token.POWER:
-                    EnterPower((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterPower((GrammaticaToken)node);
 
                     break;
 
                 case Token.MOD:
-                    EnterMod((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterMod((GrammaticaToken)node);
 
                     break;
 
                 case Token.LEFT_PAREN:
-                    EnterLeftParen((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterLeftParen((GrammaticaToken)node);
 
                     break;
 
                 case Token.RIGHT_PAREN:
-                    EnterRightParen((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterRightParen((GrammaticaToken)node);
 
                     break;
 
                 case Token.LEFT_BRACE:
-                    EnterLeftBrace((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterLeftBrace((GrammaticaToken)node);
 
                     break;
 
                 case Token.RIGHT_BRACE:
-                    EnterRightBrace((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterRightBrace((GrammaticaToken)node);
 
                     break;
 
                 case Token.EQ:
-                    EnterEq((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterEq((GrammaticaToken)node);
 
                     break;
 
                 case Token.LT:
-                    EnterLt((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterLt((GrammaticaToken)node);
 
                     break;
 
                 case Token.GT:
-                    EnterGt((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterGt((GrammaticaToken)node);
 
                     break;
 
                 case Token.LTE:
-                    EnterLte((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterLte((GrammaticaToken)node);
 
                     break;
 
                 case Token.GTE:
-                    EnterGte((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterGte((GrammaticaToken)node);
 
                     break;
 
                 case Token.NE:
-                    EnterNe((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterNe((GrammaticaToken)node);
 
                     break;
 
                 case Token.AND:
-                    EnterAnd((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterAnd((GrammaticaToken)node);
 
                     break;
 
                 case Token.OR:
-                    EnterOr((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterOr((GrammaticaToken)node);
 
                     break;
 
                 case Token.XOR:
-                    EnterXor((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterXor((GrammaticaToken)node);
 
                     break;
 
                 case Token.NOT:
-                    EnterNot((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterNot((GrammaticaToken)node);
 
                     break;
 
                 case Token.IN:
-                    EnterIn((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterIn((GrammaticaToken)node);
 
                     break;
 
                 case Token.DOT:
-                    EnterDot((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterDot((GrammaticaToken)node);
 
                     break;
 
                 case Token.ARGUMENT_SEPARATOR:
-                    EnterArgumentSeparator((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterArgumentSeparator((GrammaticaToken)node);
 
                     break;
 
                 case Token.ARRAY_BRACES:
-                    EnterArrayBraces((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterArrayBraces((GrammaticaToken)node);
 
                     break;
 
                 case Token.LEFT_SHIFT:
-                    EnterLeftShift((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterLeftShift((GrammaticaToken)node);
 
                     break;
 
                 case Token.RIGHT_SHIFT:
-                    EnterRightShift((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterRightShift((GrammaticaToken)node);
 
                     break;
 
                 case Token.INTEGER:
-                    EnterInteger((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterInteger((GrammaticaToken)node);
 
                     break;
 
                 case Token.REAL:
-                    EnterReal((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterReal((GrammaticaToken)node);
 
                     break;
 
                 case Token.STRING_LITERAL:
-                    EnterStringLiteral((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterStringLiteral((GrammaticaToken)node);
 
                     break;
 
                 case Token.CHAR_LITERAL:
-                    EnterCharLiteral((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterCharLiteral((GrammaticaToken)node);
 
                     break;
 
                 case Token.TRUE:
-                    EnterTrue((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterTrue((GrammaticaToken)node);
 
                     break;
 
                 case Token.FALSE:
-                    EnterFalse((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterFalse((GrammaticaToken)node);
 
                     break;
 
                 case Token.IDENTIFIER:
-                    EnterIdentifier((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterIdentifier((GrammaticaToken)node);
 
                     break;
 
                 case Token.HEX_LITERAL:
-                    EnterHexLiteral((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterHexLiteral((GrammaticaToken)node);
 
                     break;
 
                 case Token.NULL_LITERAL:
-                    EnterNullLiteral((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterNullLiteral((GrammaticaToken)node);
 
                     break;
 
                 case Token.TIMESPAN:
-                    EnterTimespan((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterTimespan((GrammaticaToken)node);
 
                     break;
 
                 case Token.DATETIME:
-                    EnterDatetime((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterDatetime((GrammaticaToken)node);
 
                     break;
 
                 case Token.IF:
-                    EnterIf((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterIf((GrammaticaToken)node);
 
                     break;
 
                 case Token.CAST:
-                    EnterCast((PerCederberg.Grammatica.Runtime.Token)node);
+                    EnterCast((GrammaticaToken)node);
 
                     break;
 
@@ -372,159 +375,159 @@ namespace Yale.Parser
             {
                 case Token.ADD:
 
-                    return ExitAdd((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitAdd((GrammaticaToken)node);
 
                 case Token.SUB:
 
-                    return ExitSub((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitSub((GrammaticaToken)node);
 
                 case Token.MUL:
 
-                    return ExitMul((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitMul((GrammaticaToken)node);
 
                 case Token.DIV:
 
-                    return ExitDiv((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitDiv((GrammaticaToken)node);
 
                 case Token.POWER:
 
-                    return ExitPower((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitPower((GrammaticaToken)node);
 
                 case Token.MOD:
 
-                    return ExitMod((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitMod((GrammaticaToken)node);
 
                 case Token.LEFT_PAREN:
 
-                    return ExitLeftParen((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitLeftParen((GrammaticaToken)node);
 
                 case Token.RIGHT_PAREN:
 
-                    return ExitRightParen((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitRightParen((GrammaticaToken)node);
 
                 case Token.LEFT_BRACE:
 
-                    return ExitLeftBrace((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitLeftBrace((GrammaticaToken)node);
 
                 case Token.RIGHT_BRACE:
 
-                    return ExitRightBrace((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitRightBrace((GrammaticaToken)node);
 
                 case Token.EQ:
 
-                    return ExitEq((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitEq((GrammaticaToken)node);
 
                 case Token.LT:
 
-                    return ExitLt((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitLt((GrammaticaToken)node);
 
                 case Token.GT:
 
-                    return ExitGt((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitGt((GrammaticaToken)node);
 
                 case Token.LTE:
 
-                    return ExitLte((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitLte((GrammaticaToken)node);
 
                 case Token.GTE:
 
-                    return ExitGte((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitGte((GrammaticaToken)node);
 
                 case Token.NE:
 
-                    return ExitNe((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitNe((GrammaticaToken)node);
 
                 case Token.AND:
 
-                    return ExitAnd((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitAnd((GrammaticaToken)node);
 
                 case Token.OR:
 
-                    return ExitOr((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitOr((GrammaticaToken)node);
 
                 case Token.XOR:
 
-                    return ExitXor((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitXor((GrammaticaToken)node);
 
                 case Token.NOT:
 
-                    return ExitNot((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitNot((GrammaticaToken)node);
 
                 case Token.IN:
 
-                    return ExitIn((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitIn((GrammaticaToken)node);
 
                 case Token.DOT:
 
-                    return ExitDot((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitDot((GrammaticaToken)node);
 
                 case Token.ARGUMENT_SEPARATOR:
 
-                    return ExitArgumentSeparator((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitArgumentSeparator((GrammaticaToken)node);
 
                 case Token.ARRAY_BRACES:
 
-                    return ExitArrayBraces((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitArrayBraces((GrammaticaToken)node);
 
                 case Token.LEFT_SHIFT:
 
-                    return ExitLeftShift((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitLeftShift((GrammaticaToken)node);
 
                 case Token.RIGHT_SHIFT:
 
-                    return ExitRightShift((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitRightShift((GrammaticaToken)node);
 
                 case Token.INTEGER:
 
-                    return ExitInteger((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitInteger((GrammaticaToken)node);
 
                 case Token.REAL:
 
-                    return ExitReal((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitReal((GrammaticaToken)node);
 
                 case Token.STRING_LITERAL:
 
-                    return ExitStringLiteral((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitStringLiteral((GrammaticaToken)node);
 
                 case Token.CHAR_LITERAL:
 
-                    return ExitCharLiteral((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitCharLiteral((GrammaticaToken)node);
 
                 case Token.TRUE:
 
-                    return ExitTrue((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitTrue((GrammaticaToken)node);
 
                 case Token.FALSE:
 
-                    return ExitFalse((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitFalse((GrammaticaToken)node);
 
                 case Token.IDENTIFIER:
 
-                    return ExitIdentifier((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitIdentifier((GrammaticaToken)node);
 
                 case Token.HEX_LITERAL:
 
-                    return ExitHexliteral((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitHexliteral((GrammaticaToken)node);
 
                 case Token.NULL_LITERAL:
 
-                    return ExitNullLiteral((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitNullLiteral((GrammaticaToken)node);
 
                 case Token.TIMESPAN:
 
-                    return ExitTimeSpan((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitTimeSpan((GrammaticaToken)node);
 
                 case Token.DATETIME:
 
-                    return ExitDatetime((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitDatetime((GrammaticaToken)node);
 
                 case Token.IF:
 
-                    return ExitIf((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitIf((GrammaticaToken)node);
 
                 case Token.CAST:
 
-                    return ExitCast((PerCederberg.Grammatica.Runtime.Token)node);
+                    return ExitCast((GrammaticaToken)node);
 
                 case Token.EXPRESSION:
 
@@ -801,353 +804,353 @@ namespace Yale.Parser
             }
         }
 
-        public virtual void EnterAdd(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterAdd(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitAdd(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterSub(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitSub(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitAdd(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterMul(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterSub(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitMul(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterDiv(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitDiv(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitSub(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterPower(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterMul(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitPower(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterMod(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitMod(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitMul(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterLeftParen(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterDiv(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitLeftParen(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterRightParen(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitRightParen(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitDiv(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterLeftBrace(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterPower(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitLeftBrace(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterRightBrace(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitRightBrace(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitPower(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterEq(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterMod(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitEq(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterLt(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitLt(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitMod(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterGt(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterLeftParen(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitGt(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterLte(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitLte(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitLeftParen(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterGte(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterRightParen(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitGte(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterNe(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitNe(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitRightParen(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterAnd(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterLeftBrace(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitAnd(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterOr(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitOr(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitLeftBrace(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterXor(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterRightBrace(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitXor(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterNot(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitNot(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitRightBrace(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterIn(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterEq(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitIn(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterDot(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitDot(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitEq(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterArgumentSeparator(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterLt(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitArgumentSeparator(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterArrayBraces(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitArrayBraces(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitLt(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterLeftShift(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterGt(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitLeftShift(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterRightShift(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitRightShift(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitGt(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterInteger(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterLte(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitInteger(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterReal(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitReal(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitLte(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterStringLiteral(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterGte(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitStringLiteral(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterCharLiteral(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitCharLiteral(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitGte(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterTrue(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterNe(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitTrue(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterFalse(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitFalse(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitNe(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterIdentifier(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterAnd(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitIdentifier(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterHexLiteral(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitHexliteral(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitAnd(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterNullLiteral(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterOr(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitNullLiteral(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterTimespan(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitTimeSpan(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitOr(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterDatetime(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterXor(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitDatetime(PerCederberg.Grammatica.Runtime.Token node)
-        {
-            return node;
-        }
-
-        public virtual void EnterIf(PerCederberg.Grammatica.Runtime.Token node)
-        {
-        }
-
-        public virtual Node ExitIf(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitXor(GrammaticaToken node)
         {
             return node;
         }
 
-        public virtual void EnterCast(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual void EnterNot(GrammaticaToken node)
         {
         }
 
-        public virtual Node ExitCast(PerCederberg.Grammatica.Runtime.Token node)
+        public virtual Node ExitNot(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterIn(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitIn(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterDot(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitDot(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterArgumentSeparator(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitArgumentSeparator(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterArrayBraces(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitArrayBraces(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterLeftShift(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitLeftShift(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterRightShift(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitRightShift(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterInteger(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitInteger(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterReal(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitReal(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterStringLiteral(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitStringLiteral(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterCharLiteral(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitCharLiteral(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterTrue(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitTrue(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterFalse(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitFalse(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterIdentifier(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitIdentifier(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterHexLiteral(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitHexliteral(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterNullLiteral(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitNullLiteral(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterTimespan(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitTimeSpan(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterDatetime(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitDatetime(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterIf(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitIf(GrammaticaToken node)
+        {
+            return node;
+        }
+
+        public virtual void EnterCast(GrammaticaToken node)
+        {
+        }
+
+        public virtual Node ExitCast(GrammaticaToken node)
         {
             return node;
         }

@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 using Yale.Expression;
 
-namespace Yale.Test.ExpressionTests
+namespace Yale.Tests.ExpressionTests
 {
     [TestClass]
     public class Identifier
