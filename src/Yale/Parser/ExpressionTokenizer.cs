@@ -1,5 +1,5 @@
-﻿using System.IO;
-using PerCederberg.Grammatica.Runtime;
+﻿using PerCederberg.Grammatica.Runtime;
+using System.IO;
 using static PerCederberg.Grammatica.Runtime.TokenPattern;
 
 namespace Yale.Parser
@@ -51,6 +51,9 @@ namespace Yale.Parser
             pattern = new TokenPattern((int)Token.EQ, "EQ", PatternType.STRING, "=");
             AddPattern(pattern);
 
+            pattern = new TokenPattern((int)Token.EQ, "EQ", PatternType.STRING, "EQ");
+            AddPattern(pattern);
+
             pattern = new TokenPattern((int)Token.LT, "LT", PatternType.STRING, "<");
             AddPattern(pattern);
 
@@ -96,8 +99,7 @@ namespace Yale.Parser
             pattern = new TokenPattern((int)Token.RIGHT_SHIFT, "RIGHT_SHIFT", PatternType.STRING, ">>");
             AddPattern(pattern);
 
-            pattern = new TokenPattern((int)Token.WHITESPACE, "WHITESPACE",
-                PatternType.REGEXP, "\\s+")
+            pattern = new TokenPattern((int)Token.WHITESPACE, "WHITESPACE", PatternType.REGEXP, "\\s+")
             { Ignore = true };
             AddPattern(pattern);
 

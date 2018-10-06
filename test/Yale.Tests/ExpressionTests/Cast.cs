@@ -23,7 +23,7 @@ namespace Yale.Tests.ExpressionTests
             _instance.SetValue("a", 4.0);
             _instance.AddExpression("b", "a^2");
 
-            Assert.AreEqual(16, (int)_instance.GetResult("b"));
+            Assert.AreEqual(16.0, (double)_instance.GetResult("b"));
         }
     }
 }
