@@ -7,7 +7,7 @@ namespace Yale.Expression
     /// evaluate it.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Expression<T>
+    internal class Expression<T>
     {
         /// <summary>
         /// The compiled delegate used to evaluate the expression
