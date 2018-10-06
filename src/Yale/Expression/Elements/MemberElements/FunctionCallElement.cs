@@ -11,14 +11,12 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements.MemberElements
 {
-    //Todo:remove the obsolete tag?
-    [Obsolete("Represents a function call")]
     internal class FunctionCallElement : MemberElement
     {
         private readonly ArgumentList _arguments;
         private readonly ICollection<MethodInfo> _methods;
         private CustomMethodInfo _targetMethodInfo;
-
+        
         public FunctionCallElement(string name, ArgumentList arguments) : base(name)
         {
             _arguments = arguments;
@@ -54,13 +52,13 @@ namespace Yale.Expression.Elements.MemberElements
             }
 
             // No methods with this name exist; try to bind to an on-demand function
-            //_myOnDemandFunctionReturnType = Context.Variables.ResolveOnDemandFunction(Name, argTypes);
-            throw new NotImplementedException("I do not know what the hell this is...");
-            //if (_myOnDemandFunctionReturnType == null)
+            //_onDemandFunctionReturnType = Context.Values.ResolveOnDemandFunction(Name, argTypes);
+            //if (_onDemandFunctionReturnType == null)
             //{
-            //    // Failed to bind to a function
-            //    ThrowFunctionNotFoundException(Previous);
+                
             //}
+
+            ThrowFunctionNotFoundException(Previous);
         }
 
         private void ThrowFunctionNotFoundException(MemberElement previous)

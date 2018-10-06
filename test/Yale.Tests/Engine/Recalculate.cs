@@ -1,17 +1,17 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 
-namespace Yale.Test.Engine
+namespace Yale.Tests.Engine
 {
     [TestClass]
     public class Recalculate
     {
-        private readonly ComputeInstance _autoRecalculateInstance = new ComputeInstance(new ComputeInstanceOptions
+        private readonly ComputeInstance _autoInstance = new ComputeInstance(new ComputeInstanceOptions
         {
             AutoRecalculate = true
         });
 
-        private readonly ComputeInstance _lazyRecalculateInstance = new ComputeInstance(new ComputeInstanceOptions
+        private readonly ComputeInstance _lazyInstance = new ComputeInstance(new ComputeInstanceOptions
         {
             AutoRecalculate = true,
             LazyRecalculate = true
@@ -26,11 +26,11 @@ namespace Yale.Test.Engine
         [TestMethod]
         public void AutoRecalculate_ValueUpdated_ReturnsUpdatedValue()
         {
-            _autoRecalculateInstance.SetValue("a", 10);
-            _autoRecalculateInstance.AddExpression<int>("b", "a");
+            _autoInstance.SetValue("a", 10);
+            _autoInstance.AddExpression<int>("b", "a");
             
-            _autoRecalculateInstance.SetValue("a", 20);
-            var result = _autoRecalculateInstance.GetResult("b");
+            _autoInstance.SetValue("a", 20);
+            var result = _autoInstance.GetResult("b");
 
             Assert.AreEqual(20, result);
         }
@@ -38,12 +38,12 @@ namespace Yale.Test.Engine
         [TestMethod]
         public void AutoRecalculate_ValueUpdatedDependentExpression_ReturnsUpdatedValue()
         {
-            _autoRecalculateInstance.SetValue("a", 10);
-            _autoRecalculateInstance.AddExpression<int>("b", "a");
-            _autoRecalculateInstance.AddExpression<int>("c", "b");
+            _autoInstance.SetValue("a", 10);
+            _autoInstance.AddExpression<int>("b", "a");
+            _autoInstance.AddExpression<int>("c", "b");
 
-            _autoRecalculateInstance.SetValue("a", 20);
-            var result = _autoRecalculateInstance.GetResult("c");
+            _autoInstance.SetValue("a", 20);
+            var result = _autoInstance.GetResult("c");
 
             Assert.AreEqual(20, result);
         }
@@ -52,11 +52,11 @@ namespace Yale.Test.Engine
         [TestMethod]
         public void LazyRecalculate_ValueUpdated_ReturnsUpdatedValue()
         {
-            _lazyRecalculateInstance.SetValue("a", 10);
-            _lazyRecalculateInstance.AddExpression<int>("b", "a");
+            _lazyInstance.SetValue("a", 10);
+            _lazyInstance.AddExpression<int>("b", "a");
 
-            _lazyRecalculateInstance.SetValue("a", 20);
-            var result = _lazyRecalculateInstance.GetResult("b");
+            _lazyInstance.SetValue("a", 20);
+            var result = _lazyInstance.GetResult("b");
 
             Assert.AreEqual(20, result);
         }
@@ -64,12 +64,12 @@ namespace Yale.Test.Engine
         [TestMethod]
         public void LazyRecalculate_ValueUpdatedDependentExpression_ReturnsUpdatedValue()
         {
-            _lazyRecalculateInstance.SetValue("a", 10);
-            _lazyRecalculateInstance.AddExpression<int>("b", "a");
-            _lazyRecalculateInstance.AddExpression<int>("c", "b");
+            _lazyInstance.SetValue("a", 10);
+            _lazyInstance.AddExpression<int>("b", "a");
+            _lazyInstance.AddExpression<int>("c", "b");
 
-            _lazyRecalculateInstance.SetValue("a", 20);
-            var result = _lazyRecalculateInstance.GetResult("c");
+            _lazyInstance.SetValue("a", 20);
+            var result = _lazyInstance.GetResult("c");
 
             Assert.AreEqual(20, result);
         }

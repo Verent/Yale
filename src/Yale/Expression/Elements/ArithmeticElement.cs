@@ -142,9 +142,9 @@ namespace Yale.Expression.Elements
             }
         }
 
-        private static bool IsUnsignedForArithmetic(Type t)
+        private static bool IsUnsignedForArithmetic(Type type)
         {
-            return ReferenceEquals(t, typeof(UInt32)) | ReferenceEquals(t, typeof(UInt64));
+            return ReferenceEquals(type, typeof(UInt32)) | ReferenceEquals(type, typeof(UInt64));
         }
 
         /// <summary>
@@ -298,12 +298,12 @@ namespace Yale.Expression.Elements
         {
             get
             {
-                if (_operation != BinaryArithmeticOperation.Power)
+                if (_operation != BinaryArithmeticOperation.Power || RightChild is Int32LiteralElement == false)
                 {
                     return false;
                 }
 
-                return (RightChild as Int32LiteralElement)?.Value >= 0;
+                return ((Int32LiteralElement) RightChild)?.Value >= 0;
             }
         }
     }

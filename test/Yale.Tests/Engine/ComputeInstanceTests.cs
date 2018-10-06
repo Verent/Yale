@@ -8,7 +8,7 @@ using Yale.Expression;
 // ReSharper disable once ClassTooBig
 // ReSharper disable TooManyDeclarations
 
-namespace Yale.Test.Engine
+namespace Yale.Tests.Engine
 {
     [TestClass]
     public class ComputeInstanceTests

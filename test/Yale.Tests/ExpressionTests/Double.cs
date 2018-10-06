@@ -2,7 +2,7 @@
 using System;
 using Yale.Engine;
 
-namespace Yale.Test.ExpressionTests
+namespace Yale.Tests.ExpressionTests
 {
     [TestClass]
     public class Double
@@ -18,7 +18,7 @@ namespace Yale.Test.ExpressionTests
         [DataRow("10.0", "/", "3", 10.0 / 3.0)]
         [DataRow("10.0", "/", "0.0", double.PositiveInfinity)]
         [DataRow("-10.0", "/", "0.0", double.NegativeInfinity)]
-        public void Double_AddExpression_ReturnCorrectValue(string a, string symbol, string b, object expectedResult)
+        public void AddExpression_ReturnCorrectValue(string a, string symbol, string b, object expectedResult)
         {
             _instance.AddExpression("a", $"{a}{symbol}{b}");
             var result = _instance.GetResult("a");
@@ -27,7 +27,7 @@ namespace Yale.Test.ExpressionTests
         }
 
         [TestMethod]
-        public void Double_DoublePowerDouble_IsDouble()
+        public void DoublePowerDouble_IsDouble()
         {
             _instance.AddExpression("a", "2.0^2.1");
             var result = _instance.GetResult("a");
@@ -40,5 +40,14 @@ namespace Yale.Test.ExpressionTests
             Assert.AreEqual(Math.Pow(3, 2.1), result2);
         }
 
+        [TestMethod]
+        public void RealLiteral()
+        {
+            //Double and single
+            _instance.AddExpression("expression", "100.25 + 100.25f");
+            var result = _instance.GetResult("expression");
+            Assert.AreEqual(typeof(double), result.GetType());
+            Assert.AreEqual(200.5, (double)result);
+        }
     }
-}
+};

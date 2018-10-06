@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 
-namespace Yale.Test.ExpressionTests
+namespace Yale.Tests.ExpressionTests
 {
     [TestClass]
     public class Boolean
