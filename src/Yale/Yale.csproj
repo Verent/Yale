@@ -1,13 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Yale</RootNamespace>
     <AssemblyName>Yale</AssemblyName>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <Authors>Espen Skaufel</Authors>
-    <Description>Yet another lightweight evaluator</Description>
-    <PackageLicenseUrl>LGPL</PackageLicenseUrl>
+    <Description>Yet another expression parser and evaluator library for .Net</Description>
+    <PackageLicenseUrl>MIT</PackageLicenseUrl>
+    <SignAssembly>false</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyVersion>0.0.1.0</AssemblyVersion>
+    <FileVersion>0.0.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,11 +22,4 @@
     <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.3.0" />
     <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="ParallelExtensionsExtras">
-      <HintPath>..\..\packages\ParallelExtensionsExtras.1.2.0.0\lib\net40\ParallelExtensionsExtras.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

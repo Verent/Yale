@@ -3,7 +3,7 @@ using Yale.Core.Interface;
 
 namespace Yale.Core
 {
-    public class Value : IValue
+    internal class Value : IValue
     {
         public Value(object value)
         {

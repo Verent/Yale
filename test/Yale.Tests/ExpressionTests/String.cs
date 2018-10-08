@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 
 namespace Yale.Tests.ExpressionTests
@@ -18,12 +17,11 @@ namespace Yale.Tests.ExpressionTests
             Assert.AreEqual("hi", result);
 
             _instance.AddExpression<string>("b", "\"hi\"");
-            
+
             var result2 = _instance.GetResult<string>("b");
             Assert.AreEqual(typeof(string), result2.GetType());
             Assert.AreEqual("hi", result2);
         }
-
 
         [TestMethod]
         public void Concatenation()
