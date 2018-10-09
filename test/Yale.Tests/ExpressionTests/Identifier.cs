@@ -111,21 +111,21 @@ namespace Yale.Tests.ExpressionTests
             Assert.IsTrue(result);
         }
 
-        //[TestMethod]
-        //public void Flee_And_Or_Xor_Not_Operators()
-        //{
-        //    _instance.SetValue("a", 10);
-        //    _instance.AddExpression("x", "a > 100");
+        [TestMethod]
+        public void Flee_And_Or_Xor_Not_Operators()
+        {
+            _instance.SetValue("a", 10);
+            _instance.AddExpression("x", "a > 100");
 
-        //    var result = _instance.GetResult<bool>("x");
-        //    Assert.IsFalse(result);
+            var result = _instance.GetResult<bool>("x");
+            Assert.IsFalse(result);
 
-        //    _instance.SetValue("b", 100);
-        //    _instance.SetExpression("x", "b = 100");
+            _instance.SetValue("b", 100);
+            _instance.SetExpression("x", "b = 100");
 
-        //    result = _instance.GetResult<bool>("x");
-        //    Assert.IsTrue(result);
-        //}
+            result = _instance.GetResult<bool>("x");
+            Assert.IsTrue(result);
+        }
 
         [TestMethod]
         public void Flee_Shift_Operators()

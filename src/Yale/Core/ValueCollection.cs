@@ -6,7 +6,7 @@ using System.Reflection;
 using Yale.Core.Interface;
 
 namespace Yale.Core
-{   
+{
     public sealed class ValueCollection : INotifyPropertyChanged
     {
         private readonly IDictionary<string, IValue> _values = new Dictionary<string, IValue>();
@@ -55,6 +55,10 @@ namespace Yale.Core
             set
             {
                 _values[key] = new Value(value);
+                if (value is INotifyPropertyChanged nValue)
+                {
+                    nValue.PropertyChanged += (sender, args) => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(key)); };
+                }
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(key));
             }
         }

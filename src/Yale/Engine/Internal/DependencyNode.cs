@@ -26,6 +26,7 @@ namespace Yale.Engine.Internal
         }
 
         private string[] _dependents;
+
         public string[] Dependents
         {
             get
@@ -36,6 +37,7 @@ namespace Yale.Engine.Internal
         }
 
         private string[] _precedents;
+
         public string[] Precedents
         {
             get
@@ -46,12 +48,11 @@ namespace Yale.Engine.Internal
         }
 
         /// <summary>
-        /// Removes all Predecessors and Successors from the Node
+        /// Removes predecessors. Used when expression is changed.
         /// </summary>
-        public void Clear()
+        public void ClearPredecessors()
         {
             Predecessors.Clear();
-            Successors.Clear();
         }
     }
 }

@@ -54,9 +54,11 @@ namespace Yale.Engine
 
         #region Recalculate
 
+        private bool ShouldRecalculate => _options.AutoRecalculate && _options.LazyRecalculate == false;
+
         private void BindToValuesEvents()
         {
-            if (_options.AutoRecalculate && _options.LazyRecalculate == false)
+            if (ShouldRecalculate)
             {
                 Values.PropertyChanged += RecalculateValues;
             }
@@ -149,6 +151,31 @@ namespace Yale.Engine
 
         public int ValueCount => Values.Count;
 
+        public void SetExpression(string key, string expression)
+        {
+            SetExpression<object>(key, expression);
+        }
+
+        public void SetExpression<T>(string key, string expression)
+        {
+            _dependencies.RemovePrecedents(key);
+            _nameNodeMap.Remove(key);
+
+            AddExpression<T>(key, expression);
+
+            foreach (var dependent in _dependencies.GetDependents(key))
+            {
+                if (ShouldRecalculate)
+                {
+                    RecalculateNodeAndDependents(dependent);
+                }
+                else
+                {
+                    TagNodeAndDependentsAsDirty(dependent);
+                }
+            }
+        }
+
         /// <summary>
         /// Add an expression that follows the Flee syntax
         /// </summary>
@@ -156,7 +183,7 @@ namespace Yale.Engine
         /// <param name="expression"></param>
         public void AddExpression(string key, string expression)
         {
-            var result = Builder.BuildExpression<object>(key, expression, null);
+            var result = Builder.BuildExpression<object>(key, expression);
             _nameNodeMap.Add(key, new ExpressionResult<object>(key, result));
         }
 
@@ -167,7 +194,7 @@ namespace Yale.Engine
         /// <param name="expression"></param>
         public void AddExpression<T>(string key, string expression)
         {
-            var result = Builder.BuildExpression<T>(key, expression, null);
+            var result = Builder.BuildExpression<T>(key, expression);
             _nameNodeMap.Add(key, new ExpressionResult<T>(key, result));
         }
 
@@ -203,6 +230,12 @@ namespace Yale.Engine
         public Type ResultType(string expressionKey)
         {
             return _nameNodeMap[expressionKey].ResultType;
+        }
+
+        public string GetExpression(string key)
+        {
+            var result = (ExpressionResult<object>)_nameNodeMap[key];
+            return result.Expression.ExpressionText;
         }
 
         public string GetExpression<T>(string key)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
+using Yale.Tests.Helper;
 
 namespace Yale.Tests.Engine
 {
@@ -28,7 +29,7 @@ namespace Yale.Tests.Engine
         {
             _autoInstance.SetValue("a", 10);
             _autoInstance.AddExpression<int>("b", "a");
-            
+
             _autoInstance.SetValue("a", 20);
             var result = _autoInstance.GetResult("b");
 
@@ -36,7 +37,7 @@ namespace Yale.Tests.Engine
         }
 
         [TestMethod]
-        public void AutoRecalculate_ValueUpdatedDependentExpression_ReturnsUpdatedValue()
+        public void AutoRecalculate_ValueUpdatedDependentExpression_ReturnUpdatedValue()
         {
             _autoInstance.SetValue("a", 10);
             _autoInstance.AddExpression<int>("b", "a");
@@ -48,9 +49,27 @@ namespace Yale.Tests.Engine
             Assert.AreEqual(20, result);
         }
 
+        [TestMethod]
+        public void AutoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
+        {
+            var testObject = new TestClass(nameof(AutoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
+            var expected = "a string";
+
+            testObject.Value = expected;
+
+            _autoInstance.SetValue("o", testObject);
+            _autoInstance.AddExpression<string>("e", "o.Value");
+
+            Assert.AreEqual(expected, _autoInstance.GetResult("e"));
+
+            expected = "a new string";
+            testObject.Value = expected;
+
+            Assert.AreEqual(expected, _autoInstance.GetResult("e"));
+        }
 
         [TestMethod]
-        public void LazyRecalculate_ValueUpdated_ReturnsUpdatedValue()
+        public void LazyRecalculate_ValueUpdated_ReturnUpdatedValue()
         {
             _lazyInstance.SetValue("a", 10);
             _lazyInstance.AddExpression<int>("b", "a");
@@ -62,7 +81,7 @@ namespace Yale.Tests.Engine
         }
 
         [TestMethod]
-        public void LazyRecalculate_ValueUpdatedDependentExpression_ReturnsUpdatedValue()
+        public void LazyRecalculate_ValueUpdatedDependentExpression_ReturnUpdatedValue()
         {
             _lazyInstance.SetValue("a", 10);
             _lazyInstance.AddExpression<int>("b", "a");
@@ -75,7 +94,26 @@ namespace Yale.Tests.Engine
         }
 
         [TestMethod]
-        public void NoRecalculate_ValueUpdated_ReturnsStartValue()
+        public void LazyRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
+        {
+            var testObject = new TestClass(nameof(LazyRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
+            var expected = "a string";
+
+            testObject.Value = expected;
+
+            _lazyInstance.SetValue("o", testObject);
+            _lazyInstance.AddExpression<string>("e", "o.Value");
+
+            Assert.AreEqual(expected, _lazyInstance.GetResult("e"));
+
+            expected = "a new string";
+            testObject.Value = expected;
+
+            Assert.AreEqual(expected, _lazyInstance.GetResult("e"));
+        }
+
+        [TestMethod]
+        public void NoRecalculate_ValueUpdated_ReturnStartValue()
         {
             _noRecalculateInstance.SetValue("a", 10);
             _noRecalculateInstance.AddExpression<int>("b", "a");
@@ -87,7 +125,7 @@ namespace Yale.Tests.Engine
         }
 
         [TestMethod]
-        public void NoRecalculate_ValueUpdatedDependentExpression_ReturnsStartValue()
+        public void NoRecalculate_ValueUpdatedDependentExpression_ReturnStartValue()
         {
             _noRecalculateInstance.SetValue("a", 10);
             _noRecalculateInstance.AddExpression<int>("b", "a");
@@ -97,6 +135,23 @@ namespace Yale.Tests.Engine
             var result = _noRecalculateInstance.GetResult("c");
 
             Assert.AreEqual(10, result);
+        }
+
+        [TestMethod]
+        public void NoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
+        {
+            var testObject = new TestClass(nameof(NoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
+            var expected = "a string";
+
+            testObject.Value = expected;
+
+            _noRecalculateInstance.SetValue("o", testObject);
+            _noRecalculateInstance.AddExpression<string>("e", "o.Value");
+
+            Assert.AreEqual(expected, _noRecalculateInstance.GetResult("e"));
+
+            testObject.Value = "a new string";
+            Assert.AreEqual(expected, _noRecalculateInstance.GetResult("e"));
         }
     }
 }
