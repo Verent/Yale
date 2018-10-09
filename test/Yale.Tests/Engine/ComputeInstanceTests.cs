@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 using Yale.Expression;
 
@@ -24,9 +24,9 @@ namespace Yale.Tests.Engine
         public void SetValue_WithoutKey_ThrowsException()
         {
             Assert.ThrowsException<ArgumentNullException>(() =>
-           {
-               _instance.SetValue(null, 2);
-           });
+            {
+                _instance.SetValue(null, 2);
+            });
         }
 
         [TestMethod]
@@ -115,86 +115,6 @@ namespace Yale.Tests.Engine
                 _instance.AddExpression("a", "1 == true"));
         }
 
-        //[TestMethod]
-        //public void AutoRecalculate_False()
-        //{
-        //    var instance = new ComputeInstance(new ComputeInstanceOptions
-        //    {
-        //        AutoRecalculate = false,
-        //        LazyRecalculate = true
-        //    });
-
-        //    const string expression = "b";
-        //    const string value = "a";
-
-        //    instance.SetValue(value, true);
-        //    instance.AddExpression<bool>(expression, value);
-
-        //    Assert.AreEqual(true, _instance.GetResult(value));
-        //    Assert.AreEqual(true, _instance.GetResult<bool>(value));
-
-        //    Assert.AreEqual(true, _instance.GetResult(expression));
-        //    Assert.AreEqual(true, _instance.GetResult<bool>(expression));
-
-        //    instance.SetValue(value, false);
-
-        //    Assert.AreEqual(false, _instance.GetValue(value));
-        //    Assert.AreEqual(true, _instance.GetResult(expression));
-
-        //    _instance.Recalculate(expression);
-
-        //    Assert.AreEqual(instance.GetValue(value), instance.GetResult(expression));
-        //}
-
-        //[TestMethod]
-        //public void AutoRecalculate_true()
-        //{
-        //    var instance = new ComputeInstance(new ComputeInstanceOptions
-        //    {
-        //        AutoRecalculate = false,
-        //        LazyRecalculate = true
-        //    });
-
-        //    const string expression = "b";
-        //    const string value = "a";
-
-        //    instance.SetValue(value, true);
-        //    instance.AddExpression<bool>(expression, value);
-
-        //    Assert.AreEqual(true, _instance.GetResult(value));
-        //    Assert.AreEqual(true, _instance.GetResult<bool>(value));
-
-        //    Assert.AreEqual(true, _instance.GetResult(expression));
-        //    Assert.AreEqual(true, _instance.GetResult<bool>(expression));
-
-        //    instance.SetValue(value, false);
-
-        //    Assert.AreEqual(false, _instance.GetValue(value));
-        //    Assert.AreEqual(instance.GetValue(value), instance.GetResult(expression));
-        //}
-
-        //[TestMethod]
-        //public void LazyRecalculate_False()
-        //{
-        //    var instance = new ComputeInstance(new ComputeInstanceOptions
-        //    {
-        //        AutoRecalculate = true,
-        //        LazyRecalculate = false
-        //    });
-        //    Assert.IsFalse(true);
-        //}
-
-        //[TestMethod]
-        //public void LazyRecalculate_true()
-        //{
-        //    var instance = new ComputeInstance(new ComputeInstanceOptions
-        //    {
-        //        AutoRecalculate = true,
-        //        LazyRecalculate = true
-        //    });
-        //    Assert.IsFalse(true);
-        //}
-
         [TestMethod]
         public void Generic_GetResult_Valid()
         {
@@ -226,52 +146,13 @@ namespace Yale.Tests.Engine
             Assert.ThrowsException<KeyNotFoundException>(() => _instance.GetResult("a"));
         }
 
-        //[TestMethod]
-        //public void TryGetResult_DoesNotExist_ReturnFalse()
-        //{
-        //    var result = _instance.TryGetResult("a", out var value);
-
-        //    Assert.IsFalse(result);
-        //    Assert.IsNull(value);
-        //}
-
-        //[TestMethod]
-        //public void Generic_TryGetResult_DoesNotExist_ReturnFalse()
-        //{
-        //    var result = _instance.TryGetResult<bool?>("a", out var value);
-
-        //    Assert.IsFalse(result);
-        //    Assert.IsNull(value);
-        //}
-
-        //[TestMethod]
-        //public void Generic_TryGetResult_DoesExists_ReturnTrue()
-        //{
-        //    _instance.AddExpression<int>("a", "10");
-        //    var result = _instance.TryGetResult<int>("a", out var value);
-
-        //    Assert.IsTrue(result);
-        //    Assert.IsNotNull(value);
-        //}
-
-        //[TestMethod]
-        //public void TryGetResult_DoesExists_ReturnTrue()
-        //{
-        //    _instance.AddExpression("a", "10");
-        //    var result = _instance.TryGetResult("a", out object value);
-
-        //    Assert.IsTrue(result);
-        //    Assert.IsNotNull(value);
-        //}
-
-        //[TestMethod]
-        //public void GetExpression_ExpressionExists_ReturnsExpression()
-        //{
-        //    _instance.AddExpression("a", "true");
-        //    var expression = _instance.GetExpression("a");
-
-        //    Assert.AreEqual("a", expression.ExpressionText);
-        //}
+        [TestMethod]
+        public void GetExpression_ContainsExpression()
+        {
+            Assert.IsFalse(_instance.ContainsExpression("a"));
+            _instance.AddExpression("a", "true");
+            Assert.IsTrue(_instance.ContainsExpression("a"));
+        }
 
         [TestMethod]
         public void Generic_GetExpression_ExpressionExists_ReturnsExpression()
@@ -282,69 +163,12 @@ namespace Yale.Tests.Engine
             Assert.AreEqual("true", expression);
         }
 
-        //[TestMethod]
-        //public void GetExpression_ExpressionExists_ThrowsException()
-        //{
-        //    Assert.ThrowsException<KeyNotFoundException>(() => _instance.GetExpression("a"));
-        //}
-
         [TestMethod]
-        public void Generic_GetExpression_ExpressionExists_ThrowsException()
+        public void GetExpression_ExpressionDoesNotExists_ThrowsException()
         {
+            Assert.ThrowsException<KeyNotFoundException>(() => _instance.GetExpression("a"));
             Assert.ThrowsException<KeyNotFoundException>(() => _instance.GetExpression<bool>("a"));
         }
-
-
-        //[TestMethod]
-        //public void GetDependents_Valid()
-        //{
-        //    Assert.IsFalse(true);
-        //}
-
-        //[TestMethod]
-        //public void GetDependents_Invalid()
-        //{
-        //    Assert.IsFalse(true);
-        //}
-
-        //[TestMethod]
-        //public void GetDependents_DoesNotExist()
-        //{
-        //    Assert.IsFalse(true);
-        //}
-
-        //[TestMethod]
-        //public void GetPrecedents_Valid()
-        //{
-        //    _instance.AddExpression("a", "10");
-        //    _instance.AddExpression("b", "a");
-
-        //    _instance.
-        //}
-
-        //[TestMethod]
-        //public void GetPrecedents_Invalid()
-        //{
-        //    Assert.IsFalse(true);
-        //}
-
-        //[TestMethod]
-        //public void GetPrecedents_DoesNotExist()
-        //{
-        //    Assert.IsFalse(true);
-        //}
-
-        //[TestMethod]
-        //public void HasDependents_False()
-        //{
-        //    Assert.IsFalse(true);
-        //}
-
-        //[TestMethod]
-        //public void HasDependents_True()
-        //{
-        //    Assert.IsFalse(true);
-        //}
 
         [TestMethod]
         public void ContainsExpression_False()
@@ -364,18 +188,6 @@ namespace Yale.Tests.Engine
             result = _instance.ContainsExpression("b");
             Assert.IsTrue(result);
         }
-
-        //[TestMethod]
-        //public void Remove_False()
-        //{
-        //    Assert.IsFalse(true);
-        //}
-
-        //[TestMethod]
-        //public void Remove_True()
-        //{
-        //    Assert.IsFalse(true);
-        //}
 
         [TestMethod]
         public void Clear()
@@ -398,55 +210,6 @@ namespace Yale.Tests.Engine
             Assert.AreEqual(0, _instance.ExpressionCount);
             _instance.AddExpression("a", "2");
             Assert.AreEqual(1, _instance.ExpressionCount);
-
         }
-
-        //[TestMethod]
-        //public void DependencyGraph()
-        //{
-        //    Assert.IsFalse(true);
-        //}
-
-        //[TestMethod]
-        //public void Recalculate_Valid()
-        //{
-        //    Assert.IsFalse(true);
-        //}
-
-        //[TestMethod]
-        //public void Recalculate_Invalid()
-        //{
-        //    Assert.IsFalse(true);
-        //}
-
-        //[TestMethod]
-        //public void Recalculate_DoesNotExist()
-        //{
-        //    Assert.IsFalse(true);
-        //}
-
-        //[TestMethod]
-        //public void ExplainResult_Valid()
-        //{
-        //    Assert.IsFalse(true);
-        //}
-
-        //[TestMethod]
-        //public void ExplainResult_Invalid()
-        //{
-        //    Assert.IsFalse(true);
-        //}
-
-        //[TestMethod]
-        //public void ExplainResult_DoesNotExist()
-        //{
-        //    Assert.IsFalse(true);
-        //}
-
-        //[TestMethod]
-        //public void Test_Owner_object()
-        //{
-        //    Assert.Fail();
-        //}
     }
 }

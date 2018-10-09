@@ -205,6 +205,12 @@ namespace Yale.Engine
             return _nameNodeMap[expressionKey].ResultType;
         }
 
+        public string GetExpression(string key)
+        {
+            var result = (ExpressionResult<object>)_nameNodeMap[key];
+            return result.Expression.ExpressionText;
+        }
+
         public string GetExpression<T>(string key)
         {
             var result = (ExpressionResult<T>)_nameNodeMap[key];
