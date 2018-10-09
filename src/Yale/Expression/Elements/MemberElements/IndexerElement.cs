@@ -21,9 +21,6 @@ namespace Yale.Expression.Elements.MemberElements
 
         private Type ArrayType => IsArray ? Previous.TargetType : null;
 
-
-
-
         protected override bool RequiresAddress => IsArray == false;
 
         public override Type ResultType => IsArray ? ArrayType.GetElementType() : _indexerElement.ResultType;
@@ -31,8 +28,6 @@ namespace Yale.Expression.Elements.MemberElements
         protected override bool IsPublic => IsArray || IsElementPublic((MemberElement)_indexerElement);
 
         public override bool IsStatic => false;
-
-
 
         public IndexerElement(ArgumentList indexer)
         {
