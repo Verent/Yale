@@ -89,17 +89,19 @@ namespace Yale.Tests.Engine
             _instance.AddExpression("b", "false");
 
             Assert.AreEqual(2, _instance.ExpressionCount);
-            Assert.IsTrue(_instance.ContainsExpression("a"));
+            Assert.IsTrue(_instance.GetResult<bool>("a"));
+            Assert.IsFalse(_instance.GetResult<bool>("b"));
         }
 
         [TestMethod]
-        public void AddExpressionT_ThatAreValid_IsReturned()
+        public void AddExpressionT_ThatAreValid_Exists()
         {
             _instance.AddExpression<bool>("a", "true");
             _instance.AddExpression<bool>("b", "false");
 
             Assert.AreEqual(2, _instance.ExpressionCount);
             Assert.IsTrue(_instance.ContainsExpression("a"));
+            Assert.IsTrue(_instance.ContainsExpression("b"));
         }
 
         [TestMethod]
@@ -210,6 +212,24 @@ namespace Yale.Tests.Engine
             Assert.AreEqual(0, _instance.ExpressionCount);
             _instance.AddExpression("a", "2");
             Assert.AreEqual(1, _instance.ExpressionCount);
+        }
+
+        [TestMethod]
+        public void ChangedExpressions_AreUpdated()
+        {
+            _instance.AddExpression("a", "2");
+            Assert.AreEqual(2, (int)_instance.GetResult("a"));
+            _instance.SetExpression("a", "3");
+            Assert.AreEqual(3, (int)_instance.GetResult("a"));
+        }
+
+        [TestMethod]
+        public void Generic_ChangedExpressions_AreUpdated()
+        {
+            _instance.AddExpression<int>("a", "2");
+            Assert.AreEqual(2, (int)_instance.GetResult("a"));
+            _instance.SetExpression<int>("a", "3");
+            Assert.AreEqual(3, (int)_instance.GetResult("a"));
         }
     }
 }

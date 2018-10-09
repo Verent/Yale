@@ -54,9 +54,11 @@ namespace Yale.Engine
 
         #region Recalculate
 
+        private bool ShouldRecalculate => _options.AutoRecalculate && _options.LazyRecalculate == false;
+
         private void BindToValuesEvents()
         {
-            if (_options.AutoRecalculate && _options.LazyRecalculate == false)
+            if (ShouldRecalculate)
             {
                 Values.PropertyChanged += RecalculateValues;
             }
@@ -148,6 +150,31 @@ namespace Yale.Engine
         }
 
         public int ValueCount => Values.Count;
+
+        public void SetExpression(string key, string expression)
+        {
+            SetExpression<object>(key, expression);
+        }
+
+        public void SetExpression<T>(string key, string expression)
+        {
+            _dependencies.RemovePrecedents(key);
+            _nameNodeMap.Remove(key);
+
+            AddExpression<T>(key, expression);
+
+            foreach (var dependent in _dependencies.GetDependents(key))
+            {
+                if (ShouldRecalculate)
+                {
+                    RecalculateNodeAndDependents(dependent);
+                }
+                else
+                {
+                    TagNodeAndDependentsAsDirty(dependent);
+                }
+            }
+        }
 
         /// <summary>
         /// Add an expression that follows the Flee syntax
