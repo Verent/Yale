@@ -32,10 +32,9 @@ namespace Yale.Expression.Elements.MemberElements
 
         protected override void ResolveInternal()
         {
-            // Property lookup
+            // Property lookup (imports or object instance properties)
             if (ResolveFieldProperty(Previous))
             {
-                AddReferencedVariable(Previous);
                 return;
             }
 
@@ -45,8 +44,6 @@ namespace Yale.Expression.Elements.MemberElements
             {
                 _valueType = value.VariableType;
                 computeInstance?.AddDependency(Context.ExpressionName, MemberName);
-                AddReferencedVariable(Previous);
-
                 return;
             }
 
@@ -119,19 +116,6 @@ namespace Yale.Expression.Elements.MemberElements
             var properties = TypeDescriptor.GetProperties(previous.ResultType);
             _propertyDescriptor = properties.Find(MemberName, true);
             return _propertyDescriptor != null;
-        }
-
-        private void AddReferencedVariable(MemberElement previous)
-        {
-            if (previous != null)
-            {
-                return;
-            }
-
-            if (_valueType != null || Context.OwnerType.IsAssignableFrom(MemberOwnerType))
-            {
-                Context.AddReferencedVariable(MemberName);
-            }
         }
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
@@ -332,6 +316,7 @@ namespace Yale.Expression.Elements.MemberElements
             //var methodInfo = VariableCollection.GetVirtualPropertyLoadMethod(ResultType);
             //EmitMethodCall(methodInfo, ilg);
         }
+
         //Todo: Get rid of this! One owner type to rule them all
         private Type MemberOwnerType
         {

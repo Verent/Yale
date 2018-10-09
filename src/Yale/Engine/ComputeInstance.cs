@@ -156,7 +156,7 @@ namespace Yale.Engine
         /// <param name="expression"></param>
         public void AddExpression(string key, string expression)
         {
-            var result = Builder.BuildExpression<object>(key, expression, null);
+            var result = Builder.BuildExpression<object>(key, expression);
             _nameNodeMap.Add(key, new ExpressionResult<object>(key, result));
         }
 
@@ -167,7 +167,7 @@ namespace Yale.Engine
         /// <param name="expression"></param>
         public void AddExpression<T>(string key, string expression)
         {
-            var result = Builder.BuildExpression<T>(key, expression, null);
+            var result = Builder.BuildExpression<T>(key, expression);
             _nameNodeMap.Add(key, new ExpressionResult<T>(key, result));
         }
 

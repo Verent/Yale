@@ -1,4 +1,6 @@
-﻿namespace Yale.Expression
+﻿using System;
+
+namespace Yale.Expression
 {
     /// <summary>
     //  The dynamic method inherits its security from the type to which it's attached. 
@@ -9,5 +11,6 @@
     internal class DefaultExpressionOwner
     {
         public static object Instance { get; } = new DefaultExpressionOwner();
+        public static Type Type => typeof(DefaultExpressionOwner);
     }
 }

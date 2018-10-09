@@ -14,8 +14,6 @@ namespace Yale.Expression
         public bool IntegerAsDouble { get; set; } = false;
         public StringComparer StringComparer { get; set; } = StringComparer.InvariantCulture;
 
-        public object DefaultOwner { get; set; } = DefaultExpressionOwner.Instance;
-
         public bool CaseSensitive { get; set; }
         public string DateTimeFormat { get; set; } = Format;
 
@@ -37,7 +35,7 @@ namespace Yale.Expression
             }
         }
 
-        //Todo:Simplify (just check if it is public)
+        //Todo:Verify 
         private void AssertNestedTypeIsAccessible(Type type)
         {
             while (type != null)
