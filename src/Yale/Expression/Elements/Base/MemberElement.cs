@@ -12,12 +12,12 @@ namespace Yale.Expression.Elements.Base
     internal abstract class MemberElement : ExpressionElement
     {
         /// <summary>
-        /// Working theory: Previous is the user part of user.address [previous.next]
+        /// Previous is the user part of the expression user.address [previous.next]
         /// </summary>
         protected MemberElement Previous;
 
         /// <summary>
-        /// Working theory: Next is the address part of user.address [previous.next]
+        /// Next is the address part of the expression user.address [previous.next]
         /// </summary>
         protected MemberElement Next;
 

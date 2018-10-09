@@ -8,7 +8,6 @@ namespace Yale.Core.Interface
     {
         bool OverflowChecked { get; }
         bool IntegerAsDouble { get; }
-        object DefaultOwner { get; }
         bool CaseSensitive { get; }
         string DateTimeFormat { get; }
 

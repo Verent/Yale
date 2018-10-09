@@ -8,13 +8,26 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements.MemberElements
 {
-    //Todo: remove obsolete tag?
-    [Obsolete("Element representing an array index")]
+    /// <summary>
+    /// Element representing an array index
+    /// </summary>
     internal class IndexerElement : MemberElement
     {
         private ExpressionElement _indexerElement;
 
         private readonly ArgumentList _indexerElements;
+
+        private bool IsArray => Previous.TargetType.IsArray;
+
+        private Type ArrayType => IsArray ? Previous.TargetType : null;
+
+        protected override bool RequiresAddress => IsArray == false;
+
+        public override Type ResultType => IsArray ? ArrayType.GetElementType() : _indexerElement.ResultType;
+
+        protected override bool IsPublic => IsArray || IsElementPublic((MemberElement)_indexerElement);
+
+        public override bool IsStatic => false;
 
         public IndexerElement(ArgumentList indexer)
         {
@@ -127,17 +140,5 @@ namespace Yale.Expression.Elements.MemberElements
             var functionCallElement = (FunctionCallElement)_indexerElement;
             functionCallElement.EmitFunctionCall(NextRequiresAddress, ilg, context);
         }
-
-        private Type ArrayType => IsArray ? Previous.TargetType : null;
-
-        private bool IsArray => Previous.TargetType.IsArray;
-
-        protected override bool RequiresAddress => IsArray == false;
-
-        public override Type ResultType => IsArray ? ArrayType.GetElementType() : _indexerElement.ResultType;
-
-        protected override bool IsPublic => IsArray || IsElementPublic((MemberElement)_indexerElement);
-
-        public override bool IsStatic => false;
     }
 }

@@ -22,6 +22,33 @@ namespace Yale.Tests.Engine
         };
 
         [TestMethod]
+        public void ModifyExpressions_Updates_Dependencies()
+        {
+            var instance = new ComputeInstance();
+
+            instance.SetValue("a", 10);
+            instance.SetValue("b", 5);
+
+            instance.AddExpression<int>("c", "a");
+            instance.AddExpression<int>("d", "a + b");
+            instance.AddExpression<int>("e", "c + d");
+            instance.AddExpression<int>("f", "e + 1");
+
+            var result = instance.GetResult("f");
+            Assert.AreEqual(26, result);
+
+            instance.SetExpression<int>("d", "a + a");
+
+            result = instance.GetResult("d");
+            Assert.AreEqual(20, result);
+
+            result = instance.GetResult("f");
+            Assert.AreEqual(31, result);
+
+        }
+
+
+        [TestMethod]
         public void ComplexDependency()
         {
             var result = Parallel.ForEach(_instances, Test1);

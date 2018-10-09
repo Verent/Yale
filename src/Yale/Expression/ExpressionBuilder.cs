@@ -49,10 +49,10 @@ namespace Yale.Expression
             }
         }
 
-        internal Expression<T> BuildExpression<T>(string expressionName, string expression, object owner)
+        internal Expression<T> BuildExpression<T>(string expressionName, string expression)
         {
-            owner = owner ?? _builderOptions.DefaultOwner;
-            var ownerType = owner.GetType();
+            var owner = DefaultExpressionOwner.Instance;
+            var ownerType = DefaultExpressionOwner.Type;
 
             Imports.ImportOwner(ownerType);
 
