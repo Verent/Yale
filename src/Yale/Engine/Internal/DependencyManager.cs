@@ -41,11 +41,6 @@ namespace Yale.Engine.Internal
             successor.AddPredecessor(predecessor);
         }
 
-        public void Remove(string nodeKey)
-        {
-            throw new NotImplementedException();
-        }
-
         public string[] GetDirectDependents(string nodeKey)
         {
             return Nodes[nodeKey].Dependents;
@@ -76,6 +71,11 @@ namespace Yale.Engine.Internal
         public string[] GetDirectPrecedents(string nodeKey)
         {
             return Nodes[nodeKey].Precedents;
+        }
+
+        public void RemovePrecedents(string nodeKey)
+        {
+            if (Nodes.ContainsKey(nodeKey)) Nodes[nodeKey].ClearPredecessors();
         }
 
         public string DependencyGraph
