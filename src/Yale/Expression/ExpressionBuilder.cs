@@ -20,9 +20,9 @@ namespace Yale.Expression
         private ExpressionParser Parser { get; set; }
         private YaleExpressionAnalyzer Analyzer { get; set; }
 
-        public string DynamicMethodName { get; set; } = "DynamicMethod";
+        private string DynamicMethodName { get; } = "DynamicMethod";
 
-        public ValueCollection Values { get; } = new ValueCollection();
+        internal ValueCollection Values { get; } = new ValueCollection();
 
         public TypeImports Imports { get; }
 
