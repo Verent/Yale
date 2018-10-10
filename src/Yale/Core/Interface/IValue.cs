@@ -2,7 +2,7 @@
 
 namespace Yale.Core.Interface
 {
-    public interface IValue
+    internal interface IValue
     {
         Type VariableType { get; }
 

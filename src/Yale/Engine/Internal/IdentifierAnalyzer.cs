@@ -1,8 +1,7 @@
-﻿using System;
+﻿using PerCederberg.Grammatica.Runtime;
+using System;
 using System.Collections.Generic;
-using PerCederberg.Grammatica.Runtime;
 using Yale.Expression;
-using Yale.Parser;
 using Token = Yale.Parser.Token;
 
 namespace Yale.Engine.Internal
