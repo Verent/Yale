@@ -14,7 +14,7 @@ namespace Yale.Tests.Theory
 
         internal delegate object MyMethod();
 
-        private MyMethod _basicDelegate;
+
 
         [TestMethod]
         public void CreateBasicDynamicMethod()

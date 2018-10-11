@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Yale.Core;
 using Yale.Expression.Elements.Base;
-using Yale.Internal;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
