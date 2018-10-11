@@ -5,7 +5,6 @@ using System.Reflection.Emit;
 using Yale.Expression.Elements.Base;
 using Yale.Expression.Elements.Base.Literals;
 using Yale.Expression.Elements.Literals.Integral;
-using Yale.Internal;
 using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements

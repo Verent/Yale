@@ -3,7 +3,6 @@ using System.Collections;
 using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
-using Yale.Internal;
 using Yale.Parser.Internal;
 using Yale.Resources;
 

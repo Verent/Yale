@@ -2,7 +2,6 @@ using System;
 using System.Globalization;
 using System.Reflection.Emit;
 using Yale.Expression.Elements.Base.Literals;
-using Yale.Internal;
 using Yale.Parser.Internal;
 using Yale.Resources;
 

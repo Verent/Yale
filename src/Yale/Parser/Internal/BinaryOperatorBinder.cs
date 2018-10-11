@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using System.Reflection;
-using Yale.Parser.Internal;
 
-namespace Yale.Internal
+namespace Yale.Parser.Internal
 {
     internal class BinaryOperatorBinder : CustomBinder
     {
@@ -25,15 +24,15 @@ namespace Yale.Internal
 
         public override MethodBase SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers)
         {
-            foreach (MethodInfo mi in match)
+            foreach (var methodBase in match)
             {
-                ParameterInfo[] parameters = mi.GetParameters();
-                bool leftValid = ImplicitConverter.EmitImplicitConvert(_myLeftType, parameters[0].ParameterType, null);
-                bool rightValid = ImplicitConverter.EmitImplicitConvert(_myRightType, parameters[1].ParameterType, null);
+                var parameters = methodBase.GetParameters();
+                var leftValid = ImplicitConverter.EmitImplicitConvert(_myLeftType, parameters[0].ParameterType, null);
+                var rightValid = ImplicitConverter.EmitImplicitConvert(_myRightType, parameters[1].ParameterType, null);
 
                 if (leftValid & rightValid)
                 {
-                    return mi;
+                    return methodBase;
                 }
             }
             return null;
