@@ -106,7 +106,7 @@ namespace Yale.Expression
             return new DynamicMethod(DynamicMethodName, typeof(T), parameterTypes, ownerType);
         }
 
-        internal Node Parse()
+        private Node Parse()
         {
             try
             {

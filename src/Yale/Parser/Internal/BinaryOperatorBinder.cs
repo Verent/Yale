@@ -6,14 +6,14 @@ namespace Yale.Parser.Internal
 {
     internal class BinaryOperatorBinder : CustomBinder
     {
-        private readonly Type _myLeftType;
-        private readonly Type _myRightType;
+        private readonly Type _leftType;
+        private readonly Type _rightType;
         private CustomBinder _customBinderImplementation;
 
         public BinaryOperatorBinder(Type leftType, Type rightType)
         {
-            _myLeftType = leftType;
-            _myRightType = rightType;
+            _leftType = leftType;
+            _rightType = rightType;
         }
 
         public override MethodBase BindToMethod(BindingFlags bindingAttr, MethodBase[] match, ref object[] args, ParameterModifier[] modifiers,
@@ -27,8 +27,8 @@ namespace Yale.Parser.Internal
             foreach (var methodBase in match)
             {
                 var parameters = methodBase.GetParameters();
-                var leftValid = ImplicitConverter.EmitImplicitConvert(_myLeftType, parameters[0].ParameterType, null);
-                var rightValid = ImplicitConverter.EmitImplicitConvert(_myRightType, parameters[1].ParameterType, null);
+                var leftValid = ImplicitConverter.EmitImplicitConvert(_leftType, parameters[0].ParameterType, null);
+                var rightValid = ImplicitConverter.EmitImplicitConvert(_rightType, parameters[1].ParameterType, null);
 
                 if (leftValid & rightValid)
                 {
