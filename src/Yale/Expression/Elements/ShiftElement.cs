@@ -8,7 +8,7 @@ namespace Yale.Expression.Elements
 {
     internal class ShiftElement : BinaryExpressionElement
     {
-        private ShiftOperation _myOperation;
+        private ShiftOperation _operation;
 
 
         protected override Type GetResultType(Type leftType, Type rightType)
@@ -49,7 +49,7 @@ namespace Yale.Expression.Elements
 
         protected override void GetOperation(object operation)
         {
-            _myOperation = (ShiftOperation)operation;
+            _operation = (ShiftOperation)operation;
         }
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
@@ -101,12 +101,12 @@ namespace Yale.Expression.Elements
                 case TypeCode.Int32:
                 case TypeCode.Int64:
                     // Signed operand, emit a left shift or arithmetic right shift
-                    opCode = _myOperation == ShiftOperation.LeftShift ? OpCodes.Shl : OpCodes.Shr;
+                    opCode = _operation == ShiftOperation.LeftShift ? OpCodes.Shl : OpCodes.Shr;
                     break;
                 case TypeCode.UInt32:
                 case TypeCode.UInt64:
                     // Unsigned operand, emit left shift or logical right shift
-                    opCode = _myOperation == ShiftOperation.LeftShift ? OpCodes.Shl : OpCodes.Shr_Un;
+                    opCode = _operation == ShiftOperation.LeftShift ? OpCodes.Shl : OpCodes.Shr_Un;
                     break;
                 default:
                     Debug.Assert(false, "unknown left shift operand");
