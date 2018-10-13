@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Reflection;
 
-namespace Yale.Internal
+namespace Yale.Parser.Internal
 {
     internal abstract class CustomBinder : Binder
     {

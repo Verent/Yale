@@ -23,7 +23,7 @@ namespace Yale.Resources
                 if (_myResourceManagers.TryGetValue(resourceFile, out var rm) == false)
                 {
                     var type = typeof(FleeResourceManager);
-                    rm = new ResourceManager(string.Format("{0}.{1}", type.Namespace, resourceFile), type.Assembly);
+                    rm = new ResourceManager($"{type.Namespace}.{resourceFile}", type.Assembly);
                     _myResourceManagers.Add(resourceFile, rm);
                 }
                 return rm;

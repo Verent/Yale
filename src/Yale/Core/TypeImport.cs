@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using Yale.Core.Interface;
 using Yale.Expression;
-using Yale.Parser.Internal;
 
 namespace Yale.Core
 {
     /// <summary>Represents an imported type</summary>
     /// <remarks>Use this class when you want to make the members of a type available to an expression</remarks>
-    public sealed class TypeImport : ImportBase
+    internal sealed class TypeImport : ImportBase
     {
         private readonly BindingFlags _bindFlags;
         private readonly bool _useTypeNameAsNamespace;
@@ -29,18 +28,18 @@ namespace Yale.Core
             _useTypeNameAsNamespace = useTypeNameAsNamespace;
         }
 
-        protected override void AddMembers(string memberName, MemberTypes memberType, ICollection<MemberInfo> destination)
+        protected override void AddMembers(string memberName, MemberTypes memberType, ICollection<MemberInfo> targetCollection)
         {
             var members = Target.FindMembers(memberType, _bindFlags, Options.MemberFilter, memberName);
-            AddMemberRange(members, destination);
+            AddMemberRange(members, targetCollection);
         }
 
-        protected override void AddMembers(MemberTypes memberType, ICollection<MemberInfo> destination)
+        protected override void AddMembers(MemberTypes memberType, ICollection<MemberInfo> targetCollection)
         {
             if (_useTypeNameAsNamespace) return;
 
             var members = Target.FindMembers(memberType, _bindFlags, AlwaysMemberFilter, null);
-            AddMemberRange(members, destination);
+            AddMemberRange(members, targetCollection);
         }
 
         internal override bool IsMatch(string name)

@@ -13,7 +13,7 @@ namespace Yale.Engine.Internal
             Key = key;
         }
 
-        public string Key { get; }
+        private string Key { get; }
 
         private List<DependencyNode> Predecessors { get; } = new List<DependencyNode>();
 

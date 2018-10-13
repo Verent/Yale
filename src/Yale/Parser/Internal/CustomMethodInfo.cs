@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Reflection;
 using Yale.Expression.Elements.Base;
-using Yale.Internal;
 
 namespace Yale.Parser.Internal
 {

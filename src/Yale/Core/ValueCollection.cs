@@ -7,7 +7,7 @@ using Yale.Core.Interface;
 
 namespace Yale.Core
 {
-    public sealed class ValueCollection : INotifyPropertyChanged
+    internal sealed class ValueCollection : INotifyPropertyChanged
     {
         private readonly IDictionary<string, IValue> _values = new Dictionary<string, IValue>();
 
@@ -17,9 +17,7 @@ namespace Yale.Core
         }
 
         public int Count => _values.Keys.Count;
-        public bool IsReadOnly => false;
 
-        // ReSharper disable once MethodNameNotMeaningful
         public void Add(string key, object value)
         {
             _values.Add(key, new Value(value));
@@ -42,10 +40,10 @@ namespace Yale.Core
             return success;
         }
 
-        public bool TryGetValue(string key, out IValue value)
+        public bool TryGetValue<T>(string key, out T value)
         {
             var success = _values.TryGetValue(key, out var result);
-            value = result;
+            value = (T)result;
             return success;
         }
 
