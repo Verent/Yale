@@ -5,29 +5,30 @@ using Yale.Core.Interface;
 
 namespace Yale.Core
 {
-    /// <summary>Represents an imported method</summary>
-    /// <remarks>Use this class when you want to make a single method available to an expression</remarks>
-    public sealed class MethodImport : ImportBase
+    /// <summary>
+    /// Represents a single imported method
+    /// </summary>
+    internal sealed class MethodImport : ImportBase
     {
         public MethodImport(MethodInfo importMethod, IExpressionOptions options) : base(options)
         {
             Target = importMethod ?? throw new ArgumentNullException(nameof(importMethod));
         }
 
-        protected override void AddMembers(string memberName, MemberTypes memberType, ICollection<MemberInfo> destination)
+        protected override void AddMembers(string memberName, MemberTypes memberType, ICollection<MemberInfo> targetCollection)
         {
             if (string.Equals(memberName, Target.Name, Options.MemberStringComparison) &&
                 (memberType & MemberTypes.Method) != 0)
             {
-                destination.Add(Target);
+                targetCollection.Add(Target);
             }
         }
 
-        protected override void AddMembers(MemberTypes memberType, ICollection<MemberInfo> destination)
+        protected override void AddMembers(MemberTypes memberType, ICollection<MemberInfo> targetCollection)
         {
             if ((memberType & MemberTypes.Method) != 0)
             {
-                destination.Add(Target);
+                targetCollection.Add(Target);
             }
         }
 
@@ -48,9 +49,9 @@ namespace Yale.Core
 
         public override string Name => Target.Name;
 
-        /// <summary>Gets the method that this import represents</summary>
-        /// <value>The method that this import represents</value>
-        /// <remarks>Use this property to retrieve the imported method</remarks>
+        /// <summary>
+        /// Gets the method that this import represents
+        /// </summary>
         public MethodInfo Target { get; }
     }
 }

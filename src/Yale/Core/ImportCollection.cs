@@ -8,21 +8,19 @@ using Yale.Resources;
 
 namespace Yale.Core
 {
-    public sealed class TypeImports
+    public sealed class ImportCollection
     {
         private const BindingFlags OwnerFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
         private const BindingFlags PublicStaticIgnoreCase = BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase;
 
-        public NamespaceImport RootImport { get; }
+        internal NamespaceImport RootImport { get; }
         private TypeImport _ownerImport;
         private readonly ExpressionBuilderOptions _options;
 
-
         private static readonly Dictionary<string, Type> OurBuiltinTypeMap = CreateBuiltinTypeMap();
 
-        internal TypeImports(ExpressionBuilderOptions options)
+        internal ImportCollection(ExpressionBuilderOptions options)
         {
-            //Todo: decide what to do with owner objects...
             _options = options;
             RootImport = new NamespaceImport("true", _options);
             ImportOwner(typeof(object));
@@ -56,12 +54,7 @@ namespace Yale.Core
             _ownerImport = new TypeImport(ownerType, OwnerFlags, false, _options);
         }
 
-        internal bool HasNamespace(string ns)
-        {
-            return RootImport.FindImport(ns) is NamespaceImport;
-        }
-
-        internal NamespaceImport GetImport(string ns)
+        private NamespaceImport GetImport(string ns)
         {
             if (ns.Length == 0)
             {
@@ -112,14 +105,15 @@ namespace Yale.Core
             return null;
         }
 
-        public void AddType(Type type, string ns)
+        public void AddType(Type type, string @namespace)
         {
-            Utility.AssertNotNull(type, "type");
-            Utility.AssertNotNull(ns, "ns");
+            if(type == null) throw new ArgumentNullException(nameof(type));
+            if (@namespace == null) throw new ArgumentNullException(nameof(@namespace));
+            
             const BindingFlags publicStatic = BindingFlags.Public | BindingFlags.Static;
             _options.AssertTypeIsAccessible(type);
 
-            var import = GetImport(ns);
+            var import = GetImport(@namespace);
             import.Add(new TypeImport(type, publicStatic, false, _options));
         }
 
@@ -128,11 +122,11 @@ namespace Yale.Core
             AddType(type, string.Empty);
         }
 
-        public void AddMethod(string methodName, Type type, string ns)
+        public void AddMethod(string methodName, Type type, string @namespace)
         {
-            Utility.AssertNotNull(methodName, "methodName");
-            Utility.AssertNotNull(type, "type");
-            Utility.AssertNotNull(ns, "ns");
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (@namespace == null) throw new ArgumentNullException(nameof(@namespace));
+            if (methodName == null) throw new ArgumentNullException(nameof(methodName));
 
             var methodInfo = type.GetMethod(methodName, PublicStaticIgnoreCase);
 
@@ -142,14 +136,14 @@ namespace Yale.Core
                 throw new ArgumentException(msg);
             }
 
-            AddMethod(methodInfo, ns);
+            AddMethod(methodInfo, @namespace);
         }
 
-        public void AddMethod(MethodInfo methodInfo, string ns)
+        private void AddMethod(MethodInfo methodInfo, string @namespace)
         {
-            Utility.AssertNotNull(methodInfo, "mi");
-            Utility.AssertNotNull(ns, "namespace");
-
+            if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
+            if (@namespace == null) throw new ArgumentNullException(nameof(@namespace));
+          
             _options.AssertTypeIsAccessible(methodInfo.ReflectedType);
 
             if (methodInfo.IsStatic == false | methodInfo.IsPublic == false)
@@ -158,16 +152,8 @@ namespace Yale.Core
                 throw new ArgumentException(msg);
             }
 
-            var import = GetImport(ns);
+            var import = GetImport(@namespace);
             import.Add(new MethodImport(methodInfo, _options));
-        }
-
-        public void ImportBuiltinTypes()
-        {
-            foreach (var pair in OurBuiltinTypeMap)
-            {
-                AddType(pair.Value, pair.Key);
-            }
         }
     }
 }

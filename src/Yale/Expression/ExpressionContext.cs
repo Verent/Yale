@@ -24,7 +24,7 @@ namespace Yale.Expression
 
         internal ExpressionBuilderOptions BuilderOptions { get; } = new ExpressionBuilderOptions();
 
-        public TypeImports Imports { get; set; }
+        public ImportCollection Imports { get; set; }
 
         public ValueCollection Values { get; set; }
 

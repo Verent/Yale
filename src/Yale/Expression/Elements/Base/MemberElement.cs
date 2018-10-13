@@ -23,7 +23,7 @@ namespace Yale.Expression.Elements.Base
 
         protected ExpressionContext Context;
         protected ImportBase Import;
-        public TypeImports Imports => Context.Imports;
+        public ImportCollection Imports => Context.Imports;
         public ValueCollection Values => Context.Values;
 
         public const BindingFlags BindFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
