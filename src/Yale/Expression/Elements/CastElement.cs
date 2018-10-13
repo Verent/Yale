@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Yale.Core;
 using Yale.Expression.Elements.Base;
-using Yale.Internal;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
@@ -59,7 +58,7 @@ namespace Yale.Expression.Elements
             // Try to find a builtin type with the name
             if (destTypeParts.Length == 1)
             {
-                type = TypeImports.GetBuiltinType(destTypeParts[0]);
+                type = ImportCollection.GetBuiltinType(destTypeParts[0]);
             }
 
             if (type != null)

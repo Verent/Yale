@@ -1,6 +1,7 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using Yale.Engine;
+using Yale.Expression;
 
 namespace Yale.Tests.Core
 {
@@ -10,7 +11,7 @@ namespace Yale.Tests.Core
         private readonly ComputeInstance _instance = new ComputeInstance();
 
         [TestMethod]
-        public void Parse_ValidImportedType_Executes()
+        public void Parse_ValidImportedTypeProperty_Executes()
         {
             _instance.Builder.Imports.AddType(typeof(Math));
 
@@ -22,9 +23,8 @@ namespace Yale.Tests.Core
             Assert.AreEqual(Math.E, result);
         }
 
-
         [TestMethod]
-        public void Parse_ValidImportedMethod_Executes()
+        public void Parse_ValidImportedTypeMethod_Executes()
         {
             _instance.Builder.Imports.AddType(typeof(Math));
 
@@ -34,6 +34,41 @@ namespace Yale.Tests.Core
             var result = _instance.GetResult(key);
 
             Assert.AreEqual(4.0, result);
+        }
+
+        [TestMethod]
+        public void Parse_ValidImportedTypeWithNSMethod_Executes()
+        {
+            _instance.Builder.Imports.AddType(typeof(Math), "Test");
+
+            const string key = "math_function";
+
+            _instance.AddExpression(key, "Test.Sqrt(16)");
+            var result = _instance.GetResult(key);
+
+            Assert.AreEqual(4.0, result);
+        }
+
+        [TestMethod]
+        public void Parse_ImportedMethod_Executes()
+        {
+            _instance.Builder.Imports.AddMethod("Sqrt", typeof(Math), "Test");
+
+            const string key = "math_function";
+
+            _instance.AddExpression(key, "Test.Sqrt(16)");
+            var result = _instance.GetResult(key);
+
+            Assert.AreEqual(4.0, result);
+        }
+
+        [TestMethod]
+        public void Parse_MethodNotImported_ThrowsException()
+        {
+            _instance.Builder.Imports.AddMethod("Sqrt", typeof(Math), "Test");
+
+            Assert.ThrowsException<ExpressionCompileException>(
+                () => _instance.AddExpression("key", "Test.Pow(16)"));
         }
     }
 }

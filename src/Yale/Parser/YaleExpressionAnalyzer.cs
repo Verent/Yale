@@ -13,7 +13,6 @@ using Yale.Expression.Elements.Literals;
 using Yale.Expression.Elements.Literals.Integral;
 using Yale.Expression.Elements.LogicalBitwise;
 using Yale.Expression.Elements.MemberElements;
-using Yale.Internal;
 using Yale.Parser.Internal;
 
 namespace Yale.Parser

@@ -12,7 +12,7 @@ namespace Yale.Expression
         /// <summary>
         /// The compiled delegate used to evaluate the expression
         /// </summary>
-        internal ExpressionEvaluator<T> Evaluator;
+        private readonly ExpressionEvaluator<T> Evaluator;
 
         public string ExpressionText { get; }
 

@@ -20,23 +20,23 @@ namespace Yale.Expression
         private ExpressionParser Parser { get; set; }
         private YaleExpressionAnalyzer Analyzer { get; set; }
 
-        public string DynamicMethodName { get; set; } = "DynamicMethod";
+        private string DynamicMethodName { get; } = "DynamicMethod";
 
-        public ValueCollection Values { get; } = new ValueCollection();
+        internal ValueCollection Values { get; } = new ValueCollection();
 
-        public TypeImports Imports { get; }
+        public ImportCollection Imports { get; }
 
         public ExpressionBuilder()
         {
             _builderOptions = new ExpressionBuilderOptions();
-            Imports = new TypeImports(_builderOptions);
+            Imports = new ImportCollection(_builderOptions);
             CreateParser();
         }
 
         public ExpressionBuilder(ExpressionBuilderOptions builderOptions)
         {
             _builderOptions = builderOptions;
-            Imports = new TypeImports(_builderOptions);
+            Imports = new ImportCollection(_builderOptions);
             CreateParser();
         }
 
@@ -106,7 +106,7 @@ namespace Yale.Expression
             return new DynamicMethod(DynamicMethodName, typeof(T), parameterTypes, ownerType);
         }
 
-        internal Node Parse()
+        private Node Parse()
         {
             try
             {
