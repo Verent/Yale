@@ -15,14 +15,16 @@ namespace Yale.Engine.Internal
 
         private string Key { get; }
 
-        private List<DependencyNode> Predecessors { get; } = new List<DependencyNode>();
+        private List<DependencyNode> _predecessors = new List<DependencyNode>();
 
-        private List<DependencyNode> Successors { get; } = new List<DependencyNode>();
+        private List<DependencyNode> _successors = new List<DependencyNode>();
 
         public void AddPredecessor(DependencyNode node)
         {
-            Predecessors.Add(node);
-            node.Successors.Add(this);
+            _predecessors.Add(node);
+            _precedents = null;
+            node._successors.Add(this);
+            node._dependents = null;
         }
 
         private string[] _dependents;
@@ -31,8 +33,7 @@ namespace Yale.Engine.Internal
         {
             get
             {
-                return _dependents ??
-                       (_dependents = Successors.Select(s => s.Key).ToArray());
+                return _dependents ?? (_dependents = _successors.Select(s => s.Key).ToArray());
             }
         }
 
@@ -42,8 +43,7 @@ namespace Yale.Engine.Internal
         {
             get
             {
-                return _precedents ??
-                       (_precedents = Predecessors.Select(s => s.Key).ToArray());
+                return _precedents ?? (_precedents = _predecessors.Select(s => s.Key).ToArray());
             }
         }
 
@@ -52,7 +52,7 @@ namespace Yale.Engine.Internal
         /// </summary>
         public void ClearPredecessors()
         {
-            Predecessors.Clear();
+            _predecessors.Clear();
         }
     }
 }

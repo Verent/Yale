@@ -4,7 +4,7 @@ Yale is yet another expression parser and evaluator library for .Net
 
 Like other expression frameworks Yale evaluates string expressions like `sqrt(a^2 + b^2)` and  `name() = "Maria"` at runtime. In Yale, these expressions are compiled to the [Common Intermediate Language](https://en.wikipedia.org/wiki/Common_Intermediate_Language). This results in a blazing fast performance of expression evaluation after compilation. The primary design objective of Yale is to make it as intuitive and easy to use as possible.
 
-Yale is based on [Flee](https://github.com/mparlak/Flee) with the intent to modernize and simplify the source code and usage. 
+Yale is based on [Flee](https://github.com/mparlak/Flee) (Fast Lightweight Expression Evaluator) with the intent to modernize and simplify the source code and usage.
 
 ## What is the state of Yale?
 Yale is in alpha and breaking changes should be expected. However most of the current work is focused on stabilization and bug-fixes. It should be safe for small applications and demos. Any bugs reported will be prioritized and feedback would be appreciated.
