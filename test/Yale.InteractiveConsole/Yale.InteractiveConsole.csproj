@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <RootNamespace>Yale.Console</RootNamespace>
+    <RootNamespace>Yale.InteractiveConsole</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

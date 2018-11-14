@@ -52,6 +52,8 @@ namespace Yale.Core
             get => _values[key].ValueAsObject;
             set
             {
+                if (_values.ContainsKey(key) && _values[key].Equals(value)) return;
+
                 _values[key] = new Value(value);
                 if (value is INotifyPropertyChanged nValue)
                 {

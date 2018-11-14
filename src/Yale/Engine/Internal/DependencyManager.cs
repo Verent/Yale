@@ -18,27 +18,27 @@ namespace Yale.Engine.Internal
             Nodes.Clear();
         }
 
-        public void AddDependency(string expressionKey, string dependsOn)
+        public void AddDependency(string expressionKey, string dependsOnKey)
         {
-            DependencyNode predecessor = null;
-            DependencyNode successor = null;
+            DependencyNode expressionNode = null; 
+            DependencyNode dependsOnNode = null; 
 
-            if (Nodes.ContainsKey(dependsOn) == false)
+            if (Nodes.ContainsKey(dependsOnKey) == false)
             {
-                predecessor = new DependencyNode(dependsOn);
-                Nodes.Add(dependsOn, predecessor);
+                dependsOnNode = new DependencyNode(dependsOnKey);
+                Nodes.Add(dependsOnKey, dependsOnNode);
             }
 
             if (Nodes.ContainsKey(expressionKey) == false)
             {
-                successor = new DependencyNode(expressionKey);
-                Nodes.Add(expressionKey, successor);
+                expressionNode = new DependencyNode(expressionKey);
+                Nodes.Add(expressionKey, expressionNode);
             }
 
-            predecessor = predecessor ?? Nodes[dependsOn];
-            successor = successor ?? Nodes[expressionKey];
+            dependsOnNode = dependsOnNode ?? Nodes[dependsOnKey];
+            expressionNode = expressionNode ?? Nodes[expressionKey];
 
-            successor.AddPredecessor(predecessor);
+            expressionNode.AddPredecessor(dependsOnNode);
         }
 
         public string[] GetDirectDependents(string nodeKey)
