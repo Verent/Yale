@@ -56,6 +56,10 @@ namespace Yale.Tests.Engine
 
             result = Parallel.ForEach(_instances, Test2);
             Assert.IsTrue(result.IsCompleted);
+
+            Squares(_instances[0]);
+            //result = Parallel.ForEach(_instances, Squares);
+            //Assert.IsTrue(result.IsCompleted);
         }
 
         public void Test1(ComputeInstance instance)
@@ -65,10 +69,10 @@ namespace Yale.Tests.Engine
             instance.SetValue("a", 10);
             instance.SetValue("b", 5);
 
-            instance.AddExpression<int>("c", "a");
-            instance.AddExpression<int>("d", "a + b");
-            instance.AddExpression<int>("e", "c + d");
-            instance.AddExpression<int>("f", "e + 1");
+            instance.AddExpression("c", "a");
+            instance.AddExpression("d", "a + b");
+            instance.AddExpression("e", "c + d");
+            instance.AddExpression("f", "e + 1");
 
             var result = instance.GetResult("f");
             Assert.AreEqual(26, result);
@@ -114,5 +118,33 @@ namespace Yale.Tests.Engine
             result = instance.GetResult("f");
             Assert.AreEqual(24, result);
         }
+
+        public void Squares(ComputeInstance instance)
+        {
+            instance.Clear();
+
+            instance.SetValue("a", 3);
+            instance.AddExpression("square", "a^2");
+            var result = instance.GetResult("square");
+            Assert.AreEqual(9, result);
+
+            instance.SetValue("a", 2);
+            result = instance.GetResult("square");
+            Assert.AreEqual(4, result);
+
+            instance.AddExpression("ssquare", "square^2");
+            result = instance.GetResult("ssquare");
+            Assert.AreEqual(16, result);
+
+            instance.SetValue("a", 7);
+
+            result = instance.GetResult("square");
+            Assert.AreEqual(49, result);
+            result = instance.GetResult("ssquare");
+            Assert.AreEqual(2401, result);
+
+        }
+
+
     }
 }
