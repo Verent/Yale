@@ -137,6 +137,7 @@ namespace Yale.Engine
         /// <param name="key"></param>
         public object GetValue(string key)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
             return Values[key];
         }
 
@@ -146,6 +147,7 @@ namespace Yale.Engine
         /// <param name="key"></param>
         public T GetValue<T>(string key)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
             return (T)GetValue(key);
         }
 
@@ -153,11 +155,17 @@ namespace Yale.Engine
 
         public void SetExpression(string key, string expression)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (expression == null) throw new ArgumentNullException(nameof(expression));
+
             SetExpression<object>(key, expression);
         }
 
         public void SetExpression<T>(string key, string expression)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (expression == null) throw new ArgumentNullException(nameof(expression));
+
             _dependencies.RemovePrecedents(key);
             _nameNodeMap.Remove(key);
 
@@ -183,6 +191,9 @@ namespace Yale.Engine
         /// <param name="expression"></param>
         public void AddExpression(string key, string expression)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (expression == null) throw new ArgumentNullException(nameof(expression));
+
             var result = Builder.BuildExpression<object>(key, expression);
             _nameNodeMap.Add(key, new ExpressionResult<object>(key, result));
         }
@@ -194,6 +205,9 @@ namespace Yale.Engine
         /// <param name="expression"></param>
         public void AddExpression<T>(string key, string expression)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (expression == null) throw new ArgumentNullException(nameof(expression));
+
             var result = Builder.BuildExpression<T>(key, expression);
             _nameNodeMap.Add(key, new ExpressionResult<T>(key, result));
         }
@@ -205,6 +219,8 @@ namespace Yale.Engine
         /// <returns></returns>
         public object GetResult(string key)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+
             if (_options.AutoRecalculate)
             {
                 RecalculateIfNeeded(key);
@@ -219,7 +235,25 @@ namespace Yale.Engine
         /// <returns></returns>
         public T GetResult<T>(string key)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+
             return (T)GetResult(key);
+        }
+
+        public bool TryGetResult(string key, out object result)
+        {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+
+            result = _nameNodeMap.ContainsKey(key) ? GetResult(key) : default;
+            return result != null;
+        }
+
+        public bool TryGetResult<T>(string key, out T result)
+        {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+
+            result = _nameNodeMap.ContainsKey(key) ? (T)GetResult(key) : default;
+            return result != null;
         }
 
         /// <summary>
@@ -227,19 +261,25 @@ namespace Yale.Engine
         /// </summary>
         /// <param name="expressionKey"></param>
         /// <returns></returns>
-        public Type ResultType(string expressionKey)
+        public Type ResultType(string key)
         {
-            return _nameNodeMap[expressionKey].ResultType;
+            if (key == null) throw new ArgumentNullException(nameof(key));
+
+            return _nameNodeMap[key].ResultType;
         }
 
         public string GetExpression(string key)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+
             var result = (ExpressionResult<object>)_nameNodeMap[key];
             return result.Expression.ExpressionText;
         }
 
         public string GetExpression<T>(string key)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+
             var result = (ExpressionResult<T>)_nameNodeMap[key];
             return result.Expression.ExpressionText;
         }
