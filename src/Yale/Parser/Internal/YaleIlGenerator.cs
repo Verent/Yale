@@ -178,7 +178,7 @@ namespace Yale.Parser.Internal
 
         public int LabelCount { get; private set; }
 
-        private int IlGeneratorLength => Utility.GetILGeneratorLength(_ilGenerator);
+        private int IlGeneratorLength => Utility.GetIlGeneratorLength(_ilGenerator);
 
         public bool IsTemp { get; }
     }

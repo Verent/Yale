@@ -35,7 +35,7 @@ namespace Yale.Expression
             {
                 if (Reason == CompileExceptionReason.SyntaxError)
                 {
-                    return $"{Utility.GetCompileErrorMessage(CompileErrorResourceKeys.SyntaxError)}: {InnerException.Message}"; ;
+                    return $"{CompileErrors.SyntaxError}: {InnerException?.Message}"; ;
                 }
 
                 return base.Message;

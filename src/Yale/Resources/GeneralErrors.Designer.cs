@@ -8,9 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Flee.Resources {
+namespace Yale.Resources {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -20,7 +19,7 @@ namespace Flee.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class GeneralErrors {
@@ -40,7 +39,7 @@ namespace Flee.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Flee.Resources.GeneralErrors", typeof(GeneralErrors).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Yale.Resources.GeneralErrors", typeof(GeneralErrors).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -139,15 +138,6 @@ namespace Flee.Resources {
         internal static string VariableValueNotAssignableToType {
             get {
                 return ResourceManager.GetString("VariableValueNotAssignableToType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to A variable with name &apos;{0}&apos; is already defined.
-        /// </summary>
-        internal static string VariableWithNameAlreadyDefined {
-            get {
-                return ResourceManager.GetString("VariableWithNameAlreadyDefined", resourceCulture);
             }
         }
     }

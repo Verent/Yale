@@ -144,7 +144,4 @@
   <data name="VariableValueNotAssignableToType" xml:space="preserve">
     <value>Value type of '{0}' is not assignable to required type of '{1}'</value>
   </data>
-  <data name="VariableWithNameAlreadyDefined" xml:space="preserve">
-    <value>A variable with name '{0}' is already defined</value>
-  </data>
 </root>

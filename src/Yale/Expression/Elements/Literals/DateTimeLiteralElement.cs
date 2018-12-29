@@ -9,7 +9,7 @@ namespace Yale.Expression.Elements.Literals
 {
     internal class DateTimeLiteralElement : LiteralElement
     {
-        private DateTime _value;
+        private readonly DateTime _value;
 
         public DateTimeLiteralElement(string image, ExpressionContext context)
         {
@@ -17,7 +17,7 @@ namespace Yale.Expression.Elements.Literals
 
             if (DateTime.TryParseExact(image, options.DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _value) == false)
             {
-                ThrowCompileException(CompileErrorResourceKeys.CannotParseType, CompileExceptionReason.InvalidFormat, typeof(DateTime).Name);
+                ThrowCompileException(CompileErrors.CannotParseType, CompileExceptionReason.InvalidFormat, typeof(DateTime).Name);
             }
         }
 

@@ -21,7 +21,7 @@ namespace Yale.Expression.Elements
 
             if (!ReferenceEquals(_condition.ResultType, typeof(bool)))
             {
-                ThrowCompileException(CompileErrorResourceKeys.FirstArgNotBoolean, CompileExceptionReason.TypeMismatch);
+                ThrowCompileException(CompileErrors.FirstArgNotBoolean, CompileExceptionReason.TypeMismatch);
             }
 
             // The result type is the type that is common to the true/false operands
@@ -35,7 +35,7 @@ namespace Yale.Expression.Elements
             }
             else
             {
-                ThrowCompileException(CompileErrorResourceKeys.NeitherArgIsConvertibleToTheOther, CompileExceptionReason.TypeMismatch, _whenTrue.ResultType.Name, _whenFalse.ResultType.Name);
+                ThrowCompileException(CompileErrors.NeitherArgIsConvertibleToTheOther, CompileExceptionReason.TypeMismatch, _whenTrue.ResultType.Name, _whenFalse.ResultType.Name);
             }
         }
 
@@ -53,7 +53,7 @@ namespace Yale.Expression.Elements
             }
 
             var ilgTemp = CreateTempIlGenerator(ilGenerator);
-            Utility.SyncFleeILGeneratorLabels(ilGenerator, ilgTemp);
+            Utility.SyncFleeIlGeneratorLabels(ilGenerator, ilgTemp);
 
             // Emit fake conditional to get branch target positions
             EmitConditional(ilgTemp, context, branchManager);

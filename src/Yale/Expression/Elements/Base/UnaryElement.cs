@@ -16,7 +16,7 @@ namespace Yale.Expression.Elements.Base
 
             if (_myResultType == null)
             {
-                base.ThrowCompileException(CompileErrorResourceKeys.OperationNotDefinedForType, CompileExceptionReason.TypeMismatch, MyChild.ResultType.Name);
+                ThrowCompileException(CompileErrors.OperationNotDefinedForType, CompileExceptionReason.TypeMismatch, MyChild.ResultType.Name);
             }
         }
 

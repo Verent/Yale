@@ -25,9 +25,8 @@ namespace Yale.Expression.Elements.Base
             return Name;
         }
 
-        protected void ThrowCompileException(string messageKey, CompileExceptionReason reason, params object[] arguments)
+        protected void ThrowCompileException(string messageTemplate, CompileExceptionReason reason, params object[] arguments)
         {
-            var messageTemplate = FleeResourceManager.Instance.GetCompileErrorString(messageKey);
             var message = string.Format(messageTemplate, arguments);
             message = string.Concat(Name, ": ", message);
             throw new ExpressionCompileException(message, reason);
@@ -35,7 +34,7 @@ namespace Yale.Expression.Elements.Base
 
         protected void ThrowAmbiguousCallException(Type leftType, Type rightType, object operation)
         {
-            ThrowCompileException(CompileErrorResourceKeys.AmbiguousOverloadedOperator, CompileExceptionReason.AmbiguousMatch, leftType.Name, rightType.Name, operation);
+            ThrowCompileException(CompileErrors.AmbiguousOverloadedOperator, CompileExceptionReason.AmbiguousMatch, leftType.Name, rightType.Name, operation);
         }
 
         protected YaleIlGenerator CreateTempIlGenerator(YaleIlGenerator ilgCurrent)
@@ -49,7 +48,7 @@ namespace Yale.Expression.Elements.Base
             get
             {
                 var key = GetType().Name;
-                var value = FleeResourceManager.Instance.GetElementNameString(key);
+                var value = ElementResourceManager.GetElementNameString(key);
                 Debug.Assert(value != null, $"Element name for '{key}' not in resource file");
                 return value;
             }
