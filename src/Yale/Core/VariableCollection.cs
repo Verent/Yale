@@ -7,9 +7,9 @@ using Yale.Core.Interface;
 
 namespace Yale.Core
 {
-    internal sealed class ValueCollection : INotifyPropertyChanged
+    internal sealed class VariableCollection : INotifyPropertyChanged
     {
-        private readonly IDictionary<string, IValue> _values = new Dictionary<string, IValue>();
+        private readonly IDictionary<string, IVariable> _values = new Dictionary<string, IVariable>();
 
         public void Clear()
         {
@@ -20,7 +20,7 @@ namespace Yale.Core
 
         public void Add(string key, object value)
         {
-            _values.Add(key, new Value(value));
+            _values.Add(key, new Variable(value));
         }
 
         public bool ContainsKey(string key)
@@ -54,7 +54,7 @@ namespace Yale.Core
             {
                 if (_values.ContainsKey(key) && _values[key].Equals(value)) return;
 
-                _values[key] = new Value(value);
+                _values[key] = new Variable(value);
                 if (value is INotifyPropertyChanged nValue)
                 {
                     nValue.PropertyChanged += (sender, args) => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(key)); };
@@ -73,7 +73,7 @@ namespace Yale.Core
         /// <returns></returns>
         internal static MethodInfo GetVariableLoadMethod(Type variableType)
         {
-            var methodInfo = typeof(ValueCollection).GetMethod("GetVariableValueInternal", BindingFlags.Public | BindingFlags.Instance);
+            var methodInfo = typeof(VariableCollection).GetMethod("GetVariableValueInternal", BindingFlags.Public | BindingFlags.Instance);
             // ReSharper disable once PossibleNullReferenceException
             return methodInfo.MakeGenericMethod(variableType);
         }

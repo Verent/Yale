@@ -39,10 +39,10 @@ namespace Yale.Expression.Elements.MemberElements
             }
 
             var computeInstance = Context.ComputeInstance;
-            // Value lookup
-            if (Context.Values.TryGetValue(MemberName, out IValue value))
+            // Variable lookup
+            if (Context.Variables.TryGetValue(MemberName, out IVariable value))
             {
-                _valueType = value.VariableType;
+                _valueType = value.Type;
                 computeInstance?.AddDependency(Context.ExpressionName, MemberName);
                 return;
             }
@@ -57,11 +57,11 @@ namespace Yale.Expression.Elements.MemberElements
 
             if (Previous == null)
             {
-                ThrowCompileException(CompileErrorResourceKeys.NoIdentifierWithName, CompileExceptionReason.UndefinedName, MemberName);
+                ThrowCompileException(CompileErrors.NoIdentifierWithName, CompileExceptionReason.UndefinedName, MemberName);
             }
             else
             {
-                ThrowCompileException(CompileErrorResourceKeys.NoIdentifierWithNameOnType, CompileExceptionReason.UndefinedName, MemberName, Previous.TargetType.Name);
+                ThrowCompileException(CompileErrors.NoIdentifierWithNameOnType, CompileExceptionReason.UndefinedName, MemberName, Previous.TargetType.Name);
             }
         }
 
@@ -81,11 +81,11 @@ namespace Yale.Expression.Elements.MemberElements
                 // More than one accessible member
                 if (previous == null)
                 {
-                    ThrowCompileException(CompileErrorResourceKeys.IdentifierIsAmbiguous, CompileExceptionReason.AmbiguousMatch, MemberName);
+                    ThrowCompileException(CompileErrors.IdentifierIsAmbiguous, CompileExceptionReason.AmbiguousMatch, MemberName);
                 }
                 else
                 {
-                    ThrowCompileException(CompileErrorResourceKeys.IdentifierIsAmbiguousOnType, CompileExceptionReason.AmbiguousMatch, MemberName, previous.TargetType.Name);
+                    ThrowCompileException(CompileErrors.IdentifierIsAmbiguousOnType, CompileExceptionReason.AmbiguousMatch, MemberName, previous.TargetType.Name);
                 }
             }
             else
@@ -173,12 +173,12 @@ namespace Yale.Expression.Elements.MemberElements
 
 
         /// <summary>
-        /// Emits il that loads a variable from the Values collection
+        /// Emits il that loads a variable from the Variables collection
         /// </summary>
         /// <param name="ilg"></param>
         private void EmitVariableLoad(YaleIlGenerator ilg)
         {
-            var methodInfo = ValueCollection.GetVariableLoadMethod(_valueType);
+            var methodInfo = VariableCollection.GetVariableLoadMethod(_valueType);
             ilg.Emit(OpCodes.Ldstr, MemberName);
             EmitMethodCall(methodInfo, ilg);
         }

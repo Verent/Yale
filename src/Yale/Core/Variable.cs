@@ -3,15 +3,15 @@ using Yale.Core.Interface;
 
 namespace Yale.Core
 {
-    internal class Value : IValue
+    internal class Variable : IVariable
     {
-        public Value(object value)
+        public Variable(object value)
         {
-            VariableType = value?.GetType();
+            Type = value?.GetType();
             ValueAsObject = value;
         }
 
-        public Type VariableType { get; }
+        public Type Type { get; }
 
         public object ValueAsObject { get; }
     }

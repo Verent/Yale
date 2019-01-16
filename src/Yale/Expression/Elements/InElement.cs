@@ -62,7 +62,7 @@ namespace Yale.Expression.Elements
 
             if (_targetCollectionType == null)
             {
-                ThrowCompileException(CompileErrorResourceKeys.SearchArgIsNotKnownCollectionType, CompileExceptionReason.TypeMismatch, _targetCollectionElement.ResultType.Name);
+                ThrowCompileException(CompileErrors.SearchArgIsNotKnownCollectionType, CompileExceptionReason.TypeMismatch, _targetCollectionElement.ResultType.Name);
             }
 
             // Validate that the operand type is compatible with the collection
@@ -71,7 +71,7 @@ namespace Yale.Expression.Elements
 
             if (ImplicitConverter.EmitImplicitConvert(_operand.ResultType, firstParameter.ParameterType, null) == false)
             {
-                ThrowCompileException(CompileErrorResourceKeys.OperandNotConvertibleToCollectionType, CompileExceptionReason.TypeMismatch, _operand.ResultType.Name, firstParameter.ParameterType.Name);
+                ThrowCompileException(CompileErrors.OperandNotConvertibleToCollectionType, CompileExceptionReason.TypeMismatch, _operand.ResultType.Name, firstParameter.ParameterType.Name);
             }
         }
 
@@ -126,7 +126,7 @@ namespace Yale.Expression.Elements
 
                 // Do a fake emit to get branch positions
                 var ilgTemp = CreateTempIlGenerator(ilGenerator);
-                Utility.SyncFleeILGeneratorLabels(ilGenerator, ilgTemp);
+                Utility.SyncFleeIlGeneratorLabels(ilGenerator, ilgTemp);
 
                 EmitListIn(ilgTemp, context, branchManager);
 

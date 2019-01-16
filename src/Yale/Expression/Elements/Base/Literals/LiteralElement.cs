@@ -10,10 +10,10 @@ namespace Yale.Expression.Elements.Base.Literals
     {
         protected void OnParseOverflow(string image)
         {
-            ThrowCompileException(CompileErrorResourceKeys.ValueNotRepresentableInType, CompileExceptionReason.ConstantOverflow, image, ResultType.Name);
+            ThrowCompileException(CompileErrors.ValueNotRepresentableInType, CompileExceptionReason.ConstantOverflow, image, ResultType.Name);
         }
 
-        public static void EmitLoad(Int32 value, YaleIlGenerator ilg)
+        public static void EmitLoad(int value, YaleIlGenerator ilg)
         {
             if (value >= -1 & value <= 8)
             {
@@ -29,14 +29,14 @@ namespace Yale.Expression.Elements.Base.Literals
             }
         }
 
-        protected static void EmitLoad(Int64 value, YaleIlGenerator ilg)
+        protected static void EmitLoad(long value, YaleIlGenerator ilg)
         {
-            if (value >= Int32.MinValue & value <= Int32.MaxValue)
+            if (value >= int.MinValue & value <= int.MaxValue)
             {
                 EmitLoad(Convert.ToInt32(value), ilg);
                 ilg.Emit(OpCodes.Conv_I8);
             }
-            else if (value >= 0 & value <= UInt32.MaxValue)
+            else if (value >= 0 & value <= int.MaxValue)
             {
                 EmitLoad(Convert.ToInt32(value), ilg);
                 ilg.Emit(OpCodes.Conv_U8);
@@ -52,7 +52,7 @@ namespace Yale.Expression.Elements.Base.Literals
             ilGenerator.Emit(value ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
         }
 
-        private static void EmitSuperShort(Int32 value, YaleIlGenerator ilGenerator)
+        private static void EmitSuperShort(int value, YaleIlGenerator ilGenerator)
         {
             var ldcOpcode = default(OpCode);
 

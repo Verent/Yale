@@ -103,7 +103,7 @@ namespace Yale.Expression.Elements.Base
 
         protected void ThrowOperandTypeMismatch(object operation, Type leftType, Type rightType)
         {
-            ThrowCompileException(CompileErrorResourceKeys.OperationNotDefinedForTypes, CompileExceptionReason.TypeMismatch, operation, leftType.Name, rightType.Name);
+            ThrowCompileException(CompileErrors.OperationNotDefinedForTypes, CompileExceptionReason.TypeMismatch, operation, leftType.Name, rightType.Name);
         }
 
         protected abstract Type GetResultType(Type leftType, Type rightType);

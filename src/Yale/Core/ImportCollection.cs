@@ -88,7 +88,7 @@ namespace Yale.Core
                 currentImport = currentImport.FindImport(ns);
                 if (currentImport == null)
                 {
-                    break; // TODO: might not be correct. Was : Exit For
+                    break;
                 }
             }
 
@@ -132,7 +132,7 @@ namespace Yale.Core
 
             if (methodInfo == null)
             {
-                var msg = Utility.GetGeneralErrorMessage(GeneralErrorResourceKeys.CouldNotFindPublicStaticMethodOnType, methodName, type.Name);
+                var msg = string.Format(GeneralErrors.CouldNotFindPublicStaticMethodOnType, methodName, type.Name);
                 throw new ArgumentException(msg);
             }
 
@@ -148,8 +148,7 @@ namespace Yale.Core
 
             if (methodInfo.IsStatic == false | methodInfo.IsPublic == false)
             {
-                var msg = Utility.GetGeneralErrorMessage(GeneralErrorResourceKeys.OnlyPublicStaticMethodsCanBeImported);
-                throw new ArgumentException(msg);
+                throw new ArgumentException(GeneralErrors.OnlyPublicStaticMethodsCanBeImported);
             }
 
             var import = GetImport(@namespace);

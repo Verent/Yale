@@ -30,7 +30,7 @@ namespace Yale.Expression
 
         internal T Evaluate()
         {
-            return Evaluator(_context.Owner, _context, _context.Values);
+            return Evaluator(_context.Owner, _context, _context.Variables);
         }
     }
 }

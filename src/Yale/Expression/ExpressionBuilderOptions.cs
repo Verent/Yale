@@ -51,7 +51,7 @@ namespace Yale.Expression
 
             if (isPublic == false)
             {
-                var msg = Utility.GetGeneralErrorMessage(GeneralErrorResourceKeys.TypeNotAccessibleToExpression, t.Name);
+                var msg = string.Format(GeneralErrors.TypeNotAccessibleToExpression, t.Name);
                 throw new ArgumentException(msg);
             }
         }

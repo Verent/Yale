@@ -52,7 +52,7 @@ namespace Yale.Expression.Elements.MemberElements
             }
 
             // No methods with this name exist; try to bind to an on-demand function
-            //_onDemandFunctionReturnType = Context.Values.ResolveOnDemandFunction(Name, argTypes);
+            //_onDemandFunctionReturnType = Context.Variables.ResolveOnDemandFunction(Name, argTypes);
             //if (_onDemandFunctionReturnType == null)
             //{
                 
@@ -65,11 +65,11 @@ namespace Yale.Expression.Elements.MemberElements
         {
             if (previous == null)
             {
-                ThrowCompileException(CompileErrorResourceKeys.UndefinedFunction, CompileExceptionReason.UndefinedName, MemberName, _arguments);
+                ThrowCompileException(CompileErrors.UndefinedFunction, CompileExceptionReason.UndefinedName, MemberName, _arguments);
             }
             else
             {
-                ThrowCompileException(CompileErrorResourceKeys.UndefinedFunctionOnType, CompileExceptionReason.UndefinedName, MemberName, _arguments, previous.TargetType.Name);
+                ThrowCompileException(CompileErrors.UndefinedFunctionOnType, CompileExceptionReason.UndefinedName, MemberName, _arguments, previous.TargetType.Name);
             }
         }
 
@@ -77,17 +77,17 @@ namespace Yale.Expression.Elements.MemberElements
         {
             if (previous == null)
             {
-                ThrowCompileException(CompileErrorResourceKeys.NoAccessibleMatches, CompileExceptionReason.AccessDenied, MemberName, _arguments);
+                ThrowCompileException(CompileErrors.NoAccessibleMatches, CompileExceptionReason.AccessDenied, MemberName, _arguments);
             }
             else
             {
-                ThrowCompileException(CompileErrorResourceKeys.NoAccessibleMatchesOnType, CompileExceptionReason.AccessDenied, MemberName, _arguments, previous.TargetType.Name);
+                ThrowCompileException(CompileErrors.NoAccessibleMatchesOnType, CompileExceptionReason.AccessDenied, MemberName, _arguments, previous.TargetType.Name);
             }
         }
 
         private void ThrowAmbiguousMethodCallException()
         {
-            ThrowCompileException(CompileErrorResourceKeys.AmbiguousCallOfFunction, CompileExceptionReason.AmbiguousMatch, MemberName, _arguments);
+            ThrowCompileException(CompileErrors.AmbiguousCallOfFunction, CompileExceptionReason.AmbiguousMatch, MemberName, _arguments);
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace Yale.Expression.Elements.MemberElements
             // Any function reference in an expression must return a value
             if (ReferenceEquals(Method.ReturnType, typeof(void)))
             {
-                ThrowCompileException(CompileErrorResourceKeys.FunctionHasNoReturnValue, CompileExceptionReason.FunctionHasNoReturnValue, MemberName);
+                ThrowCompileException(CompileErrors.FunctionHasNoReturnValue, CompileExceptionReason.FunctionHasNoReturnValue, MemberName);
             }
         }
 

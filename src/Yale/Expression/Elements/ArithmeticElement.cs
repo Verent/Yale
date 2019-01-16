@@ -64,8 +64,6 @@ namespace Yale.Expression.Elements
 
         private Type GetPowerResultType(Type leftType, Type rightType, Type binaryResultType)
         {
-            //Todo: Figure out what this is.
-
             if (IsOptimizablePower)
             {
                 return leftType;
@@ -88,7 +86,6 @@ namespace Yale.Expression.Elements
 
         /// <summary>
         /// Returns the correct name used to generate IL operations
-        /// Todo: Verify comment
         /// </summary>
         /// <param name="operation"></param>
         /// <returns></returns>

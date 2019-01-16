@@ -8,13 +8,13 @@ namespace Yale.Expression.Elements.Literals
 {
     internal class TimeSpanLiteralElement : LiteralElement
     {
-        private TimeSpan _myValue;
+        private readonly TimeSpan _value;
 
         public TimeSpanLiteralElement(string image)
         {
-            if (TimeSpan.TryParse(image, out _myValue) == false)
+            if (TimeSpan.TryParse(image, out _value) == false)
             {
-                ThrowCompileException(CompileErrorResourceKeys.CannotParseType, CompileExceptionReason.InvalidFormat, typeof(TimeSpan).Name);
+                ThrowCompileException(CompileErrors.CannotParseType, CompileExceptionReason.InvalidFormat, typeof(TimeSpan).Name);
             }
         }
 
@@ -24,7 +24,7 @@ namespace Yale.Expression.Elements.Literals
 
             Utility.EmitLoadLocalAddress(ilGenerator, index);
 
-            EmitLoad(_myValue.Ticks, ilGenerator);
+            EmitLoad(_value.Ticks, ilGenerator);
 
             var constructorInfo = typeof(TimeSpan).GetConstructor(new[] { typeof(Int64) });
 

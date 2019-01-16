@@ -90,7 +90,7 @@ namespace Yale.Expression.Elements.MemberElements
 
             if (elements.Count == 0)
             {
-                ThrowCompileException(CompileErrorResourceKeys.NamespaceCannotBeUsedAsType, CompileExceptionReason.TypeMismatch, currentImport.Name);
+                ThrowCompileException(CompileErrors.NamespaceCannotBeUsedAsType, CompileExceptionReason.TypeMismatch, currentImport.Name);
             }
         }
 

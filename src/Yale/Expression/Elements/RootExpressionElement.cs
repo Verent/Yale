@@ -40,7 +40,7 @@ namespace Yale.Expression.Elements
         {
             if (ImplicitConverter.EmitImplicitConvert(_child.ResultType, _resultType, null) == false)
             {
-                ThrowCompileException(CompileErrorResourceKeys.CannotConvertTypeToExpressionResult, CompileExceptionReason.TypeMismatch, _child.ResultType.Name, _resultType.Name);
+                ThrowCompileException(CompileErrors.CannotConvertTypeToExpressionResult, CompileExceptionReason.TypeMismatch, _child.ResultType.Name, _resultType.Name);
             }
         }
 

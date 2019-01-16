@@ -21,7 +21,7 @@ namespace Yale.Engine
         /// <summary>
         /// Variables available in expressions
         /// </summary>
-        private ValueCollection Values => Builder.Values;
+        private VariableCollection Variables => Builder.Variables;
 
         /// <summary>
         /// Expression results
@@ -60,11 +60,11 @@ namespace Yale.Engine
         {
             if (ShouldRecalculate)
             {
-                Values.PropertyChanged += RecalculateValues;
+                Variables.PropertyChanged += RecalculateValues;
             }
             else
             {
-                Values.PropertyChanged += TagResultsAsDirty;
+                Variables.PropertyChanged += TagResultsAsDirty;
             }
         }
 
@@ -128,7 +128,7 @@ namespace Yale.Engine
         public void SetValue(string key, object value)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
-            Values[key] = value;
+            Variables[key] = value;
         }
 
         /// <summary>
@@ -138,7 +138,11 @@ namespace Yale.Engine
         public object GetValue(string key)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
-            return Values[key];
+            if (Variables.TryGetValue(key, out var value))
+            {
+                return value;
+            }
+            throw new ArgumentOutOfRangeException(key);
         }
 
         /// <summary>
@@ -151,7 +155,7 @@ namespace Yale.Engine
             return (T)GetValue(key);
         }
 
-        public int ValueCount => Values.Count;
+        public int ValueCount => Variables.Count;
 
         public void SetExpression(string key, string expression)
         {
@@ -259,7 +263,7 @@ namespace Yale.Engine
         /// <summary>
         /// Get the object type of an expression result
         /// </summary>
-        /// <param name="expressionKey"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
         public Type ResultType(string key)
         {
@@ -285,13 +289,13 @@ namespace Yale.Engine
         }
 
         /// <summary>
-        /// Removes all expressions and values
+        /// Removes all expressions and variables
         /// </summary>
         public void Clear()
         {
             _nameNodeMap.Clear();
             _dependencies.Clear();
-            Values.Clear();
+            Variables.Clear();
         }
 
         public bool ContainsExpression(string key) => _nameNodeMap.ContainsKey(key);
@@ -305,7 +309,7 @@ namespace Yale.Engine
         internal void AddDependency(string expressionKey, string dependsOn)
         {
             if (ContainsExpression(dependsOn) == false &&
-                Values.ContainsKey(dependsOn) == false) throw new InvalidOperationException("Can not depend an an expression that is not added to the instance");
+                Variables.ContainsKey(dependsOn) == false) throw new InvalidOperationException("Can not depend an an expression that is not added to the instance");
 
             _dependencies.AddDependency(expressionKey, dependsOn);
         }
