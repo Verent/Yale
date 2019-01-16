@@ -3,8 +3,7 @@
     public class ComputeInstanceOptions
     {
         /// <summary>
-        /// Results that are retrieved are always using that latest values in
-        /// precedents
+        /// Results are recalculated when a preceding value is updated
         /// </summary>
         public bool AutoRecalculate { get; set; } = true;
 

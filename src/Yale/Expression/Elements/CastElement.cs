@@ -21,7 +21,7 @@ namespace Yale.Expression.Elements
 
             if (_destType == null)
             {
-                ThrowCompileException(CompileErrorResourceKeys.CouldNotResolveType, CompileExceptionReason.UndefinedName, GetDestinationTypeString(destintaionTypeParts, isArray));
+                ThrowCompileException(CompileErrors.CouldNotResolveType, CompileExceptionReason.UndefinedName, GetDestinationTypeString(destintaionTypeParts, isArray));
             }
 
             if (isArray)
@@ -246,7 +246,7 @@ namespace Yale.Expression.Elements
 
         private void ThrowInvalidCastException()
         {
-            ThrowCompileException(CompileErrorResourceKeys.CannotConvertType, CompileExceptionReason.InvalidExplicitCast, _castExpression.ResultType.Name, _destType.Name);
+            ThrowCompileException(CompileErrors.CannotConvertType, CompileExceptionReason.InvalidExplicitCast, _castExpression.ResultType.Name, _destType.Name);
         }
 
         private static bool IsCastableNumericType(Type t)
@@ -288,7 +288,6 @@ namespace Yale.Expression.Elements
             }
             else if (ImplicitConverter.EmitImplicitConvert(sourceType, destType, ilg))
             {
-                //Todo: Clean up here... to many ifs!
                 // Implicit numeric cast; do nothing
                 return;
             }

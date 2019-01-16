@@ -7,7 +7,7 @@ Like other expression frameworks Yale evaluates string expressions like `sqrt(a^
 Yale is based on [Flee](https://github.com/mparlak/Flee) (Fast Lightweight Expression Evaluator) with the intent to modernize and simplify the source code and usage.
 
 ## What is the state of Yale?
-Yale is in alpha and breaking changes should be expected. However most of the current work is focused on stabilization and bug-fixes. It should be safe for small applications and demos. Any bugs reported will be prioritized and feedback would be appreciated.
+Yale is stabalizing. Yale is feature complete for the current major release, all work now is focused on stabilizing, performance improvements, better test coverage and bug-fixes. Any bugs reported will be prioritized and feedback would be appreciated.
 
 For more information read the [wiki](../../wiki)
 

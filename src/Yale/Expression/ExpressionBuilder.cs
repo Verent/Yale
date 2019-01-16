@@ -22,7 +22,7 @@ namespace Yale.Expression
 
         private string DynamicMethodName { get; } = "DynamicMethod";
 
-        internal ValueCollection Values { get; } = new ValueCollection();
+        internal VariableCollection Variables { get; } = new VariableCollection();
 
         public ImportCollection Imports { get; }
 
@@ -58,7 +58,7 @@ namespace Yale.Expression
 
             var context = new ExpressionContext(_builderOptions, expressionName, owner)
             {
-                Values = Values,
+                Variables = Variables,
                 Imports = Imports,
                 ComputeInstance = ComputeInstance,
             };
@@ -101,7 +101,7 @@ namespace Yale.Expression
             Type[] parameterTypes = {
                 typeof(object),
                 typeof(ExpressionContext),
-                typeof(ValueCollection)
+                typeof(VariableCollection)
             };
             return new DynamicMethod(DynamicMethodName, typeof(T), parameterTypes, ownerType);
         }

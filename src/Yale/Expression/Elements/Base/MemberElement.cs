@@ -24,7 +24,7 @@ namespace Yale.Expression.Elements.Base
         protected ExpressionContext Context;
         protected ImportBase Import;
         public ImportCollection Imports => Context.Imports;
-        public ValueCollection Values => Context.Values;
+        public VariableCollection Variables => Context.Variables;
 
         public const BindingFlags BindFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 
@@ -59,9 +59,6 @@ namespace Yale.Expression.Elements.Base
             Import = import;
         }
 
-        /// <summary>
-        /// Todo: What does resolve internal do?
-        /// </summary>
         protected abstract void ResolveInternal();
 
         public abstract bool IsStatic { get; }
@@ -76,11 +73,11 @@ namespace Yale.Expression.Elements.Base
 
             if (IsStatic && SupportsStatic == false)
             {
-                ThrowCompileException(CompileErrorResourceKeys.StaticMemberCannotBeAccessedWithInstanceReference, CompileExceptionReason.TypeMismatch, MemberName);
+                ThrowCompileException(CompileErrors.StaticMemberCannotBeAccessedWithInstanceReference, CompileExceptionReason.TypeMismatch, MemberName);
             }
             else if (IsStatic == false && SupportsInstance == false)
             {
-                ThrowCompileException(CompileErrorResourceKeys.ReferenceToNonSharedMemberRequiresObjectReference, CompileExceptionReason.TypeMismatch, MemberName);
+                ThrowCompileException(CompileErrors.ReferenceToNonSharedMemberRequiresObjectReference, CompileExceptionReason.TypeMismatch, MemberName);
             }
         }
 
@@ -128,6 +125,7 @@ namespace Yale.Expression.Elements.Base
         protected static bool IsGetTypeMethod(MethodInfo mi)
         {
             var miGetType = typeof(object).GetMethod("gettype", BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+            // ReSharper disable once PossibleNullReferenceException
             return mi.MethodHandle.Equals(miGetType.MethodHandle);
         }
 

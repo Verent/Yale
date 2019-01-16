@@ -26,7 +26,7 @@ namespace Yale.Expression
 
         public ImportCollection Imports { get; set; }
 
-        public ValueCollection Values { get; set; }
+        public VariableCollection Variables { get; set; }
 
         public ComputeInstance ComputeInstance { get; set; }
 

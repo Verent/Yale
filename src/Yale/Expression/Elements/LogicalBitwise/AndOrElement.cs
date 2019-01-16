@@ -79,7 +79,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
             var ilgTemp = CreateTempIlGenerator(ilg);
 
             // We have to make sure that the label count for the temp YaleIlGenerator matches our real YaleIlGenerator
-            Utility.SyncFleeILGeneratorLabels(ilg, ilgTemp);
+            Utility.SyncFleeIlGeneratorLabels(ilg, ilgTemp);
             // Do the fake emit
             EmitLogical(ilgTemp, info, context);
 
@@ -88,7 +88,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
 
             info.Branches.ComputeBranches();
 
-            Utility.SyncFleeILGeneratorLabels(ilgTemp, ilg);
+            Utility.SyncFleeIlGeneratorLabels(ilgTemp, ilg);
 
             // Do the real emit
             EmitLogical(ilg, info, context);

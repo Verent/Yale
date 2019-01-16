@@ -36,8 +36,7 @@ namespace Yale.Core
 
             if (importNamespace.Length == 0)
             {
-                var msg = Utility.GetGeneralErrorMessage(GeneralErrorResourceKeys.InvalidNamespaceName);
-                throw new ArgumentException(msg);
+                throw new ArgumentException(GeneralErrors.InvalidNamespaceName);
             }
 
             _namespace = importNamespace;

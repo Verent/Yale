@@ -1,35 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using System.Reflection.Emit;
-using Yale.Resources;
 // ReSharper disable MethodTooLong
 
 namespace Yale.Parser.Internal
 {
     internal static class Utility
     {
-        public static void AssertNotNull(object parameter, string paramName)
-        {
-            if (parameter == null)
-            {
-                throw new ArgumentNullException(paramName);
-            }
-        }
-
-        public static void AssertNotNullOrWhitespace(string parameter, string paramName)
-        {
-            if (string.IsNullOrWhiteSpace(parameter) == false) return;
-
-            if (parameter == null)
-            {
-                throw new ArgumentNullException(paramName);
-            }
-            throw new ArgumentException($"{paramName} can not be an empty string");
-        }
-
-
         public static void EmitStoreLocal(YaleIlGenerator ilg, int index)
         {
             if (index >= 0 & index <= 3)
@@ -210,7 +190,7 @@ namespace Yale.Parser.Internal
             }
         }
 
-        public static void SyncFleeILGeneratorLabels(YaleIlGenerator source, YaleIlGenerator target)
+        public static void SyncFleeIlGeneratorLabels(YaleIlGenerator source, YaleIlGenerator target)
         {
             while (source.LabelCount != target.LabelCount)
             {
@@ -258,11 +238,12 @@ namespace Yale.Parser.Internal
         public static MethodInfo GetSimpleOverloadedOperator(string name, Type sourceType, Type destinationType)
         {
 
-            //Todo: read up on FindMembers filter parameter. destType?
-            var data = new Hashtable();
-            data.Add("Name", string.Concat("op_", name));
-            data.Add("sourceType", sourceType);
-            data.Add("destType", destinationType);
+            var data = new Hashtable
+            {
+                {"Name", string.Concat("op_", name)},
+                { "sourceType", sourceType},
+                { "destType", destinationType}
+            };
 
 
             const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
@@ -313,32 +294,26 @@ namespace Yale.Parser.Internal
                 return false;
             }
 
-            ParameterInfo[] parameters = methodInfo.GetParameters();
-            bool argumentMatch = parameters.Length > 0 && ReferenceEquals(parameters[0].ParameterType, (Type)data["sourceType"]);
+            var parameters = methodInfo.GetParameters();
+            var argumentMatch = parameters.Length > 0 && ReferenceEquals(parameters[0].ParameterType, (Type)data["sourceType"]);
 
             return argumentMatch;
         }
 
 
-        //Todo: cleanup
         public static MethodInfo GetOverloadedOperator(string name, Type sourceType, Binder binder, params Type[] argumentTypes)
         {
             name = string.Concat("op_", name);
-            MethodInfo mi = sourceType.GetMethod(name, BindingFlags.Public | BindingFlags.Static, binder, CallingConventions.Any, argumentTypes, null);
+            var mi = sourceType.GetMethod(name, BindingFlags.Public | BindingFlags.Static, binder, CallingConventions.Any, argumentTypes, null);
 
-            if (mi == null || mi.IsSpecialName == false)
-            {
-                return null;
-            }
-            else
-            {
-                return mi;
-            }
+            return mi == null || mi.IsSpecialName == false ? null : mi;
+            
         }
 
-        public static int GetILGeneratorLength(ILGenerator ilg)
+        public static int GetIlGeneratorLength(ILGenerator ilg)
         {
-            FieldInfo fi = typeof(ILGenerator).GetField("m_length", BindingFlags.Instance | BindingFlags.NonPublic);
+            var fi = typeof(ILGenerator).GetField("m_length", BindingFlags.Instance | BindingFlags.NonPublic);
+            // ReSharper disable once PossibleNullReferenceException
             return (int)fi.GetValue(ilg);
         }
 
@@ -349,20 +324,9 @@ namespace Yale.Parser.Internal
 
         public static string FormatList(string[] items)
         {
-            string separator = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ";
+            var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ";
             return string.Join(separator, items);
         }
 
-        public static string GetGeneralErrorMessage(string key, params object[] args)
-        {
-            string msg = FleeResourceManager.Instance.GetGeneralErrorString(key);
-            return string.Format(msg, args);
-        }
-
-        public static string GetCompileErrorMessage(string key, params object[] args)
-        {
-            string msg = FleeResourceManager.Instance.GetCompileErrorString(key);
-            return string.Format(msg, args);
-        }
     }
 }
