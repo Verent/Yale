@@ -7,9 +7,9 @@ namespace Yale.InteractiveConsole
     internal class Program
     {
         private readonly ComputeInstance _instance = new ComputeInstance();
-        private Regex isValue = new Regex("^[a-zA-Z]+[=][\\w]+$");
-        private Regex isExpression = new Regex("[a-zA-Z]+[:].+$");
-        private Regex isEvaluate = new Regex("[a-zA-Z]+");
+        private readonly Regex isValue = new Regex("^[a-zA-Z]+[=][\\w]+$");
+        private readonly Regex isExpression = new Regex("[a-zA-Z]+[:].+$");
+        private readonly Regex isEvaluate = new Regex("[a-zA-Z]+");
 
         private void Run()
         {

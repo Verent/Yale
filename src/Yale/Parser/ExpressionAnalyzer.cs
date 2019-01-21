@@ -1,5 +1,4 @@
 ﻿using PerCederberg.Grammatica.Runtime;
-using System.Diagnostics;
 
 // ReSharper disable CyclomaticComplexity
 // ReSharper disable MethodTooLong
@@ -21,8 +20,6 @@ namespace Yale.Parser
         // ReSharper disable once MethodTooLong
         public override void Enter(Node node)
         {
-            Debug.WriteLine($"ExpressionAnalyzer enter: {node.Id}");
-
             switch ((Token)node.Id)
             {
                 case Token.ADD:

@@ -26,6 +26,8 @@ namespace Yale.Engine
         /// </summary>
         public VariableCollection Variables => Builder.Variables;
 
+        public IEnumerable<string> ExpressionKeys => _nameNodeMap.Keys;
+
         /// <summary>
         /// Expression results
         /// </summary>
