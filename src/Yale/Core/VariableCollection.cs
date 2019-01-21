@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,7 +8,7 @@ using Yale.Core.Interface;
 
 namespace Yale.Core
 {
-    public sealed class VariableCollection : INotifyPropertyChanged
+    public sealed class VariableCollection : INotifyPropertyChanged, IEnumerable<KeyValuePair<string, object>>
     {
         private readonly IDictionary<string, IVariable> _values = new Dictionary<string, IVariable>();
 
@@ -105,6 +106,16 @@ namespace Yale.Core
         public T GetVariableValueInternal<T>(string name)
         {
             return (T)_values[name].ValueAsObject;
+        }
+
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        {
+            return new VariableEnumerator(_values);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
