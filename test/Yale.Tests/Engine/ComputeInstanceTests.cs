@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using Yale.Engine;
 using Yale.Expression;
@@ -20,14 +19,12 @@ namespace Yale.Tests.Engine
             _instance = new ComputeInstance();
         }
 
-        
-
         [TestMethod]
         public void AddExpression_WithAValue_ReturnsValue()
         {
             const int a = 1;
-            _instance.SetValue("a", a);
-            var aResult = _instance.GetValue<int>("a");
+            _instance.Variables.Add("a", a);
+            var aResult = _instance.Variables.Get<int>("a");
             Assert.AreEqual(a, aResult);
 
             _instance.AddExpression("ea", "a");
@@ -74,7 +71,7 @@ namespace Yale.Tests.Engine
         [TestMethod]
         public void Generic_GetResult_Valid()
         {
-            _instance.SetValue("a", 10);
+            _instance.Variables.Add("a", 10);
             _instance.AddExpression<int>("b", "a");
             var result = _instance.GetResult<int>("b");
             Assert.AreEqual(typeof(int), result.GetType());
@@ -84,7 +81,7 @@ namespace Yale.Tests.Engine
         [TestMethod]
         public void GetResult_Valid()
         {
-            _instance.SetValue("a", 10);
+            _instance.Variables.Add("a", 10);
             _instance.AddExpression("b", "a");
             var result = _instance.GetResult("b");
             Assert.AreEqual(10, result);
@@ -152,11 +149,11 @@ namespace Yale.Tests.Engine
             _instance.AddExpression("b", "2");
             _instance.AddExpression("c", "2");
             Assert.AreEqual(3, _instance.ExpressionCount);
-            _instance.SetValue("va", 22);
-            _instance.SetValue("vb", 22);
-            Assert.AreEqual(2, _instance.ValueCount);
+            _instance.Variables.Add("va", 22);
+            _instance.Variables.Add("vb", 22);
+            Assert.AreEqual(2, _instance.Variables.Count);
             _instance.Clear();
-            Assert.AreEqual(0, _instance.ValueCount);
+            Assert.AreEqual(0, _instance.Variables.Count);
             Assert.AreEqual(0, _instance.ExpressionCount);
         }
 

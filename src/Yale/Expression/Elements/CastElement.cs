@@ -54,7 +54,7 @@ namespace Yale.Expression.Elements
         private static Type GetDestType(string[] destTypeParts, ExpressionContext context)
         {
             Type type = null;
-            
+
             // Try to find a builtin type with the name
             if (destTypeParts.Length == 1)
             {

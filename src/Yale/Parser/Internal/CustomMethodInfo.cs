@@ -10,7 +10,6 @@ namespace Yale.Parser.Internal
     /// </summary>
     internal class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<CustomMethodInfo>
     {
-
         /// <summary>
         /// The rating of how close the method matches the given arguments (0 is best)
         /// </summary>

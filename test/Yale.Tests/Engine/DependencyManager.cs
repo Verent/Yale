@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Threading.Tasks;
 using Yale.Engine;
 
 namespace Yale.Tests.Engine
@@ -7,7 +7,7 @@ namespace Yale.Tests.Engine
     [TestClass]
     public class DependencyManager
     {
-        private readonly ComputeInstance[] _instances = 
+        private readonly ComputeInstance[] _instances =
         {
             new ComputeInstance(new ComputeInstanceOptions
             {
@@ -26,8 +26,8 @@ namespace Yale.Tests.Engine
         {
             var instance = new ComputeInstance();
 
-            instance.SetValue("a", 10);
-            instance.SetValue("b", 5);
+            instance.Variables.Add("a", 10);
+            instance.Variables.Add("b", 5);
 
             instance.AddExpression<int>("c", "a");
             instance.AddExpression<int>("d", "a + b");
@@ -44,9 +44,7 @@ namespace Yale.Tests.Engine
 
             result = instance.GetResult("f");
             Assert.AreEqual(31, result);
-
         }
-
 
         [TestMethod]
         public void ComplexDependency()
@@ -66,8 +64,8 @@ namespace Yale.Tests.Engine
         {
             instance.Clear();
 
-            instance.SetValue("a", 10);
-            instance.SetValue("b", 5);
+            instance.Variables["a"] = 10;
+            instance.Variables["b"] = 5;
 
             instance.AddExpression("c", "a");
             instance.AddExpression("d", "a + b");
@@ -77,43 +75,41 @@ namespace Yale.Tests.Engine
             var result = instance.GetResult("f");
             Assert.AreEqual(26, result);
 
-            instance.SetValue("b", 1);
+            instance.Variables["b"] = 1;
 
             result = instance.GetResult("f");
             Assert.AreEqual(22, result);
 
-            instance.SetValue("a", 5);
+            instance.Variables["a"] = 5;
 
             result = instance.GetResult("f");
             Assert.AreEqual(12, result);
         }
 
-
         public void Test2(ComputeInstance instance)
         {
             instance.Clear();
 
-            instance.SetValue("a", 2);
-            instance.SetValue("b", 5);
+            instance.Variables.Add("a", 2);
+            instance.Variables.Add("b", 5);
 
             instance.AddExpression<int>("c", "a + b");      // 7    9   12
             instance.AddExpression<int>("d", "b");          // 5    7   7
             instance.AddExpression<int>("e", "c + b");      // 12   16  19
             instance.AddExpression<int>("f", "a + e");      // 14   18  24
-            instance.AddExpression<int>("g", "c + e");      // 19   25 
+            instance.AddExpression<int>("g", "c + e");      // 19   25
             instance.AddExpression<int>("h", "e + d");      // 17   23
             instance.AddExpression<int>("i", "g + f + h");  // 50   66
-
 
             var result = instance.GetResult("i");
             Assert.AreEqual(50, result);
 
-            instance.SetValue("b", 7);
+            instance.Variables["b"] = 7;
 
             result = instance.GetResult("i");
             Assert.AreEqual(66, result);
 
-            instance.SetValue("a", 5);
+            instance.Variables["a"] = 5;
 
             result = instance.GetResult("f");
             Assert.AreEqual(24, result);
@@ -123,12 +119,12 @@ namespace Yale.Tests.Engine
         {
             instance.Clear();
 
-            instance.SetValue("a", 3);
+            instance.Variables.Add("a", 3);
             instance.AddExpression("square", "a^2");
             var result = instance.GetResult("square");
             Assert.AreEqual(9, result);
 
-            instance.SetValue("a", 2);
+            instance.Variables["a"] = 2;
             result = instance.GetResult("square");
             Assert.AreEqual(4, result);
 
@@ -136,15 +132,12 @@ namespace Yale.Tests.Engine
             result = instance.GetResult("ssquare");
             Assert.AreEqual(16, result);
 
-            instance.SetValue("a", 7);
+            instance.Variables["a"] = 7;
 
             result = instance.GetResult("square");
             Assert.AreEqual(49, result);
             result = instance.GetResult("ssquare");
             Assert.AreEqual(2401, result);
-
         }
-
-
     }
 }

@@ -16,7 +16,7 @@ namespace Yale.Expression.Elements.MemberElements
         private readonly ArgumentList _arguments;
         private readonly ICollection<MethodInfo> _methods;
         private CustomMethodInfo _targetMethodInfo;
-        
+
         public FunctionCallElement(string name, ArgumentList arguments) : base(name)
         {
             _arguments = arguments;
@@ -55,7 +55,6 @@ namespace Yale.Expression.Elements.MemberElements
             //_onDemandFunctionReturnType = Context.Variables.ResolveOnDemandFunction(Name, argTypes);
             //if (_onDemandFunctionReturnType == null)
             //{
-                
             //}
 
             ThrowFunctionNotFoundException(Previous);

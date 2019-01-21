@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using Yale.Core.Interface;
-using Yale.Parser.Internal;
 using Yale.Resources;
 
 namespace Yale.Expression
@@ -35,7 +34,7 @@ namespace Yale.Expression
             }
         }
 
-        //Todo:Verify 
+        //Todo:Verify
         private void AssertNestedTypeIsAccessible(Type type)
         {
             while (type != null)

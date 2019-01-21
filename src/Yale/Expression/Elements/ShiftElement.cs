@@ -10,7 +10,6 @@ namespace Yale.Expression.Elements
     {
         private ShiftOperation _operation;
 
-
         protected override Type GetResultType(Type leftType, Type rightType)
         {
             // Right argument (shift count) must be convertible to int32
@@ -35,12 +34,16 @@ namespace Yale.Expression.Elements
                 case TypeCode.UInt16:
                 case TypeCode.Int32:
                     return typeof(Int32);
+
                 case TypeCode.UInt32:
                     return typeof(UInt32);
+
                 case TypeCode.Int64:
                     return typeof(Int64);
+
                 case TypeCode.UInt64:
                     return typeof(UInt64);
+
                 default:
                     Debug.Assert(false, "unknown left shift operand");
                     return null;
@@ -75,10 +78,12 @@ namespace Yale.Expression.Elements
                 case TypeCode.UInt32:
                     ilg.Emit(OpCodes.Ldc_I4_S, Convert.ToSByte(0x1f));
                     break;
+
                 case TypeCode.Int64:
                 case TypeCode.UInt64:
                     ilg.Emit(OpCodes.Ldc_I4_S, Convert.ToSByte(0x3f));
                     break;
+
                 default:
                     Debug.Assert(false, "unknown left shift operand");
                     break;
@@ -103,11 +108,13 @@ namespace Yale.Expression.Elements
                     // Signed operand, emit a left shift or arithmetic right shift
                     opCode = _operation == ShiftOperation.LeftShift ? OpCodes.Shl : OpCodes.Shr;
                     break;
+
                 case TypeCode.UInt32:
                 case TypeCode.UInt64:
                     // Unsigned operand, emit left shift or logical right shift
                     opCode = _operation == ShiftOperation.LeftShift ? OpCodes.Shl : OpCodes.Shr_Un;
                     break;
+
                 default:
                     Debug.Assert(false, "unknown left shift operand");
                     break;

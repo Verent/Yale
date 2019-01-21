@@ -7,7 +7,7 @@ using Yale.Core.Interface;
 
 namespace Yale.Core
 {
-    internal sealed class VariableCollection : INotifyPropertyChanged
+    public sealed class VariableCollection : INotifyPropertyChanged
     {
         private readonly IDictionary<string, IVariable> _values = new Dictionary<string, IVariable>();
 
@@ -18,9 +18,33 @@ namespace Yale.Core
 
         public int Count => _values.Keys.Count;
 
+        /// <summary>
+        /// Adds a value to this compute instance. This can be referenced in expressions.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         public void Add(string key, object value)
         {
             _values.Add(key, new Variable(value));
+        }
+
+        /// <summary>
+        /// Returns the current value registered to a variable in this instance.
+        /// </summary>
+        /// <param name="key"></param>
+        /// 
+        public object Get(string key)
+        {
+            return _values[key].ValueAsObject;
+        }
+
+        /// <summary>
+        /// Returns the current value registered to a variable in this instance.
+        /// </summary>
+        /// <param name="key"></param>
+        public T Get<T>(string key)
+        {
+            return (T)Get(key);
         }
 
         public bool ContainsKey(string key)

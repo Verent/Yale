@@ -23,7 +23,7 @@ namespace Yale.Expression.Elements.MemberElements
 
         //A value from the value collection
         private Type _valueType;
-        
+
         //Another expression
         private Type _calcEngineReferenceType;
 
@@ -150,7 +150,6 @@ namespace Yale.Expression.Elements.MemberElements
         {
             ilg.Emit(OpCodes.Ldarg_1);
             Context.ComputeInstance.EmitLoad(MemberName, ilg);
-
         }
 
         private void EmitFirst(YaleIlGenerator ilg)
@@ -171,7 +170,6 @@ namespace Yale.Expression.Elements.MemberElements
             }
         }
 
-
         /// <summary>
         /// Emits il that loads a variable from the Variables collection
         /// </summary>
@@ -182,7 +180,6 @@ namespace Yale.Expression.Elements.MemberElements
             ilg.Emit(OpCodes.Ldstr, MemberName);
             EmitMethodCall(methodInfo, ilg);
         }
-
 
         private void EmitFieldLoad(FieldInfo fi, YaleIlGenerator ilg, ExpressionContext context)
         {

@@ -86,16 +86,22 @@ namespace Yale.Expression.Elements
             {
                 case LogicalCompareOperation.Equal:
                     return "Equality";
+
                 case LogicalCompareOperation.NotEqual:
                     return "Inequality";
+
                 case LogicalCompareOperation.GreaterThan:
                     return "GreaterThan";
+
                 case LogicalCompareOperation.LessThan:
                     return "LessThan";
+
                 case LogicalCompareOperation.GreaterThanOrEqual:
                     return "GreaterThanOrEqual";
+
                 case LogicalCompareOperation.LessThanOrEqual:
                     return "LessThanOrEqual";
+
                 default:
                     Debug.Assert(false, "unknown compare type");
                     return null;
@@ -201,27 +207,33 @@ namespace Yale.Expression.Elements
                 case LogicalCompareOperation.Equal:
                     ilg.Emit(OpCodes.Ceq);
                     break;
+
                 case LogicalCompareOperation.LessThan:
                     ilg.Emit(ltOpcode);
                     break;
+
                 case LogicalCompareOperation.GreaterThan:
                     ilg.Emit(gtOpcode);
                     break;
+
                 case LogicalCompareOperation.NotEqual:
                     ilg.Emit(OpCodes.Ceq);
                     ilg.Emit(OpCodes.Ldc_I4_0);
                     ilg.Emit(OpCodes.Ceq);
                     break;
+
                 case LogicalCompareOperation.LessThanOrEqual:
                     ilg.Emit(gtOpcode);
                     ilg.Emit(OpCodes.Ldc_I4_0);
                     ilg.Emit(OpCodes.Ceq);
                     break;
+
                 case LogicalCompareOperation.GreaterThanOrEqual:
                     ilg.Emit(ltOpcode);
                     ilg.Emit(OpCodes.Ldc_I4_0);
                     ilg.Emit(OpCodes.Ceq);
                     break;
+
                 default:
                     Debug.Fail("Unknown op type");
                     break;

@@ -1,6 +1,5 @@
 ﻿using PerCederberg.Grammatica.Runtime;
 using System;
-using Yale.Parser.Internal;
 using Yale.Resources;
 
 namespace Yale.Expression

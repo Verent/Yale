@@ -16,11 +16,10 @@ namespace Yale.Tests.ExpressionTests
             Assert.AreEqual(100, _instance.GetResult("cast"));
         }
 
-
         [TestMethod]
         public void PowerFloatVariable()
         {
-            _instance.SetValue("a", 4.0);
+            _instance.Variables.Add("a", 4.0);
             _instance.AddExpression("b", "a^2");
 
             Assert.AreEqual(16.0, (double)_instance.GetResult("b"));

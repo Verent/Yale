@@ -142,12 +142,15 @@ namespace Yale.Parser.Internal
             {
                 case OperandType.InlineNone:
                     return 0;
+
                 case OperandType.ShortInlineBrTarget:
                 case OperandType.ShortInlineI:
                 case OperandType.ShortInlineVar:
                     return 1;
+
                 case OperandType.InlineVar:
                     return 2;
+
                 case OperandType.InlineBrTarget:
                 case OperandType.InlineField:
                 case OperandType.InlineI:
@@ -158,9 +161,11 @@ namespace Yale.Parser.Internal
                 case OperandType.InlineType:
                 case OperandType.ShortInlineR:
                     return 4;
+
                 case OperandType.InlineI8:
                 case OperandType.InlineR:
                     return 8;
+
                 default:
                     Debug.Fail("Unknown operand type");
                     break;

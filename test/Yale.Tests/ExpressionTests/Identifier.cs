@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using Yale.Engine;
 using Yale.Expression;
 
@@ -51,16 +51,16 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void Flee_Basic()
         {
-            _instance.SetValue("x", 100);
+            _instance.Variables.Add("x", 100);
             _instance.AddExpression("a", "x * 2");
-            _instance.SetValue("y", 1);
+            _instance.Variables.Add("y", 1);
             _instance.AddExpression("b", "a + y");
             _instance.AddExpression("c", "b * 2");
 
             var result = _instance.GetResult<int>("c");
             Assert.AreEqual(result, (100 * 2 + 1) * 2);
 
-            _instance.SetValue("x", 345);
+            _instance.Variables["x"] = 345;
             result = _instance.GetResult<int>("c");
             Assert.AreEqual((345 * 2 + 1) * 2, result);
         }
@@ -68,7 +68,7 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void Flee_MultipleIdentical_References()
         {
-            _instance.SetValue("x", 100);
+            _instance.Variables.Add("x", 100);
             _instance.AddExpression("a", "x * 2");
             _instance.AddExpression("b", "a + a + a");
             var result = _instance.GetResult<int>("b");
@@ -78,9 +78,9 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void Flee_Complex()
         {
-            _instance.SetValue("x", 100);
+            _instance.Variables.Add("x", 100);
             _instance.AddExpression("a", "x * 2");
-            _instance.SetValue("y", 24);
+            _instance.Variables.Add("y", 24);
             _instance.AddExpression("b", "y * 2");
             _instance.AddExpression("c", "a + b");
             _instance.AddExpression("d", "80");
@@ -93,8 +93,8 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void Flee_Arithmetic()
         {
-            _instance.SetValue("a", 10);
-            _instance.SetValue("b", 20);
+            _instance.Variables.Add("a", 10);
+            _instance.Variables.Add("b", 20);
             _instance.AddExpression("x", "((a * 2) + (b ^ 2)) - (100 % 5)");
 
             var result = _instance.GetResult<int>("x");
@@ -104,7 +104,7 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void Flee_Comparison_Operators()
         {
-            _instance.SetValue("a", 10);
+            _instance.Variables.Add("a", 10);
             _instance.AddExpression("x", "a <> 100");
             var result = _instance.GetResult<bool>("x");
 
@@ -114,13 +114,13 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void Flee_And_Or_Xor_Not_Operators()
         {
-            _instance.SetValue("a", 10);
+            _instance.Variables.Add("a", 10);
             _instance.AddExpression("x", "a > 100");
 
             var result = _instance.GetResult<bool>("x");
             Assert.IsFalse(result);
 
-            _instance.SetValue("b", 100);
+            _instance.Variables.Add("b", 100);
             _instance.SetExpression("x", "b = 100");
 
             result = _instance.GetResult<bool>("x");
@@ -138,12 +138,12 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void Flee_Recalculate_NonSource()
         {
-            _instance.SetValue("x", 10);
+            _instance.Variables.Add("x", 10);
             _instance.AddExpression("a", "x * 2");
-            _instance.SetValue("y", 1);
+            _instance.Variables.Add("y", 1);
             _instance.AddExpression("b", "a + y");
             _instance.AddExpression("c", "b * 2");
-            _instance.SetValue("x", 100);
+            _instance.Variables["x"] = 100;
 
             var result = _instance.GetResult<int>("c");
             Assert.AreEqual((100 * 2 + 1) * 2, result);
@@ -152,12 +152,12 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void Flee_Partial_Recalculate()
         {
-            _instance.SetValue("x", 100);
+            _instance.Variables.Add("x", 100);
             _instance.AddExpression("a", "x * 2");
-            _instance.SetValue("y", 1);
+            _instance.Variables.Add("y", 1);
             _instance.AddExpression("b", "a + y");
             _instance.AddExpression("c", "b * 2");
-            _instance.SetValue("y", 222);
+            _instance.Variables["y"] = 222;
 
             var result = _instance.GetResult<int>("c");
             Assert.AreEqual((100 * 2 + 222) * 2, result);
@@ -166,9 +166,9 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void Self_Reference1()
         {
-            _instance.SetValue("x", 100);
+            _instance.Variables.Add("x", 100);
             _instance.AddExpression("a", "x * 2");
-            _instance.SetValue("y", 1);
+            _instance.Variables.Add("y", 1);
 
             Assert.ThrowsException<ExpressionCompileException>(() => { _instance.AddExpression("b", "a + y + b"); });
         }
@@ -181,7 +181,7 @@ namespace Yale.Tests.ExpressionTests
 
             foreach (var expressionVariable in expressionVariables.Keys)
             {
-                _instance.SetValue(expressionVariable, expressionVariables[expressionVariable]);
+                _instance.Variables.Add(expressionVariable, expressionVariables[expressionVariable]);
             }
 
             _instance.AddExpression("e", expression);
@@ -189,7 +189,7 @@ namespace Yale.Tests.ExpressionTests
 
             Assert.AreEqual(1, result);
 
-            _instance.SetValue("a", 0);
+            _instance.Variables["a"] = 0;
             var result2 = _instance.GetResult("e");
             Assert.AreEqual(0, result2);
         }

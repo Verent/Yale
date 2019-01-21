@@ -12,6 +12,7 @@ namespace Yale.Parser.Internal
         private readonly IList<BranchInfo> _branchInfos;
 
         private readonly IDictionary<object, Label> _keyLabelMap;
+
         public BranchManager()
         {
             _branchInfos = new List<BranchInfo>();

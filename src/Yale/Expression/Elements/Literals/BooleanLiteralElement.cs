@@ -7,6 +7,7 @@ namespace Yale.Expression.Elements.Literals
     internal class BooleanLiteralElement : LiteralElement
     {
         private readonly bool _value;
+
         public BooleanLiteralElement(bool value)
         {
             _value = value;

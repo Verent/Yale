@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Yale.Expression;
-using Yale.Parser.Internal;
 using Yale.Resources;
 
 namespace Yale.Core

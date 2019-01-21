@@ -52,15 +52,15 @@ namespace Yale.InteractiveConsole
 
             if (int.TryParse(value, out var integer))
             {
-                _instance.SetValue(key, integer);
+                _instance.Variables.Add(key, integer);
             }
             else if (double.TryParse(value, out var number))
             {
-                _instance.SetValue(key, number);
+                _instance.Variables.Add(key, number);
             }
             else
             {
-                _instance.SetValue(key, value);
+                _instance.Variables.Add(key, value);
             }
         }
 

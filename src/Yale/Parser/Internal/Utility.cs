@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Reflection.Emit;
+
 // ReSharper disable MethodTooLong
 
 namespace Yale.Parser.Internal
@@ -237,14 +238,12 @@ namespace Yale.Parser.Internal
         /// <returns>The operator's method or null of no match is found</returns>
         public static MethodInfo GetSimpleOverloadedOperator(string name, Type sourceType, Type destinationType)
         {
-
             var data = new Hashtable
             {
                 {"Name", string.Concat("op_", name)},
                 { "sourceType", sourceType},
                 { "destType", destinationType}
             };
-
 
             const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
 
@@ -300,14 +299,12 @@ namespace Yale.Parser.Internal
             return argumentMatch;
         }
 
-
         public static MethodInfo GetOverloadedOperator(string name, Type sourceType, Binder binder, params Type[] argumentTypes)
         {
             name = string.Concat("op_", name);
             var mi = sourceType.GetMethod(name, BindingFlags.Public | BindingFlags.Static, binder, CallingConventions.Any, argumentTypes, null);
 
             return mi == null || mi.IsSpecialName == false ? null : mi;
-            
         }
 
         public static int GetIlGeneratorLength(ILGenerator ilg)
@@ -327,6 +324,5 @@ namespace Yale.Parser.Internal
             var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ";
             return string.Join(separator, items);
         }
-
     }
 }
