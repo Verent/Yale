@@ -18,11 +18,9 @@ namespace Yale.Expression.Elements
             Validate();
         }
 
-
         //Entry point of IL Creation
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            
             _child.Emit(ilGenerator, context);
 
             ImplicitConverter.EmitImplicitConvert(_child.ResultType, _resultType, ilGenerator);
@@ -32,7 +30,7 @@ namespace Yale.Expression.Elements
             {
                 ImplicitConverter.EmitImplicitConvert(_resultType, typeof(object), ilGenerator);
             }
-            
+
             ilGenerator.Emit(OpCodes.Ret);
         }
 

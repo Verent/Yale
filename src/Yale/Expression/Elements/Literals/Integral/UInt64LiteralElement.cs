@@ -7,6 +7,7 @@ namespace Yale.Expression.Elements.Literals.Integral
     internal class UInt64LiteralElement : IntegralLiteralElement
     {
         private readonly UInt64 _value;
+
         public UInt64LiteralElement(string image, System.Globalization.NumberStyles ns)
         {
             try

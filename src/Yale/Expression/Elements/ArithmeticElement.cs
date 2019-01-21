@@ -57,7 +57,7 @@ namespace Yale.Expression.Elements
                 // String concatenation
                 return typeof(string);
             }
-                
+
             // Invalid types
             return null;
         }
@@ -71,7 +71,6 @@ namespace Yale.Expression.Elements
 
             return typeof(double);
         }
-
 
         /// <summary>
         /// Return an methodInfo based on the type of the left and right child
@@ -299,7 +298,7 @@ namespace Yale.Expression.Elements
                     return false;
                 }
 
-                return ((Int32LiteralElement) RightChild)?.Value >= 0;
+                return ((Int32LiteralElement)RightChild)?.Value >= 0;
             }
         }
     }

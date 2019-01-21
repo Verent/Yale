@@ -7,10 +7,10 @@ namespace Yale.Expression.Elements.Literals.Integral
 {
     internal class Int64LiteralElement : IntegralLiteralElement
     {
-
         private Int64 _value;
         private const string MinValue = "9223372036854775808";
         private readonly bool _isMinValue;
+
         public Int64LiteralElement(Int64 value)
         {
             _value = value;

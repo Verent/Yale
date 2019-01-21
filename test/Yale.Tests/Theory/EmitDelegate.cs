@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Yale.Tests.Theory
 {
@@ -13,8 +13,6 @@ namespace Yale.Tests.Theory
         private const string Value = "Hello";
 
         internal delegate object MyMethod();
-
-
 
         [TestMethod]
         public void CreateBasicDynamicMethod()
@@ -110,7 +108,7 @@ namespace Yale.Tests.Theory
             }
         }
 
-         private DynamicMethod CreateDynamicMethod(Type ownerType)
+        private DynamicMethod CreateDynamicMethod(Type ownerType)
         {
             Type[] parameterTypes = { };
 

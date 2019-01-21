@@ -20,8 +20,8 @@ namespace Yale.Engine.Internal
 
         public void AddDependency(string expressionKey, string dependsOnKey)
         {
-            DependencyNode expressionNode = null; 
-            DependencyNode dependsOnNode = null; 
+            DependencyNode expressionNode = null;
+            DependencyNode dependsOnNode = null;
 
             if (Nodes.ContainsKey(dependsOnKey) == false)
             {

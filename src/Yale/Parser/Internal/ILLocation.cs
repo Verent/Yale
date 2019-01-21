@@ -59,6 +59,7 @@ namespace Yale.Parser.Internal
         {
             return _position == other._position;
         }
+
         bool IEquatable<ILLocation>.Equals(ILLocation other)
         {
             return Equals1(other);

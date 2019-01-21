@@ -11,7 +11,7 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void NullCheck()
         {
-            _instance.SetValue("a", "stringObject");
+            _instance.Variables.Add("a", "stringObject");
             _instance.AddExpression("b", "a = null");
 
             Assert.IsFalse((bool)_instance.GetResult("b"));

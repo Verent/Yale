@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Yale.Expression;
-using Yale.Parser.Internal;
 using Yale.Resources;
 
 namespace Yale.Core
@@ -107,9 +106,9 @@ namespace Yale.Core
 
         public void AddType(Type type, string @namespace)
         {
-            if(type == null) throw new ArgumentNullException(nameof(type));
+            if (type == null) throw new ArgumentNullException(nameof(type));
             if (@namespace == null) throw new ArgumentNullException(nameof(@namespace));
-            
+
             const BindingFlags publicStatic = BindingFlags.Public | BindingFlags.Static;
             _options.AssertTypeIsAccessible(type);
 
@@ -143,7 +142,7 @@ namespace Yale.Core
         {
             if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
             if (@namespace == null) throw new ArgumentNullException(nameof(@namespace));
-          
+
             _options.AssertTypeIsAccessible(methodInfo.ReflectedType);
 
             if (methodInfo.IsStatic == false | methodInfo.IsPublic == false)

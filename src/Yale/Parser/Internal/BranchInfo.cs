@@ -56,6 +56,7 @@ namespace Yale.Parser.Internal
         {
             return _start.Equals1(other._start) && _myLabel.Equals(other._myLabel);
         }
+
         bool IEquatable<BranchInfo>.Equals(BranchInfo other)
         {
             return Equals1(other);

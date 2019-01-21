@@ -15,7 +15,7 @@ namespace Yale.Tests.ExpressionTests
         {
             var testObject = new TestClass(nameof(CallInstanceMethod));
 
-            _instance.SetValue("testObject", testObject);
+            _instance.Variables.Add("testObject", testObject);
             _instance.AddExpression<string>("e", "testObject.GetCaller()");
 
             Assert.AreEqual(nameof(CallInstanceMethod), _instance.GetResult<string>("e"));
@@ -24,7 +24,7 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void CallInstanceMethod_2()
         {
-            _instance.SetValue("rand", new Random());
+            _instance.Variables.Add("rand", new Random());
             _instance.AddExpression("e", "rand.nextDouble() + 100");
 
             Assert.IsInstanceOfType((double)_instance.GetResult("e"), typeof(double));

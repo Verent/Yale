@@ -12,16 +12,19 @@ using Yale.Parser.Internal;
 
 namespace Yale.Engine
 {
-    public class ComputeInstance : IComputeInstance
+    public class ComputeInstance
     {
         private readonly ComputeInstanceOptions _options;
-        public ExpressionBuilder Builder { get; }
+        internal ExpressionBuilder Builder { get; }
+
+        public ImportCollection Imports => Builder.Imports;
+
         private readonly DependencyManager _dependencies = new DependencyManager();
 
         /// <summary>
         /// Variables available in expressions
         /// </summary>
-        private VariableCollection Variables => Builder.Variables;
+        public VariableCollection Variables => Builder.Variables;
 
         /// <summary>
         /// Expression results
@@ -119,43 +122,6 @@ namespace Yale.Engine
         }
 
         #endregion Recalculate
-
-        /// <summary>
-        /// Adds a value to this compute instance. This can be referenced in expressions.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        public void SetValue(string key, object value)
-        {
-            if (key == null) throw new ArgumentNullException(nameof(key));
-            Variables[key] = value;
-        }
-
-        /// <summary>
-        /// Returns the current value registered to a variable in this instance.
-        /// </summary>
-        /// <param name="key"></param>
-        public object GetValue(string key)
-        {
-            if (key == null) throw new ArgumentNullException(nameof(key));
-            if (Variables.TryGetValue(key, out var value))
-            {
-                return value;
-            }
-            throw new ArgumentOutOfRangeException(key);
-        }
-
-        /// <summary>
-        /// Returns the current value registered to a variable in this instance.
-        /// </summary>
-        /// <param name="key"></param>
-        public T GetValue<T>(string key)
-        {
-            if (key == null) throw new ArgumentNullException(nameof(key));
-            return (T)GetValue(key);
-        }
-
-        public int ValueCount => Variables.Count;
 
         public void SetExpression(string key, string expression)
         {

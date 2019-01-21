@@ -11,7 +11,7 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void IfTestTrue()
         {
-            _instance.SetValue("a", 1);
+            _instance.Variables.Add("a", 1);
             _instance.AddExpression("b", "If(a < 100; true; false)");
 
             Assert.IsTrue((bool)_instance.GetResult("b"));
@@ -20,7 +20,7 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void IfTestFalse()
         {
-            _instance.SetValue("a", 1);
+            _instance.Variables.Add("a", 1);
             _instance.AddExpression("b", "If(a > 100; true; false)");
 
             Assert.IsFalse((bool)_instance.GetResult("b"));

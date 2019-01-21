@@ -145,6 +145,6 @@ namespace Yale.Expression.Elements.Base
             ValidateInternal(op);
         }
 
-        public sealed override Type ResultType => _resultType;
+        public override sealed Type ResultType => _resultType;
     }
 }
