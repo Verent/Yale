@@ -1,4 +1,6 @@
-﻿namespace Yale.Engine
+﻿using Yale.Expression;
+
+namespace Yale.Engine
 {
     public class ComputeInstanceOptions
     {
@@ -12,6 +14,8 @@
         /// the result of an expression that depend on it. Lazy recalculate will only work when AutoRecalculate is true
         /// </summary>
         public bool LazyRecalculate { get; set; } = false;
+
+        public ExpressionBuilderOptions ExpressionOptions { get; set; } = new ExpressionBuilderOptions();
 
         public static ComputeInstanceOptions Default { get; } = new ComputeInstanceOptions();
     }

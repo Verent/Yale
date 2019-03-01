@@ -25,7 +25,7 @@ namespace Yale.Tests.ExpressionTests
         public void CallInstanceMethod_2()
         {
             _instance.Variables.Add("rand", new Random());
-            _instance.AddExpression("e", "rand.nextDouble() + 100");
+            _instance.AddExpression("e", "rand.NextDouble() + 100");
 
             Assert.IsInstanceOfType((double)_instance.GetResult("e"), typeof(double));
         }

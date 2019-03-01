@@ -1,7 +1,9 @@
 ﻿using PerCederberg.Grammatica.Runtime;
+
 using System;
 using System.IO;
 using System.Reflection.Emit;
+
 using Yale.Core;
 using Yale.Engine;
 using Yale.Expression.Elements;
@@ -13,8 +15,7 @@ namespace Yale.Expression
 {
     public class ExpressionBuilder
     {
-        private readonly ExpressionBuilderOptions _builderOptions;
-        private static readonly object SyncRoot = new object();
+        public ExpressionBuilderOptions Options { get; private set; }
         internal ComputeInstance ComputeInstance { get; set; }
 
         private ExpressionParser Parser { get; set; }
@@ -28,25 +29,22 @@ namespace Yale.Expression
 
         public ExpressionBuilder()
         {
-            _builderOptions = new ExpressionBuilderOptions();
-            Imports = new ImportCollection(_builderOptions);
+            Options = new ExpressionBuilderOptions();
+            Imports = new ImportCollection(Options);
             CreateParser();
         }
 
         public ExpressionBuilder(ExpressionBuilderOptions builderOptions)
         {
-            _builderOptions = builderOptions;
-            Imports = new ImportCollection(_builderOptions);
+            Options = builderOptions;
+            Imports = new ImportCollection(Options);
             CreateParser();
         }
 
         private void CreateParser()
         {
-            lock (SyncRoot)
-            {
-                Analyzer = new YaleExpressionAnalyzer();
-                Parser = new ExpressionParser(TextReader.Null, Analyzer);
-            }
+            Analyzer = new YaleExpressionAnalyzer();
+            Parser = new ExpressionParser(TextReader.Null, Analyzer);
         }
 
         internal Expression<T> BuildExpression<T>(string expressionName, string expression)
@@ -56,7 +54,7 @@ namespace Yale.Expression
 
             Imports.ImportOwner(ownerType);
 
-            var context = new ExpressionContext(_builderOptions, expressionName, owner)
+            var context = new ExpressionContext(Options, expressionName, owner)
             {
                 Variables = Variables,
                 Imports = Imports,
@@ -80,20 +78,17 @@ namespace Yale.Expression
 
         private ExpressionElement Parse(string expression, ExpressionContext context)
         {
-            lock (SyncRoot)
-            {
-                var stringReader = new StringReader(expression);
+            var stringReader = new StringReader(expression);
 
-                Parser.Reset(stringReader);
-                var analyzer = (YaleExpressionAnalyzer)Parser.Analyzer;
+            Parser.Reset(stringReader);
+            var analyzer = (YaleExpressionAnalyzer)Parser.Analyzer;
 
-                analyzer.SetContext(context);
-                var rootNode = Parse();
-                analyzer.Reset();
+            analyzer.SetContext(context);
+            var rootNode = Parse();
+            analyzer.Reset();
 
-                var topElement = (ExpressionElement)rootNode.Values[0];
-                return topElement;
-            }
+            var topElement = (ExpressionElement)rootNode.Values[0];
+            return topElement;
         }
 
         private DynamicMethod CreateDynamicMethod<T>(Type ownerType)

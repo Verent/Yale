@@ -1,7 +1,6 @@
 ﻿// ReSharper disable InconsistentNaming
 namespace Yale.Parser
 {
-    //Todo: Reorganize this (Token enum and production enum?) or better naming.
     ///<remarks>
     /// An enumeration with token and production node constants. (69)
     ///</remarks>
