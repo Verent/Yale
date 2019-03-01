@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+
 using Yale.Core;
 using Yale.Engine.Interface;
 using Yale.Engine.Internal;
@@ -41,18 +42,19 @@ namespace Yale.Engine
             };
 
             _options = ComputeInstanceOptions.Default;
-            _nameNodeMap = new Dictionary<string, IExpressionResult>(StringComparer.OrdinalIgnoreCase);
+            _nameNodeMap = new Dictionary<string, IExpressionResult>();
 
             BindToValuesEvents();
         }
 
         public ComputeInstance(ComputeInstanceOptions options)
         {
-            Builder = new ExpressionBuilder
+            Builder = new ExpressionBuilder(options.ExpressionOptions)
             {
                 ComputeInstance = this
             };
             _options = options ?? throw new ArgumentNullException(nameof(options));
+            _nameNodeMap = new Dictionary<string, IExpressionResult>(options.ExpressionOptions.StringComparer);
 
             BindToValuesEvents();
         }
@@ -294,7 +296,7 @@ namespace Yale.Engine
             ilGenerator.Emit(OpCodes.Callvirt, propertyInfo.GetGetMethod());
 
             //Find and load expression result
-            var members = typeof(ComputeInstance).FindMembers(MemberTypes.Method, BindingFlags.Instance | BindingFlags.Public, Type.FilterNameIgnoreCase, "GetResult");
+            var members = typeof(ComputeInstance).FindMembers(MemberTypes.Method, BindingFlags.Instance | BindingFlags.Public, Type.FilterName, "GetResult");
             var methodInfo = members.Cast<MethodInfo>().First(method => method.IsGenericMethod);
             var resultType = ResultType(expressionKey);
             methodInfo = methodInfo.MakeGenericMethod(resultType);

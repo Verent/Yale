@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+
 using Yale.Core.Interface;
 using Yale.Resources;
 
@@ -11,14 +12,14 @@ namespace Yale.Expression
 
         public bool OverflowChecked { get; set; } = true;
         public bool IntegerAsDouble { get; set; } = false;
-        public StringComparer StringComparer { get; set; } = StringComparer.InvariantCulture;
 
-        public bool CaseSensitive { get; set; }
+        public bool CaseSensitive { get; set; } = true;
         public string DateTimeFormat { get; set; } = Format;
 
         public StringComparison StringComparison { get; set; } = StringComparison.Ordinal;
         public RealLiteralDataType RealLiteralDataType { get; set; } = RealLiteralDataType.Double;
 
+        public StringComparer StringComparer => CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
         public StringComparison MemberStringComparison => CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
         public MemberFilter MemberFilter => CaseSensitive ? Type.FilterName : Type.FilterNameIgnoreCase;
 

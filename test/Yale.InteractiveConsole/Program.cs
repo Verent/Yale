@@ -41,7 +41,7 @@ namespace Yale.InteractiveConsole
         private void AddExpression(string input)
         {
             var values = input.Split(':');
-            _instance.AddExpression(values[0], values[1]);
+            _instance.SetExpression(values[0], values[1]);
         }
 
         private void AddValue(string input)
@@ -52,15 +52,15 @@ namespace Yale.InteractiveConsole
 
             if (int.TryParse(value, out var integer))
             {
-                _instance.Variables.Add(key, integer);
+                _instance.Variables[key] = integer;
             }
             else if (double.TryParse(value, out var number))
             {
-                _instance.Variables.Add(key, number);
+                _instance.Variables[key] = number;
             }
             else
             {
-                _instance.Variables.Add(key, value);
+                _instance.Variables[key] = value;
             }
         }
 
