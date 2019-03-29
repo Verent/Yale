@@ -52,7 +52,7 @@ namespace Yale.Tests.Engine
         [TestMethod]
         public void AutoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
         {
-            var testObject = new TestClass(nameof(AutoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
+            var testObject = new TestClass<string>(nameof(AutoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
             var expected = "a string";
 
             testObject.Value = expected;
@@ -63,6 +63,25 @@ namespace Yale.Tests.Engine
             Assert.AreEqual(expected, _autoInstance.GetResult("e"));
 
             expected = "a new string";
+            testObject.Value = expected;
+
+            Assert.AreEqual(expected, _autoInstance.GetResult("e"));
+        }
+
+        [TestMethod]
+        public void AutoRecalculate_Int_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
+        {
+            var testObject = new TestClass<int>(nameof(AutoRecalculate_Int_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
+            var expected = 1;
+
+            testObject.Value = expected;
+
+            _autoInstance.Variables["o"] = testObject;
+            _autoInstance.AddExpression<int>("e", "o.Value");
+
+            Assert.AreEqual(expected, _autoInstance.GetResult("e"));
+
+            expected = 2;
             testObject.Value = expected;
 
             Assert.AreEqual(expected, _autoInstance.GetResult("e"));
@@ -96,7 +115,7 @@ namespace Yale.Tests.Engine
         [TestMethod]
         public void LazyRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
         {
-            var testObject = new TestClass(nameof(LazyRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
+            var testObject = new TestClass<string>(nameof(LazyRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
             var expected = "a string";
 
             testObject.Value = expected;
@@ -140,7 +159,7 @@ namespace Yale.Tests.Engine
         [TestMethod]
         public void NoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
         {
-            var testObject = new TestClass(nameof(NoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
+            var testObject = new TestClass<string>(nameof(NoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
             var expected = "a string";
 
             testObject.Value = expected;

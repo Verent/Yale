@@ -309,9 +309,9 @@ namespace Yale.Parser.Internal
 
         public static int GetIlGeneratorLength(ILGenerator ilg)
         {
-            var fi = typeof(ILGenerator).GetField("m_length", BindingFlags.Instance | BindingFlags.NonPublic);
-            // ReSharper disable once PossibleNullReferenceException
-            return (int)fi.GetValue(ilg);
+            var fi = typeof(ILGenerator).GetField("m_length", BindingFlags.Instance | BindingFlags.NonPublic) ??
+                typeof(ILGenerator).GetField("code_len", BindingFlags.Instance | BindingFlags.NonPublic);
+            return fi != null ? (int)fi.GetValue(ilg) : -1;
         }
 
         public static bool IsLongBranch(int startPosition, int endPosition)

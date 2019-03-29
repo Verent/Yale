@@ -105,7 +105,11 @@ namespace Yale.Engine
         private void RecalculateNodeAndDependents(string key)
         {
             var node = _nameNodeMap[key];
+            var result = node.ResultAsObject;
             node.Recalculate();
+
+            //No need to recalculate dependents if value is the same.
+            if (result.Equals(node.ResultAsObject)) return;
 
             foreach (var dependent in _dependencies.GetDependents(key))
             {

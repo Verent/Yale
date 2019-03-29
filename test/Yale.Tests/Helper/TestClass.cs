@@ -4,10 +4,10 @@ using Yale.Tests.Annotations;
 
 namespace Yale.Tests.Helper
 {
-    internal class TestClass : INotifyPropertyChanged
+    internal class TestClass<T> : INotifyPropertyChanged
     {
         private readonly string _caller;
-        private string _value;
+        private T _value;
 
         public TestClass(string caller)
         {
@@ -19,7 +19,7 @@ namespace Yale.Tests.Helper
             return _caller;
         }
 
-        public string Value
+        public T Value
         {
             get => _value;
             set

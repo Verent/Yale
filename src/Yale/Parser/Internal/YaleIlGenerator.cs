@@ -176,7 +176,8 @@ namespace Yale.Parser.Internal
         [Conditional("DEBUG")]
         public void ValidateLength()
         {
-            Debug.Assert(Length == IlGeneratorLength, "YaleIlGenerator length mismatch");
+            var ilGen = IlGeneratorLength;
+            Debug.Assert(Length == ilGen || ilGen == -1, "YaleIlGenerator length mismatch");
         }
 
         public int Length { get; private set; }

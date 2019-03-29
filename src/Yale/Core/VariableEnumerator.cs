@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using Yale.Core.Interface;
 
 namespace Yale.Core
 {
     internal sealed class VariableEnumerator : IEnumerator<KeyValuePair<string, object>>
     {
-        private IEnumerator<KeyValuePair<string, IVariable>> _enumerator;
+        private readonly IEnumerator<KeyValuePair<string, IVariable>> _enumerator;
 
         public VariableEnumerator(IDictionary<string, IVariable> values)
         {

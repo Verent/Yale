@@ -155,7 +155,7 @@ namespace Yale.Expression.Elements
 
         private MethodInfo GetCollectionContainsMethod()
         {
-            string methodName = "Contains";
+            var methodName = "Contains";
 
             if (_targetCollectionType.IsGenericType && ReferenceEquals(_targetCollectionType.GetGenericTypeDefinition(), typeof(IDictionary<,>)))
             {
