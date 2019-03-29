@@ -8,7 +8,7 @@ namespace Yale.Parser.Internal
     {
         private readonly Type _returnType;
         private readonly Type _argType;
-        private CustomBinder _customBinderImplementation;
+        private readonly CustomBinder _customBinderImplementation;
 
         public ExplicitOperatorMethodBinder(Type returnType, Type argType)
         {

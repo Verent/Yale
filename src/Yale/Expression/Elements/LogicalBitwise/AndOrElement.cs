@@ -114,11 +114,11 @@ namespace Yale.Expression.Elements.LogicalBitwise
             EmitLogicalShortCircuit(ilg, info, context);
 
             // Get the last operand
-            ExpressionElement terminalOperand = (ExpressionElement)info.Operands.Pop();
+            var terminalOperand = (ExpressionElement)info.Operands.Pop();
             // Emit it
             EmitOperand(terminalOperand, info, ilg, context);
             // And jump to the end
-            Label endLabel = info.Branches.FindLabel(OurEndLabelKey);
+            var endLabel = info.Branches.FindLabel(OurEndLabelKey);
             ilg.Emit(OpCodes.Br_S, endLabel);
 
             // Emit our true/false terminals

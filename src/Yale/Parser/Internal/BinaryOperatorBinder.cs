@@ -8,7 +8,7 @@ namespace Yale.Parser.Internal
     {
         private readonly Type _leftType;
         private readonly Type _rightType;
-        private CustomBinder _customBinderImplementation;
+        private readonly CustomBinder _customBinderImplementation;
 
         public BinaryOperatorBinder(Type leftType, Type rightType)
         {

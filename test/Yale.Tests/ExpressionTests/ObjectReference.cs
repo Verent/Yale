@@ -13,7 +13,7 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void CallInstanceMethod()
         {
-            var testObject = new TestClass(nameof(CallInstanceMethod));
+            var testObject = new TestClass<string>(nameof(CallInstanceMethod));
 
             _instance.Variables.Add("testObject", testObject);
             _instance.AddExpression<string>("e", "testObject.GetCaller()");

@@ -15,9 +15,9 @@ namespace Yale.Engine.Internal
 
         private string Key { get; }
 
-        private List<DependencyNode> _predecessors = new List<DependencyNode>();
+        private readonly List<DependencyNode> _predecessors = new List<DependencyNode>();
 
-        private List<DependencyNode> _successors = new List<DependencyNode>();
+        private readonly List<DependencyNode> _successors = new List<DependencyNode>();
 
         public void AddPredecessor(DependencyNode node)
         {

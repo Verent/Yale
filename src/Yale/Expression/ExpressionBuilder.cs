@@ -68,7 +68,10 @@ namespace Yale.Expression
 
             var ilGenerator = new YaleIlGenerator(dynamicMethod.GetILGenerator());
             rootElement.Emit(ilGenerator, context);
+
+#if DEBUG
             ilGenerator.ValidateLength();
+#endif
 
             var delegateType = typeof(ExpressionEvaluator<>).MakeGenericType(typeof(T));
             var evaluator = (ExpressionEvaluator<T>)dynamicMethod.CreateDelegate(delegateType);

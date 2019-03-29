@@ -229,9 +229,9 @@ namespace Yale.Parser
         public override Node ExitCastExpression(Production node)
         {
             IList childValues = GetChildValues(node);
-            string[] destTypeParts = (string[])childValues[1];
-            bool isArray = (bool)childValues[2];
-            CastElement op = new CastElement((ExpressionElement)childValues[0], destTypeParts, isArray, _context);
+            var destTypeParts = (string[])childValues[1];
+            var isArray = (bool)childValues[2];
+            var op = new CastElement((ExpressionElement)childValues[0], destTypeParts, isArray, _context);
             node.AddValue(op);
             return node;
         }
@@ -239,14 +239,14 @@ namespace Yale.Parser
         public override Node ExitCastTypeExpression(Production node)
         {
             IList childValues = GetChildValues(node);
-            List<string> parts = new List<string>();
+            var parts = new List<string>();
 
             foreach (string part in childValues)
             {
                 parts.Add(part);
             }
 
-            bool isArray = false;
+            var isArray = false;
 
             if (parts[parts.Count - 1] == "[]")
             {
@@ -315,7 +315,7 @@ namespace Yale.Parser
 
             if (childValues.Count == 2)
             {
-                UnaryElement element = (UnaryElement)Activator.CreateInstance(elementType);
+                var element = (UnaryElement)Activator.CreateInstance(elementType);
                 element.SetChild((ExpressionElement)childValues[1]);
                 node.AddValue(element);
             }

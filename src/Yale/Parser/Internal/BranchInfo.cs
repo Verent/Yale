@@ -10,7 +10,7 @@ namespace Yale.Parser.Internal
     {
         private readonly ILLocation _start;
         private readonly ILLocation _end;
-        private Label _myLabel;
+        private readonly Label _myLabel;
 
         public BranchInfo(ILLocation startLocation, Label endLabel)
         {
