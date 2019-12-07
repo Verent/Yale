@@ -11,7 +11,7 @@ namespace Yale.Core
     /// </summary>
     internal abstract class ImportBase : IEnumerable<ImportBase>, IEquatable<ImportBase>
     {
-        internal ImportBase(IExpressionOptions options)
+        protected ImportBase(IExpressionOptions options)
         {
             Options = options ?? throw new ArgumentNullException(nameof(options));
         }
