@@ -96,7 +96,7 @@ namespace Yale.Expression.Elements
                 return true;
             }
 
-            if (sourceType.IsEnum | destType.IsEnum)
+            if (sourceType.IsEnum || destType.IsEnum)
             {
                 return IsValidExplicitEnumCast(sourceType, destType);
             }
@@ -120,7 +120,7 @@ namespace Yale.Expression.Elements
                 // Can only succeed if the reference type is a base of the value type or
                 // it is one of the interfaces the value type implements
                 var interfaces = destType.GetInterfaces();
-                return IsBaseType(destType, sourceType) | Array.IndexOf(interfaces, sourceType) != -1;
+                return IsBaseType(destType, sourceType) || Array.IndexOf(interfaces, sourceType) != -1;
             }
 
             // Reference type to reference type

@@ -27,6 +27,7 @@ namespace Yale.Expression
 
         public ImportCollection Imports { get; }
 
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         public ExpressionBuilder()
         {
             Options = new ExpressionBuilderOptions();
@@ -40,6 +41,7 @@ namespace Yale.Expression
             Imports = new ImportCollection(Options);
             CreateParser();
         }
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         private void CreateParser()
         {
