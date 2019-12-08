@@ -13,27 +13,28 @@ namespace Yale.Expression.Elements.MemberElements
 {
     internal class FunctionCallElement : MemberElement
     {
-        private readonly ArgumentList _arguments;
-        private readonly ICollection<MethodInfo> _methods;
-        private CustomMethodInfo _targetMethodInfo;
+        private readonly ArgumentList arguments;
+        private readonly ICollection<MethodInfo> methods;
+
+        private CustomMethodInfo targetMethodInfo;
 
         public FunctionCallElement(string name, ArgumentList arguments) : base(name)
         {
-            _arguments = arguments;
+            this.arguments = arguments;
         }
 
         internal FunctionCallElement(string name, ICollection<MethodInfo> methods, ArgumentList arguments) : base(name)
         {
-            _arguments = arguments;
-            _methods = methods;
+            this.arguments = arguments;
+            this.methods = methods;
         }
 
         protected override void ResolveInternal()
         {
             // Get the types of our arguments
-            var argTypes = _arguments.GetArgumentTypes();
+            var argTypes = arguments.GetArgumentTypes();
             // Find all methods with our name on the type
-            var methods = _methods;
+            var methods = this.methods;
 
             if (methods == null)
             {
@@ -64,11 +65,11 @@ namespace Yale.Expression.Elements.MemberElements
         {
             if (previous == null)
             {
-                ThrowCompileException(CompileErrors.UndefinedFunction, CompileExceptionReason.UndefinedName, MemberName, _arguments);
+                ThrowCompileException(CompileErrors.UndefinedFunction, CompileExceptionReason.UndefinedName, MemberName, arguments);
             }
             else
             {
-                ThrowCompileException(CompileErrors.UndefinedFunctionOnType, CompileExceptionReason.UndefinedName, MemberName, _arguments, previous.TargetType.Name);
+                ThrowCompileException(CompileErrors.UndefinedFunctionOnType, CompileExceptionReason.UndefinedName, MemberName, arguments, previous.TargetType.Name);
             }
         }
 
@@ -76,17 +77,17 @@ namespace Yale.Expression.Elements.MemberElements
         {
             if (previous == null)
             {
-                ThrowCompileException(CompileErrors.NoAccessibleMatches, CompileExceptionReason.AccessDenied, MemberName, _arguments);
+                ThrowCompileException(CompileErrors.NoAccessibleMatches, CompileExceptionReason.AccessDenied, MemberName, arguments);
             }
             else
             {
-                ThrowCompileException(CompileErrors.NoAccessibleMatchesOnType, CompileExceptionReason.AccessDenied, MemberName, _arguments, previous.TargetType.Name);
+                ThrowCompileException(CompileErrors.NoAccessibleMatchesOnType, CompileExceptionReason.AccessDenied, MemberName, arguments, previous.TargetType.Name);
             }
         }
 
         private void ThrowAmbiguousMethodCallException()
         {
-            ThrowCompileException(CompileErrors.AmbiguousCallOfFunction, CompileExceptionReason.AmbiguousMatch, MemberName, _arguments);
+            ThrowCompileException(CompileErrors.AmbiguousCallOfFunction, CompileExceptionReason.AmbiguousMatch, MemberName, arguments);
         }
 
         /// <summary>
@@ -160,7 +161,7 @@ namespace Yale.Expression.Elements.MemberElements
             DetectAmbiguousMatches(customInfoArray);
 
             // If we get here, then there is only one best match
-            _targetMethodInfo = customInfoArray[0];
+            targetMethodInfo = customInfoArray[0];
         }
 
         private CustomMethodInfo[] GetAccessibleInfos(CustomMethodInfo[] infos)
@@ -248,11 +249,11 @@ namespace Yale.Expression.Elements.MemberElements
         private void EmitParamArrayArguments(ParameterInfo[] parameters, ExpressionElement[] elements, YaleIlGenerator ilGenerator, ExpressionContext context)
         {
             // Get the fixed parameters
-            var fixedParameters = new ParameterInfo[_targetMethodInfo.FixedArgTypes.Length];
+            var fixedParameters = new ParameterInfo[targetMethodInfo.FixedArgTypes.Length];
             Array.Copy(parameters, fixedParameters, fixedParameters.Length);
 
             // Get the corresponding fixed parameters
-            var fixedElements = new ExpressionElement[_targetMethodInfo.FixedArgTypes.Length];
+            var fixedElements = new ExpressionElement[targetMethodInfo.FixedArgTypes.Length];
             Array.Copy(elements, fixedElements, fixedElements.Length);
 
             // Emit the fixed arguments
@@ -263,7 +264,7 @@ namespace Yale.Expression.Elements.MemberElements
             Array.Copy(elements, fixedElements.Length, paramArrayElements, 0, paramArrayElements.Length);
 
             // Emit them into an array
-            EmitElementArrayLoad(paramArrayElements, _targetMethodInfo.ParamArrayElementType, ilGenerator, context);
+            EmitElementArrayLoad(paramArrayElements, targetMethodInfo.ParamArrayElementType, ilGenerator, context);
         }
 
         /// <summary>
@@ -303,10 +304,10 @@ namespace Yale.Expression.Elements.MemberElements
         public void EmitFunctionCall(bool nextRequiresAddress, YaleIlGenerator ilg, ExpressionContext context)
         {
             var parameters = Method.GetParameters();
-            var elements = _arguments.ToArray();
+            var elements = arguments.ToArray();
 
             // Emit either a regular or paramArray call
-            if (_targetMethodInfo.IsParamArray == false)
+            if (targetMethodInfo.IsParamArray == false)
             {
                 EmitRegularFunctionInternal(parameters, elements, ilg, context);
             }
@@ -339,7 +340,7 @@ namespace Yale.Expression.Elements.MemberElements
         /// <summary>
         /// The method info we will be calling
         /// </summary>
-        private MethodInfo Method => _targetMethodInfo.Target;
+        private MethodInfo Method => targetMethodInfo.Target;
 
         public override Type ResultType => Method.ReturnType;
 

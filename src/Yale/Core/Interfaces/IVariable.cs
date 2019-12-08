@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Yale.Core.Interface
+namespace Yale.Core.Interfaces
 {
     /// <summary>
     /// Internal object for storing expression variables

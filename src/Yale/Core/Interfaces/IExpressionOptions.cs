@@ -2,7 +2,7 @@
 using System.Reflection;
 using Yale.Expression;
 
-namespace Yale.Core.Interface
+namespace Yale.Core.Interfaces
 {
     public interface IExpressionOptions
     {

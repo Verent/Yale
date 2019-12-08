@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
 using Yale.Core;
-using Yale.Core.Interface;
+using Yale.Core.Interfaces;
 using Yale.Expression.Elements.Base;
 using Yale.Expression.Elements.Base.Literals;
 using Yale.Expression.Elements.Literals;
@@ -17,15 +17,15 @@ namespace Yale.Expression.Elements.MemberElements
 {
     internal class IdentifierElement : MemberElement
     {
-        private FieldInfo _field;
-        private PropertyInfo _property;
-        private PropertyDescriptor _propertyDescriptor;
+        private FieldInfo field;
+        private PropertyInfo property;
+        private PropertyDescriptor propertyDescriptor;
 
         //A value from the value collection
-        private Type _valueType;
+        private Type valueType;
 
         //Another expression
-        private Type _calcEngineReferenceType;
+        private Type calcEngineReferenceType;
 
         public IdentifierElement(string name) : base(name)
         { }
@@ -42,7 +42,7 @@ namespace Yale.Expression.Elements.MemberElements
             // Variable lookup
             if (Context.Variables.TryGetValue(MemberName, out IVariable value))
             {
-                _valueType = value.Type;
+                valueType = value.Type;
                 computeInstance?.AddDependency(Context.ExpressionName, MemberName);
                 return;
             }
@@ -51,7 +51,7 @@ namespace Yale.Expression.Elements.MemberElements
             if (computeInstance?.ContainsExpression(MemberName) == true)
             {
                 computeInstance.AddDependency(Context.ExpressionName, MemberName);
-                _calcEngineReferenceType = computeInstance.ResultType(MemberName);
+                calcEngineReferenceType = computeInstance.ResultType(MemberName);
                 return;
             }
 
@@ -91,14 +91,14 @@ namespace Yale.Expression.Elements.MemberElements
             else
             {
                 // Only one member; bind to it
-                _field = members[0] as FieldInfo;
-                if (_field != null)
+                field = members[0] as FieldInfo;
+                if (field != null)
                 {
                     return true;
                 }
 
                 // Assume it must be a property
-                _property = (PropertyInfo)members[0];
+                property = (PropertyInfo)members[0];
                 return true;
             }
 
@@ -114,8 +114,8 @@ namespace Yale.Expression.Elements.MemberElements
             }
 
             var properties = TypeDescriptor.GetProperties(previous.ResultType);
-            _propertyDescriptor = properties.Find(MemberName, true);
-            return _propertyDescriptor != null;
+            propertyDescriptor = properties.Find(MemberName, true);
+            return propertyDescriptor != null;
         }
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
@@ -124,25 +124,25 @@ namespace Yale.Expression.Elements.MemberElements
 
             EmitFirst(ilGenerator);
 
-            if (_calcEngineReferenceType != null)
+            if (calcEngineReferenceType != null)
             {
                 EmitReferenceLoad(ilGenerator);
             }
-            else if (_valueType != null)
+            else if (valueType != null)
             {
                 EmitVariableLoad(ilGenerator);
             }
-            else if (_field != null)
+            else if (field != null)
             {
-                EmitFieldLoad(_field, ilGenerator, context);
+                EmitFieldLoad(field, ilGenerator, context);
             }
-            else if (_propertyDescriptor != null)
+            else if (propertyDescriptor != null)
             {
                 EmitVirtualPropertyLoad(ilGenerator);
             }
             else
             {
-                EmitPropertyLoad(_property, ilGenerator);
+                EmitPropertyLoad(property, ilGenerator);
             }
         }
 
@@ -159,7 +159,7 @@ namespace Yale.Expression.Elements.MemberElements
                 return;
             }
 
-            var isVariable = _valueType != null;
+            var isVariable = valueType != null;
             if (isVariable)
             {
                 EmitLoadVariables(ilg);
@@ -176,7 +176,7 @@ namespace Yale.Expression.Elements.MemberElements
         /// <param name="ilg"></param>
         private void EmitVariableLoad(YaleIlGenerator ilg)
         {
-            var methodInfo = VariableCollection.GetVariableLoadMethod(_valueType);
+            var methodInfo = VariableCollection.GetVariableLoadMethod(valueType);
             ilg.Emit(OpCodes.Ldstr, MemberName);
             EmitMethodCall(methodInfo, ilg);
         }
@@ -319,17 +319,17 @@ namespace Yale.Expression.Elements.MemberElements
         {
             get
             {
-                if (_field != null)
+                if (field != null)
                 {
-                    return _field.ReflectedType;
+                    return field.ReflectedType;
                 }
 
-                if (_propertyDescriptor != null)
+                if (propertyDescriptor != null)
                 {
-                    return _propertyDescriptor.ComponentType;
+                    return propertyDescriptor.ComponentType;
                 }
 
-                return _property != null ? _property.ReflectedType : null;
+                return property != null ? property.ReflectedType : null;
             }
         }
 
@@ -337,58 +337,58 @@ namespace Yale.Expression.Elements.MemberElements
         {
             get
             {
-                if (_calcEngineReferenceType != null)
+                if (calcEngineReferenceType != null)
                 {
-                    return _calcEngineReferenceType;
+                    return calcEngineReferenceType;
                 }
 
-                if (_valueType != null)
+                if (valueType != null)
                 {
-                    return _valueType;
+                    return valueType;
                 }
 
-                if (_propertyDescriptor != null)
+                if (propertyDescriptor != null)
                 {
-                    return _propertyDescriptor.PropertyType;
+                    return propertyDescriptor.PropertyType;
                 }
 
-                if (_field != null)
+                if (field != null)
                 {
-                    return _field.FieldType;
+                    return field.FieldType;
                 }
 
-                var methodInfo = _property.GetGetMethod(true);
+                var methodInfo = property.GetGetMethod(true);
                 return methodInfo.ReturnType;
             }
         }
 
-        protected override bool RequiresAddress => _propertyDescriptor == null;
+        protected override bool RequiresAddress => propertyDescriptor == null;
 
         protected override bool IsPublic
         {
             get
             {
-                if (_valueType != null | (_calcEngineReferenceType != null))
+                if (valueType != null | (calcEngineReferenceType != null))
                 {
                     return true;
                 }
 
-                if (_valueType != null)
+                if (valueType != null)
                 {
                     return true;
                 }
 
-                if (_propertyDescriptor != null)
+                if (propertyDescriptor != null)
                 {
                     return true;
                 }
 
-                if (_field != null)
+                if (field != null)
                 {
-                    return _field.IsPublic;
+                    return field.IsPublic;
                 }
 
-                var methodInfo = _property.GetGetMethod(true);
+                var methodInfo = property.GetGetMethod(true);
                 return methodInfo.IsPublic;
             }
         }
@@ -397,13 +397,13 @@ namespace Yale.Expression.Elements.MemberElements
         {
             get
             {
-                if (_valueType != null)
+                if (valueType != null)
                 {
                     // Variables never support static
                     return false;
                 }
 
-                if (_propertyDescriptor != null)
+                if (propertyDescriptor != null)
                 {
                     // Neither do virtual properties
                     return false;
@@ -424,13 +424,13 @@ namespace Yale.Expression.Elements.MemberElements
         {
             get
             {
-                if (_valueType != null)
+                if (valueType != null)
                 {
                     // Variables always support instance
                     return true;
                 }
 
-                if (_propertyDescriptor != null)
+                if (propertyDescriptor != null)
                 {
                     // So do virtual properties
                     return true;
@@ -451,27 +451,27 @@ namespace Yale.Expression.Elements.MemberElements
         {
             get
             {
-                if ((_valueType != null) | (_calcEngineReferenceType != null))
+                if ((valueType != null) | (calcEngineReferenceType != null))
                 {
                     return false;
                 }
 
-                if (_valueType != null)
+                if (valueType != null)
                 {
                     return false;
                 }
 
-                if (_field != null)
+                if (field != null)
                 {
-                    return _field.IsStatic;
+                    return field.IsStatic;
                 }
 
-                if (_propertyDescriptor != null)
+                if (propertyDescriptor != null)
                 {
                     return false;
                 }
 
-                var methodInfo = _property.GetGetMethod(true);
+                var methodInfo = property.GetGetMethod(true);
                 return methodInfo.IsStatic;
             }
         }

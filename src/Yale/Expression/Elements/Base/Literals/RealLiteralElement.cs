@@ -6,11 +6,11 @@ namespace Yale.Expression.Elements.Base.Literals
 {
     internal abstract class RealLiteralElement : LiteralElement
     {
-        private static ExpressionBuilderOptions _builderOptions;
+        private static ExpressionBuilderOptions? builderOptions;
 
         public static LiteralElement CreateFromInteger(string image, ExpressionBuilderOptions options)
         {
-            _builderOptions = options;
+            builderOptions = options;
             LiteralElement element = CreateSingle(image);
 
             if (element != null)
@@ -25,7 +25,7 @@ namespace Yale.Expression.Elements.Base.Literals
                 return element;
             }
 
-            if (_builderOptions.IntegerAsDouble)
+            if (builderOptions.IntegerAsDouble)
             {
                 return DoubleLiteralElement.Parse(image);
             }
@@ -35,7 +35,7 @@ namespace Yale.Expression.Elements.Base.Literals
 
         public static object Create(string image, ExpressionBuilderOptions options)
         {
-            _builderOptions = options;
+            builderOptions = options;
             LiteralElement element = CreateSingle(image);
 
             if (element != null)
@@ -62,7 +62,7 @@ namespace Yale.Expression.Elements.Base.Literals
 
         private static LiteralElement CreateImplicitReal(string image)
         {
-            var realType = _builderOptions.RealLiteralDataType;
+            var realType = builderOptions.RealLiteralDataType;
 
             switch (realType)
             {

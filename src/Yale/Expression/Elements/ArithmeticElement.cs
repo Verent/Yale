@@ -11,17 +11,17 @@ namespace Yale.Expression.Elements
 {
     internal class ArithmeticElement : BinaryExpressionElement
     {
-        private static MethodInfo _powerMethodInfo;
-        private static MethodInfo _stringConcatMethodInfo;
-        private static MethodInfo _objectConcatMethodInfo;
+        private static MethodInfo powerMethodInfo;
+        private static MethodInfo stringConcatMethodInfo;
+        private static MethodInfo objectConcatMethodInfo;
 
         private BinaryArithmeticOperation _operation;
 
         public ArithmeticElement()
         {
-            _powerMethodInfo = typeof(Math).GetMethod("Pow", BindingFlags.Public | BindingFlags.Static);
-            _stringConcatMethodInfo = typeof(string).GetMethod("Concat", new[] { typeof(string), typeof(string) }, null);
-            _objectConcatMethodInfo = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object) }, null);
+            powerMethodInfo = typeof(Math).GetMethod("Pow", BindingFlags.Public | BindingFlags.Static);
+            stringConcatMethodInfo = typeof(string).GetMethod("Concat", new[] { typeof(string), typeof(string) }, null);
+            objectConcatMethodInfo = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object) }, null);
         }
 
         protected override void GetOperation(object operation)
@@ -213,7 +213,7 @@ namespace Yale.Expression.Elements
             }
             else
             {
-                ilGenerator.Emit(OpCodes.Call, _powerMethodInfo);
+                ilGenerator.Emit(OpCodes.Call, powerMethodInfo);
             }
         }
 
@@ -271,13 +271,13 @@ namespace Yale.Expression.Elements
             // Pick the most specific concat method
             if (AreBothChildrenOfType(typeof(string)))
             {
-                concatMethodInfo = _stringConcatMethodInfo;
+                concatMethodInfo = stringConcatMethodInfo;
                 argType = typeof(string);
             }
             else
             {
                 Debug.Assert(IsEitherChildOfType(typeof(string)), "one child must be a string");
-                concatMethodInfo = _objectConcatMethodInfo;
+                concatMethodInfo = objectConcatMethodInfo;
                 argType = typeof(object);
             }
 
