@@ -47,6 +47,7 @@ namespace Yale.Core
 
         internal abstract Type FindType(string typeName);
 
+        //Todo: Make this abstract
         internal virtual ImportBase FindImport(string name)
         {
             return null;
