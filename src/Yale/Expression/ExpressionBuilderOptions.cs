@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-using Yale.Core.Interface;
+using Yale.Core.Interfaces;
 using Yale.Resources;
 
 namespace Yale.Expression

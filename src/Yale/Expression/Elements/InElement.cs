@@ -12,34 +12,34 @@ namespace Yale.Expression.Elements
     internal class InElement : ExpressionElement
     {
         // Element we will search for
-        private readonly ExpressionElement _operand;
+        private readonly ExpressionElement operand;
 
         // Elements we will compare against
-        private readonly List<ExpressionElement> _arguments;
+        private readonly List<ExpressionElement> arguments;
 
         // Collection to look in
-        private readonly ExpressionElement _targetCollectionElement;
+        private readonly ExpressionElement targetCollectionElement;
 
         // Type of the collection
-        private Type _targetCollectionType;
+        private Type targetCollectionType;
 
         // Initialize for searching a list of values
         public InElement(ExpressionElement operand, IList listElements)
         {
-            _operand = operand;
+            this.operand = operand;
 
             var elements = new ExpressionElement[listElements.Count];
             listElements.CopyTo(elements, 0);
 
-            _arguments = new List<ExpressionElement>(elements);
+            arguments = new List<ExpressionElement>(elements);
             ResolveForListSearch();
         }
 
         // Initialize for searching a collection
         public InElement(ExpressionElement operand, ExpressionElement targetCollection)
         {
-            _operand = operand;
-            _targetCollectionElement = targetCollection;
+            this.operand = operand;
+            targetCollectionElement = targetCollection;
             ResolveForCollectionSearch();
         }
 
@@ -48,9 +48,9 @@ namespace Yale.Expression.Elements
             var compareElement = new CompareElement();
 
             // Validate that our operand is comparable to all elements in the list
-            foreach (var argumentElement in _arguments)
+            foreach (var argumentElement in arguments)
             {
-                compareElement.Initialize(_operand, argumentElement, LogicalCompareOperation.Equal);
+                compareElement.Initialize(operand, argumentElement, LogicalCompareOperation.Equal);
                 compareElement.Validate();
             }
         }
@@ -58,26 +58,26 @@ namespace Yale.Expression.Elements
         private void ResolveForCollectionSearch()
         {
             // Try to find a collection type
-            _targetCollectionType = GetTargetCollectionType();
+            targetCollectionType = GetTargetCollectionType();
 
-            if (_targetCollectionType == null)
+            if (targetCollectionType == null)
             {
-                ThrowCompileException(CompileErrors.SearchArgIsNotKnownCollectionType, CompileExceptionReason.TypeMismatch, _targetCollectionElement.ResultType.Name);
+                ThrowCompileException(CompileErrors.SearchArgIsNotKnownCollectionType, CompileExceptionReason.TypeMismatch, targetCollectionElement.ResultType.Name);
             }
 
             // Validate that the operand type is compatible with the collection
             var methodInfo = GetCollectionContainsMethod();
             var firstParameter = methodInfo.GetParameters()[0];
 
-            if (ImplicitConverter.EmitImplicitConvert(_operand.ResultType, firstParameter.ParameterType, null) == false)
+            if (ImplicitConverter.EmitImplicitConvert(operand.ResultType, firstParameter.ParameterType, null) == false)
             {
-                ThrowCompileException(CompileErrors.OperandNotConvertibleToCollectionType, CompileExceptionReason.TypeMismatch, _operand.ResultType.Name, firstParameter.ParameterType.Name);
+                ThrowCompileException(CompileErrors.OperandNotConvertibleToCollectionType, CompileExceptionReason.TypeMismatch, operand.ResultType.Name, firstParameter.ParameterType.Name);
             }
         }
 
         private Type GetTargetCollectionType()
         {
-            var collType = _targetCollectionElement.ResultType;
+            var collType = targetCollectionElement.ResultType;
 
             // Try to see if the collection is a generic ICollection or IDictionary
             var interfaces = collType.GetInterfaces();
@@ -114,7 +114,7 @@ namespace Yale.Expression.Elements
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            if ((_targetCollectionType != null))
+            if ((targetCollectionType != null))
             {
                 EmitCollectionIn(ilGenerator, context);
             }
@@ -144,11 +144,11 @@ namespace Yale.Expression.Elements
             var firstParameter = methodInfo.GetParameters()[0];
 
             // Load the collection
-            _targetCollectionElement.Emit(ilg, context);
+            targetCollectionElement.Emit(ilg, context);
             // Load the argument
-            _operand.Emit(ilg, context);
+            operand.Emit(ilg, context);
             // Do an implicit convert if necessary
-            ImplicitConverter.EmitImplicitConvert(_operand.ResultType, firstParameter.ParameterType, ilg);
+            ImplicitConverter.EmitImplicitConvert(operand.ResultType, firstParameter.ParameterType, ilg);
             // Call the contains method
             ilg.Emit(OpCodes.Callvirt, methodInfo);
         }
@@ -157,12 +157,12 @@ namespace Yale.Expression.Elements
         {
             var methodName = "Contains";
 
-            if (_targetCollectionType.IsGenericType && ReferenceEquals(_targetCollectionType.GetGenericTypeDefinition(), typeof(IDictionary<,>)))
+            if (targetCollectionType.IsGenericType && ReferenceEquals(targetCollectionType.GetGenericTypeDefinition(), typeof(IDictionary<,>)))
             {
                 methodName = "ContainsKey";
             }
 
-            return _targetCollectionType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            return targetCollectionType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
         }
 
         private void EmitListIn(YaleIlGenerator ilg, ExpressionContext context, BranchManager branchManager)
@@ -172,17 +172,17 @@ namespace Yale.Expression.Elements
             var trueTerminal = branchManager.FindLabel("trueTerminal");
 
             // Cache the operand since we will be comparing against it a lot
-            var lb = ilg.DeclareLocal(_operand.ResultType);
+            var lb = ilg.DeclareLocal(operand.ResultType);
             var targetIndex = lb.LocalIndex;
 
-            _operand.Emit(ilg, context);
+            operand.Emit(ilg, context);
             Utility.EmitStoreLocal(ilg, targetIndex);
 
             // Wrap our operand in a local shim
-            var targetShim = new LocalBasedElement(_operand, targetIndex);
+            var targetShim = new LocalBasedElement(operand, targetIndex);
 
             // Emit the compares
-            foreach (var argumentElement in _arguments)
+            foreach (var argumentElement in arguments)
             {
                 compareElement.Initialize(targetShim, argumentElement, LogicalCompareOperation.Equal);
                 compareElement.Emit(ilg, context);

@@ -1,5 +1,5 @@
 ﻿using System;
-using Yale.Core.Interface;
+using Yale.Core.Interfaces;
 
 namespace Yale.Core
 {
@@ -7,7 +7,9 @@ namespace Yale.Core
     {
         public Variable(object value)
         {
-            Type = value?.GetType();
+            if (value == null) throw new ArgumentNullException(nameof(value));
+
+            Type = value.GetType();
             ValueAsObject = value;
         }
 

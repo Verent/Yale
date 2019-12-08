@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-using Yale.Core.Interface;
+using Yale.Core.Interfaces;
 
 namespace Yale.Core
 {

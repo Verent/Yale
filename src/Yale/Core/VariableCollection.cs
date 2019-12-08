@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using Yale.Core.Interface;
+using Yale.Core.Interfaces;
 
 namespace Yale.Core
 {

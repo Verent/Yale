@@ -45,5 +45,6 @@ namespace Yale.Expression
         /// Explains the reason why compilation failed.
         /// </summary>
         public CompileExceptionReason Reason { get; }
+
     }
 }
