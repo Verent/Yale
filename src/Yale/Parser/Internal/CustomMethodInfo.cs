@@ -105,7 +105,7 @@ namespace Yale.Parser.Internal
 
         public bool IsAccessible(MemberElement owner)
         {
-            return owner.IsMemberAccessible(Target);
+            return MemberElement.IsMemberAccessible(Target);
         }
 
         /// <summary>

@@ -125,7 +125,6 @@ namespace Yale.Expression.Elements.Base
         protected static bool IsGetTypeMethod(MethodInfo mi)
         {
             var miGetType = typeof(object).GetMethod("gettype", BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
-            // ReSharper disable once PossibleNullReferenceException
             return mi.MethodHandle.Equals(miGetType.MethodHandle);
         }
 
@@ -223,7 +222,7 @@ namespace Yale.Expression.Elements.Base
                 return methodInfo.IsPublic;
             }
 
-            Debug.Assert(false, "unknown member type");
+            Debug.Assert(false, "Unknown member type");
             return false;
         }
 
@@ -248,10 +247,8 @@ namespace Yale.Expression.Elements.Base
         /// </summary>
         /// <param name="member"></param>
         /// <returns></returns>
-        public bool IsMemberAccessible(MemberInfo member)
-        {
-            return IsMemberPublic(member);
-        }
+        public static bool IsMemberAccessible(MemberInfo member)
+            => IsMemberPublic(member);
 
         protected MemberInfo[] GetMembers(MemberTypes targets)
         {

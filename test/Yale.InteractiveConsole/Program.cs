@@ -6,7 +6,7 @@ namespace Yale.InteractiveConsole
 {
     internal class Program
     {
-        private readonly ComputeInstance _instance = new ComputeInstance();
+        private readonly ComputeInstance instance = new ComputeInstance();
         private readonly Regex isValue = new Regex("^[a-zA-Z]+[=][\\w]+$");
         private readonly Regex isExpression = new Regex("[a-zA-Z]+[:].+$");
         private readonly Regex isEvaluate = new Regex("[a-zA-Z]+");
@@ -27,9 +27,9 @@ namespace Yale.InteractiveConsole
 
         private void TryEvaluate(string input)
         {
-            if (_instance.ContainsExpression(input))
+            if (instance.ContainsExpression(input))
             {
-                var result = _instance.GetResult(input);
+                var result = instance.GetResult(input);
                 Console.WriteLine($"Result: {result}");
             }
             else
@@ -41,7 +41,7 @@ namespace Yale.InteractiveConsole
         private void AddExpression(string input)
         {
             var values = input.Split(':');
-            _instance.SetExpression(values[0], values[1]);
+            instance.SetExpression(values[0], values[1]);
         }
 
         private void AddValue(string input)
@@ -52,19 +52,19 @@ namespace Yale.InteractiveConsole
 
             if (int.TryParse(value, out var integer))
             {
-                _instance.Variables[key] = integer;
+                instance.Variables[key] = integer;
             }
             else if (double.TryParse(value, out var number))
             {
-                _instance.Variables[key] = number;
+                instance.Variables[key] = number;
             }
             else
             {
-                _instance.Variables[key] = value;
+                instance.Variables[key] = value;
             }
         }
 
-        private static void Main(string[] args)
+        private static void Main(string[] _)
         {
             new Program().Run();
         }
