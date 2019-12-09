@@ -20,8 +20,8 @@ namespace Yale.Engine.Internal
 
         public void AddDependency(string expressionKey, string dependsOnKey)
         {
-            DependencyNode expressionNode = null;
-            DependencyNode dependsOnNode = null;
+            DependencyNode? expressionNode = null;
+            DependencyNode? dependsOnNode = null;
 
             if (Nodes.ContainsKey(dependsOnKey) == false)
             {
@@ -35,8 +35,8 @@ namespace Yale.Engine.Internal
                 Nodes.Add(expressionKey, expressionNode);
             }
 
-            dependsOnNode = dependsOnNode ?? Nodes[dependsOnKey];
-            expressionNode = expressionNode ?? Nodes[expressionKey];
+            dependsOnNode ??= Nodes[dependsOnKey];
+            expressionNode ??= Nodes[expressionKey];
 
             expressionNode.AddPredecessor(dependsOnNode);
         }

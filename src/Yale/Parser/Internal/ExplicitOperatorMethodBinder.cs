@@ -8,7 +8,6 @@ namespace Yale.Parser.Internal
     {
         private readonly Type returnType;
         private readonly Type argType;
-        private readonly CustomBinder customBinderImplementation;
 
         public ExplicitOperatorMethodBinder(Type returnType, Type argType)
         {
@@ -19,10 +18,10 @@ namespace Yale.Parser.Internal
         public override MethodBase BindToMethod(BindingFlags bindingAttr, MethodBase[] match, ref object[] args, ParameterModifier[] modifiers,
             CultureInfo culture, string[] names, out object state)
         {
-            return customBinderImplementation.BindToMethod(bindingAttr, match, ref args, modifiers, culture, names, out state);
+            throw new NotImplementedException();
         }
 
-        public override MethodBase SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers)
+        public override MethodBase? SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers)
         {
             foreach (MethodInfo methodInfo in match)
             {

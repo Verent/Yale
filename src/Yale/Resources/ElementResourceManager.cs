@@ -1,4 +1,5 @@
-﻿using System.Resources;
+﻿using System;
+using System.Resources;
 
 namespace Yale.Resources
 {
@@ -21,7 +22,7 @@ namespace Yale.Resources
 
         public static string GetElementNameString(string key)
         {
-            return Manager.GetString(key);
+            return Manager.GetString(key) ?? throw new InvalidOperationException();
         }
     }
 }
