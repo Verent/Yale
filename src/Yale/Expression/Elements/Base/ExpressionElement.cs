@@ -52,7 +52,6 @@ namespace Yale.Expression.Elements.Base
                 Debug.Assert(value != null, $"Element name for '{key}' not in resource file");
                 return value;
             }
-            set => throw new InvalidOperationException("Can not set name of ExpressionElement.");
         }
     }
 }

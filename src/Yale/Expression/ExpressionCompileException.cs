@@ -4,7 +4,6 @@ using Yale.Resources;
 
 namespace Yale.Expression
 {
-    /// The exception thrown when an expression cannot be compiled.
     public sealed class ExpressionCompileException : Exception
     {
         internal ExpressionCompileException(string message, CompileExceptionReason reason) : base(message)

@@ -27,7 +27,7 @@ namespace Yale.Engine.Internal
             node.dependents = null;
         }
 
-        private string[] dependents;
+        private string[]? dependents;
 
         public string[] Dependents
         {
@@ -37,7 +37,7 @@ namespace Yale.Engine.Internal
             }
         }
 
-        private string[] precedents;
+        private string[]? precedents;
 
         public string[] Precedents
         {
