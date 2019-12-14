@@ -30,9 +30,9 @@ namespace Yale.Engine.Internal
 
         public bool Dirty { get; set; }
 
-        public Type ResultType => Result.GetType();
+        public Type? ResultType => Result?.GetType();
 
-        public object ResultAsObject => Result;
+        public object? ResultAsObject => Result;
 
         public Expression<T> GetExpression() => Expression;
 

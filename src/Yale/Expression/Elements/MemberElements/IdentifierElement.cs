@@ -17,7 +17,7 @@ namespace Yale.Expression.Elements.MemberElements
 {
     internal class IdentifierElement : MemberElement
     {
-        private FieldInfo field;
+        private FieldInfo? field;
         private PropertyInfo property;
         private PropertyDescriptor propertyDescriptor;
 

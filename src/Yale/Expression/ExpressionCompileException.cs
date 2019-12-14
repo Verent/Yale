@@ -1,9 +1,14 @@
-﻿using PerCederberg.Grammatica.Runtime;
-using System;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
+
+using PerCederberg.Grammatica.Runtime;
+
 using Yale.Resources;
 
 namespace Yale.Expression
 {
+    [SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "<Pending>")]
     public sealed class ExpressionCompileException : Exception
     {
         internal ExpressionCompileException(string message, CompileExceptionReason reason) : base(message)
@@ -16,15 +21,15 @@ namespace Yale.Expression
             Reason = CompileExceptionReason.SyntaxError;
         }
 
-        private ExpressionCompileException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context)
+        private ExpressionCompileException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             Reason = (CompileExceptionReason)info.GetInt32("Reason");
         }
 
-        public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
-            info.AddValue("Reason", Convert.ToInt32(Reason));
+            info.AddValue("Reason", (int)Reason);
         }
 
         public override string Message
@@ -44,6 +49,5 @@ namespace Yale.Expression
         /// Explains the reason why compilation failed.
         /// </summary>
         public CompileExceptionReason Reason { get; }
-
     }
 }
