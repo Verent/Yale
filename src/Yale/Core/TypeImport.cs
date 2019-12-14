@@ -10,8 +10,8 @@ namespace Yale.Core
     /// <remarks>Use this class when you want to make the members of a type available to an expression</remarks>
     internal sealed class TypeImport : ImportBase
     {
-        private readonly BindingFlags _bindFlags;
-        private readonly bool _useTypeNameAsNamespace;
+        private readonly BindingFlags bindFlags;
+        private readonly bool useTypeNameAsNamespace;
 
         public TypeImport(Type importType, ExpressionBuilderOptions options) : this(importType, false, options)
         {
@@ -24,30 +24,30 @@ namespace Yale.Core
         internal TypeImport(Type importType, BindingFlags flags, bool useTypeNameAsNamespace, IExpressionOptions options) : base(options)
         {
             Target = importType ?? throw new ArgumentNullException(nameof(importType));
-            _bindFlags = flags;
-            _useTypeNameAsNamespace = useTypeNameAsNamespace;
+            bindFlags = flags;
+            this.useTypeNameAsNamespace = useTypeNameAsNamespace;
         }
 
         protected override void AddMembers(string memberName, MemberTypes memberType, ICollection<MemberInfo> targetCollection)
         {
-            var members = Target.FindMembers(memberType, _bindFlags, Options.MemberFilter, memberName);
+            var members = Target.FindMembers(memberType, bindFlags, Options.MemberFilter, memberName);
             AddMemberRange(members, targetCollection);
         }
 
         protected override void AddMembers(MemberTypes memberType, ICollection<MemberInfo> targetCollection)
         {
-            if (_useTypeNameAsNamespace) return;
+            if (useTypeNameAsNamespace) return;
 
-            var members = Target.FindMembers(memberType, _bindFlags, AlwaysMemberFilter, null);
+            var members = Target.FindMembers(memberType, bindFlags, AlwaysMemberFilter, null);
             AddMemberRange(members, targetCollection);
         }
 
         internal override bool IsMatch(string name)
         {
-            return _useTypeNameAsNamespace && string.Equals(Target.Name, name, Options.MemberStringComparison);
+            return useTypeNameAsNamespace && string.Equals(Target.Name, name, Options.MemberStringComparison);
         }
 
-        internal override Type FindType(string typeName)
+        internal override Type? FindType(string typeName)
         {
             return string.Equals(typeName, Target.Name, Options.MemberStringComparison) ? Target : null;
         }
@@ -59,13 +59,13 @@ namespace Yale.Core
 
         public override IEnumerator<ImportBase> GetEnumerator()
         {
-            if (!_useTypeNameAsNamespace) return base.GetEnumerator();
+            if (!useTypeNameAsNamespace) return base.GetEnumerator();
 
             var coll = new List<ImportBase> { new TypeImport(Target, false, Options) };
             return coll.GetEnumerator();
         }
 
-        public override bool IsContainer => _useTypeNameAsNamespace;
+        public override bool IsContainer => useTypeNameAsNamespace;
 
         public override string Name => Target.Name;
 

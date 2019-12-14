@@ -65,11 +65,11 @@ namespace Yale.Expression.Elements.MemberElements
         {
             if (previous == null)
             {
-                ThrowCompileException(CompileErrors.UndefinedFunction, CompileExceptionReason.UndefinedName, MemberName, arguments);
+                throw CompileException(CompileErrors.UndefinedFunction, CompileExceptionReason.UndefinedName, MemberName, arguments);
             }
             else
             {
-                ThrowCompileException(CompileErrors.UndefinedFunctionOnType, CompileExceptionReason.UndefinedName, MemberName, arguments, previous.TargetType.Name);
+                throw CompileException(CompileErrors.UndefinedFunctionOnType, CompileExceptionReason.UndefinedName, MemberName, arguments, previous.TargetType.Name);
             }
         }
 
@@ -77,17 +77,17 @@ namespace Yale.Expression.Elements.MemberElements
         {
             if (previous == null)
             {
-                ThrowCompileException(CompileErrors.NoAccessibleMatches, CompileExceptionReason.AccessDenied, MemberName, arguments);
+                throw CompileException(CompileErrors.NoAccessibleMatches, CompileExceptionReason.AccessDenied, MemberName, arguments);
             }
             else
             {
-                ThrowCompileException(CompileErrors.NoAccessibleMatchesOnType, CompileExceptionReason.AccessDenied, MemberName, arguments, previous.TargetType.Name);
+                throw CompileException(CompileErrors.NoAccessibleMatchesOnType, CompileExceptionReason.AccessDenied, MemberName, arguments, previous.TargetType.Name);
             }
         }
 
         private void ThrowAmbiguousMethodCallException()
         {
-            ThrowCompileException(CompileErrors.AmbiguousCallOfFunction, CompileExceptionReason.AmbiguousMatch, MemberName, arguments);
+            throw CompileException(CompileErrors.AmbiguousCallOfFunction, CompileExceptionReason.AmbiguousMatch, MemberName, arguments);
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace Yale.Expression.Elements.MemberElements
             // Any function reference in an expression must return a value
             if (ReferenceEquals(Method.ReturnType, typeof(void)))
             {
-                ThrowCompileException(CompileErrors.FunctionHasNoReturnValue, CompileExceptionReason.FunctionHasNoReturnValue, MemberName);
+                throw CompileException(CompileErrors.FunctionHasNoReturnValue, CompileExceptionReason.FunctionHasNoReturnValue, MemberName);
             }
         }
 

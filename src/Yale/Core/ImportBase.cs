@@ -45,7 +45,7 @@ namespace Yale.Core
 
         internal abstract bool IsMatch(string name);
 
-        internal abstract Type FindType(string typeName);
+        internal abstract Type? FindType(string typeName);
 
         //Todo: Make this abstract
         internal virtual ImportBase FindImport(string name)

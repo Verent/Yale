@@ -10,7 +10,7 @@ namespace Yale.Expression.Elements.Base.Literals
     {
         protected void OnParseOverflow(string image)
         {
-            ThrowCompileException(CompileErrors.ValueNotRepresentableInType, CompileExceptionReason.ConstantOverflow, image, ResultType.Name);
+            throw CompileException(CompileErrors.ValueNotRepresentableInType, CompileExceptionReason.ConstantOverflow, image, ResultType.Name);
         }
 
         public static void EmitLoad(int value, YaleIlGenerator ilg)

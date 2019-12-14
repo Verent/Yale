@@ -58,7 +58,7 @@ namespace Yale.Core
             return _values.Remove(key);
         }
 
-        public bool TryGetValue(string key, out object value)
+        public bool TryGetValue(string key, out object? value)
         {
             var success = _values.TryGetValue(key, out var result);
             value = result?.ValueAsObject;
@@ -118,6 +118,6 @@ namespace Yale.Core
             return GetEnumerator();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

@@ -38,7 +38,7 @@ namespace Yale.Expression.Elements
         {
             if (ImplicitConverter.EmitImplicitConvert(_child.ResultType, _resultType, null) == false)
             {
-                ThrowCompileException(CompileErrors.CannotConvertTypeToExpressionResult, CompileExceptionReason.TypeMismatch, _child.ResultType.Name, _resultType.Name);
+                throw CompileException(CompileErrors.CannotConvertTypeToExpressionResult, CompileExceptionReason.TypeMismatch, _child.ResultType.Name, _resultType.Name);
             }
         }
 

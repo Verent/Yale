@@ -62,7 +62,7 @@ namespace Yale.Expression.Elements
 
             if (targetCollectionType == null)
             {
-                ThrowCompileException(CompileErrors.SearchArgIsNotKnownCollectionType, CompileExceptionReason.TypeMismatch, targetCollectionElement.ResultType.Name);
+                throw CompileException(CompileErrors.SearchArgIsNotKnownCollectionType, CompileExceptionReason.TypeMismatch, targetCollectionElement.ResultType.Name);
             }
 
             // Validate that the operand type is compatible with the collection
@@ -71,7 +71,7 @@ namespace Yale.Expression.Elements
 
             if (ImplicitConverter.EmitImplicitConvert(operand.ResultType, firstParameter.ParameterType, null) == false)
             {
-                ThrowCompileException(CompileErrors.OperandNotConvertibleToCollectionType, CompileExceptionReason.TypeMismatch, operand.ResultType.Name, firstParameter.ParameterType.Name);
+                throw CompileException(CompileErrors.OperandNotConvertibleToCollectionType, CompileExceptionReason.TypeMismatch, operand.ResultType.Name, firstParameter.ParameterType.Name);
             }
         }
 

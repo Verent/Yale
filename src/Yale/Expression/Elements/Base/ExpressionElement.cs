@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reflection.Emit;
+
 using Yale.Parser.Internal;
 using Yale.Resources;
 
@@ -25,16 +25,16 @@ namespace Yale.Expression.Elements.Base
             return Name;
         }
 
-        protected void ThrowCompileException(string messageTemplate, CompileExceptionReason reason, params object[] arguments)
+        protected ExpressionCompileException CompileException(string messageTemplate, CompileExceptionReason reason, params object[] arguments)
         {
             var message = string.Format(messageTemplate, arguments);
             message = string.Concat(Name, ": ", message);
-            throw new ExpressionCompileException(message, reason);
+            return new ExpressionCompileException(message, reason);
         }
 
-        protected void ThrowAmbiguousCallException(Type leftType, Type rightType, object operation)
+        protected ExpressionCompileException ThrowAmbiguousCallException(Type leftType, Type rightType, object operation)
         {
-            ThrowCompileException(CompileErrors.AmbiguousOverloadedOperator, CompileExceptionReason.AmbiguousMatch, leftType.Name, rightType.Name, operation);
+            return CompileException(CompileErrors.AmbiguousOverloadedOperator, CompileExceptionReason.AmbiguousMatch, leftType.Name, rightType.Name, operation);
         }
 
         protected YaleIlGenerator CreateTempIlGenerator(YaleIlGenerator ilgCurrent)
@@ -49,7 +49,7 @@ namespace Yale.Expression.Elements.Base
             {
                 var key = GetType().Name;
                 var value = ElementResourceManager.GetElementNameString(key);
-                Debug.Assert(value != null, $"Element name for '{key}' not in resource file");
+                if (value == null) throw new InvalidOperationException($"Element name for '{key}' not in resource file");
                 return value;
             }
         }

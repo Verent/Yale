@@ -197,7 +197,7 @@ namespace Yale.Engine
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public object GetResult(string key)
+        public object? GetResult(string key)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
 
@@ -241,7 +241,7 @@ namespace Yale.Engine
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public Type ResultType(string key)
+        public Type? ResultType(string key)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
 

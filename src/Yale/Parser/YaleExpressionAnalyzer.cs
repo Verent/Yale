@@ -315,8 +315,7 @@ namespace Yale.Parser
 
             if (childValues.Count == 2)
             {
-                var element = (UnaryElement)Activator.CreateInstance(elementType);
-                element.SetChild((ExpressionElement)childValues[1]);
+                var element = (UnaryElement)Activator.CreateInstance(elementType, childValues[1]);
                 node.AddValue(element);
             }
             else
