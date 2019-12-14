@@ -19,7 +19,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
             _myOperation = (AndOrOperation)operation;
         }
 
-        protected override Type GetResultType(Type leftType, Type rightType)
+        protected override Type? GetResultType(Type leftType, Type rightType)
         {
             var bitwiseOpType = Utility.GetBitwiseOpType(leftType, rightType);
             if (bitwiseOpType != null)

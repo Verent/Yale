@@ -21,7 +21,7 @@ namespace Yale.Expression.Elements
 
             if (!ReferenceEquals(this.condition.ResultType, typeof(bool)))
             {
-                ThrowCompileException(CompileErrors.FirstArgNotBoolean, CompileExceptionReason.TypeMismatch);
+                throw CompileException(CompileErrors.FirstArgNotBoolean, CompileExceptionReason.TypeMismatch);
             }
 
             // The result type is the type that is common to the true/false operands
@@ -35,7 +35,7 @@ namespace Yale.Expression.Elements
             }
             else
             {
-                ThrowCompileException(CompileErrors.NeitherArgIsConvertibleToTheOther, CompileExceptionReason.TypeMismatch, this.whenTrue.ResultType.Name, this.whenFalse.ResultType.Name);
+                throw CompileException(CompileErrors.NeitherArgIsConvertibleToTheOther, CompileExceptionReason.TypeMismatch, this.whenTrue.ResultType.Name, this.whenFalse.ResultType.Name);
             }
         }
 

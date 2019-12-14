@@ -57,11 +57,11 @@ namespace Yale.Expression.Elements.MemberElements
 
             if (Previous == null)
             {
-                ThrowCompileException(CompileErrors.NoIdentifierWithName, CompileExceptionReason.UndefinedName, MemberName);
+                throw CompileException(CompileErrors.NoIdentifierWithName, CompileExceptionReason.UndefinedName, MemberName);
             }
             else
             {
-                ThrowCompileException(CompileErrors.NoIdentifierWithNameOnType, CompileExceptionReason.UndefinedName, MemberName, Previous.TargetType.Name);
+                throw CompileException(CompileErrors.NoIdentifierWithNameOnType, CompileExceptionReason.UndefinedName, MemberName, Previous.TargetType.Name);
             }
         }
 
@@ -81,11 +81,11 @@ namespace Yale.Expression.Elements.MemberElements
                 // More than one accessible member
                 if (previous == null)
                 {
-                    ThrowCompileException(CompileErrors.IdentifierIsAmbiguous, CompileExceptionReason.AmbiguousMatch, MemberName);
+                    throw CompileException(CompileErrors.IdentifierIsAmbiguous, CompileExceptionReason.AmbiguousMatch, MemberName);
                 }
                 else
                 {
-                    ThrowCompileException(CompileErrors.IdentifierIsAmbiguousOnType, CompileExceptionReason.AmbiguousMatch, MemberName, previous.TargetType.Name);
+                    throw CompileException(CompileErrors.IdentifierIsAmbiguousOnType, CompileExceptionReason.AmbiguousMatch, MemberName, previous.TargetType.Name);
                 }
             }
             else

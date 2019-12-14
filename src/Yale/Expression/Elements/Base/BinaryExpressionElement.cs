@@ -3,6 +3,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
+
 using Yale.Parser.Internal;
 using Yale.Resources;
 
@@ -15,7 +16,7 @@ namespace Yale.Expression.Elements.Base
     {
         protected ExpressionElement LeftChild;
         protected ExpressionElement RightChild;
-        private Type _resultType;
+        private Type? resultType;
 
         /// <summary>
         /// Converts a list of binary elements into a binary tree
@@ -44,15 +45,15 @@ namespace Yale.Expression.Elements.Base
 
         protected void ValidateInternal(object op)
         {
-            _resultType = GetResultType(LeftChild.ResultType, RightChild.ResultType);
+            resultType = GetResultType(LeftChild.ResultType, RightChild.ResultType);
 
-            if (_resultType == null)
+            if (resultType == null)
             {
                 ThrowOperandTypeMismatch(op, LeftChild.ResultType, RightChild.ResultType);
             }
         }
 
-        protected MethodInfo GetOverloadedBinaryOperator(string name, object operation)
+        protected MethodInfo? GetOverloadedBinaryOperator(string name, object operation)
         {
             var leftType = LeftChild.ResultType;
             var rightType = RightChild.ResultType;
@@ -72,7 +73,7 @@ namespace Yale.Expression.Elements.Base
             if (leftMethod == null & rightMethod == null)
             {
                 // No operator defined for either
-                return null;
+                return default;
             }
 
             if (leftMethod == null)
@@ -85,9 +86,7 @@ namespace Yale.Expression.Elements.Base
                 return leftMethod;
             }
 
-            //Ambiguous call
-            ThrowAmbiguousCallException(leftType, rightType, operation);
-            return null;
+            throw ThrowAmbiguousCallException(leftType, rightType, operation);
         }
 
         protected void EmitOverloadedOperatorCall(MethodInfo method, YaleIlGenerator ilg, ExpressionContext context)
@@ -103,10 +102,10 @@ namespace Yale.Expression.Elements.Base
 
         protected void ThrowOperandTypeMismatch(object operation, Type leftType, Type rightType)
         {
-            ThrowCompileException(CompileErrors.OperationNotDefinedForTypes, CompileExceptionReason.TypeMismatch, operation, leftType.Name, rightType.Name);
+            throw CompileException(CompileErrors.OperationNotDefinedForTypes, CompileExceptionReason.TypeMismatch, operation, leftType.Name, rightType.Name);
         }
 
-        protected abstract Type GetResultType(Type leftType, Type rightType);
+        protected abstract Type? GetResultType(Type leftType, Type rightType);
 
         protected static void EmitChildWithConvert(ExpressionElement child, Type resultType, YaleIlGenerator ilg, ExpressionContext context)
         {
@@ -145,6 +144,6 @@ namespace Yale.Expression.Elements.Base
             ValidateInternal(op);
         }
 
-        public override sealed Type ResultType => _resultType;
+        public override sealed Type ResultType => resultType;
     }
 }

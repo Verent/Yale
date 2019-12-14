@@ -12,25 +12,25 @@ namespace Yale.Expression.Elements
 {
     internal class CastElement : ExpressionElement
     {
-        private readonly ExpressionElement _castExpression;
-        private readonly Type _destType;
+        private readonly ExpressionElement castExpression;
+        private readonly Type? destType;
 
         public CastElement(ExpressionElement castExpression, string[] destintaionTypeParts, bool isArray, ExpressionContext context)
         {
-            _castExpression = castExpression;
-            _destType = GetDestType(destintaionTypeParts, context);
+            this.castExpression = castExpression;
+            destType = GetDestType(destintaionTypeParts, context);
 
-            if (_destType == null)
+            if (destType == null)
             {
-                ThrowCompileException(CompileErrors.CouldNotResolveType, CompileExceptionReason.UndefinedName, GetDestinationTypeString(destintaionTypeParts, isArray));
+                throw CompileException(CompileErrors.CouldNotResolveType, CompileExceptionReason.UndefinedName, GetDestinationTypeString(destintaionTypeParts, isArray));
             }
 
             if (isArray)
             {
-                _destType = _destType.MakeArrayType();
+                destType = destType?.MakeArrayType();
             }
 
-            if (IsValidCast(_castExpression.ResultType, _destType) == false)
+            if (IsValidCast(this.castExpression.ResultType, destType) == false)
             {
                 ThrowInvalidCastException();
             }
@@ -150,8 +150,7 @@ namespace Yale.Expression.Elements
                 return miSource;
             }
 
-            ThrowAmbiguousCallException(sourceType, destType, "Explicit");
-            return null;
+            throw ThrowAmbiguousCallException(sourceType, destType, "Explicit");
         }
 
         private bool IsValidExplicitEnumCast(Type sourceType, Type destType)
@@ -248,7 +247,7 @@ namespace Yale.Expression.Elements
 
         private void ThrowInvalidCastException()
         {
-            ThrowCompileException(CompileErrors.CannotConvertType, CompileExceptionReason.InvalidExplicitCast, _castExpression.ResultType.Name, _destType.Name);
+            throw CompileException(CompileErrors.CannotConvertType, CompileExceptionReason.InvalidExplicitCast, castExpression.ResultType.Name, destType.Name);
         }
 
         private static bool IsCastableNumericType(Type t)
@@ -263,10 +262,10 @@ namespace Yale.Expression.Elements
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            _castExpression.Emit(ilGenerator, context);
+            castExpression.Emit(ilGenerator, context);
 
-            var sourceType = _castExpression.ResultType;
-            var destType = _destType;
+            var sourceType = castExpression.ResultType;
+            var destType = this.destType;
 
             EmitCast(ilGenerator, sourceType, destType, context);
         }
@@ -506,6 +505,6 @@ namespace Yale.Expression.Elements
             }
         }
 
-        public override Type ResultType => _destType;
+        public override Type ResultType => destType;
     }
 }

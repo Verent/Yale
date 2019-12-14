@@ -73,11 +73,11 @@ namespace Yale.Expression.Elements.Base
 
             if (IsStatic && SupportsStatic == false)
             {
-                ThrowCompileException(CompileErrors.StaticMemberCannotBeAccessedWithInstanceReference, CompileExceptionReason.TypeMismatch, MemberName);
+                throw CompileException(CompileErrors.StaticMemberCannotBeAccessedWithInstanceReference, CompileExceptionReason.TypeMismatch, MemberName);
             }
             else if (IsStatic == false && SupportsInstance == false)
             {
-                ThrowCompileException(CompileErrors.ReferenceToNonSharedMemberRequiresObjectReference, CompileExceptionReason.TypeMismatch, MemberName);
+                throw CompileException(CompileErrors.ReferenceToNonSharedMemberRequiresObjectReference, CompileExceptionReason.TypeMismatch, MemberName);
             }
         }
 

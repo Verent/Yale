@@ -37,7 +37,7 @@ namespace Yale.Core
             return string.Equals(Target.Name, name, Options.MemberStringComparison);
         }
 
-        internal override Type FindType(string typeName)
+        internal override Type? FindType(string typeName)
         {
             return null;
         }
