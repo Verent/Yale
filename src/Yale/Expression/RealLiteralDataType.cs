@@ -1,8 +1,11 @@
-﻿namespace Yale.Expression
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Yale.Expression
 {
     /// <summary>
     /// Defines values to indicate the data type to use for storing real literals.
     /// </summary>
+    [SuppressMessage("Documentation", "CA1200:Avoid using cref tags with a prefix", Justification = "Because they represent types")]
     public enum RealLiteralDataType
     {
         /// <summary>

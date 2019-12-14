@@ -49,6 +49,8 @@ namespace Yale.Engine
 
         public ComputeInstance(ComputeInstanceOptions options)
         {
+            if (options == null) throw new ArgumentNullException(nameof(options));
+
             Builder = new ExpressionBuilder(options.ExpressionOptions)
             {
                 ComputeInstance = this

@@ -60,7 +60,7 @@ namespace Yale.Core
                 .FirstOrDefault(type => type != null);
         }
 
-        internal override ImportBase FindImport(string name)
+        internal override ImportBase? FindImport(string name)
         {
             foreach (var import in _imports)
             {

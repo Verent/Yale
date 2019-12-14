@@ -74,7 +74,7 @@ namespace Yale.Core
             return ownerImport.FindMembers(memberName, memberType);
         }
 
-        internal Type FindType(string[] typeNameParts)
+        internal Type? FindType(string[] typeNameParts)
         {
             var namespaces = new string[typeNameParts.Length - 1];
             var typeName = typeNameParts[typeNameParts.Length - 1];
@@ -94,14 +94,9 @@ namespace Yale.Core
             return currentImport?.FindType(typeName);
         }
 
-        internal static Type GetBuiltinType(string name)
+        internal static Type? GetBuiltinType(string name)
         {
-            if (OurBuiltinTypeMap.TryGetValue(name, out var type))
-            {
-                return type;
-            }
-
-            return null;
+            return OurBuiltinTypeMap.TryGetValue(name, out var type) ? type : null;
         }
 
         public void AddType(Type type, string @namespace)
