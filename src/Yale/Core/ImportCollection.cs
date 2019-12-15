@@ -80,7 +80,7 @@ namespace Yale.Core
             var typeName = typeNameParts[typeNameParts.Length - 1];
 
             Array.Copy(typeNameParts, namespaces, namespaces.Length);
-            ImportBase currentImport = RootImport;
+            ImportBase? currentImport = RootImport;
 
             foreach (var ns in namespaces)
             {

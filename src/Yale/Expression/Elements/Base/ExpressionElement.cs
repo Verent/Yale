@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.Reflection.Emit;
-
 using Yale.Parser.Internal;
 using Yale.Resources;
 
@@ -27,12 +28,12 @@ namespace Yale.Expression.Elements.Base
 
         protected ExpressionCompileException CompileException(string messageTemplate, CompileExceptionReason reason, params object[] arguments)
         {
-            var message = string.Format(messageTemplate, arguments);
+            var message = string.Format(CultureInfo.InvariantCulture, messageTemplate, arguments);
             message = string.Concat(Name, ": ", message);
             return new ExpressionCompileException(message, reason);
         }
 
-        protected ExpressionCompileException ThrowAmbiguousCallException(Type leftType, Type rightType, object operation)
+        protected ExpressionCompileException AmbiguousCallException(Type leftType, Type rightType, object operation)
         {
             return CompileException(CompileErrors.AmbiguousOverloadedOperator, CompileExceptionReason.AmbiguousMatch, leftType.Name, rightType.Name, operation);
         }
@@ -49,7 +50,7 @@ namespace Yale.Expression.Elements.Base
             {
                 var key = GetType().Name;
                 var value = ElementResourceManager.GetElementNameString(key);
-                if (value == null) throw new InvalidOperationException($"Element name for '{key}' not in resource file");
+                Debug.Assert(value != null, $"Element name for '{key}' not in resource file");
                 return value;
             }
         }

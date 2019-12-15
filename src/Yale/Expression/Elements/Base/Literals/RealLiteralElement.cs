@@ -60,7 +60,7 @@ namespace Yale.Expression.Elements.Base.Literals
             return element;
         }
 
-        private static LiteralElement CreateImplicitReal(string image)
+        private static LiteralElement? CreateImplicitReal(string image)
         {
             var realType = builderOptions.RealLiteralDataType;
 
@@ -81,7 +81,7 @@ namespace Yale.Expression.Elements.Base.Literals
             }
         }
 
-        private static DoubleLiteralElement CreateDouble(string image)
+        private static DoubleLiteralElement? CreateDouble(string image)
         {
             if (image.EndsWith("d", StringComparison.OrdinalIgnoreCase))
             {
@@ -92,7 +92,7 @@ namespace Yale.Expression.Elements.Base.Literals
             return null;
         }
 
-        private static SingleLiteralElement CreateSingle(string image)
+        private static SingleLiteralElement? CreateSingle(string image)
         {
             if (image.EndsWith("f", StringComparison.OrdinalIgnoreCase))
             {
@@ -103,7 +103,7 @@ namespace Yale.Expression.Elements.Base.Literals
             return null;
         }
 
-        private static DecimalLiteralElement CreateDecimal(string image)
+        private static DecimalLiteralElement? CreateDecimal(string image)
         {
             if (image.EndsWith("m", StringComparison.OrdinalIgnoreCase))
             {
