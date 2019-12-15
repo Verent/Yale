@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
-
 using Yale.Core;
 using Yale.Expression.Elements.Base;
 using Yale.Parser.Internal;
@@ -12,25 +11,25 @@ namespace Yale.Expression.Elements
 {
     internal class CastElement : ExpressionElement
     {
-        private readonly ExpressionElement castExpression;
-        private readonly Type? destType;
+        private readonly ExpressionElement _castExpression;
+        private readonly Type _destType;
 
         public CastElement(ExpressionElement castExpression, string[] destintaionTypeParts, bool isArray, ExpressionContext context)
         {
-            this.castExpression = castExpression;
-            destType = GetDestType(destintaionTypeParts, context);
+            _castExpression = castExpression;
+            _destType = GetDestType(destintaionTypeParts, context);
 
-            if (destType == null)
+            if (_destType == null)
             {
-                throw CompileException(CompileErrors.CouldNotResolveType, CompileExceptionReason.UndefinedName, GetDestinationTypeString(destintaionTypeParts, isArray));
+                CompileException(CompileErrors.CouldNotResolveType, CompileExceptionReason.UndefinedName, GetDestinationTypeString(destintaionTypeParts, isArray));
             }
 
             if (isArray)
             {
-                destType = destType?.MakeArrayType();
+                _destType = _destType.MakeArrayType();
             }
 
-            if (IsValidCast(this.castExpression.ResultType, destType) == false)
+            if (IsValidCast(_castExpression.ResultType, _destType) == false)
             {
                 ThrowInvalidCastException();
             }
@@ -41,7 +40,7 @@ namespace Yale.Expression.Elements
             var s = string.Join(".", parts);
             if (isArray)
             {
-                s = s + "[]";
+                s += "[]";
             }
             return s;
         }
@@ -110,15 +109,16 @@ namespace Yale.Expression.Elements
 
             if (sourceType.IsValueType)
             {
-                // If we get here then the cast always fails since we are either casting one value
-                // type to another or a value type to an invalid reference type
+                // If we get here then the cast always fails since we are either casting one value type to another
+                // or a value type to an invalid reference type
                 return false;
             }
 
             if (destType.IsValueType)
             {
-                // Reference type to value type Can only succeed if the reference type is a base of
-                // the value type or it is one of the interfaces the value type implements
+                // Reference type to value type
+                // Can only succeed if the reference type is a base of the value type or
+                // it is one of the interfaces the value type implements
                 var interfaces = destType.GetInterfaces();
                 return IsBaseType(destType, sourceType) || Array.IndexOf(interfaces, sourceType) != -1;
             }
@@ -127,7 +127,7 @@ namespace Yale.Expression.Elements
             return IsValidExplicitReferenceCast(sourceType, destType);
         }
 
-        private MethodInfo GetExplictOverloadedOperator(Type sourceType, Type destType)
+        private MethodInfo? GetExplictOverloadedOperator(Type sourceType, Type destType)
         {
             var methodBinder = new ExplicitOperatorMethodBinder(destType, sourceType);
 
@@ -150,7 +150,8 @@ namespace Yale.Expression.Elements
                 return miSource;
             }
 
-            throw ThrowAmbiguousCallException(sourceType, destType, "Explicit");
+            AmbiguousCallException(sourceType, destType, "Explicit");
+            return null;
         }
 
         private bool IsValidExplicitEnumCast(Type sourceType, Type destType)
@@ -172,8 +173,8 @@ namespace Yale.Expression.Elements
 
             if (sourceType.IsArray & destType.IsArray)
             {
-                // From an array-type S with an element type SE to an array-type T with an element
-                // type TE, provided all of the following are true:
+                // From an array-type S with an element type SE to an array-type T with an element type TE,
+                // provided all of the following are true:
 
                 // S and T have the same number of dimensions
                 if (sourceType.GetArrayRank() != destType.GetArrayRank())
@@ -202,15 +203,13 @@ namespace Yale.Expression.Elements
 
             if (sourceType.IsClass & destType.IsInterface)
             {
-                // From any class-type S to any interface-type T, provided S is not sealed and
-                // provided S does not implement T
+                // From any class-type S to any interface-type T, provided S is not sealed and provided S does not implement T
                 return sourceType.IsSealed == false & ImplementsInterface(sourceType, destType) == false;
             }
 
             if (sourceType.IsInterface & destType.IsClass)
             {
-                // From any interface-type S to any class-type T, provided T is not sealed or
-                // provided T implements S.
+                // From any interface-type S to any class-type T, provided T is not sealed or provided T implements S.
                 return destType.IsSealed == false | ImplementsInterface(destType, sourceType);
             }
 
@@ -247,7 +246,7 @@ namespace Yale.Expression.Elements
 
         private void ThrowInvalidCastException()
         {
-            throw CompileException(CompileErrors.CannotConvertType, CompileExceptionReason.InvalidExplicitCast, castExpression.ResultType.Name, destType.Name);
+            CompileException(CompileErrors.CannotConvertType, CompileExceptionReason.InvalidExplicitCast, _castExpression.ResultType.Name, _destType.Name);
         }
 
         private static bool IsCastableNumericType(Type t)
@@ -262,10 +261,10 @@ namespace Yale.Expression.Elements
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            castExpression.Emit(ilGenerator, context);
+            _castExpression.Emit(ilGenerator, context);
 
-            var sourceType = castExpression.ResultType;
-            var destType = this.destType;
+            var sourceType = _castExpression.ResultType;
+            var destType = _destType;
 
             EmitCast(ilGenerator, sourceType, destType, context);
         }
@@ -423,8 +422,7 @@ namespace Yale.Expression.Elements
                     }
                     else if (sourcetc != TypeCode.UInt32)
                     {
-                        // Don't need to emit a convert for this case since, to the CLR, it is the
-                        // same data type
+                        // Don't need to emit a convert for this case since, to the CLR, it is the same data type
                         opCode = OpCodes.Conv_I4;
                     }
                     break;
@@ -505,6 +503,6 @@ namespace Yale.Expression.Elements
             }
         }
 
-        public override Type ResultType => destType;
+        public override Type ResultType => _destType;
     }
 }

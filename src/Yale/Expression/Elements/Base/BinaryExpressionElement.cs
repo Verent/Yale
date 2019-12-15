@@ -3,7 +3,6 @@ using System.Collections;
 using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
-
 using Yale.Parser.Internal;
 using Yale.Resources;
 
@@ -73,7 +72,7 @@ namespace Yale.Expression.Elements.Base
             if (leftMethod == null & rightMethod == null)
             {
                 // No operator defined for either
-                return default;
+                return null;
             }
 
             if (leftMethod == null)
@@ -86,7 +85,9 @@ namespace Yale.Expression.Elements.Base
                 return leftMethod;
             }
 
-            throw ThrowAmbiguousCallException(leftType, rightType, operation);
+            //Ambiguous call
+            AmbiguousCallException(leftType, rightType, operation);
+            return null;
         }
 
         protected void EmitOverloadedOperatorCall(MethodInfo method, YaleIlGenerator ilg, ExpressionContext context)
@@ -102,7 +103,7 @@ namespace Yale.Expression.Elements.Base
 
         protected void ThrowOperandTypeMismatch(object operation, Type leftType, Type rightType)
         {
-            throw CompileException(CompileErrors.OperationNotDefinedForTypes, CompileExceptionReason.TypeMismatch, operation, leftType.Name, rightType.Name);
+            CompileException(CompileErrors.OperationNotDefinedForTypes, CompileExceptionReason.TypeMismatch, operation, leftType.Name, rightType.Name);
         }
 
         protected abstract Type? GetResultType(Type leftType, Type rightType);

@@ -15,7 +15,7 @@ namespace Yale.Expression.Elements
         private static MethodInfo stringConcatMethodInfo;
         private static MethodInfo objectConcatMethodInfo;
 
-        private BinaryArithmeticOperation _operation;
+        private BinaryArithmeticOperation operation;
 
         public ArithmeticElement()
         {
@@ -26,10 +26,10 @@ namespace Yale.Expression.Elements
 
         protected override void GetOperation(object operation)
         {
-            _operation = (BinaryArithmeticOperation)operation;
+            this.operation = (BinaryArithmeticOperation)operation;
         }
 
-        protected override Type GetResultType(Type leftType, Type rightType)
+        protected override Type? GetResultType(Type leftType, Type rightType)
         {
             var binaryResultType = ImplicitConverter.GetBinaryResultType(leftType, rightType);
             var overloadedMethod = GetOverloadedArithmeticOperator();
@@ -44,7 +44,7 @@ namespace Yale.Expression.Elements
             if (binaryResultType != null)
             {
                 // Operands are primitive types.  Return computed result type unless we are doing a power operation
-                if (_operation == BinaryArithmeticOperation.Power)
+                if (operation == BinaryArithmeticOperation.Power)
                 {
                     return GetPowerResultType(leftType, rightType, binaryResultType);
                 }
@@ -52,7 +52,7 @@ namespace Yale.Expression.Elements
                 return binaryResultType;
             }
 
-            if (IsEitherChildOfType(typeof(string)) & (_operation == BinaryArithmeticOperation.Add))
+            if (IsEitherChildOfType(typeof(string)) & (operation == BinaryArithmeticOperation.Add))
             {
                 // String concatenation
                 return typeof(string);
@@ -64,23 +64,18 @@ namespace Yale.Expression.Elements
 
         private Type GetPowerResultType(Type leftType, Type rightType, Type binaryResultType)
         {
-            if (IsOptimizablePower)
-            {
-                return leftType;
-            }
-
-            return typeof(double);
+            return IsOptimizablePower ? leftType : typeof(double);
         }
 
         /// <summary>
         /// Return an methodInfo based on the type of the left and right child
         /// </summary>
         /// <returns>Overloaded methodInfo or null if no overloaded method is needed</returns>
-        private MethodInfo GetOverloadedArithmeticOperator()
+        private MethodInfo? GetOverloadedArithmeticOperator()
         {
             //Get the name of the operator
-            var name = GetOverloadedOperatorFunctionName(_operation);
-            return GetOverloadedBinaryOperator(name, _operation);
+            var name = GetOverloadedOperatorFunctionName(operation);
+            return GetOverloadedBinaryOperator(name, operation);
         }
 
         /// <summary>
@@ -88,7 +83,7 @@ namespace Yale.Expression.Elements
         /// </summary>
         /// <param name="operation"></param>
         /// <returns></returns>
-        private static string GetOverloadedOperatorFunctionName(BinaryArithmeticOperation operation)
+        private static string? GetOverloadedOperatorFunctionName(BinaryArithmeticOperation operation)
         {
             switch (operation)
             {
@@ -111,6 +106,7 @@ namespace Yale.Expression.Elements
                     return "Exponent";
 
                 default:
+                    //Todo: Perhaps this should be an exception?
                     Debug.Assert(false, "unknown operator type");
                     return null;
             }
@@ -133,7 +129,7 @@ namespace Yale.Expression.Elements
             else
             {
                 // Emit a regular arithmetic operation
-                EmitArithmeticOperation(_operation, ilGenerator, context);
+                EmitArithmeticOperation(operation, ilGenerator, context);
             }
         }
 
@@ -246,7 +242,7 @@ namespace Yale.Expression.Elements
             }
         }
 
-        private void EmitMultiply(YaleIlGenerator ilGenerator, bool emitOverflow, bool unsigned)
+        private static void EmitMultiply(YaleIlGenerator ilGenerator, bool emitOverflow, bool unsigned)
         {
             if (emitOverflow)
             {
@@ -293,7 +289,7 @@ namespace Yale.Expression.Elements
         {
             get
             {
-                if (_operation != BinaryArithmeticOperation.Power || RightChild is Int32LiteralElement == false)
+                if (operation != BinaryArithmeticOperation.Power || RightChild is Int32LiteralElement == false)
                 {
                     return false;
                 }
