@@ -34,6 +34,19 @@ namespace Yale.Tests.Engine
         }
 
         [TestMethod]
+        public void ChangeInt_UsedInExpressions_UpdatesExpression()
+        {
+            const int a = 1;
+            const int aUpdated = 2;
+            _instance.Variables.Add("a", a);
+            _instance.AddExpression("ra", "a*2");
+            Assert.AreEqual(a * 2, _instance.GetResult<int>("ra"));
+
+            _instance.Variables["a"] = aUpdated;
+            Assert.AreEqual(aUpdated * 2, _instance.GetResult<int>("ra"));
+        }
+
+        [TestMethod]
         public void AddExpression_ThatAreValid_ReturnsExpectedResult()
         {
             _instance.AddExpression("a", "true");
