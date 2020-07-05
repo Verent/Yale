@@ -6,14 +6,14 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements
 {
-    internal class ConditionalElement : ExpressionElement
+    internal class ConditionalElement : BaseExpressionElement
     {
-        private readonly ExpressionElement condition;
-        private readonly ExpressionElement whenTrue;
-        private readonly ExpressionElement whenFalse;
+        private readonly BaseExpressionElement condition;
+        private readonly BaseExpressionElement whenTrue;
+        private readonly BaseExpressionElement whenFalse;
         private readonly Type resultType;
 
-        public ConditionalElement(ExpressionElement condition, ExpressionElement whenTrue, ExpressionElement whenFalse)
+        public ConditionalElement(BaseExpressionElement condition, BaseExpressionElement whenTrue, BaseExpressionElement whenFalse)
         {
             this.condition = condition;
             this.whenTrue = whenTrue;
@@ -21,7 +21,7 @@ namespace Yale.Expression.Elements
 
             if (!ReferenceEquals(this.condition.ResultType, typeof(bool)))
             {
-                throw CompileException(CompileErrors.FirstArgNotBoolean, CompileExceptionReason.TypeMismatch);
+                throw CreateCompileException(CompileErrors.FirstArgNotBoolean, CompileExceptionReason.TypeMismatch);
             }
 
             // The result type is the type that is common to the true/false operands
@@ -35,7 +35,7 @@ namespace Yale.Expression.Elements
             }
             else
             {
-                throw CompileException(CompileErrors.NeitherArgIsConvertibleToTheOther, CompileExceptionReason.TypeMismatch, this.whenTrue.ResultType.Name, this.whenFalse.ResultType.Name);
+                throw CreateCompileException(CompileErrors.NeitherArgIsConvertibleToTheOther, CompileExceptionReason.TypeMismatch, this.whenTrue.ResultType.Name, this.whenFalse.ResultType.Name);
             }
         }
 

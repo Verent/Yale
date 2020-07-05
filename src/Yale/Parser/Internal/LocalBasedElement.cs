@@ -7,13 +7,13 @@ namespace Yale.Parser.Internal
     /// <summary>
     /// Wraps an expression element so that it is loaded from a local slot
     /// </summary>
-    internal class LocalBasedElement : ExpressionElement
+    internal class LocalBasedElement : BaseExpressionElement
     {
         private readonly int _index;
 
-        private readonly ExpressionElement _target;
+        private readonly BaseExpressionElement _target;
 
-        public LocalBasedElement(ExpressionElement target, int index)
+        public LocalBasedElement(BaseExpressionElement target, int index)
         {
             _target = target;
             _index = index;

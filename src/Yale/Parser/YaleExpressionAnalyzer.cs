@@ -112,7 +112,7 @@ namespace Yale.Parser
             IList childValues = GetChildValues(node);
 
             // Get last child
-            var childElement = (ExpressionElement)childValues[childValues.Count - 1];
+            var childElement = (BaseExpressionElement)childValues[childValues.Count - 1];
 
             // Is it an signed integer constant?
             if (ReferenceEquals(childElement.GetType(), typeof(Int32LiteralElement)) & childValues.Count == 2)
@@ -178,7 +178,7 @@ namespace Yale.Parser
         public override Node ExitIfExpression(Production node)
         {
             IList childValues = GetChildValues(node);
-            var op = new ConditionalElement((ExpressionElement)childValues[0], (ExpressionElement)childValues[1], (ExpressionElement)childValues[2]);
+            var op = new ConditionalElement((BaseExpressionElement)childValues[0], (BaseExpressionElement)childValues[1], (BaseExpressionElement)childValues[2]);
             node.AddValue(op);
             return node;
         }
@@ -193,7 +193,7 @@ namespace Yale.Parser
                 return node;
             }
 
-            var operand = (ExpressionElement)childValues[0];
+            var operand = (BaseExpressionElement)childValues[0];
             childValues.RemoveAt(0);
 
             var second = childValues[0];
@@ -231,7 +231,7 @@ namespace Yale.Parser
             IList childValues = GetChildValues(node);
             var destTypeParts = (string[])childValues[1];
             var isArray = (bool)childValues[2];
-            var op = new CastElement((ExpressionElement)childValues[0], destTypeParts, isArray, _context);
+            var op = new CastElement((BaseExpressionElement)childValues[0], destTypeParts, isArray, _context);
             node.AddValue(op);
             return node;
         }

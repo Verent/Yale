@@ -7,7 +7,7 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements.Base
 {
-    internal abstract class ExpressionElement
+    internal abstract class BaseExpressionElement
     {
         /// <summary>
         /// All expression elements must be able to emit their own Intermediate language
@@ -26,16 +26,11 @@ namespace Yale.Expression.Elements.Base
             return Name;
         }
 
-        protected ExpressionCompileException CompileException(string messageTemplate, CompileExceptionReason reason, params object[] arguments)
+        protected ExpressionCompileException CreateCompileException(string messageTemplate, CompileExceptionReason reason, params object[] arguments)
         {
             var message = string.Format(CultureInfo.InvariantCulture, messageTemplate, arguments);
             message = string.Concat(Name, ": ", message);
             return new ExpressionCompileException(message, reason);
-        }
-
-        protected ExpressionCompileException AmbiguousCallException(Type leftType, Type rightType, object operation)
-        {
-            return CompileException(CompileErrors.AmbiguousOverloadedOperator, CompileExceptionReason.AmbiguousMatch, leftType.Name, rightType.Name, operation);
         }
 
         protected YaleIlGenerator CreateTempIlGenerator(YaleIlGenerator ilgCurrent)

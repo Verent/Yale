@@ -65,11 +65,11 @@ namespace Yale.Expression.Elements.MemberElements
         {
             if (previous == null)
             {
-                throw CompileException(CompileErrors.UndefinedFunction, CompileExceptionReason.UndefinedName, MemberName, arguments);
+                throw CreateCompileException(CompileErrors.UndefinedFunction, CompileExceptionReason.UndefinedName, MemberName, arguments);
             }
             else
             {
-                throw CompileException(CompileErrors.UndefinedFunctionOnType, CompileExceptionReason.UndefinedName, MemberName, arguments, previous.TargetType.Name);
+                throw CreateCompileException(CompileErrors.UndefinedFunctionOnType, CompileExceptionReason.UndefinedName, MemberName, arguments, previous.TargetType.Name);
             }
         }
 
@@ -77,17 +77,17 @@ namespace Yale.Expression.Elements.MemberElements
         {
             if (previous == null)
             {
-                throw CompileException(CompileErrors.NoAccessibleMatches, CompileExceptionReason.AccessDenied, MemberName, arguments);
+                throw CreateCompileException(CompileErrors.NoAccessibleMatches, CompileExceptionReason.AccessDenied, MemberName, arguments);
             }
             else
             {
-                throw CompileException(CompileErrors.NoAccessibleMatchesOnType, CompileExceptionReason.AccessDenied, MemberName, arguments, previous.TargetType.Name);
+                throw CreateCompileException(CompileErrors.NoAccessibleMatchesOnType, CompileExceptionReason.AccessDenied, MemberName, arguments, previous.TargetType.Name);
             }
         }
 
         private void ThrowAmbiguousMethodCallException()
         {
-            throw CompileException(CompileErrors.AmbiguousCallOfFunction, CompileExceptionReason.AmbiguousMatch, MemberName, arguments);
+            throw CreateCompileException(CompileErrors.AmbiguousCallOfFunction, CompileExceptionReason.AmbiguousMatch, MemberName, arguments);
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace Yale.Expression.Elements.MemberElements
             // Any function reference in an expression must return a value
             if (ReferenceEquals(Method.ReturnType, typeof(void)))
             {
-                throw CompileException(CompileErrors.FunctionHasNoReturnValue, CompileExceptionReason.FunctionHasNoReturnValue, MemberName);
+                throw CreateCompileException(CompileErrors.FunctionHasNoReturnValue, CompileExceptionReason.FunctionHasNoReturnValue, MemberName);
             }
         }
 
@@ -246,21 +246,21 @@ namespace Yale.Expression.Elements.MemberElements
         }
 
         // Emit the arguments to a paramArray method call
-        private void EmitParamArrayArguments(ParameterInfo[] parameters, ExpressionElement[] elements, YaleIlGenerator ilGenerator, ExpressionContext context)
+        private void EmitParamArrayArguments(ParameterInfo[] parameters, BaseExpressionElement[] elements, YaleIlGenerator ilGenerator, ExpressionContext context)
         {
             // Get the fixed parameters
             var fixedParameters = new ParameterInfo[targetMethodInfo.FixedArgTypes.Length];
             Array.Copy(parameters, fixedParameters, fixedParameters.Length);
 
             // Get the corresponding fixed parameters
-            var fixedElements = new ExpressionElement[targetMethodInfo.FixedArgTypes.Length];
+            var fixedElements = new BaseExpressionElement[targetMethodInfo.FixedArgTypes.Length];
             Array.Copy(elements, fixedElements, fixedElements.Length);
 
             // Emit the fixed arguments
             EmitRegularFunctionInternal(fixedParameters, fixedElements, ilGenerator, context);
 
             // Get the paramArray arguments
-            var paramArrayElements = new ExpressionElement[elements.Length - fixedElements.Length];
+            var paramArrayElements = new BaseExpressionElement[elements.Length - fixedElements.Length];
             Array.Copy(elements, fixedElements.Length, paramArrayElements, 0, paramArrayElements.Length);
 
             // Emit them into an array
@@ -270,7 +270,7 @@ namespace Yale.Expression.Elements.MemberElements
         /// <summary>
         /// Emit elements into an array
         /// </summary>
-        private static void EmitElementArrayLoad(ExpressionElement[] elements, Type arrayElementType, YaleIlGenerator ilg, ExpressionContext context)
+        private static void EmitElementArrayLoad(BaseExpressionElement[] elements, Type arrayElementType, YaleIlGenerator ilg, ExpressionContext context)
         {
             // Load the array length
             LiteralElement.EmitLoad(elements.Length, ilg);
@@ -322,7 +322,7 @@ namespace Yale.Expression.Elements.MemberElements
         /// <summary>
         ///  Emit the arguments to a regular method call
         /// </summary>
-        private void EmitRegularFunctionInternal(ParameterInfo[] parameters, ExpressionElement[] elements, YaleIlGenerator ilg, ExpressionContext context)
+        private void EmitRegularFunctionInternal(ParameterInfo[] parameters, BaseExpressionElement[] elements, YaleIlGenerator ilg, ExpressionContext context)
         {
             Debug.Assert(parameters.Length == elements.Length, "argument count mismatch");
 

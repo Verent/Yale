@@ -2,14 +2,14 @@
 
 namespace Yale.Expression.Elements.Base
 {
-    internal abstract class UnaryElement : ExpressionElement
+    internal abstract class UnaryElement : BaseExpressionElement
     {
-        public UnaryElement(ExpressionElement child)
+        public UnaryElement(BaseExpressionElement child)
         {
             MyChild = child;
         }
 
-        protected ExpressionElement MyChild;
+        protected BaseExpressionElement MyChild;
 
         protected abstract Type GetResultType(Type childType);
     }

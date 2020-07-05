@@ -10,7 +10,7 @@ namespace Yale.Expression.Elements.MemberElements
     /// <summary>
     /// Todo: What is invocation list element?
     /// </summary>
-    internal class InvocationListElement : ExpressionElement
+    internal class InvocationListElement : BaseExpressionElement
     {
         //Todo: Some description would be nice
         private readonly MemberElement _tail;
@@ -45,7 +45,7 @@ namespace Yale.Expression.Elements.MemberElements
 
         private void HandleFirstElement(IList elements, ExpressionContext context)
         {
-            var firstElement = (ExpressionElement)elements[0];
+            var firstElement = (BaseExpressionElement)elements[0];
 
             // If the first element is not a member element, then we assume it
             //is an expression and replace it with the correct member element
@@ -90,7 +90,7 @@ namespace Yale.Expression.Elements.MemberElements
 
             if (elements.Count == 0)
             {
-                throw CompileException(CompileErrors.NamespaceCannotBeUsedAsType, CompileExceptionReason.TypeMismatch, currentImport.Name);
+                throw CreateCompileException(CompileErrors.NamespaceCannotBeUsedAsType, CompileExceptionReason.TypeMismatch, currentImport.Name);
             }
         }
 

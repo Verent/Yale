@@ -15,7 +15,7 @@ namespace Yale.Expression.Elements
 
         public override Type ResultType { get; }
 
-        public NegateElement(ExpressionElement child) : base(child)
+        public NegateElement(BaseExpressionElement child) : base(child)
         {
             ResultType = GetResultType(child.ResultType);
         }
@@ -42,7 +42,7 @@ namespace Yale.Expression.Elements
                     return typeof(Int64);
 
                 default:
-                    throw CompileException(CompileErrors.OperationNotDefinedForType, CompileExceptionReason.TypeMismatch, MyChild.ResultType.Name);
+                    throw CreateCompileException(CompileErrors.OperationNotDefinedForType, CompileExceptionReason.TypeMismatch, MyChild.ResultType.Name);
             }
         }
 

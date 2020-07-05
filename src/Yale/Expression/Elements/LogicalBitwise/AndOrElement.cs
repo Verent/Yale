@@ -71,27 +71,26 @@ namespace Yale.Expression.Elements.LogicalBitwise
             }
         }
 
-        private void DoEmitLogical(YaleIlGenerator ilg, ExpressionContext context)
+        private void DoEmitLogical(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
             // We have to do a 'fake' emit so we can get the positions of the labels
             var info = new ShortCircuitInfo();
             // Create a temporary IL generator
-            var ilgTemp = CreateTempIlGenerator(ilg);
+            var ilgTemp = CreateTempIlGenerator(ilGenerator);
 
             // We have to make sure that the label count for the temp YaleIlGenerator matches our real YaleIlGenerator
-            Utility.SyncFleeIlGeneratorLabels(ilg, ilgTemp);
+            Utility.SyncFleeIlGeneratorLabels(ilGenerator, ilgTemp);
             // Do the fake emit
             EmitLogical(ilgTemp, info, context);
 
             // Clear everything except the label positions
             info.ClearTempState();
-
             info.Branches.ComputeBranches();
 
-            Utility.SyncFleeIlGeneratorLabels(ilgTemp, ilg);
+            Utility.SyncFleeIlGeneratorLabels(ilgTemp, ilGenerator);
 
             // Do the real emit
-            EmitLogical(ilg, info, context);
+            EmitLogical(ilGenerator, info, context);
         }
 
         /// <summary>
@@ -114,7 +113,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
             EmitLogicalShortCircuit(ilg, info, context);
 
             // Get the last operand
-            var terminalOperand = (ExpressionElement)info.Operands.Pop();
+            var terminalOperand = (BaseExpressionElement)info.Operands.Pop();
             // Emit it
             EmitOperand(terminalOperand, info, ilg, context);
             // And jump to the end
@@ -141,7 +140,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
                 // Get the operator
                 var op = (AndOrElement)info.Operators.Pop();
                 // Get the left operand
-                var leftOperand = (ExpressionElement)info.Operands.Pop();
+                var leftOperand = (BaseExpressionElement)info.Operands.Pop();
 
                 // Emit the left
                 EmitOperand(leftOperand, info, ilg, context);
@@ -275,7 +274,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
             }
         }
 
-        private static void EmitOperand(ExpressionElement operand, ShortCircuitInfo info, YaleIlGenerator ilg, ExpressionContext context)
+        private static void EmitOperand(BaseExpressionElement operand, ShortCircuitInfo info, YaleIlGenerator ilg, ExpressionContext context)
         {
             // Is this operand the target of a label?
             if (info.Branches.HasLabel(operand))

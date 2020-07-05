@@ -6,9 +6,9 @@ namespace Yale.Expression.Elements.MemberElements
 {
     internal class ExpressionMemberElement : MemberElement
     {
-        private readonly ExpressionElement _myElement;
+        private readonly BaseExpressionElement _myElement;
 
-        public ExpressionMemberElement(ExpressionElement element)
+        public ExpressionMemberElement(BaseExpressionElement element)
         {
             _myElement = element;
         }

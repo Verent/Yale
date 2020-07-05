@@ -9,19 +9,19 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements
 {
-    internal class CastElement : ExpressionElement
+    internal class CastElement : BaseExpressionElement
     {
-        private readonly ExpressionElement _castExpression;
+        private readonly BaseExpressionElement _castExpression;
         private readonly Type _destType;
 
-        public CastElement(ExpressionElement castExpression, string[] destintaionTypeParts, bool isArray, ExpressionContext context)
+        public CastElement(BaseExpressionElement castExpression, string[] destintaionTypeParts, bool isArray, ExpressionContext context)
         {
             _castExpression = castExpression;
             _destType = GetDestType(destintaionTypeParts, context);
 
             if (_destType == null)
             {
-                CompileException(CompileErrors.CouldNotResolveType, CompileExceptionReason.UndefinedName, GetDestinationTypeString(destintaionTypeParts, isArray));
+                throw CreateCompileException(CompileErrors.CouldNotResolveType, CompileExceptionReason.UndefinedName, GetDestinationTypeString(destintaionTypeParts, isArray));
             }
 
             if (isArray)
@@ -150,8 +150,8 @@ namespace Yale.Expression.Elements
                 return miSource;
             }
 
-            AmbiguousCallException(sourceType, destType, "Explicit");
-            return null;
+            throw CreateCompileException(CompileErrors.AmbiguousOverloadedOperator, CompileExceptionReason.AmbiguousMatch,
+                sourceType.Name, destType.Name, "Explicit");
         }
 
         private bool IsValidExplicitEnumCast(Type sourceType, Type destType)
@@ -246,7 +246,7 @@ namespace Yale.Expression.Elements
 
         private void ThrowInvalidCastException()
         {
-            CompileException(CompileErrors.CannotConvertType, CompileExceptionReason.InvalidExplicitCast, _castExpression.ResultType.Name, _destType.Name);
+            throw CreateCompileException(CompileErrors.CannotConvertType, CompileExceptionReason.InvalidExplicitCast, _castExpression.ResultType.Name, _destType.Name);
         }
 
         private static bool IsCastableNumericType(Type t)

@@ -13,7 +13,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
     {
         public override Type ResultType { get; }
 
-        public NotElement(ExpressionElement child) : base(child)
+        public NotElement(BaseExpressionElement child) : base(child)
         {
             ResultType = GetResultType(child.ResultType);
         }
@@ -46,7 +46,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
             }
             var result = Utility.IsIntegralType(childType) ?
                 childType :
-                throw CompileException(CompileErrors.OperationNotDefinedForType, CompileExceptionReason.TypeMismatch, MyChild.ResultType.Name);
+                throw CreateCompileException(CompileErrors.OperationNotDefinedForType, CompileExceptionReason.TypeMismatch, MyChild.ResultType.Name);
 
             return result;
         }

@@ -11,10 +11,10 @@ namespace Yale.Expression.Elements.Base
     /// <summary>
     /// "Base class for expression elements that operate on two child elements"
     /// </summary>
-    internal abstract class BinaryExpressionElement : ExpressionElement
+    internal abstract class BinaryExpressionElement : BaseExpressionElement
     {
-        protected ExpressionElement LeftChild;
-        protected ExpressionElement RightChild;
+        protected BaseExpressionElement LeftChild;
+        protected BaseExpressionElement RightChild;
         private Type? resultType;
 
         /// <summary>
@@ -26,14 +26,14 @@ namespace Yale.Expression.Elements.Base
         public static BinaryExpressionElement CreateElement(IList childValues, Type elementType)
         {
             var firstElement = (BinaryExpressionElement)Activator.CreateInstance(elementType);
-            firstElement.Configure((ExpressionElement)childValues[0], (ExpressionElement)childValues[2], childValues[1]);
+            firstElement.Configure((BaseExpressionElement)childValues[0], (BaseExpressionElement)childValues[2], childValues[1]);
 
             var lastElement = firstElement;
 
             for (var i = 3; i <= childValues.Count - 1; i += 2)
             {
                 var element = (BinaryExpressionElement)Activator.CreateInstance(elementType);
-                element.Configure(lastElement, (ExpressionElement)childValues[i + 1], childValues[i]);
+                element.Configure(lastElement, (BaseExpressionElement)childValues[i + 1], childValues[i]);
                 lastElement = element;
             }
 
@@ -86,8 +86,8 @@ namespace Yale.Expression.Elements.Base
             }
 
             //Ambiguous call
-            AmbiguousCallException(leftType, rightType, operation);
-            return null;
+            throw CreateCompileException(CompileErrors.AmbiguousOverloadedOperator, CompileExceptionReason.AmbiguousMatch,
+                leftType.Name, rightType.Name, operation);
         }
 
         protected void EmitOverloadedOperatorCall(MethodInfo method, YaleIlGenerator ilg, ExpressionContext context)
@@ -103,12 +103,12 @@ namespace Yale.Expression.Elements.Base
 
         protected void ThrowOperandTypeMismatch(object operation, Type leftType, Type rightType)
         {
-            CompileException(CompileErrors.OperationNotDefinedForTypes, CompileExceptionReason.TypeMismatch, operation, leftType.Name, rightType.Name);
+            throw CreateCompileException(CompileErrors.OperationNotDefinedForTypes, CompileExceptionReason.TypeMismatch, operation, leftType.Name, rightType.Name);
         }
 
         protected abstract Type? GetResultType(Type leftType, Type rightType);
 
-        protected static void EmitChildWithConvert(ExpressionElement child, Type resultType, YaleIlGenerator ilg, ExpressionContext context)
+        protected static void EmitChildWithConvert(BaseExpressionElement child, Type resultType, YaleIlGenerator ilg, ExpressionContext context)
         {
             child.Emit(ilg, context);
             var converted = ImplicitConverter.EmitImplicitConvert(child.ResultType, resultType, ilg);
@@ -125,7 +125,7 @@ namespace Yale.Expression.Elements.Base
             return IsChildOfType(LeftChild, target) || IsChildOfType(RightChild, target);
         }
 
-        protected static bool IsChildOfType(ExpressionElement child, Type t)
+        protected static bool IsChildOfType(BaseExpressionElement child, Type t)
         {
             return ReferenceEquals(child.ResultType, t);
         }
@@ -136,7 +136,7 @@ namespace Yale.Expression.Elements.Base
         /// <param name="leftChild"></param>
         /// <param name="rightChild"></param>
         /// <param name="op"></param>
-        private void Configure(ExpressionElement leftChild, ExpressionElement rightChild, object op)
+        private void Configure(BaseExpressionElement leftChild, BaseExpressionElement rightChild, object op)
         {
             LeftChild = leftChild;
             RightChild = rightChild;

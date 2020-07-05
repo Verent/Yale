@@ -9,7 +9,7 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements.Base
 {
-    internal abstract class MemberElement : ExpressionElement
+    internal abstract class MemberElement : BaseExpressionElement
     {
         /// <summary>
         /// Previous is the user part of the expression user.address [previous.next]
@@ -73,11 +73,11 @@ namespace Yale.Expression.Elements.Base
 
             if (IsStatic && SupportsStatic == false)
             {
-                throw CompileException(CompileErrors.StaticMemberCannotBeAccessedWithInstanceReference, CompileExceptionReason.TypeMismatch, MemberName);
+                throw CreateCompileException(CompileErrors.StaticMemberCannotBeAccessedWithInstanceReference, CompileExceptionReason.TypeMismatch, MemberName);
             }
             else if (IsStatic == false && SupportsInstance == false)
             {
-                throw CompileException(CompileErrors.ReferenceToNonSharedMemberRequiresObjectReference, CompileExceptionReason.TypeMismatch, MemberName);
+                throw CreateCompileException(CompileErrors.ReferenceToNonSharedMemberRequiresObjectReference, CompileExceptionReason.TypeMismatch, MemberName);
             }
         }
 

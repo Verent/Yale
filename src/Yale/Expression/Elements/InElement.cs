@@ -9,34 +9,34 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements
 {
-    internal class InElement : ExpressionElement
+    internal class InElement : BaseExpressionElement
     {
         // Element we will search for
-        private readonly ExpressionElement operand;
+        private readonly BaseExpressionElement operand;
 
         // Elements we will compare against
-        private readonly List<ExpressionElement> arguments;
+        private readonly List<BaseExpressionElement> arguments;
 
         // Collection to look in
-        private readonly ExpressionElement targetCollectionElement;
+        private readonly BaseExpressionElement targetCollectionElement;
 
         // Type of the collection
         private Type targetCollectionType;
 
         // Initialize for searching a list of values
-        public InElement(ExpressionElement operand, IList listElements)
+        public InElement(BaseExpressionElement operand, IList listElements)
         {
             this.operand = operand;
 
-            var elements = new ExpressionElement[listElements.Count];
+            var elements = new BaseExpressionElement[listElements.Count];
             listElements.CopyTo(elements, 0);
 
-            arguments = new List<ExpressionElement>(elements);
+            arguments = new List<BaseExpressionElement>(elements);
             ResolveForListSearch();
         }
 
         // Initialize for searching a collection
-        public InElement(ExpressionElement operand, ExpressionElement targetCollection)
+        public InElement(BaseExpressionElement operand, BaseExpressionElement targetCollection)
         {
             this.operand = operand;
             targetCollectionElement = targetCollection;
@@ -62,7 +62,7 @@ namespace Yale.Expression.Elements
 
             if (targetCollectionType == null)
             {
-                throw CompileException(CompileErrors.SearchArgIsNotKnownCollectionType, CompileExceptionReason.TypeMismatch, targetCollectionElement.ResultType.Name);
+                throw CreateCompileException(CompileErrors.SearchArgIsNotKnownCollectionType, CompileExceptionReason.TypeMismatch, targetCollectionElement.ResultType.Name);
             }
 
             // Validate that the operand type is compatible with the collection
@@ -71,7 +71,7 @@ namespace Yale.Expression.Elements
 
             if (ImplicitConverter.EmitImplicitConvert(operand.ResultType, firstParameter.ParameterType, null) == false)
             {
-                throw CompileException(CompileErrors.OperandNotConvertibleToCollectionType, CompileExceptionReason.TypeMismatch, operand.ResultType.Name, firstParameter.ParameterType.Name);
+                throw CreateCompileException(CompileErrors.OperandNotConvertibleToCollectionType, CompileExceptionReason.TypeMismatch, operand.ResultType.Name, firstParameter.ParameterType.Name);
             }
         }
 

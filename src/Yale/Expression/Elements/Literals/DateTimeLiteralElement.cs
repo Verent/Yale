@@ -17,7 +17,7 @@ namespace Yale.Expression.Elements.Literals
 
             if (DateTime.TryParseExact(image, options.DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _value) == false)
             {
-                throw CompileException(CompileErrors.CannotParseType, CompileExceptionReason.InvalidFormat, typeof(DateTime).Name);
+                throw CreateCompileException(CompileErrors.CannotParseType, CompileExceptionReason.InvalidFormat, typeof(DateTime).Name);
             }
         }
 
