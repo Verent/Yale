@@ -53,14 +53,14 @@ namespace Yale.Core
         protected override void AddMembers(MemberTypes memberType, ICollection<MemberInfo> targetCollection)
         { }
 
-        internal override Type FindType(string typeName)
+        internal override Type? FindType(string typeName)
         {
             return NonContainerImports
                 .Select(import => import.FindType(typeName))
                 .FirstOrDefault(type => type != null);
         }
 
-        internal override ImportBase FindImport(string name)
+        internal override ImportBase? FindImport(string name)
         {
             foreach (var import in _imports)
             {

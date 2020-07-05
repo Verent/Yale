@@ -14,7 +14,7 @@ namespace Yale.Expression.Elements.Literals
         {
             if (TimeSpan.TryParse(image, out _value) == false)
             {
-                ThrowCompileException(CompileErrors.CannotParseType, CompileExceptionReason.InvalidFormat, typeof(TimeSpan).Name);
+                throw CreateCompileException(CompileErrors.CannotParseType, CompileExceptionReason.InvalidFormat, typeof(TimeSpan).Name);
             }
         }
 

@@ -6,12 +6,12 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements
 {
-    internal class RootExpressionElement : ExpressionElement
+    internal class RootExpressionElement : BaseExpressionElement
     {
-        private readonly ExpressionElement _child;
+        private readonly BaseExpressionElement _child;
         private readonly Type _resultType;
 
-        public RootExpressionElement(ExpressionElement child, Type resultType)
+        public RootExpressionElement(BaseExpressionElement child, Type resultType)
         {
             _child = child;
             _resultType = resultType;
@@ -38,7 +38,7 @@ namespace Yale.Expression.Elements
         {
             if (ImplicitConverter.EmitImplicitConvert(_child.ResultType, _resultType, null) == false)
             {
-                ThrowCompileException(CompileErrors.CannotConvertTypeToExpressionResult, CompileExceptionReason.TypeMismatch, _child.ResultType.Name, _resultType.Name);
+                throw CreateCompileException(CompileErrors.CannotConvertTypeToExpressionResult, CompileExceptionReason.TypeMismatch, _child.ResultType.Name, _resultType.Name);
             }
         }
 

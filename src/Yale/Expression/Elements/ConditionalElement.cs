@@ -6,36 +6,36 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements
 {
-    internal class ConditionalElement : ExpressionElement
+    internal class ConditionalElement : BaseExpressionElement
     {
-        private readonly ExpressionElement _condition;
-        private readonly ExpressionElement _whenTrue;
-        private readonly ExpressionElement _whenFalse;
-        private readonly Type _resultType;
+        private readonly BaseExpressionElement condition;
+        private readonly BaseExpressionElement whenTrue;
+        private readonly BaseExpressionElement whenFalse;
+        private readonly Type resultType;
 
-        public ConditionalElement(ExpressionElement condition, ExpressionElement whenTrue, ExpressionElement whenFalse)
+        public ConditionalElement(BaseExpressionElement condition, BaseExpressionElement whenTrue, BaseExpressionElement whenFalse)
         {
-            _condition = condition;
-            _whenTrue = whenTrue;
-            _whenFalse = whenFalse;
+            this.condition = condition;
+            this.whenTrue = whenTrue;
+            this.whenFalse = whenFalse;
 
-            if (!ReferenceEquals(_condition.ResultType, typeof(bool)))
+            if (!ReferenceEquals(this.condition.ResultType, typeof(bool)))
             {
-                ThrowCompileException(CompileErrors.FirstArgNotBoolean, CompileExceptionReason.TypeMismatch);
+                throw CreateCompileException(CompileErrors.FirstArgNotBoolean, CompileExceptionReason.TypeMismatch);
             }
 
             // The result type is the type that is common to the true/false operands
-            if (ImplicitConverter.EmitImplicitConvert(_whenFalse.ResultType, _whenTrue.ResultType, null))
+            if (ImplicitConverter.EmitImplicitConvert(this.whenFalse.ResultType, this.whenTrue.ResultType, null))
             {
-                _resultType = _whenTrue.ResultType;
+                resultType = this.whenTrue.ResultType;
             }
-            else if (ImplicitConverter.EmitImplicitConvert(_whenTrue.ResultType, _whenFalse.ResultType, null))
+            else if (ImplicitConverter.EmitImplicitConvert(this.whenTrue.ResultType, this.whenFalse.ResultType, null))
             {
-                _resultType = _whenFalse.ResultType;
+                resultType = this.whenFalse.ResultType;
             }
             else
             {
-                ThrowCompileException(CompileErrors.NeitherArgIsConvertibleToTheOther, CompileExceptionReason.TypeMismatch, _whenTrue.ResultType.Name, _whenFalse.ResultType.Name);
+                throw CreateCompileException(CompileErrors.NeitherArgIsConvertibleToTheOther, CompileExceptionReason.TypeMismatch, this.whenTrue.ResultType.Name, this.whenFalse.ResultType.Name);
             }
         }
 
@@ -70,7 +70,7 @@ namespace Yale.Expression.Elements
             var endLabel = branchManager.FindLabel("endLabel");
 
             // Emit the condition
-            _condition.Emit(ilg, context);
+            condition.Emit(ilg, context);
 
             // On false go to the false operand
             if (ilg.IsTemp)
@@ -88,8 +88,8 @@ namespace Yale.Expression.Elements
             }
 
             // Emit the true operand
-            _whenTrue.Emit(ilg, context);
-            ImplicitConverter.EmitImplicitConvert(_whenTrue.ResultType, _resultType, ilg);
+            whenTrue.Emit(ilg, context);
+            ImplicitConverter.EmitImplicitConvert(whenTrue.ResultType, resultType, ilg);
 
             // Jump to end
             if (ilg.IsTemp)
@@ -110,13 +110,13 @@ namespace Yale.Expression.Elements
             ilg.MarkLabel(falseLabel);
 
             // Emit the false operand
-            _whenFalse.Emit(ilg, context);
-            ImplicitConverter.EmitImplicitConvert(_whenFalse.ResultType, _resultType, ilg);
+            whenFalse.Emit(ilg, context);
+            ImplicitConverter.EmitImplicitConvert(whenFalse.ResultType, resultType, ilg);
             // Fall through to end
             branchManager.MarkLabel(ilg, endLabel);
             ilg.MarkLabel(endLabel);
         }
 
-        public override Type ResultType => _resultType;
+        public override Type ResultType => resultType;
     }
 }

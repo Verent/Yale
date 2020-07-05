@@ -13,7 +13,7 @@ namespace Yale.Expression.Elements.MemberElements
     /// </summary>
     internal class IndexerElement : MemberElement
     {
-        private ExpressionElement _indexerElement;
+        private BaseExpressionElement _indexerElement;
 
         private readonly ArgumentList _indexerElements;
 
@@ -49,7 +49,7 @@ namespace Yale.Expression.Elements.MemberElements
             // Not an array, so try to find an indexer on the type
             if (FindIndexer(target) == false)
             {
-                ThrowCompileException(CompileErrors.TypeNotArrayAndHasNoIndexerOfType, CompileExceptionReason.TypeMismatch, target.Name, _indexerElements);
+                throw CreateCompileException(CompileErrors.TypeNotArrayAndHasNoIndexerOfType, CompileExceptionReason.TypeMismatch, target.Name, _indexerElements);
             }
         }
 
@@ -59,11 +59,11 @@ namespace Yale.Expression.Elements.MemberElements
 
             if (_indexerElements.Count > 1)
             {
-                ThrowCompileException(CompileErrors.MultiArrayIndexNotSupported, CompileExceptionReason.TypeMismatch);
+                throw CreateCompileException(CompileErrors.MultiArrayIndexNotSupported, CompileExceptionReason.TypeMismatch);
             }
             else if (ImplicitConverter.EmitImplicitConvert(_indexerElement.ResultType, typeof(Int32), null) == false)
             {
-                ThrowCompileException(CompileErrors.ArrayIndexersMustBeOfType, CompileExceptionReason.TypeMismatch, typeof(Int32).Name);
+                throw CreateCompileException(CompileErrors.ArrayIndexersMustBeOfType, CompileExceptionReason.TypeMismatch, typeof(Int32).Name);
             }
         }
 

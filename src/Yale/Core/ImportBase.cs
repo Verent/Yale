@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using Yale.Core.Interface;
+using Yale.Core.Interfaces;
 
 namespace Yale.Core
 {
@@ -11,7 +11,7 @@ namespace Yale.Core
     /// </summary>
     internal abstract class ImportBase : IEnumerable<ImportBase>, IEquatable<ImportBase>
     {
-        internal ImportBase(IExpressionOptions options)
+        protected ImportBase(IExpressionOptions options)
         {
             Options = options ?? throw new ArgumentNullException(nameof(options));
         }
@@ -45,9 +45,10 @@ namespace Yale.Core
 
         internal abstract bool IsMatch(string name);
 
-        internal abstract Type FindType(string typeName);
+        internal abstract Type? FindType(string typeName);
 
-        internal virtual ImportBase FindImport(string name)
+        //Todo: Make this abstract
+        internal virtual ImportBase? FindImport(string name)
         {
             return null;
         }

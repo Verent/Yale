@@ -13,13 +13,14 @@ namespace Yale.Parser.Internal
         /// <summary>
         /// The rating of how close the method matches the given arguments (0 is best)
         /// </summary>
-        private float _score;
+        private float score;
 
         public bool IsParamArray;
-        public Type[] FixedArgTypes;
-        public Type[] ParamArrayArgTypes;
+        public Type[]? FixedArgTypes;
+        public Type[]? ParamArrayArgTypes;
+        public MethodInfo Target { get; }
 
-        public Type ParamArrayElementType;
+        public Type? ParamArrayElementType;
 
         public CustomMethodInfo(MethodInfo target)
         {
@@ -32,15 +33,15 @@ namespace Yale.Parser.Internal
 
             if (parameters.Length == 0)
             {
-                _score = 0.0F;
+                score = 0.0F;
             }
             else if (IsParamArray)
             {
-                _score = ComputeScoreForParamArray(parameters, argTypes);
+                score = ComputeScoreForParamArray(parameters, argTypes);
             }
             else
             {
-                _score = ComputeScoreInternal(parameters, argTypes);
+                score = ComputeScoreInternal(parameters, argTypes);
             }
         }
 
@@ -88,16 +89,7 @@ namespace Yale.Parser.Internal
                 paramArraySum += ImplicitConverter.GetImplicitConvertScore(argType, paramArrayElementType);
             }
 
-            float score;
-
-            if (argTypes.Length > 0)
-            {
-                score = (fixedSum + paramArraySum) / argTypes.Length;
-            }
-            else
-            {
-                score = 0;
-            }
+            var score = argTypes.Length > 0 ? (fixedSum + paramArraySum) / argTypes.Length : (float)0;
 
             // The param array score gets a slight penalty so that it scores worse than direct matches
             return score + 1;
@@ -105,7 +97,7 @@ namespace Yale.Parser.Internal
 
         public bool IsAccessible(MemberElement owner)
         {
-            return owner.IsMemberAccessible(Target);
+            return MemberElement.IsMemberAccessible(Target);
         }
 
         /// <summary>
@@ -218,12 +210,12 @@ namespace Yale.Parser.Internal
 
         public int CompareTo(CustomMethodInfo other)
         {
-            return _score.CompareTo(other._score);
+            return score.CompareTo(other.score);
         }
 
         private bool Equals1(CustomMethodInfo other)
         {
-            return _score == other._score;
+            return score == other.score;
         }
 
         bool IEquatable<CustomMethodInfo>.Equals(CustomMethodInfo other)
@@ -231,6 +223,5 @@ namespace Yale.Parser.Internal
             return Equals1(other);
         }
 
-        public MethodInfo Target { get; }
     }
 }

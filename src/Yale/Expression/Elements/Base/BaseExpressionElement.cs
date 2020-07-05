@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection.Emit;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
 namespace Yale.Expression.Elements.Base
 {
-    internal abstract class ExpressionElement
+    internal abstract class BaseExpressionElement
     {
         /// <summary>
         /// All expression elements must be able to emit their own Intermediate language
@@ -25,16 +26,11 @@ namespace Yale.Expression.Elements.Base
             return Name;
         }
 
-        protected void ThrowCompileException(string messageTemplate, CompileExceptionReason reason, params object[] arguments)
+        protected ExpressionCompileException CreateCompileException(string messageTemplate, CompileExceptionReason reason, params object[] arguments)
         {
-            var message = string.Format(messageTemplate, arguments);
+            var message = string.Format(CultureInfo.InvariantCulture, messageTemplate, arguments);
             message = string.Concat(Name, ": ", message);
-            throw new ExpressionCompileException(message, reason);
-        }
-
-        protected void ThrowAmbiguousCallException(Type leftType, Type rightType, object operation)
-        {
-            ThrowCompileException(CompileErrors.AmbiguousOverloadedOperator, CompileExceptionReason.AmbiguousMatch, leftType.Name, rightType.Name, operation);
+            return new ExpressionCompileException(message, reason);
         }
 
         protected YaleIlGenerator CreateTempIlGenerator(YaleIlGenerator ilgCurrent)
@@ -52,7 +48,6 @@ namespace Yale.Expression.Elements.Base
                 Debug.Assert(value != null, $"Element name for '{key}' not in resource file");
                 return value;
             }
-            set => throw new InvalidOperationException("Can not set name of ExpressionElement.");
         }
     }
 }

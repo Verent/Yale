@@ -9,19 +9,19 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements
 {
-    internal class CastElement : ExpressionElement
+    internal class CastElement : BaseExpressionElement
     {
-        private readonly ExpressionElement _castExpression;
+        private readonly BaseExpressionElement _castExpression;
         private readonly Type _destType;
 
-        public CastElement(ExpressionElement castExpression, string[] destintaionTypeParts, bool isArray, ExpressionContext context)
+        public CastElement(BaseExpressionElement castExpression, string[] destintaionTypeParts, bool isArray, ExpressionContext context)
         {
             _castExpression = castExpression;
             _destType = GetDestType(destintaionTypeParts, context);
 
             if (_destType == null)
             {
-                ThrowCompileException(CompileErrors.CouldNotResolveType, CompileExceptionReason.UndefinedName, GetDestinationTypeString(destintaionTypeParts, isArray));
+                throw CreateCompileException(CompileErrors.CouldNotResolveType, CompileExceptionReason.UndefinedName, GetDestinationTypeString(destintaionTypeParts, isArray));
             }
 
             if (isArray)
@@ -40,7 +40,7 @@ namespace Yale.Expression.Elements
             var s = string.Join(".", parts);
             if (isArray)
             {
-                s = s + "[]";
+                s += "[]";
             }
             return s;
         }
@@ -51,9 +51,9 @@ namespace Yale.Expression.Elements
         /// <param name="destTypeParts"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        private static Type GetDestType(string[] destTypeParts, ExpressionContext context)
+        private static Type? GetDestType(string[] destTypeParts, ExpressionContext context)
         {
-            Type type = null;
+            Type? type = null;
 
             // Try to find a builtin type with the name
             if (destTypeParts.Length == 1)
@@ -96,7 +96,7 @@ namespace Yale.Expression.Elements
                 return true;
             }
 
-            if (sourceType.IsEnum | destType.IsEnum)
+            if (sourceType.IsEnum || destType.IsEnum)
             {
                 return IsValidExplicitEnumCast(sourceType, destType);
             }
@@ -120,14 +120,14 @@ namespace Yale.Expression.Elements
                 // Can only succeed if the reference type is a base of the value type or
                 // it is one of the interfaces the value type implements
                 var interfaces = destType.GetInterfaces();
-                return IsBaseType(destType, sourceType) | Array.IndexOf(interfaces, sourceType) != -1;
+                return IsBaseType(destType, sourceType) || Array.IndexOf(interfaces, sourceType) != -1;
             }
 
             // Reference type to reference type
             return IsValidExplicitReferenceCast(sourceType, destType);
         }
 
-        private MethodInfo GetExplictOverloadedOperator(Type sourceType, Type destType)
+        private MethodInfo? GetExplictOverloadedOperator(Type sourceType, Type destType)
         {
             var methodBinder = new ExplicitOperatorMethodBinder(destType, sourceType);
 
@@ -150,8 +150,8 @@ namespace Yale.Expression.Elements
                 return miSource;
             }
 
-            ThrowAmbiguousCallException(sourceType, destType, "Explicit");
-            return null;
+            throw CreateCompileException(CompileErrors.AmbiguousOverloadedOperator, CompileExceptionReason.AmbiguousMatch,
+                sourceType.Name, destType.Name, "Explicit");
         }
 
         private bool IsValidExplicitEnumCast(Type sourceType, Type destType)
@@ -246,7 +246,7 @@ namespace Yale.Expression.Elements
 
         private void ThrowInvalidCastException()
         {
-            ThrowCompileException(CompileErrors.CannotConvertType, CompileExceptionReason.InvalidExplicitCast, _castExpression.ResultType.Name, _destType.Name);
+            throw CreateCompileException(CompileErrors.CannotConvertType, CompileExceptionReason.InvalidExplicitCast, _castExpression.ResultType.Name, _destType.Name);
         }
 
         private static bool IsCastableNumericType(Type t)

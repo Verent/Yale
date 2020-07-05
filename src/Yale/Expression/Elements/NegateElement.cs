@@ -1,13 +1,24 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
+
 using Yale.Expression.Elements.Base;
 using Yale.Parser.Internal;
+using Yale.Resources;
 
 namespace Yale.Expression.Elements
 {
+    [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "<Pending>")]
     internal class NegateElement : UnaryElement
     {
         private const string UnaryNegoation = "UnaryNegation";
+
+        public override Type ResultType { get; }
+
+        public NegateElement(BaseExpressionElement child) : base(child)
+        {
+            ResultType = GetResultType(child.ResultType);
+        }
 
         protected override Type GetResultType(Type childType)
         {
@@ -31,7 +42,7 @@ namespace Yale.Expression.Elements
                     return typeof(Int64);
 
                 default:
-                    return null;
+                    throw CreateCompileException(CompileErrors.OperationNotDefinedForType, CompileExceptionReason.TypeMismatch, MyChild.ResultType.Name);
             }
         }
 

@@ -8,11 +8,12 @@ namespace Yale.Engine.Internal
     /// Represents the calculated result of an expression
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [System.Runtime.InteropServices.Guid("7B091BCF-2B30-4056-8D51-054E93947FB4")]
     internal class ExpressionResult<T> : IExpressionResult
     {
         public Expression<T> Expression { get; }
         public string Name { get; }
-        public T Result { get; set; }
+        public T Result { get; private set; }
 
         internal ExpressionResult(string name, Expression<T> expression)
         {
@@ -29,18 +30,13 @@ namespace Yale.Engine.Internal
 
         public bool Dirty { get; set; }
 
-        public Expression<T> GetExpression()
-        {
-            return Expression;
-        }
+        public Type? ResultType => Result?.GetType();
 
-        public Type ResultType => Result.GetType();
+        public object? ResultAsObject => Result;
 
-        public object ResultAsObject => Result;
+        public Expression<T> GetExpression() => Expression;
 
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
+
     }
 }

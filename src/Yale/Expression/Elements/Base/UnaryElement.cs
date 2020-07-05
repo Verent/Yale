@@ -1,27 +1,16 @@
 ﻿using System;
-using Yale.Resources;
 
 namespace Yale.Expression.Elements.Base
 {
-    internal abstract class UnaryElement : ExpressionElement
+    internal abstract class UnaryElement : BaseExpressionElement
     {
-        protected ExpressionElement MyChild;
-
-        private Type _myResultType;
-
-        public void SetChild(ExpressionElement child)
+        public UnaryElement(BaseExpressionElement child)
         {
             MyChild = child;
-            _myResultType = GetResultType(child.ResultType);
-
-            if (_myResultType == null)
-            {
-                ThrowCompileException(CompileErrors.OperationNotDefinedForType, CompileExceptionReason.TypeMismatch, MyChild.ResultType.Name);
-            }
         }
 
-        protected abstract Type GetResultType(Type childType);
+        protected BaseExpressionElement MyChild;
 
-        public override Type ResultType => _myResultType;
+        protected abstract Type GetResultType(Type childType);
     }
 }

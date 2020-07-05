@@ -11,11 +11,11 @@ namespace Yale.Expression.Elements.MemberElements
     /// </summary>
     internal class ArgumentList
     {
-        private readonly IList<ExpressionElement> _elements;
+        private readonly IList<BaseExpressionElement> _elements;
 
         public ArgumentList(ICollection elements)
         {
-            var arr = new ExpressionElement[elements.Count];
+            var arr = new BaseExpressionElement[elements.Count];
             elements.CopyTo(arr, 0);
             _elements = arr;
         }
@@ -50,14 +50,14 @@ namespace Yale.Expression.Elements.MemberElements
             return Utility.FormatList(typeNames);
         }
 
-        public ExpressionElement[] ToArray()
+        public BaseExpressionElement[] ToArray()
         {
-            var arr = new ExpressionElement[_elements.Count];
+            var arr = new BaseExpressionElement[_elements.Count];
             _elements.CopyTo(arr, 0);
             return arr;
         }
 
-        public ExpressionElement this[int index] => _elements[index];
+        public BaseExpressionElement this[int index] => _elements[index];
 
         public int Count => _elements.Count;
     }

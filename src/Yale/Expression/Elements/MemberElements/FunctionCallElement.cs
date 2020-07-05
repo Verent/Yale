@@ -13,27 +13,28 @@ namespace Yale.Expression.Elements.MemberElements
 {
     internal class FunctionCallElement : MemberElement
     {
-        private readonly ArgumentList _arguments;
-        private readonly ICollection<MethodInfo> _methods;
-        private CustomMethodInfo _targetMethodInfo;
+        private readonly ArgumentList arguments;
+        private readonly ICollection<MethodInfo> methods;
+
+        private CustomMethodInfo targetMethodInfo;
 
         public FunctionCallElement(string name, ArgumentList arguments) : base(name)
         {
-            _arguments = arguments;
+            this.arguments = arguments;
         }
 
         internal FunctionCallElement(string name, ICollection<MethodInfo> methods, ArgumentList arguments) : base(name)
         {
-            _arguments = arguments;
-            _methods = methods;
+            this.arguments = arguments;
+            this.methods = methods;
         }
 
         protected override void ResolveInternal()
         {
             // Get the types of our arguments
-            var argTypes = _arguments.GetArgumentTypes();
+            var argTypes = arguments.GetArgumentTypes();
             // Find all methods with our name on the type
-            var methods = _methods;
+            var methods = this.methods;
 
             if (methods == null)
             {
@@ -64,11 +65,11 @@ namespace Yale.Expression.Elements.MemberElements
         {
             if (previous == null)
             {
-                ThrowCompileException(CompileErrors.UndefinedFunction, CompileExceptionReason.UndefinedName, MemberName, _arguments);
+                throw CreateCompileException(CompileErrors.UndefinedFunction, CompileExceptionReason.UndefinedName, MemberName, arguments);
             }
             else
             {
-                ThrowCompileException(CompileErrors.UndefinedFunctionOnType, CompileExceptionReason.UndefinedName, MemberName, _arguments, previous.TargetType.Name);
+                throw CreateCompileException(CompileErrors.UndefinedFunctionOnType, CompileExceptionReason.UndefinedName, MemberName, arguments, previous.TargetType.Name);
             }
         }
 
@@ -76,17 +77,17 @@ namespace Yale.Expression.Elements.MemberElements
         {
             if (previous == null)
             {
-                ThrowCompileException(CompileErrors.NoAccessibleMatches, CompileExceptionReason.AccessDenied, MemberName, _arguments);
+                throw CreateCompileException(CompileErrors.NoAccessibleMatches, CompileExceptionReason.AccessDenied, MemberName, arguments);
             }
             else
             {
-                ThrowCompileException(CompileErrors.NoAccessibleMatchesOnType, CompileExceptionReason.AccessDenied, MemberName, _arguments, previous.TargetType.Name);
+                throw CreateCompileException(CompileErrors.NoAccessibleMatchesOnType, CompileExceptionReason.AccessDenied, MemberName, arguments, previous.TargetType.Name);
             }
         }
 
         private void ThrowAmbiguousMethodCallException()
         {
-            ThrowCompileException(CompileErrors.AmbiguousCallOfFunction, CompileExceptionReason.AmbiguousMatch, MemberName, _arguments);
+            throw CreateCompileException(CompileErrors.AmbiguousCallOfFunction, CompileExceptionReason.AmbiguousMatch, MemberName, arguments);
         }
 
         /// <summary>
@@ -160,7 +161,7 @@ namespace Yale.Expression.Elements.MemberElements
             DetectAmbiguousMatches(customInfoArray);
 
             // If we get here, then there is only one best match
-            _targetMethodInfo = customInfoArray[0];
+            targetMethodInfo = customInfoArray[0];
         }
 
         private CustomMethodInfo[] GetAccessibleInfos(CustomMethodInfo[] infos)
@@ -216,7 +217,7 @@ namespace Yale.Expression.Elements.MemberElements
             // Any function reference in an expression must return a value
             if (ReferenceEquals(Method.ReturnType, typeof(void)))
             {
-                ThrowCompileException(CompileErrors.FunctionHasNoReturnValue, CompileExceptionReason.FunctionHasNoReturnValue, MemberName);
+                throw CreateCompileException(CompileErrors.FunctionHasNoReturnValue, CompileExceptionReason.FunctionHasNoReturnValue, MemberName);
             }
         }
 
@@ -245,31 +246,31 @@ namespace Yale.Expression.Elements.MemberElements
         }
 
         // Emit the arguments to a paramArray method call
-        private void EmitParamArrayArguments(ParameterInfo[] parameters, ExpressionElement[] elements, YaleIlGenerator ilGenerator, ExpressionContext context)
+        private void EmitParamArrayArguments(ParameterInfo[] parameters, BaseExpressionElement[] elements, YaleIlGenerator ilGenerator, ExpressionContext context)
         {
             // Get the fixed parameters
-            var fixedParameters = new ParameterInfo[_targetMethodInfo.FixedArgTypes.Length];
+            var fixedParameters = new ParameterInfo[targetMethodInfo.FixedArgTypes.Length];
             Array.Copy(parameters, fixedParameters, fixedParameters.Length);
 
             // Get the corresponding fixed parameters
-            var fixedElements = new ExpressionElement[_targetMethodInfo.FixedArgTypes.Length];
+            var fixedElements = new BaseExpressionElement[targetMethodInfo.FixedArgTypes.Length];
             Array.Copy(elements, fixedElements, fixedElements.Length);
 
             // Emit the fixed arguments
             EmitRegularFunctionInternal(fixedParameters, fixedElements, ilGenerator, context);
 
             // Get the paramArray arguments
-            var paramArrayElements = new ExpressionElement[elements.Length - fixedElements.Length];
+            var paramArrayElements = new BaseExpressionElement[elements.Length - fixedElements.Length];
             Array.Copy(elements, fixedElements.Length, paramArrayElements, 0, paramArrayElements.Length);
 
             // Emit them into an array
-            EmitElementArrayLoad(paramArrayElements, _targetMethodInfo.ParamArrayElementType, ilGenerator, context);
+            EmitElementArrayLoad(paramArrayElements, targetMethodInfo.ParamArrayElementType, ilGenerator, context);
         }
 
         /// <summary>
         /// Emit elements into an array
         /// </summary>
-        private static void EmitElementArrayLoad(ExpressionElement[] elements, Type arrayElementType, YaleIlGenerator ilg, ExpressionContext context)
+        private static void EmitElementArrayLoad(BaseExpressionElement[] elements, Type arrayElementType, YaleIlGenerator ilg, ExpressionContext context)
         {
             // Load the array length
             LiteralElement.EmitLoad(elements.Length, ilg);
@@ -303,10 +304,10 @@ namespace Yale.Expression.Elements.MemberElements
         public void EmitFunctionCall(bool nextRequiresAddress, YaleIlGenerator ilg, ExpressionContext context)
         {
             var parameters = Method.GetParameters();
-            var elements = _arguments.ToArray();
+            var elements = arguments.ToArray();
 
             // Emit either a regular or paramArray call
-            if (_targetMethodInfo.IsParamArray == false)
+            if (targetMethodInfo.IsParamArray == false)
             {
                 EmitRegularFunctionInternal(parameters, elements, ilg, context);
             }
@@ -321,7 +322,7 @@ namespace Yale.Expression.Elements.MemberElements
         /// <summary>
         ///  Emit the arguments to a regular method call
         /// </summary>
-        private void EmitRegularFunctionInternal(ParameterInfo[] parameters, ExpressionElement[] elements, YaleIlGenerator ilg, ExpressionContext context)
+        private void EmitRegularFunctionInternal(ParameterInfo[] parameters, BaseExpressionElement[] elements, YaleIlGenerator ilg, ExpressionContext context)
         {
             Debug.Assert(parameters.Length == elements.Length, "argument count mismatch");
 
@@ -339,7 +340,7 @@ namespace Yale.Expression.Elements.MemberElements
         /// <summary>
         /// The method info we will be calling
         /// </summary>
-        private MethodInfo Method => _targetMethodInfo.Target;
+        private MethodInfo Method => targetMethodInfo.Target;
 
         public override Type ResultType => Method.ReturnType;
 

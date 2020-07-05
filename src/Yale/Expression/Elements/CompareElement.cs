@@ -12,7 +12,7 @@ namespace Yale.Expression.Elements
     {
         private LogicalCompareOperation _operation;
 
-        public void Initialize(ExpressionElement leftChild, ExpressionElement rightChild, LogicalCompareOperation op)
+        public void Initialize(BaseExpressionElement leftChild, BaseExpressionElement rightChild, LogicalCompareOperation op)
         {
             LeftChild = leftChild;
             RightChild = (Int32LiteralElement)rightChild;
