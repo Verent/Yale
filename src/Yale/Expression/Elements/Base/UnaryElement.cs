@@ -2,6 +2,9 @@
 
 namespace Yale.Expression.Elements.Base
 {
+    /// <summary>
+    /// Base element that takes one operand (example: Not and Negate)
+    /// </summary>
     internal abstract class UnaryElement : BaseExpressionElement
     {
         public UnaryElement(BaseExpressionElement child)

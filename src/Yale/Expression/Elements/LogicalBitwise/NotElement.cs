@@ -8,7 +8,9 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements.LogicalBitwise
 {
-    [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "<Pending>")]
+    /// <summary>
+    /// 
+    /// </summary>
     internal class NotElement : UnaryElement
     {
         public override Type ResultType { get; }
