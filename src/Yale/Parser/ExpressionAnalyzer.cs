@@ -1,14 +1,11 @@
 ﻿using PerCederberg.Grammatica.Runtime;
 
-// ReSharper disable CyclomaticComplexity
-// ReSharper disable MethodTooLong
-
 using GrammaticaToken = PerCederberg.Grammatica.Runtime.Token;
 
 namespace Yale.Parser
 {
     /// <summary>
-    /// A class providing callback methods for the parser.
+    /// Callback methods for the parser.
     /// </summary>
     // ReSharper disable once ClassTooBig
     public class ExpressionAnalyzer : Analyzer

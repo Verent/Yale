@@ -23,12 +23,13 @@ namespace Yale.Tests.ExpressionTests
         public void Negate_NegativeInteger_IsPositive()
         {
             instance.Variables.Add("a", -10);
+            instance.Variables.Add("b", 10);
             instance.AddExpression("ae", "-a");
-            instance.AddExpression("be", "--5");
+            instance.AddExpression("be", "-b");
             instance.AddExpression("ce", "-(-5)");
 
             Assert.AreEqual(10, instance.GetResult<int>("ae"));
-            Assert.AreEqual(5, instance.GetResult<int>("be"));
+            Assert.AreEqual(-10, instance.GetResult<int>("be"));
             Assert.AreEqual(5, instance.GetResult<int>("ce"));
         }
     }

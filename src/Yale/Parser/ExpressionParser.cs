@@ -1,10 +1,6 @@
 ﻿using PerCederberg.Grammatica.Runtime;
 using System.IO;
 
-// ReSharper disable StringLiteralTypo
-// ReSharper disable IdentifierTypo
-// ReSharper disable InconsistentNaming
-
 namespace Yale.Parser
 {
     /// <summary>
@@ -43,7 +39,6 @@ namespace Yale.Parser
             CreatePatterns();
         }
 
-        // ReSharper disable once MethodTooLong
         private void CreatePatterns()
         {
             var pattern = new ProductionPattern((int)Token.EXPRESSION, "Expression");
@@ -199,8 +194,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
+            
             pattern = new ProductionPattern((int)Token.IF_EXPRESSION, "IfExpression");
-            alt = new ProductionPatternAlternative();
+            //if(expr;expr;expr)
+            alt = new ProductionPatternAlternative(); 
             alt.AddToken((int)Token.IF, 1, 1);
             alt.AddToken((int)Token.LEFT_PAREN, 1, 1);
             alt.AddProduction((int)Token.EXPRESSION, 1, 1);

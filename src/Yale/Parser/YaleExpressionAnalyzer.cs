@@ -21,23 +21,22 @@ namespace Yale.Parser
     /// A class providing callback methods for the parser.
     /// This extends ExpressionAnalyzer with Yale specific callback methods
     /// </summary>
-    // ReSharper disable once ClassTooBig
     internal class YaleExpressionAnalyzer : ExpressionAnalyzer
     {
-        private readonly Regex _unicodeEscapeRegex = new Regex("\\\\u[0-9a-f]{4}", RegexOptions.IgnoreCase);
-        private readonly Regex _regularEscapeRegex = new Regex("\\\\[\\\\\"'trn]", RegexOptions.IgnoreCase);
+        private readonly Regex unicodeEscapeRegex = new Regex("\\\\u[0-9a-f]{4}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private readonly Regex regularEscapeRegex = new Regex("\\\\[\\\\\"'trn]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        private bool _inUnaryNegate;
-        private ExpressionContext _context;
+        private bool inUnaryNegate;
+        private ExpressionContext? context;
 
         public void SetContext(ExpressionContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public override void Reset()
         {
-            _context = null;
+            context = null;
         }
 
         public override Node ExitExpression(Production node)
@@ -147,7 +146,7 @@ namespace Yale.Parser
             }
             else
             {
-                var invocationListElement = new InvocationListElement(childValues, _context);
+                var invocationListElement = new InvocationListElement(childValues, context);
                 node.AddValue(invocationListElement);
             }
 
@@ -205,7 +204,7 @@ namespace Yale.Parser
             }
             else
             {
-                var invocationListElement = new InvocationListElement(childValues, _context);
+                var invocationListElement = new InvocationListElement(childValues, context);
                 op = new InElement(operand, invocationListElement);
             }
 
@@ -231,7 +230,7 @@ namespace Yale.Parser
             IList childValues = GetChildValues(node);
             var destTypeParts = (string[])childValues[1];
             var isArray = (bool)childValues[2];
-            var op = new CastElement((BaseExpressionElement)childValues[0], destTypeParts, isArray, _context);
+            var op = new CastElement((BaseExpressionElement)childValues[0], destTypeParts, isArray, context);
             node.AddValue(op);
             return node;
         }
@@ -345,7 +344,7 @@ namespace Yale.Parser
 
         public override Node ExitReal(PerCederberg.Grammatica.Runtime.Token node)
         {
-            var element = RealLiteralElement.Create(node.Image, _context.BuilderOptions);
+            var element = RealLiteralElement.Create(node.Image, context.BuilderOptions);
 
             node.AddValue(element);
             return node;
@@ -353,14 +352,14 @@ namespace Yale.Parser
 
         public override Node ExitInteger(PerCederberg.Grammatica.Runtime.Token node)
         {
-            var element = IntegralLiteralElement.Create(node.Image, false, _inUnaryNegate, _context.BuilderOptions);
+            var element = IntegralLiteralElement.Create(node.Image, false, inUnaryNegate, context.BuilderOptions);
             node.AddValue(element);
             return node;
         }
 
         public override Node ExitHexliteral(PerCederberg.Grammatica.Runtime.Token node)
         {
-            var element = IntegralLiteralElement.Create(node.Image, true, _inUnaryNegate, _context.BuilderOptions);
+            var element = IntegralLiteralElement.Create(node.Image, true, inUnaryNegate, context.BuilderOptions);
             node.AddValue(element);
             return node;
         }
@@ -401,7 +400,7 @@ namespace Yale.Parser
         public override Node ExitDatetime(PerCederberg.Grammatica.Runtime.Token node)
         {
             var image = node.Image.Substring(1, node.Image.Length - 2);
-            var element = new DateTimeLiteralElement(image, _context);
+            var element = new DateTimeLiteralElement(image, context);
             node.AddValue(element);
             return node;
         }
@@ -418,12 +417,12 @@ namespace Yale.Parser
         {
             // Remove outer quotes
             image = image.Substring(1, image.Length - 2);
-            image = _unicodeEscapeRegex.Replace(image, UnicodeEscapeMatcher);
-            image = _regularEscapeRegex.Replace(image, RegularEscapeMatcher);
+            image = unicodeEscapeRegex.Replace(image, UnicodeEscapeMatcher);
+            image = regularEscapeRegex.Replace(image, RegularEscapeMatcher);
             return image;
         }
 
-        private static string RegularEscapeMatcher(Match match)
+        private static string? RegularEscapeMatcher(Match match)
         {
             var matchValue = match.Value;
             // Remove leading \
@@ -593,7 +592,7 @@ namespace Yale.Parser
         public override void Child(Production node, Node child)
         {
             base.Child(node, child);
-            _inUnaryNegate = node.Id == (int)Token.NEGATE_EXPRESSION & child.Id == (int)Token.SUB;
+            inUnaryNegate = node.Id == (int)Token.NEGATE_EXPRESSION & child.Id == (int)Token.SUB;
         }
     }
 }

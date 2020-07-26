@@ -11,7 +11,7 @@ namespace Yale.Expression.Elements
     [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "<Pending>")]
     internal class NegateElement : UnaryElement
     {
-        private const string UnaryNegoation = "UnaryNegation";
+        private const string UnaryNegation = nameof(UnaryNegation);
 
         public override Type ResultType { get; }
 
@@ -24,7 +24,7 @@ namespace Yale.Expression.Elements
         {
             var typeCode = Type.GetTypeCode(childType);
 
-            var methodInfo = Utility.GetSimpleOverloadedOperator(UnaryNegoation, childType, childType);
+            var methodInfo = Utility.GetSimpleOverloadedOperator(UnaryNegation, childType, childType);
             if (methodInfo != null)
             {
                 return methodInfo.ReturnType;
@@ -52,7 +52,7 @@ namespace Yale.Expression.Elements
             MyChild.Emit(ilGenerator, context);
             ImplicitConverter.EmitImplicitConvert(MyChild.ResultType, resultType, ilGenerator);
 
-            var methodInfo = Utility.GetSimpleOverloadedOperator(UnaryNegoation, resultType, resultType);
+            var methodInfo = Utility.GetSimpleOverloadedOperator(UnaryNegation, resultType, resultType);
 
             if (methodInfo == null)
             {

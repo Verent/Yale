@@ -96,5 +96,6 @@ namespace Yale.Core
         /// Determines if this import can contain other imports
         /// </summary>
         public virtual bool IsContainer => false;
+
     }
 }
