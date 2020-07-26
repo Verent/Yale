@@ -286,7 +286,7 @@ namespace Yale.Engine
         {
             if (ContainsExpression(dependsOn) == false && Variables.ContainsKey(dependsOn) == false)
             {
-                throw new InvalidOperationException("Can not depend an an expression that is not added to the instance");
+                throw new InvalidOperationException($"Dependent expression or variable {dependsOn} does not exist");
             }
 
             dependencies.AddDependency(expressionKey, dependsOn);
@@ -299,7 +299,7 @@ namespace Yale.Engine
         /// <param name="ilGenerator"></param>
         internal void EmitLoad(string expressionKey, YaleIlGenerator ilGenerator)
         {
-            var propertyInfo = typeof(ExpressionContext).GetProperty("ComputeInstance");
+            var propertyInfo = typeof(ExpressionContext).GetProperty(nameof(ExpressionContext.ComputeInstance));
             ilGenerator.Emit(OpCodes.Callvirt, propertyInfo.GetGetMethod());
 
             //Find and load expression result

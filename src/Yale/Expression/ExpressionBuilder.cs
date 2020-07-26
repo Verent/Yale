@@ -21,7 +21,7 @@ namespace Yale.Expression
         private ExpressionParser Parser { get; set; }
         private YaleExpressionAnalyzer Analyzer { get; set; }
 
-        private string DynamicMethodName { get; } = "DynamicMethod";
+        private const string DynamicMethodName = "DynamicMethod";
 
         internal VariableCollection Variables { get; } = new VariableCollection();
 

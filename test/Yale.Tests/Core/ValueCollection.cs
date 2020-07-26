@@ -9,7 +9,7 @@ namespace Yale.Tests.Core
     public class ValueCollection
     {
         private readonly ComputeInstance _instance = new ComputeInstance();
-        private VariableCollection _variables => _instance.Variables;
+        private VariableCollection variables => _instance.Variables;
 
         [TestMethod]
         public void AddValue_CanBe_Retrieved()
@@ -34,12 +34,12 @@ namespace Yale.Tests.Core
         {
             Assert.ThrowsException<ArgumentNullException>(() =>
             {
-                _variables.Get(null);
+                variables.Get(null);
             });
 
             Assert.ThrowsException<ArgumentNullException>(() =>
             {
-                _variables.Get<object>(null);
+                variables.Get<object>(null);
             });
         }
 
@@ -48,22 +48,22 @@ namespace Yale.Tests.Core
         {
             const int a = 1;
             _instance.Variables.Add("a", a);
-            var aResult = _variables.Get<int>("a");
+            var aResult = variables.Get<int>("a");
             Assert.AreEqual(a, aResult);
 
             const double b = 1.0;
             _instance.Variables.Add("b", b);
-            var bResult = _variables.Get<double>("b");
+            var bResult = variables.Get<double>("b");
             Assert.AreEqual(b, bResult);
 
             const string c = "stringValue";
             _instance.Variables.Add("c", c);
-            var cResult = _variables.Get<string>("c");
+            var cResult = variables.Get<string>("c");
             Assert.AreEqual(c, cResult);
 
             const string d = "a > b";
             _instance.Variables.Add("d", d);
-            var dResult = _variables.Get<string>("d");
+            var dResult = variables.Get<string>("d");
             Assert.AreEqual(d, dResult);
             Assert.AreNotEqual(false, dResult);
         }
@@ -71,13 +71,13 @@ namespace Yale.Tests.Core
         [TestMethod]
         public void Enumerator_Works()
         {
-            foreach (var variable in _variables)
+            foreach (var variable in variables)
             {
                 Assert.Fail("No variables addded");
             }
 
-            _variables.Add("a", 1);
-            foreach (var variable in _variables)
+            variables.Add("a", 1);
+            foreach (var variable in variables)
             {
                 Assert.AreEqual("a", variable.Key);
                 Assert.AreEqual(1, variable.Value);

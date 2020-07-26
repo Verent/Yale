@@ -8,7 +8,7 @@ namespace Yale.Expression.Elements.Literals.Integral
     internal class Int32LiteralElement : IntegralLiteralElement
     {
         private const string MinValue = "2147483648";
-        private readonly bool _isMinValue;
+        private readonly bool isMinValue;
 
         public Int32LiteralElement(int value)
         {
@@ -17,7 +17,7 @@ namespace Yale.Expression.Elements.Literals.Integral
 
         private Int32LiteralElement()
         {
-            _isMinValue = true;
+            isMinValue = true;
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Yale.Expression.Elements.Literals.Integral
         /// <param name="isHex"></param>
         /// <param name="negated"></param>
         /// <returns></returns>
-        public static Int32LiteralElement TryCreate(string image, bool isHex, bool negated)
+        public static Int32LiteralElement? TryCreate(string image, bool isHex, bool negated)
         {
             if (negated & image == MinValue)
             {
@@ -42,7 +42,7 @@ namespace Yale.Expression.Elements.Literals.Integral
                     return null;
                 }
 
-                if (value >= 0 & value <= Int32.MaxValue)
+                if (value >= 0 & value <= int.MaxValue)
                 {
                     return new Int32LiteralElement(value);
                 }
@@ -57,7 +57,7 @@ namespace Yale.Expression.Elements.Literals.Integral
 
         public void Negate()
         {
-            if (_isMinValue)
+            if (isMinValue)
             {
                 Value = int.MinValue;
             }

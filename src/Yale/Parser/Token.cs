@@ -1,10 +1,8 @@
-﻿// ReSharper disable InconsistentNaming
-namespace Yale.Parser
+﻿namespace Yale.Parser
 {
     ///<remarks>
     /// An enumeration with token and production node constants. (69)
     ///</remarks>
-    ///
     internal enum Token
     {
         ADD = 1001,
