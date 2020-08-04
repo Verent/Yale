@@ -8,7 +8,7 @@ namespace Yale.Expression.Elements.Literals.Real
 {
     internal class DoubleLiteralElement : RealLiteralElement
     {
-        private readonly double _value;
+        private readonly double value;
 
         private DoubleLiteralElement()
         {
@@ -16,10 +16,10 @@ namespace Yale.Expression.Elements.Literals.Real
 
         public DoubleLiteralElement(double value)
         {
-            _value = value;
+            this.value = value;
         }
 
-        public static DoubleLiteralElement Parse(string image)
+        public static DoubleLiteralElement? Parse(string image)
         {
             var element = new DoubleLiteralElement();
 
@@ -37,7 +37,7 @@ namespace Yale.Expression.Elements.Literals.Real
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            ilGenerator.Emit(OpCodes.Ldc_R8, _value);
+            ilGenerator.Emit(OpCodes.Ldc_R8, value);
         }
 
         public override Type ResultType => typeof(double);

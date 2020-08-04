@@ -11,25 +11,25 @@ namespace Yale.Expression.Elements
 {
     internal class CastElement : BaseExpressionElement
     {
-        private readonly BaseExpressionElement _castExpression;
-        private readonly Type _destType;
+        private readonly BaseExpressionElement castExpression;
+        private readonly Type? destType;
 
         public CastElement(BaseExpressionElement castExpression, string[] destintaionTypeParts, bool isArray, ExpressionContext context)
         {
-            _castExpression = castExpression;
-            _destType = GetDestType(destintaionTypeParts, context);
+            this.castExpression = castExpression;
+            destType = GetDestType(destintaionTypeParts, context);
 
-            if (_destType == null)
+            if (destType == null)
             {
                 throw CreateCompileException(CompileErrors.CouldNotResolveType, CompileExceptionReason.UndefinedName, GetDestinationTypeString(destintaionTypeParts, isArray));
             }
 
             if (isArray)
             {
-                _destType = _destType.MakeArrayType();
+                destType = destType.MakeArrayType();
             }
 
-            if (IsValidCast(_castExpression.ResultType, _destType) == false)
+            if (IsValidCast(this.castExpression.ResultType, destType) == false)
             {
                 ThrowInvalidCastException();
             }
@@ -246,7 +246,7 @@ namespace Yale.Expression.Elements
 
         private void ThrowInvalidCastException()
         {
-            throw CreateCompileException(CompileErrors.CannotConvertType, CompileExceptionReason.InvalidExplicitCast, _castExpression.ResultType.Name, _destType.Name);
+            throw CreateCompileException(CompileErrors.CannotConvertType, CompileExceptionReason.InvalidExplicitCast, castExpression.ResultType.Name, destType.Name);
         }
 
         private static bool IsCastableNumericType(Type t)
@@ -261,10 +261,10 @@ namespace Yale.Expression.Elements
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            _castExpression.Emit(ilGenerator, context);
+            castExpression.Emit(ilGenerator, context);
 
-            var sourceType = _castExpression.ResultType;
-            var destType = _destType;
+            var sourceType = castExpression.ResultType;
+            var destType = this.destType;
 
             EmitCast(ilGenerator, sourceType, destType, context);
         }
@@ -503,6 +503,6 @@ namespace Yale.Expression.Elements
             }
         }
 
-        public override Type ResultType => _destType;
+        public override Type ResultType => destType;
     }
 }

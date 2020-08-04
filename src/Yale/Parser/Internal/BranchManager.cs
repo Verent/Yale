@@ -9,14 +9,14 @@ namespace Yale.Parser.Internal
     /// </summary>
     internal class BranchManager
     {
-        private readonly IList<BranchInfo> _branchInfos;
+        private readonly IList<BranchInfo> branchInfos;
 
-        private readonly IDictionary<object, Label> _keyLabelMap;
+        private readonly IDictionary<object, Label> keyLabelMap;
 
         public BranchManager()
         {
-            _branchInfos = new List<BranchInfo>();
-            _keyLabelMap = new Dictionary<object, Label>();
+            branchInfos = new List<BranchInfo>();
+            keyLabelMap = new Dictionary<object, Label>();
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Yale.Parser.Internal
         {
             var betweenBranches = new List<BranchInfo>();
 
-            foreach (var branchInfo in _branchInfos)
+            foreach (var branchInfo in branchInfos)
             {
                 betweenBranches.Clear();
 
@@ -44,7 +44,7 @@ namespace Yale.Parser.Internal
             var longBranchCount = 0;
 
             // Adjust the start location of each branch
-            foreach (var branchInfo in _branchInfos)
+            foreach (var branchInfo in branchInfos)
             {
                 // Save the short/long branch type
                 branchInfo.BakeIsLongBranch();
@@ -83,7 +83,7 @@ namespace Yale.Parser.Internal
         /// <remarks></remarks>
         private void FindBetweenBranches(BranchInfo target, ICollection<BranchInfo> dest)
         {
-            foreach (var branchInfo in _branchInfos)
+            foreach (var branchInfo in branchInfos)
             {
                 if (branchInfo.IsBetween(target))
                 {
@@ -104,8 +104,8 @@ namespace Yale.Parser.Internal
             var startLoc = new ILLocation(ilg.Length);
             var branchInfo = new BranchInfo(startLoc, target);
 
-            var index = _branchInfos.IndexOf(branchInfo);
-            branchInfo = _branchInfos[index];
+            var index = branchInfos.IndexOf(branchInfo);
+            branchInfo = branchInfos[index];
 
             return branchInfo.IsLongBranch;
         }
@@ -121,7 +121,7 @@ namespace Yale.Parser.Internal
             var startLoc = new ILLocation(ilg.Length);
             var branchInfo = new BranchInfo(startLoc, target);
 
-            _branchInfos.Add(branchInfo);
+            branchInfos.Add(branchInfo);
         }
 
         /// <summary>
@@ -130,10 +130,7 @@ namespace Yale.Parser.Internal
         /// <param name="key"></param>
         /// <returns></returns>
         /// <remarks></remarks>
-        public Label FindLabel(object key)
-        {
-            return _keyLabelMap[key];
-        }
+        public Label FindLabel(object key) => keyLabelMap[key];
 
         /// <summary>
         /// Get a label by a key.  Create the label if it is not present.
@@ -144,10 +141,10 @@ namespace Yale.Parser.Internal
         /// <remarks></remarks>
         public Label GetLabel(object key, YaleIlGenerator ilg)
         {
-            if (_keyLabelMap.TryGetValue(key, out var lbl) == false)
+            if (keyLabelMap.TryGetValue(key, out var lbl) == false)
             {
                 lbl = ilg.DefineLabel();
-                _keyLabelMap.Add(key, lbl);
+                keyLabelMap.Add(key, lbl);
             }
             return lbl;
         }
@@ -158,10 +155,7 @@ namespace Yale.Parser.Internal
         /// <param name="key"></param>
         /// <returns></returns>
         /// <remarks></remarks>
-        public bool HasLabel(object key)
-        {
-            return _keyLabelMap.ContainsKey(key);
-        }
+        public bool HasLabel(object key) => keyLabelMap.ContainsKey(key);
 
         /// <summary>
         /// Set the position for a label
@@ -173,7 +167,7 @@ namespace Yale.Parser.Internal
         {
             var pos = ilg.Length;
 
-            foreach (var branchInfo in _branchInfos)
+            foreach (var branchInfo in branchInfos)
             {
                 branchInfo.Mark(target, pos);
             }
@@ -181,11 +175,11 @@ namespace Yale.Parser.Internal
 
         public override string ToString()
         {
-            var arr = new string[_branchInfos.Count];
+            var arr = new string[branchInfos.Count];
 
-            for (var i = 0; i <= _branchInfos.Count - 1; i++)
+            for (var i = 0; i <= branchInfos.Count - 1; i++)
             {
-                arr[i] = _branchInfos[i].ToString();
+                arr[i] = branchInfos[i].ToString();
             }
 
             return string.Join(Environment.NewLine, arr);

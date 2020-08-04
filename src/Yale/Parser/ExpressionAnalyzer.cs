@@ -7,14 +7,12 @@ namespace Yale.Parser
     /// <summary>
     /// Callback methods for the parser.
     /// </summary>
-    // ReSharper disable once ClassTooBig
     public class ExpressionAnalyzer : Analyzer
     {
         /// <summary>
         /// Called when entering a parse tree node.
         /// </summary>
         /// <param name="node"></param>
-        // ReSharper disable once MethodTooLong
         public override void Enter(Node node)
         {
             switch ((Token)node.Id)

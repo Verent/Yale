@@ -34,11 +34,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>CompileErrors.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\ElementNames.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ElementNames.resx</DependentUpon>
-    </Compile>
     <Compile Update="Resources\GeneralErrors.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -50,10 +45,6 @@
     <EmbeddedResource Update="Resources\CompileErrors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>CompileErrors.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\ElementNames.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ElementNames.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\GeneralErrors.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -11,7 +11,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
         {
             var bitwiseType = Utility.GetBitwiseOpType(leftType, rightType);
 
-            if ((bitwiseType != null))
+            if (bitwiseType != null)
             {
                 return bitwiseType;
             }

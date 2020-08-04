@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Reflection.Emit;
 using Yale.Parser.Internal;
-using Yale.Resources;
 
 namespace Yale.Expression.Elements.Base
 {
@@ -21,10 +19,9 @@ namespace Yale.Expression.Elements.Base
         /// </summary>
         public abstract Type ResultType { get; }
 
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
+
+        protected string Name => GetType().Name;
 
         protected ExpressionCompileException CreateCompileException(string messageTemplate, CompileExceptionReason reason, params object[] arguments)
         {
@@ -37,17 +34,6 @@ namespace Yale.Expression.Elements.Base
         {
             var dynamicMethod = new DynamicMethod("temp", typeof(int), null, GetType());
             return new YaleIlGenerator(dynamicMethod.GetILGenerator(), ilgCurrent.Length, true);
-        }
-
-        protected string Name
-        {
-            get
-            {
-                var key = GetType().Name;
-                var value = ElementResourceManager.GetElementNameString(key);
-                Debug.Assert(value != null, $"Element name for '{key}' not in resource file");
-                return value;
-            }
         }
     }
 }

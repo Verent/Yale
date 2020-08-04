@@ -6,7 +6,7 @@ namespace Yale.Engine.Interface
     {
         string Name { get; }
 
-        object? ResultAsObject { get; }
+        object ResultAsObject { get; }
 
         Type? ResultType { get; }
 

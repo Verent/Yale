@@ -3,8 +3,7 @@
 namespace Yale.Expression
 {
     /// <summary>
-    /// This class contains information about an expression and the delegate used to
-    /// evaluate it.
+    /// This class contains information about an expression and the delegate used to evaluate it.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     internal class Expression<T>

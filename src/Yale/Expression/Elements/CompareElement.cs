@@ -10,30 +10,30 @@ namespace Yale.Expression.Elements
 {
     internal class CompareElement : BinaryExpressionElement
     {
-        private LogicalCompareOperation _operation;
+        private LogicalCompareOperation operation;
 
-        public void Initialize(BaseExpressionElement leftChild, BaseExpressionElement rightChild, LogicalCompareOperation op)
+        public void Initialize(BaseExpressionElement leftChild, BaseExpressionElement rightChild, LogicalCompareOperation operation)
         {
+            this.operation = operation;
             LeftChild = leftChild;
             RightChild = (Int32LiteralElement)rightChild;
-            _operation = op;
         }
 
         public void Validate()
         {
-            ValidateInternal(_operation);
+            ValidateInternal(operation);
         }
 
         protected override void GetOperation(object operation)
         {
-            _operation = (LogicalCompareOperation)operation;
+            this.operation = (LogicalCompareOperation)operation;
         }
 
         protected override Type GetResultType(Type leftType, Type rightType)
         {
             var binaryResultType = ImplicitConverter.GetBinaryResultType(leftType, rightType);
             var overloadedOperator = GetOverloadedCompareOperator();
-            var isEqualityOp = IsOpTypeEqualOrNotEqual(_operation);
+            var isEqualityOp = IsOpTypeEqualOrNotEqual(operation);
 
             // Use our string equality instead of overloaded operator
             if (ReferenceEquals(leftType, typeof(string)) & ReferenceEquals(rightType, typeof(string)) & isEqualityOp)
@@ -76,8 +76,8 @@ namespace Yale.Expression.Elements
 
         private MethodInfo GetOverloadedCompareOperator()
         {
-            var name = GetCompareOperatorName(_operation);
-            return GetOverloadedBinaryOperator(name, _operation);
+            var name = GetCompareOperatorName(operation);
+            return GetOverloadedBinaryOperator(name, operation);
         }
 
         private static string GetCompareOperatorName(LogicalCompareOperation op)
@@ -118,7 +118,7 @@ namespace Yale.Expression.Elements
                 // String equality
                 LeftChild.Emit(ilGenerator, context);
                 RightChild.Emit(ilGenerator, context);
-                EmitStringEquality(ilGenerator, _operation, context);
+                EmitStringEquality(ilGenerator, operation, context);
             }
             else if (overloadedOperator != null)
             {
@@ -129,7 +129,7 @@ namespace Yale.Expression.Elements
                 // Emit a compare of numeric operands
                 EmitChildWithConvert(LeftChild, binaryResultType, ilGenerator, context);
                 EmitChildWithConvert(RightChild, binaryResultType, ilGenerator, context);
-                EmitCompareOperation(ilGenerator, _operation);
+                EmitCompareOperation(ilGenerator, operation);
             }
             else if (AreBothChildrenOfType(typeof(bool)))
             {
@@ -155,7 +155,7 @@ namespace Yale.Expression.Elements
         {
             LeftChild.Emit(ilg, context);
             RightChild.Emit(ilg, context);
-            EmitCompareOperation(ilg, _operation);
+            EmitCompareOperation(ilg, operation);
         }
 
         private static void EmitStringEquality(YaleIlGenerator ilg, LogicalCompareOperation op, ExpressionContext context)

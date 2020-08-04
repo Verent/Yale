@@ -38,10 +38,8 @@ namespace Yale.Core
             }
         }
 
-        protected bool AlwaysMemberFilter(MemberInfo member, object criteria)
-        {
-            return true;
-        }
+        //Todo: Reimplement
+        protected bool AlwaysMemberFilter(MemberInfo member, object criteria) => true;
 
         internal abstract bool IsMatch(string name);
 
@@ -96,6 +94,5 @@ namespace Yale.Core
         /// Determines if this import can contain other imports
         /// </summary>
         public virtual bool IsContainer => false;
-
     }
 }
