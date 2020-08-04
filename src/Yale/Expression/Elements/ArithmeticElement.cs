@@ -11,18 +11,11 @@ namespace Yale.Expression.Elements
 {
     internal class ArithmeticElement : BinaryExpressionElement
     {
-        private static MethodInfo powerMethodInfo;
-        private static MethodInfo stringConcatMethodInfo;
-        private static MethodInfo objectConcatMethodInfo;
+        private static readonly MethodInfo powerMethodInfo = typeof(Math).GetMethod(nameof(Math.Pow), BindingFlags.Public | BindingFlags.Static);
+        private static readonly MethodInfo stringConcatMethodInfo = typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(string), typeof(string) }, null);
+        private static readonly MethodInfo objectConcatMethodInfo = typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(object), typeof(object) }, null);
 
         private BinaryArithmeticOperation operation;
-
-        public ArithmeticElement()
-        {
-            powerMethodInfo = typeof(Math).GetMethod("Pow", BindingFlags.Public | BindingFlags.Static);
-            stringConcatMethodInfo = typeof(string).GetMethod("Concat", new[] { typeof(string), typeof(string) }, null);
-            objectConcatMethodInfo = typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object) }, null);
-        }
 
         protected override void GetOperation(object operation)
         {
@@ -46,7 +39,7 @@ namespace Yale.Expression.Elements
                 // Operands are primitive types.  Return computed result type unless we are doing a power operation
                 if (operation == BinaryArithmeticOperation.Power)
                 {
-                    return GetPowerResultType(leftType, rightType, binaryResultType);
+                    return GetPowerResultType(leftType);
                 }
 
                 return binaryResultType;
@@ -62,7 +55,7 @@ namespace Yale.Expression.Elements
             return null;
         }
 
-        private Type GetPowerResultType(Type leftType, Type rightType, Type binaryResultType)
+        private Type GetPowerResultType(Type leftType)
         {
             return IsOptimizablePower ? leftType : typeof(double);
         }
@@ -83,33 +76,18 @@ namespace Yale.Expression.Elements
         /// </summary>
         /// <param name="operation"></param>
         /// <returns></returns>
-        private static string? GetOverloadedOperatorFunctionName(BinaryArithmeticOperation operation)
+        private static string GetOverloadedOperatorFunctionName(BinaryArithmeticOperation operation)
         {
-            switch (operation)
+            return operation switch
             {
-                case BinaryArithmeticOperation.Add:
-                    return "Addition";
-
-                case BinaryArithmeticOperation.Subtract:
-                    return "Subtraction";
-
-                case BinaryArithmeticOperation.Multiply:
-                    return "Multiply";
-
-                case BinaryArithmeticOperation.Divide:
-                    return "Division";
-
-                case BinaryArithmeticOperation.Mod:
-                    return "Modulus";
-
-                case BinaryArithmeticOperation.Power:
-                    return "Exponent";
-
-                default:
-                    //Todo: Perhaps this should be an exception?
-                    Debug.Assert(false, "unknown operator type");
-                    return null;
-            }
+                BinaryArithmeticOperation.Add => "Addition",
+                BinaryArithmeticOperation.Subtract => "Subtraction",
+                BinaryArithmeticOperation.Multiply => "Multiply",
+                BinaryArithmeticOperation.Divide => "Division",
+                BinaryArithmeticOperation.Mod => "Modulus",
+                BinaryArithmeticOperation.Power => "Exponent",
+                _ => throw new InvalidOperationException($"Operation {operation} is not a valid arithmetic operation"),
+            };
         }
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)

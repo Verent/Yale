@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Diagnostics;
 using System.Reflection.Emit;
 using Yale.Expression.Elements.Base;
 using Yale.Parser.Internal;
@@ -9,14 +8,14 @@ namespace Yale.Expression.Elements.LogicalBitwise
 {
     internal class AndOrElement : BinaryExpressionElement
     {
-        private AndOrOperation _myOperation;
+        private AndOrOperation myOperation;
         private static readonly object OurTrueTerminalKey = new object();
         private static readonly object OurFalseTerminalKey = new object();
         private static readonly object OurEndLabelKey = new object();
 
         protected override void GetOperation(object operation)
         {
-            _myOperation = (AndOrOperation)operation;
+            myOperation = (AndOrOperation)operation;
         }
 
         protected override Type? GetResultType(Type leftType, Type rightType)
@@ -49,7 +48,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
                 ImplicitConverter.EmitImplicitConvert(LeftChild.ResultType, resultType, ilGenerator);
                 RightChild.Emit(ilGenerator, context);
                 ImplicitConverter.EmitImplicitConvert(RightChild.ResultType, resultType, ilGenerator);
-                EmitBitwiseOperation(ilGenerator, _myOperation);
+                EmitBitwiseOperation(ilGenerator, myOperation);
             }
         }
 
@@ -66,8 +65,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
                     break;
 
                 default:
-                    Debug.Fail("Unknown op type");
-                    break;
+                    throw new InvalidOperationException("Unknown op type");
             }
         }
 
@@ -182,7 +180,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
         /// </summary>
         private static OpCode GetBranchOpcode(AndOrElement op, bool longBranch)
         {
-            if (op._myOperation == AndOrOperation.And)
+            if (op.myOperation == AndOrOperation.And)
             {
                 return longBranch ? OpCodes.Brfalse : OpCodes.Brfalse_S;
             }
@@ -209,7 +207,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
                 var top = (AndOrElement)cloneOperators.Pop();
 
                 // Is is a different operation?
-                if (top._myOperation != current._myOperation)
+                if (top.myOperation != current.myOperation)
                 {
                     // Yes, so return a label to its right operand
                     var nextOperand = cloneOperands.Pop();
@@ -221,7 +219,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
             }
 
             // We've reached the end of the stack so return the label for the appropriate true/false terminal
-            if (current._myOperation == AndOrOperation.And)
+            if (current.myOperation == AndOrOperation.And)
             {
                 return GetLabel(OurFalseTerminalKey, ilg, info);
             }

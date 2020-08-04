@@ -8,20 +8,20 @@ namespace Yale.Parser.Internal
     /// </summary>
     internal class BranchInfo : IEquatable<BranchInfo>
     {
-        private readonly ILLocation _start;
-        private readonly ILLocation _end;
-        private readonly Label _myLabel;
+        private readonly ILLocation start;
+        private readonly ILLocation end;
+        private readonly Label myLabel;
 
         public BranchInfo(ILLocation startLocation, Label endLabel)
         {
-            _start = startLocation;
-            _myLabel = endLabel;
-            _end = new ILLocation();
+            start = startLocation;
+            myLabel = endLabel;
+            end = new ILLocation();
         }
 
         public void AdjustForLongBranches(int longBranchCount)
         {
-            _start.AdjustForLongBranch(longBranchCount);
+            start.AdjustForLongBranch(longBranchCount);
         }
 
         public void BakeIsLongBranch()
@@ -31,30 +31,30 @@ namespace Yale.Parser.Internal
 
         public void AdjustForLongBranchesBetween(int betweenLongBranchCount)
         {
-            _end.AdjustForLongBranch(betweenLongBranchCount);
+            end.AdjustForLongBranch(betweenLongBranchCount);
         }
 
         public bool IsBetween(BranchInfo other)
         {
-            return _start.CompareTo(other._start) > 0 && _start.CompareTo(other._end) < 0;
+            return start.CompareTo(other.start) > 0 && start.CompareTo(other.end) < 0;
         }
 
         public bool ComputeIsLongBranch()
         {
-            return _start.IsLongBranch(_end);
+            return start.IsLongBranch(end);
         }
 
         public void Mark(Label target, int position)
         {
-            if (_myLabel.Equals(target))
+            if (myLabel.Equals(target))
             {
-                _end.SetPosition(position);
+                end.SetPosition(position);
             }
         }
 
         public bool Equals1(BranchInfo other)
         {
-            return _start.Equals1(other._start) && _myLabel.Equals(other._myLabel);
+            return start.Equals1(other.start) && myLabel.Equals(other.myLabel);
         }
 
         bool IEquatable<BranchInfo>.Equals(BranchInfo other)
@@ -64,7 +64,7 @@ namespace Yale.Parser.Internal
 
         public override string ToString()
         {
-            return $"{_start} -> {_end} (L={_start.IsLongBranch(_end)})";
+            return $"{start} -> {end} (L={start.IsLongBranch(end)})";
         }
 
         public bool IsLongBranch { get; private set; }

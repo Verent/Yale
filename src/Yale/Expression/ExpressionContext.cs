@@ -18,7 +18,7 @@ namespace Yale.Expression
             Owner = owner;
         }
 
-        public object? Owner { get; }
+        public object Owner { get; }
 
         public Type? OwnerType => Owner?.GetType();
 

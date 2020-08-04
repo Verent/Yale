@@ -96,7 +96,7 @@ namespace Yale.Expression
             return topElement;
         }
 
-        private DynamicMethod CreateDynamicMethod<T>(Type ownerType)
+        private static DynamicMethod CreateDynamicMethod<T>(Type ownerType)
         {
             Type[] parameterTypes = {
                 typeof(object),

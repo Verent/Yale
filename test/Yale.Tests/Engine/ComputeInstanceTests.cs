@@ -12,23 +12,18 @@ namespace Yale.Tests.Engine
     [TestClass]
     public class ComputeInstanceTests
     {
-        private readonly ComputeInstance _instance;
-
-        public ComputeInstanceTests()
-        {
-            _instance = new ComputeInstance();
-        }
+        private readonly ComputeInstance instance = new ComputeInstance();
 
         [TestMethod]
         public void AddExpression_WithAValue_ReturnsValue()
         {
             const int a = 1;
-            _instance.Variables.Add("a", a);
-            var aResult = _instance.Variables.Get<int>("a");
+            instance.Variables.Add("a", a);
+            var aResult = instance.Variables.Get<int>("a");
             Assert.AreEqual(a, aResult);
 
-            _instance.AddExpression("ea", "a");
-            var aeResult = _instance.GetResult("ea");
+            instance.AddExpression("ea", "a");
+            var aeResult = instance.GetResult("ea");
 
             Assert.AreEqual(aResult, aeResult);
         }
@@ -38,55 +33,55 @@ namespace Yale.Tests.Engine
         {
             const int a = 1;
             const int aUpdated = 2;
-            _instance.Variables.Add("a", a);
-            _instance.AddExpression("ra", "a*2");
-            Assert.AreEqual(a * 2, _instance.GetResult<int>("ra"));
+            instance.Variables.Add("a", a);
+            instance.AddExpression("ra", "a*2");
+            Assert.AreEqual(a * 2, instance.GetResult<int>("ra"));
 
-            _instance.Variables["a"] = aUpdated;
-            Assert.AreEqual(aUpdated * 2, _instance.GetResult<int>("ra"));
+            instance.Variables["a"] = aUpdated;
+            Assert.AreEqual(aUpdated * 2, instance.GetResult<int>("ra"));
         }
 
         [TestMethod]
         public void AddExpression_ThatAreValid_ReturnsExpectedResult()
         {
-            _instance.AddExpression("a", "true");
-            _instance.AddExpression("b", "false");
+            instance.AddExpression("a", "true");
+            instance.AddExpression("b", "false");
 
-            Assert.AreEqual(2, _instance.ExpressionCount);
-            Assert.IsTrue(_instance.GetResult<bool>("a"));
-            Assert.IsFalse(_instance.GetResult<bool>("b"));
+            Assert.AreEqual(2, instance.ExpressionCount);
+            Assert.IsTrue(instance.GetResult<bool>("a"));
+            Assert.IsFalse(instance.GetResult<bool>("b"));
         }
 
         [TestMethod]
         public void AddExpressionT_ThatAreValid_Exists()
         {
-            _instance.AddExpression<bool>("a", "true");
-            _instance.AddExpression<bool>("b", "false");
+            instance.AddExpression<bool>("a", "true");
+            instance.AddExpression<bool>("b", "false");
 
-            Assert.AreEqual(2, _instance.ExpressionCount);
-            Assert.IsTrue(_instance.ContainsExpression("a"));
-            Assert.IsTrue(_instance.ContainsExpression("b"));
+            Assert.AreEqual(2, instance.ExpressionCount);
+            Assert.IsTrue(instance.ContainsExpression("a"));
+            Assert.IsTrue(instance.ContainsExpression("b"));
         }
 
         [TestMethod]
         public void AddExpression_ThatAreInvalid_ThrowsException()
         {
             Assert.ThrowsException<ExpressionCompileException>(() =>
-                _instance.AddExpression("a", "true > false"));
+                instance.AddExpression("a", "true > false"));
 
             Assert.ThrowsException<ExpressionCompileException>(() =>
-                _instance.AddExpression("a", "Hello there < 1"));
+                instance.AddExpression("a", "Hello there < 1"));
 
             Assert.ThrowsException<ExpressionCompileException>(() =>
-                _instance.AddExpression("a", "1 == true"));
+                instance.AddExpression("a", "1 == true"));
         }
 
         [TestMethod]
         public void Generic_GetResult_Valid()
         {
-            _instance.Variables.Add("a", 10);
-            _instance.AddExpression<int>("b", "a");
-            var result = _instance.GetResult<int>("b");
+            instance.Variables.Add("a", 10);
+            instance.AddExpression<int>("b", "a");
+            var result = instance.GetResult<int>("b");
             Assert.AreEqual(typeof(int), result.GetType());
             Assert.AreEqual(10, result);
         }
@@ -94,37 +89,37 @@ namespace Yale.Tests.Engine
         [TestMethod]
         public void GetResult_Valid()
         {
-            _instance.Variables.Add("a", 10);
-            _instance.AddExpression("b", "a");
-            var result = _instance.GetResult("b");
+            instance.Variables.Add("a", 10);
+            instance.AddExpression("b", "a");
+            var result = instance.GetResult("b");
             Assert.AreEqual(10, result);
         }
 
         [TestMethod]
         public void Generic_GetResult_DoesNotExist()
         {
-            Assert.ThrowsException<KeyNotFoundException>(() => _instance.GetResult<int>("a"));
+            Assert.ThrowsException<KeyNotFoundException>(() => instance.GetResult<int>("a"));
         }
 
         [TestMethod]
         public void GetResult_DoesNotExist()
         {
-            Assert.ThrowsException<KeyNotFoundException>(() => _instance.GetResult("a"));
+            Assert.ThrowsException<KeyNotFoundException>(() => instance.GetResult("a"));
         }
 
         [TestMethod]
         public void GetExpression_ContainsExpression()
         {
-            Assert.IsFalse(_instance.ContainsExpression("a"));
-            _instance.AddExpression("a", "true");
-            Assert.IsTrue(_instance.ContainsExpression("a"));
+            Assert.IsFalse(instance.ContainsExpression("a"));
+            instance.AddExpression("a", "true");
+            Assert.IsTrue(instance.ContainsExpression("a"));
         }
 
         [TestMethod]
         public void Generic_GetExpression_ExpressionExists_ReturnsExpression()
         {
-            _instance.AddExpression<bool>("a", "true");
-            var expression = _instance.GetExpression<bool>("a");
+            instance.AddExpression<bool>("a", "true");
+            var expression = instance.GetExpression<bool>("a");
 
             Assert.AreEqual("true", expression);
         }
@@ -132,68 +127,68 @@ namespace Yale.Tests.Engine
         [TestMethod]
         public void GetExpression_ExpressionDoesNotExists_ThrowsException()
         {
-            Assert.ThrowsException<KeyNotFoundException>(() => _instance.GetExpression("a"));
-            Assert.ThrowsException<KeyNotFoundException>(() => _instance.GetExpression<bool>("a"));
+            Assert.ThrowsException<KeyNotFoundException>(() => instance.GetExpression("a"));
+            Assert.ThrowsException<KeyNotFoundException>(() => instance.GetExpression<bool>("a"));
         }
 
         [TestMethod]
         public void ContainsExpression_False()
         {
-            var result = _instance.ContainsExpression("a");
+            var result = instance.ContainsExpression("a");
             Assert.IsFalse(result);
         }
 
         [TestMethod]
         public void ContainsExpression_True()
         {
-            _instance.AddExpression<int>("a", "10");
-            var result = _instance.ContainsExpression("a");
+            instance.AddExpression<int>("a", "10");
+            var result = instance.ContainsExpression("a");
             Assert.IsTrue(result);
 
-            _instance.AddExpression("b", "10");
-            result = _instance.ContainsExpression("b");
+            instance.AddExpression("b", "10");
+            result = instance.ContainsExpression("b");
             Assert.IsTrue(result);
         }
 
         [TestMethod]
         public void Clear()
         {
-            _instance.AddExpression("a", "2");
-            _instance.AddExpression("b", "2");
-            _instance.AddExpression("c", "2");
-            Assert.AreEqual(3, _instance.ExpressionCount);
-            _instance.Variables.Add("va", 22);
-            _instance.Variables.Add("vb", 22);
-            Assert.AreEqual(2, _instance.Variables.Count);
-            _instance.Clear();
-            Assert.AreEqual(0, _instance.Variables.Count);
-            Assert.AreEqual(0, _instance.ExpressionCount);
+            instance.AddExpression("a", "2");
+            instance.AddExpression("b", "2");
+            instance.AddExpression("c", "2");
+            Assert.AreEqual(3, instance.ExpressionCount);
+            instance.Variables.Add("va", 22);
+            instance.Variables.Add("vb", 22);
+            Assert.AreEqual(2, instance.Variables.Count);
+            instance.Clear();
+            Assert.AreEqual(0, instance.Variables.Count);
+            Assert.AreEqual(0, instance.ExpressionCount);
         }
 
         [TestMethod]
         public void ExpressionCount_IsCorrect()
         {
-            Assert.AreEqual(0, _instance.ExpressionCount);
-            _instance.AddExpression("a", "2");
-            Assert.AreEqual(1, _instance.ExpressionCount);
+            Assert.AreEqual(0, instance.ExpressionCount);
+            instance.AddExpression("a", "2");
+            Assert.AreEqual(1, instance.ExpressionCount);
         }
 
         [TestMethod]
         public void ChangedExpressions_AreUpdated()
         {
-            _instance.AddExpression("a", "2");
-            Assert.AreEqual(2, (int)_instance.GetResult("a"));
-            _instance.SetExpression("a", "3");
-            Assert.AreEqual(3, (int)_instance.GetResult("a"));
+            instance.AddExpression("a", "2");
+            Assert.AreEqual(2, (int)instance.GetResult("a"));
+            instance.SetExpression("a", "3");
+            Assert.AreEqual(3, (int)instance.GetResult("a"));
         }
 
         [TestMethod]
         public void Generic_ChangedExpressions_AreUpdated()
         {
-            _instance.AddExpression<int>("a", "2");
-            Assert.AreEqual(2, (int)_instance.GetResult("a"));
-            _instance.SetExpression<int>("a", "3");
-            Assert.AreEqual(3, (int)_instance.GetResult("a"));
+            instance.AddExpression<int>("a", "2");
+            Assert.AreEqual(2, (int)instance.GetResult("a"));
+            instance.SetExpression<int>("a", "3");
+            Assert.AreEqual(3, (int)instance.GetResult("a"));
         }
     }
 }

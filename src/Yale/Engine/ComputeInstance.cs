@@ -197,7 +197,7 @@ namespace Yale.Engine
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public object? GetResult(string key)
+        public object GetResult(string key)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
 

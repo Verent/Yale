@@ -7,12 +7,12 @@ namespace Yale.Tests.Parser
     [TestClass]
     public class Core
     {
-        private readonly ComputeInstance _instance = new ComputeInstance();
+        private readonly ComputeInstance instance = new ComputeInstance();
 
         [TestMethod]
         public void Parse_InvalidToken_ThrowsException()
         {
-            Assert.ThrowsException<ExpressionCompileException>(() => _instance.AddExpression<int>("a", "b"));
+            Assert.ThrowsException<ExpressionCompileException>(() => instance.AddExpression<int>("a", "b"));
         }
     }
 }
