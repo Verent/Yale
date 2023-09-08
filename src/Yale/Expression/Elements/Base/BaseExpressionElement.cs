@@ -25,14 +25,14 @@ namespace Yale.Expression.Elements.Base
 
         protected ExpressionCompileException CreateCompileException(string messageTemplate, CompileExceptionReason reason, params object[] arguments)
         {
-            var message = string.Format(CultureInfo.InvariantCulture, messageTemplate, arguments);
+            string message = string.Format(CultureInfo.InvariantCulture, messageTemplate, arguments);
             message = string.Concat(Name, ": ", message);
             return new ExpressionCompileException(message, reason);
         }
 
         protected YaleIlGenerator CreateTempIlGenerator(YaleIlGenerator ilgCurrent)
         {
-            var dynamicMethod = new DynamicMethod("temp", typeof(int), null, GetType());
+            DynamicMethod dynamicMethod = new DynamicMethod("temp", typeof(int), null, GetType());
             return new YaleIlGenerator(dynamicMethod.GetILGenerator(), ilgCurrent.Length, true);
         }
     }

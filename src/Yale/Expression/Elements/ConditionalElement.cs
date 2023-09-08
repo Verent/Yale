@@ -41,7 +41,7 @@ namespace Yale.Expression.Elements
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            var branchManager = new BranchManager();
+            BranchManager branchManager = new BranchManager();
             branchManager.GetLabel("falseLabel", ilGenerator);
             branchManager.GetLabel("endLabel", ilGenerator);
 
@@ -52,7 +52,7 @@ namespace Yale.Expression.Elements
                 return;
             }
 
-            var ilgTemp = CreateTempIlGenerator(ilGenerator);
+            YaleIlGenerator ilgTemp = CreateTempIlGenerator(ilGenerator);
             Utility.SyncFleeIlGeneratorLabels(ilGenerator, ilgTemp);
 
             // Emit fake conditional to get branch target positions
@@ -66,8 +66,8 @@ namespace Yale.Expression.Elements
 
         private void EmitConditional(YaleIlGenerator ilg, ExpressionContext context, BranchManager branchManager)
         {
-            var falseLabel = branchManager.FindLabel("falseLabel");
-            var endLabel = branchManager.FindLabel("endLabel");
+            Label falseLabel = branchManager.FindLabel("falseLabel");
+            Label endLabel = branchManager.FindLabel("endLabel");
 
             // Emit the condition
             condition.Emit(ilg, context);

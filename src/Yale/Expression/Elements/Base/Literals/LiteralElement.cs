@@ -54,7 +54,7 @@ namespace Yale.Expression.Elements.Base.Literals
 
         private static void EmitSuperShort(int value, YaleIlGenerator ilGenerator)
         {
-            var ldcOpcode = default(OpCode);
+            OpCode ldcOpcode = default(OpCode);
 
             switch (value)
             {

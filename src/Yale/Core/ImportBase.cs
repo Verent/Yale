@@ -32,7 +32,7 @@ namespace Yale.Core
 
         protected static void AddMemberRange(ICollection<MemberInfo> members, ICollection<MemberInfo> destination)
         {
-            foreach (var memberInfo in members)
+            foreach (MemberInfo memberInfo in members)
             {
                 destination.Add(memberInfo);
             }
@@ -53,21 +53,21 @@ namespace Yale.Core
 
         internal MemberInfo[] FindMembers(string memberName, MemberTypes memberType)
         {
-            var found = new List<MemberInfo>();
+            List<MemberInfo> found = new List<MemberInfo>();
             AddMembers(memberName, memberType, found);
             return found.ToArray();
         }
 
         public MemberInfo[] GetMembers(MemberTypes memberType)
         {
-            var found = new List<MemberInfo>();
+            List<MemberInfo> found = new List<MemberInfo>();
             AddMembers(memberType, found);
             return found.ToArray();
         }
 
         public virtual IEnumerator<ImportBase> GetEnumerator()
         {
-            var imports = new List<ImportBase>();
+            List<ImportBase> imports = new List<ImportBase>();
             return imports.GetEnumerator();
         }
 

@@ -13,7 +13,7 @@ namespace Yale.Expression.Elements.Literals
 
         public DateTimeLiteralElement(string image, ExpressionContext context)
         {
-            var options = context.BuilderOptions;
+            ExpressionBuilderOptions options = context.BuilderOptions;
 
             if (DateTime.TryParseExact(image, options.DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _value) == false)
             {
@@ -23,13 +23,13 @@ namespace Yale.Expression.Elements.Literals
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            var index = ilGenerator.GetTempLocalIndex(typeof(DateTime));
+            int index = ilGenerator.GetTempLocalIndex(typeof(DateTime));
 
             Utility.EmitLoadLocalAddress(ilGenerator, index);
 
             EmitLoad(_value.Ticks, ilGenerator);
 
-            var constructor = typeof(DateTime).GetConstructor(new[] { typeof(Int64) });
+            System.Reflection.ConstructorInfo constructor = typeof(DateTime).GetConstructor(new[] { typeof(Int64) });
 
             ilGenerator.Emit(OpCodes.Call, constructor);
 

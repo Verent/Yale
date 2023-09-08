@@ -37,7 +37,7 @@ namespace Yale.Expression.Elements
 
         private static string GetDestinationTypeString(string[] parts, bool isArray)
         {
-            var s = string.Join(".", parts);
+            string s = string.Join(".", parts);
             if (isArray)
             {
                 s += "[]";
@@ -119,7 +119,7 @@ namespace Yale.Expression.Elements
                 // Reference type to value type
                 // Can only succeed if the reference type is a base of the value type or
                 // it is one of the interfaces the value type implements
-                var interfaces = destType.GetInterfaces();
+                Type[] interfaces = destType.GetInterfaces();
                 return IsBaseType(destType, sourceType) || Array.IndexOf(interfaces, sourceType) != -1;
             }
 
@@ -129,11 +129,11 @@ namespace Yale.Expression.Elements
 
         private MethodInfo? GetExplictOverloadedOperator(Type sourceType, Type destType)
         {
-            var methodBinder = new ExplicitOperatorMethodBinder(destType, sourceType);
+            ExplicitOperatorMethodBinder methodBinder = new ExplicitOperatorMethodBinder(destType, sourceType);
 
             // Look for an operator on the source type and dest types
-            var miSource = Utility.GetOverloadedOperator("Explicit", sourceType, methodBinder, sourceType);
-            var miDest = Utility.GetOverloadedOperator("Explicit", destType, methodBinder, sourceType);
+            MethodInfo? miSource = Utility.GetOverloadedOperator("Explicit", sourceType, methodBinder, sourceType);
+            MethodInfo? miDest = Utility.GetOverloadedOperator("Explicit", destType, methodBinder, sourceType);
 
             if (miSource == null & miDest == null)
             {
@@ -182,8 +182,8 @@ namespace Yale.Expression.Elements
                     return false;
                 }
 
-                var sourceElementType = sourceType.GetElementType();
-                var destElementType = destType.GetElementType();
+                Type sourceElementType = sourceType.GetElementType();
+                Type destElementType = destType.GetElementType();
 
                 // Both SE and TE are reference-types
                 if (sourceElementType.IsValueType | destElementType.IsValueType)
@@ -226,7 +226,7 @@ namespace Yale.Expression.Elements
 
         private static bool IsBaseType(Type target, Type potentialBase)
         {
-            var current = target;
+            Type current = target;
             while (current != null)
             {
                 if (ReferenceEquals(current, potentialBase))
@@ -240,7 +240,7 @@ namespace Yale.Expression.Elements
 
         private static bool ImplementsInterface(Type target, Type interfaceType)
         {
-            var interfaces = target.GetInterfaces();
+            Type[] interfaces = target.GetInterfaces();
             return Array.IndexOf(interfaces, interfaceType) != -1;
         }
 
@@ -263,15 +263,15 @@ namespace Yale.Expression.Elements
         {
             castExpression.Emit(ilGenerator, context);
 
-            var sourceType = castExpression.ResultType;
-            var destType = this.destType;
+            Type sourceType = castExpression.ResultType;
+            Type? destType = this.destType;
 
             EmitCast(ilGenerator, sourceType, destType, context);
         }
 
         private void EmitCast(YaleIlGenerator ilg, Type sourceType, Type destType, ExpressionContext context)
         {
-            var explicitOperator = GetExplictOverloadedOperator(sourceType, destType);
+            MethodInfo? explicitOperator = GetExplictOverloadedOperator(sourceType, destType);
             if (ReferenceEquals(sourceType, destType))
             {
                 // Identity cast; do nothing
@@ -340,13 +340,13 @@ namespace Yale.Expression.Elements
 
         private static void EmitExplicitNumericCast(YaleIlGenerator ilg, Type sourceType, Type destType, ExpressionContext context)
         {
-            var desttc = Type.GetTypeCode(destType);
-            var sourcetc = Type.GetTypeCode(sourceType);
-            var unsigned = IsUnsignedType(sourceType);
-            var options = context.BuilderOptions;
-            var overflowCheck = options.OverflowChecked;
-            var opCode = OpCodes.Nop;
-            var unsignedAndChecked = unsigned & overflowCheck;
+            TypeCode desttc = Type.GetTypeCode(destType);
+            TypeCode sourcetc = Type.GetTypeCode(sourceType);
+            bool unsigned = IsUnsignedType(sourceType);
+            ExpressionBuilderOptions options = context.BuilderOptions;
+            bool overflowCheck = options.OverflowChecked;
+            OpCode opCode = OpCodes.Nop;
+            bool unsignedAndChecked = unsigned & overflowCheck;
 
             switch (desttc)
             {

@@ -6,10 +6,10 @@ namespace Yale.InteractiveConsole
 {
     internal class Program
     {
-        private readonly ComputeInstance instance = new ComputeInstance();
-        private readonly Regex isValue = new Regex("^[a-zA-Z]+[=][\\w]+$");
-        private readonly Regex isExpression = new Regex("[a-zA-Z]+[:].+$");
-        private readonly Regex isEvaluate = new Regex("[a-zA-Z]+");
+        private readonly ComputeInstance instance = new();
+        private readonly Regex isValue = new("^[a-zA-Z]+[=][\\w]+$");
+        private readonly Regex isExpression = new("[a-zA-Z]+[:].+$");
+        private readonly Regex isEvaluate = new("[a-zA-Z]+");
 
         private void Run()
         {
@@ -17,7 +17,7 @@ namespace Yale.InteractiveConsole
 
             while (true)
             {
-                var input = Console.ReadLine().Trim();
+                string input = Console.ReadLine().Trim();
 
                 if (isValue.IsMatch(input)) AddValue(input);
                 else if (isExpression.IsMatch(input)) AddExpression(input);
@@ -29,7 +29,7 @@ namespace Yale.InteractiveConsole
         {
             if (instance.ContainsExpression(input))
             {
-                var result = instance.GetResult(input);
+                object result = instance.GetResult(input);
                 Console.WriteLine($"Result: {result}");
             }
             else
@@ -40,21 +40,21 @@ namespace Yale.InteractiveConsole
 
         private void AddExpression(string input)
         {
-            var values = input.Split(':');
+            string[] values = input.Split(':');
             instance.SetExpression(values[0], values[1]);
         }
 
         private void AddValue(string input)
         {
-            var values = input.Split('=');
-            var key = values[0];
-            var value = values[1];
+            string[] values = input.Split('=');
+            string key = values[0];
+            string value = values[1];
 
-            if (int.TryParse(value, out var integer))
+            if (int.TryParse(value, out int integer))
             {
                 instance.Variables[key] = integer;
             }
-            else if (double.TryParse(value, out var number))
+            else if (double.TryParse(value, out double number))
             {
                 instance.Variables[key] = number;
             }

@@ -15,16 +15,16 @@ namespace Yale.Expression.Elements.MemberElements
 
         public ArgumentList(ICollection elements)
         {
-            var arr = new BaseExpressionElement[elements.Count];
+            BaseExpressionElement[] arr = new BaseExpressionElement[elements.Count];
             elements.CopyTo(arr, 0);
             _elements = arr;
         }
 
         private string[] GetArgumentTypeNames()
         {
-            var list = new List<string>();
+            List<string> list = new List<string>();
 
-            foreach (var expressionElement in _elements)
+            foreach (BaseExpressionElement expressionElement in _elements)
             {
                 list.Add(expressionElement.ResultType.Name);
             }
@@ -34,9 +34,9 @@ namespace Yale.Expression.Elements.MemberElements
 
         public Type[] GetArgumentTypes()
         {
-            var list = new List<Type>();
+            List<Type> list = new List<Type>();
 
-            foreach (var e in _elements)
+            foreach (BaseExpressionElement e in _elements)
             {
                 list.Add(e.ResultType);
             }
@@ -46,13 +46,13 @@ namespace Yale.Expression.Elements.MemberElements
 
         public override string ToString()
         {
-            var typeNames = GetArgumentTypeNames();
+            string[] typeNames = GetArgumentTypeNames();
             return Utility.FormatList(typeNames);
         }
 
         public BaseExpressionElement[] ToArray()
         {
-            var arr = new BaseExpressionElement[_elements.Count];
+            BaseExpressionElement[] arr = new BaseExpressionElement[_elements.Count];
             _elements.CopyTo(arr, 0);
             return arr;
         }

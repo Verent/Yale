@@ -76,13 +76,13 @@ namespace Yale.Core
 
         internal Type? FindType(string[] typeNameParts)
         {
-            var namespaces = new string[typeNameParts.Length - 1];
-            var typeName = typeNameParts[typeNameParts.Length - 1];
+            string[] namespaces = new string[typeNameParts.Length - 1];
+            string typeName = typeNameParts[typeNameParts.Length - 1];
 
             Array.Copy(typeNameParts, namespaces, namespaces.Length);
             ImportBase? currentImport = RootImport;
 
-            foreach (var ns in namespaces)
+            foreach (string ns in namespaces)
             {
                 currentImport = currentImport.FindImport(ns);
                 if (currentImport == null)
@@ -96,7 +96,7 @@ namespace Yale.Core
 
         internal static Type? GetBuiltinType(string name)
         {
-            return OurBuiltinTypeMap.TryGetValue(name, out var type) ? type : null;
+            return OurBuiltinTypeMap.TryGetValue(name, out Type? type) ? type : null;
         }
 
         public void AddType(Type type, string @namespace)
@@ -107,7 +107,7 @@ namespace Yale.Core
             const BindingFlags publicStatic = BindingFlags.Public | BindingFlags.Static;
             options.AssertTypeIsAccessible(type);
 
-            var import = GetImport(@namespace);
+            NamespaceImport import = GetImport(@namespace);
             import.Add(new TypeImport(type, publicStatic, false, options));
         }
 
@@ -122,11 +122,11 @@ namespace Yale.Core
             if (@namespace == null) throw new ArgumentNullException(nameof(@namespace));
             if (methodName == null) throw new ArgumentNullException(nameof(methodName));
 
-            var methodInfo = type.GetMethod(methodName, PublicStaticIgnoreCase);
+            MethodInfo methodInfo = type.GetMethod(methodName, PublicStaticIgnoreCase);
 
             if (methodInfo == null)
             {
-                var msg = string.Format(CultureInfo.InvariantCulture, GeneralErrors.CouldNotFindPublicStaticMethodOnType, methodName, type.Name);
+                string msg = string.Format(CultureInfo.InvariantCulture, GeneralErrors.CouldNotFindPublicStaticMethodOnType, methodName, type.Name);
                 throw new ArgumentException(msg);
             }
 
@@ -145,7 +145,7 @@ namespace Yale.Core
                 throw new ArgumentException(GeneralErrors.OnlyPublicStaticMethodsCanBeImported);
             }
 
-            var import = GetImport(@namespace);
+            NamespaceImport import = GetImport(@namespace);
             import.Add(new MethodImport(methodInfo, options));
         }
     }

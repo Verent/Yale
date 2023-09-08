@@ -8,7 +8,7 @@ namespace Yale.Tests.Core
     [TestClass]
     public class Import
     {
-        private readonly ComputeInstance _instance = new ComputeInstance();
+        private readonly ComputeInstance _instance = new();
 
         [TestMethod]
         public void Parse_ValidImportedTypeProperty_Executes()
@@ -18,7 +18,7 @@ namespace Yale.Tests.Core
             const string key = "math_constant";
 
             _instance.AddExpression(key, "E");
-            var result = _instance.GetResult(key);
+            object result = _instance.GetResult(key);
 
             Assert.AreEqual(Math.E, result);
         }
@@ -31,7 +31,7 @@ namespace Yale.Tests.Core
             const string key = "math_function";
 
             _instance.AddExpression(key, "Sqrt(16)");
-            var result = _instance.GetResult(key);
+            object result = _instance.GetResult(key);
 
             Assert.AreEqual(4.0, result);
         }
@@ -44,7 +44,7 @@ namespace Yale.Tests.Core
             const string key = "math_function";
 
             _instance.AddExpression(key, "Test.Sqrt(16)");
-            var result = _instance.GetResult(key);
+            object result = _instance.GetResult(key);
 
             Assert.AreEqual(4.0, result);
         }
@@ -57,7 +57,7 @@ namespace Yale.Tests.Core
             const string key = "math_function";
 
             _instance.AddExpression(key, "Test.Sqrt(16)");
-            var result = _instance.GetResult(key);
+            object result = _instance.GetResult(key);
 
             Assert.AreEqual(4.0, result);
         }

@@ -30,7 +30,7 @@ namespace Yale.Expression.Elements.Literals.Integral
 
             if (isHex)
             {
-                if (Int64.TryParse(image, NumberStyles.AllowHexSpecifier, null, out var value) == false)
+                if (Int64.TryParse(image, NumberStyles.AllowHexSpecifier, null, out long value) == false)
                 {
                     return null;
                 }
@@ -45,7 +45,7 @@ namespace Yale.Expression.Elements.Literals.Integral
             }
             else
             {
-                if (Int64.TryParse(image, out var value))
+                if (Int64.TryParse(image, out long value))
                 {
                     return new Int64LiteralElement(value);
                 }

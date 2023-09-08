@@ -24,7 +24,7 @@ namespace Yale.Expression.Elements
                 return null;
             }
 
-            var typeCode = Type.GetTypeCode(leftType);
+            TypeCode typeCode = Type.GetTypeCode(leftType);
 
             switch (typeCode)
             {
@@ -67,7 +67,7 @@ namespace Yale.Expression.Elements
         private void EmitShiftCount(YaleIlGenerator ilg, ExpressionContext context)
         {
             RightChild.Emit(ilg, context);
-            var typeCode = Type.GetTypeCode(LeftChild.ResultType);
+            TypeCode typeCode = Type.GetTypeCode(LeftChild.ResultType);
             switch (typeCode)
             {
                 case TypeCode.Byte:
@@ -94,8 +94,8 @@ namespace Yale.Expression.Elements
 
         private void EmitShift(YaleIlGenerator ilg)
         {
-            var typeCode = Type.GetTypeCode(LeftChild.ResultType);
-            var opCode = default(OpCode);
+            TypeCode typeCode = Type.GetTypeCode(LeftChild.ResultType);
+            OpCode opCode = default(OpCode);
 
             switch (typeCode)
             {

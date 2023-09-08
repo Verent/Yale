@@ -24,7 +24,7 @@ namespace Yale.Tests.Engine
         [TestMethod]
         public void ModifyExpressions_Updates_Dependencies()
         {
-            var instance = new ComputeInstance();
+            ComputeInstance instance = new();
 
             instance.Variables.Add("a", 10);
             instance.Variables.Add("b", 5);
@@ -34,7 +34,7 @@ namespace Yale.Tests.Engine
             instance.AddExpression<int>("e", "c + d");
             instance.AddExpression<int>("f", "e + 1");
 
-            var result = instance.GetResult("f");
+            object result = instance.GetResult("f");
             Assert.AreEqual(26, result);
 
             instance.SetExpression<int>("d", "a + a");
@@ -49,7 +49,7 @@ namespace Yale.Tests.Engine
         [TestMethod]
         public void ComplexDependency()
         {
-            var result = Parallel.ForEach(_instances, Test1);
+            ParallelLoopResult result = Parallel.ForEach(_instances, Test1);
             Assert.IsTrue(result.IsCompleted);
 
             result = Parallel.ForEach(_instances, Test2);
@@ -72,7 +72,7 @@ namespace Yale.Tests.Engine
             instance.AddExpression("e", "c + d");
             instance.AddExpression("f", "e + 1");
 
-            var result = instance.GetResult("f");
+            object result = instance.GetResult("f");
             Assert.AreEqual(26, result);
 
             instance.Variables["b"] = 1;
@@ -101,7 +101,7 @@ namespace Yale.Tests.Engine
             instance.AddExpression<int>("h", "e + d");      // 17   23
             instance.AddExpression<int>("i", "g + f + h");  // 50   66
 
-            var result = instance.GetResult("i");
+            object result = instance.GetResult("i");
             Assert.AreEqual(50, result);
 
             instance.Variables["b"] = 7;
@@ -121,7 +121,7 @@ namespace Yale.Tests.Engine
 
             instance.Variables.Add("a", 3);
             instance.AddExpression("square", "a^2");
-            var result = instance.GetResult("square");
+            object result = instance.GetResult("square");
             Assert.AreEqual(9, result);
 
             instance.Variables["a"] = 2;

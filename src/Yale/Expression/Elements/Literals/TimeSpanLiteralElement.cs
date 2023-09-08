@@ -20,13 +20,13 @@ namespace Yale.Expression.Elements.Literals
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            var index = ilGenerator.GetTempLocalIndex(typeof(TimeSpan));
+            int index = ilGenerator.GetTempLocalIndex(typeof(TimeSpan));
 
             Utility.EmitLoadLocalAddress(ilGenerator, index);
 
             EmitLoad(_value.Ticks, ilGenerator);
 
-            var constructorInfo = typeof(TimeSpan).GetConstructor(new[] { typeof(Int64) });
+            System.Reflection.ConstructorInfo constructorInfo = typeof(TimeSpan).GetConstructor(new[] { typeof(Int64) });
 
             ilGenerator.Emit(OpCodes.Call, constructorInfo);
 

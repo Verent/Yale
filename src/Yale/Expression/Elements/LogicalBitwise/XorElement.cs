@@ -9,7 +9,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
     {
         protected override Type GetResultType(Type leftType, Type rightType)
         {
-            var bitwiseType = Utility.GetBitwiseOpType(leftType, rightType);
+            Type bitwiseType = Utility.GetBitwiseOpType(leftType, rightType);
 
             if (bitwiseType != null)
             {
@@ -21,7 +21,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            var resultType = ResultType;
+            Type resultType = ResultType;
 
             LeftChild.Emit(ilGenerator, context);
             ImplicitConverter.EmitImplicitConvert(LeftChild.ResultType, resultType, ilGenerator);

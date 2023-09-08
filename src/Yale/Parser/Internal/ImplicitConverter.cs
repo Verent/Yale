@@ -33,7 +33,7 @@ namespace Yale.Parser.Internal
             typeof(double)
         };
             OurBinaryTypes = types;
-            var table = new Type[types.Length, types.Length];
+            Type[,] table = new Type[types.Length, types.Length];
             OurBinaryResultTable = table;
             FillIdentities(types, table);
 
@@ -112,17 +112,17 @@ namespace Yale.Parser.Internal
 
         private static void FillIdentities(Type[] typeArray, Type[,] table)
         {
-            for (var i = 0; i <= typeArray.Length - 1; i++)
+            for (int i = 0; i <= typeArray.Length - 1; i++)
             {
-                var type = typeArray[i];
+                Type type = typeArray[i];
                 table[i, i] = type;
             }
         }
 
         private static void AddEntry(Type type1, Type type2, Type result)
         {
-            var index1 = GetTypeIndex(type1);
-            var index2 = GetTypeIndex(type2);
+            int index1 = GetTypeIndex(type1);
+            int index2 = GetTypeIndex(type2);
             OurBinaryResultTable[index1, index2] = result;
             OurBinaryResultTable[index2, index1] = result;
         }
@@ -155,7 +155,7 @@ namespace Yale.Parser.Internal
         private static bool EmitOverloadedImplicitConvert(Type sourceType, Type destinationType, YaleIlGenerator ilGenerator)
         {
             // Look for an implicit operator on the destination type
-            var methodInfo = Utility.GetSimpleOverloadedOperator("Implicit", sourceType, destinationType);
+            System.Reflection.MethodInfo methodInfo = Utility.GetSimpleOverloadedOperator("Implicit", sourceType, destinationType);
 
             if (methodInfo == null)
             {
@@ -221,8 +221,8 @@ namespace Yale.Parser.Internal
         /// <returns></returns>
         public static bool EmitImplicitNumericConvert(Type sourceType, Type destinationType, YaleIlGenerator ilGenerator)
         {
-            var sourceTypeCode = Type.GetTypeCode(sourceType);
-            var destTypeCode = Type.GetTypeCode(destinationType);
+            TypeCode sourceTypeCode = Type.GetTypeCode(sourceType);
+            TypeCode destTypeCode = Type.GetTypeCode(destinationType);
 
             switch (destTypeCode)
             {
@@ -439,8 +439,8 @@ namespace Yale.Parser.Internal
         /// <returns></returns>
         public static Type GetBinaryResultType(Type t1, Type t2)
         {
-            var index1 = GetTypeIndex(t1);
-            var index2 = GetTypeIndex(t2);
+            int index1 = GetTypeIndex(t1);
+            int index2 = GetTypeIndex(t2);
 
             if (index1 == -1 || index2 == -1)
             {
@@ -473,8 +473,8 @@ namespace Yale.Parser.Internal
                 if (destinationType.IsValueType)
                 {
                     // Value type -> value type
-                    var sourceScore = GetValueTypeImplicitConvertScore(sourceType);
-                    var destinationScore = GetValueTypeImplicitConvertScore(destinationType);
+                    int sourceScore = GetValueTypeImplicitConvertScore(sourceType);
+                    int destinationScore = GetValueTypeImplicitConvertScore(destinationType);
 
                     return destinationScore - sourceScore;
                 }
@@ -499,7 +499,7 @@ namespace Yale.Parser.Internal
 
         private static int GetValueTypeImplicitConvertScore(Type type)
         {
-            var typeCode = Type.GetTypeCode(type);
+            TypeCode typeCode = Type.GetTypeCode(type);
 
             switch (typeCode)
             {
@@ -557,8 +557,8 @@ namespace Yale.Parser.Internal
 
         private static int GetInheritanceDistance(Type sourceType, Type destinationType)
         {
-            var count = 0;
-            var current = sourceType;
+            int count = 0;
+            Type current = sourceType;
 
             while (!ReferenceEquals(current, destinationType))
             {
@@ -571,8 +571,8 @@ namespace Yale.Parser.Internal
 
         private static int GetInverseDistanceToObject(Type t)
         {
-            var score = 1000;
-            var current = t.BaseType;
+            int score = 1000;
+            Type current = t.BaseType;
 
             while (current != null)
             {

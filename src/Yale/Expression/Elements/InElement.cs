@@ -28,7 +28,7 @@ namespace Yale.Expression.Elements
         {
             this.operand = operand;
 
-            var elements = new BaseExpressionElement[listElements.Count];
+            BaseExpressionElement[] elements = new BaseExpressionElement[listElements.Count];
             listElements.CopyTo(elements, 0);
 
             arguments = new List<BaseExpressionElement>(elements);
@@ -45,10 +45,10 @@ namespace Yale.Expression.Elements
 
         private void ResolveForListSearch()
         {
-            var compareElement = new CompareElement();
+            CompareElement compareElement = new CompareElement();
 
             // Validate that our operand is comparable to all elements in the list
-            foreach (var argumentElement in arguments)
+            foreach (BaseExpressionElement argumentElement in arguments)
             {
                 compareElement.Initialize(operand, argumentElement, LogicalCompareOperation.Equal);
                 compareElement.Validate();
@@ -66,8 +66,8 @@ namespace Yale.Expression.Elements
             }
 
             // Validate that the operand type is compatible with the collection
-            var methodInfo = GetCollectionContainsMethod();
-            var firstParameter = methodInfo.GetParameters()[0];
+            MethodInfo methodInfo = GetCollectionContainsMethod();
+            ParameterInfo firstParameter = methodInfo.GetParameters()[0];
 
             if (ImplicitConverter.EmitImplicitConvert(operand.ResultType, firstParameter.ParameterType, null) == false)
             {
@@ -77,19 +77,19 @@ namespace Yale.Expression.Elements
 
         private Type GetTargetCollectionType()
         {
-            var collType = targetCollectionElement.ResultType;
+            Type collType = targetCollectionElement.ResultType;
 
             // Try to see if the collection is a generic ICollection or IDictionary
-            var interfaces = collType.GetInterfaces();
+            Type[] interfaces = collType.GetInterfaces();
 
-            foreach (var interfaceType in interfaces)
+            foreach (Type? interfaceType in interfaces)
             {
                 if (interfaceType.IsGenericType == false)
                 {
                     continue;
                 }
 
-                var genericTypeDef = interfaceType.GetGenericTypeDefinition();
+                Type genericTypeDef = interfaceType.GetGenericTypeDefinition();
 
                 if (ReferenceEquals(genericTypeDef, typeof(ICollection<>)) | ReferenceEquals(genericTypeDef, typeof(IDictionary<,>)))
                 {
@@ -120,12 +120,12 @@ namespace Yale.Expression.Elements
             }
             else
             {
-                var branchManager = new BranchManager();
+                BranchManager branchManager = new BranchManager();
                 branchManager.GetLabel("endLabel", ilGenerator);
                 branchManager.GetLabel("trueTerminal", ilGenerator);
 
                 // Do a fake emit to get branch positions
-                var ilgTemp = CreateTempIlGenerator(ilGenerator);
+                YaleIlGenerator ilgTemp = CreateTempIlGenerator(ilGenerator);
                 Utility.SyncFleeIlGeneratorLabels(ilGenerator, ilgTemp);
 
                 EmitListIn(ilgTemp, context, branchManager);
@@ -140,8 +140,8 @@ namespace Yale.Expression.Elements
         private void EmitCollectionIn(YaleIlGenerator ilg, ExpressionContext context)
         {
             // Get the contains method
-            var methodInfo = GetCollectionContainsMethod();
-            var firstParameter = methodInfo.GetParameters()[0];
+            MethodInfo methodInfo = GetCollectionContainsMethod();
+            ParameterInfo firstParameter = methodInfo.GetParameters()[0];
 
             // Load the collection
             targetCollectionElement.Emit(ilg, context);
@@ -155,7 +155,7 @@ namespace Yale.Expression.Elements
 
         private MethodInfo GetCollectionContainsMethod()
         {
-            var methodName = "Contains";
+            string methodName = "Contains";
 
             if (targetCollectionType.IsGenericType && ReferenceEquals(targetCollectionType.GetGenericTypeDefinition(), typeof(IDictionary<,>)))
             {
@@ -167,22 +167,22 @@ namespace Yale.Expression.Elements
 
         private void EmitListIn(YaleIlGenerator ilg, ExpressionContext context, BranchManager branchManager)
         {
-            var compareElement = new CompareElement();
-            var endLabel = branchManager.FindLabel("endLabel");
-            var trueTerminal = branchManager.FindLabel("trueTerminal");
+            CompareElement compareElement = new CompareElement();
+            Label endLabel = branchManager.FindLabel("endLabel");
+            Label trueTerminal = branchManager.FindLabel("trueTerminal");
 
             // Cache the operand since we will be comparing against it a lot
-            var lb = ilg.DeclareLocal(operand.ResultType);
-            var targetIndex = lb.LocalIndex;
+            LocalBuilder lb = ilg.DeclareLocal(operand.ResultType);
+            int targetIndex = lb.LocalIndex;
 
             operand.Emit(ilg, context);
             Utility.EmitStoreLocal(ilg, targetIndex);
 
             // Wrap our operand in a local shim
-            var targetShim = new LocalBasedElement(operand, targetIndex);
+            LocalBasedElement targetShim = new LocalBasedElement(operand, targetIndex);
 
             // Emit the compares
-            foreach (var argumentElement in arguments)
+            foreach (BaseExpressionElement argumentElement in arguments)
             {
                 compareElement.Initialize(targetShim, argumentElement, LogicalCompareOperation.Equal);
                 compareElement.Emit(ilg, context);

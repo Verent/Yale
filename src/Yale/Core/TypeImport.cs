@@ -30,7 +30,7 @@ namespace Yale.Core
 
         protected override void AddMembers(string memberName, MemberTypes memberType, ICollection<MemberInfo> targetCollection)
         {
-            var members = Target.FindMembers(memberType, bindFlags, Options.MemberFilter, memberName);
+            MemberInfo[] members = Target.FindMembers(memberType, bindFlags, Options.MemberFilter, memberName);
             AddMemberRange(members, targetCollection);
         }
 
@@ -38,7 +38,7 @@ namespace Yale.Core
         {
             if (useTypeNameAsNamespace) return;
 
-            var members = Target.FindMembers(memberType, bindFlags, AlwaysMemberFilter, null);
+            MemberInfo[] members = Target.FindMembers(memberType, bindFlags, AlwaysMemberFilter, null);
             AddMemberRange(members, targetCollection);
         }
 
@@ -61,7 +61,7 @@ namespace Yale.Core
         {
             if (!useTypeNameAsNamespace) return base.GetEnumerator();
 
-            var coll = new List<ImportBase> { new TypeImport(Target, false, Options) };
+            List<ImportBase> coll = new List<ImportBase> { new TypeImport(Target, false, Options) };
             return coll.GetEnumerator();
         }
 

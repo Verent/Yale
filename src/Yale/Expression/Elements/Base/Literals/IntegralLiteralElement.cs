@@ -22,7 +22,7 @@ namespace Yale.Expression.Elements.Base.Literals
             if (isHex == false)
             {
                 // Create a real element if required
-                var realElement = RealLiteralElement.CreateFromInteger(image, options);
+                LiteralElement? realElement = RealLiteralElement.CreateFromInteger(image, options);
 
                 if (realElement != null)
                 {
@@ -30,13 +30,13 @@ namespace Yale.Expression.Elements.Base.Literals
                 }
             }
 
-            var hasUSuffix = image.EndsWith("u", comparison) & !image.EndsWith("lu", comparison);
-            var hasLSuffix = image.EndsWith("l", comparison) & !image.EndsWith("ul", comparison);
-            var hasUlSuffix = image.EndsWith("ul", comparison) | image.EndsWith("lu", comparison);
-            var hasSuffix = hasUSuffix | hasLSuffix | hasUlSuffix;
+            bool hasUSuffix = image.EndsWith("u", comparison) & !image.EndsWith("lu", comparison);
+            bool hasLSuffix = image.EndsWith("l", comparison) & !image.EndsWith("ul", comparison);
+            bool hasUlSuffix = image.EndsWith("ul", comparison) | image.EndsWith("lu", comparison);
+            bool hasSuffix = hasUSuffix | hasLSuffix | hasUlSuffix;
 
             LiteralElement constant;
-            var numStyles = NumberStyles.Integer;
+            NumberStyles numStyles = NumberStyles.Integer;
 
             if (isHex)
             {

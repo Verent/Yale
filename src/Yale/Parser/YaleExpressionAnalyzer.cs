@@ -111,7 +111,7 @@ namespace Yale.Parser
             IList childValues = GetChildValues(node);
 
             // Get last child
-            var childElement = (BaseExpressionElement)childValues[childValues.Count - 1];
+            BaseExpressionElement childElement = (BaseExpressionElement)childValues[childValues.Count - 1];
 
             // Is it an signed integer constant?
             if (ReferenceEquals(childElement.GetType(), typeof(Int32LiteralElement)) & childValues.Count == 2)
@@ -138,7 +138,7 @@ namespace Yale.Parser
         public override Node ExitMemberExpression(Production node)
         {
             IList childValues = GetChildValues(node);
-            var first = childValues[0];
+            object first = childValues[0];
 
             if (childValues.Count == 1 && !(first is MemberElement))
             {
@@ -146,7 +146,7 @@ namespace Yale.Parser
             }
             else
             {
-                var invocationListElement = new InvocationListElement(childValues, context);
+                InvocationListElement invocationListElement = new InvocationListElement(childValues, context);
                 node.AddValue(invocationListElement);
             }
 
@@ -156,8 +156,8 @@ namespace Yale.Parser
         public override Node ExitIndexExpression(Production node)
         {
             IList childValues = GetChildValues(node);
-            var args = new ArgumentList(childValues);
-            var e = new IndexerElement(args);
+            ArgumentList args = new ArgumentList(childValues);
+            IndexerElement e = new IndexerElement(args);
             node.AddValue(e);
             return node;
         }
@@ -177,7 +177,7 @@ namespace Yale.Parser
         public override Node ExitIfExpression(Production node)
         {
             IList childValues = GetChildValues(node);
-            var op = new ConditionalElement((BaseExpressionElement)childValues[0], (BaseExpressionElement)childValues[1], (BaseExpressionElement)childValues[2]);
+            ConditionalElement op = new ConditionalElement((BaseExpressionElement)childValues[0], (BaseExpressionElement)childValues[1], (BaseExpressionElement)childValues[2]);
             node.AddValue(op);
             return node;
         }
@@ -192,10 +192,10 @@ namespace Yale.Parser
                 return node;
             }
 
-            var operand = (BaseExpressionElement)childValues[0];
+            BaseExpressionElement operand = (BaseExpressionElement)childValues[0];
             childValues.RemoveAt(0);
 
-            var second = childValues[0];
+            object second = childValues[0];
             InElement op;
 
             if (second is IList list)
@@ -204,7 +204,7 @@ namespace Yale.Parser
             }
             else
             {
-                var invocationListElement = new InvocationListElement(childValues, context);
+                InvocationListElement invocationListElement = new InvocationListElement(childValues, context);
                 op = new InElement(operand, invocationListElement);
             }
 
@@ -228,9 +228,9 @@ namespace Yale.Parser
         public override Node ExitCastExpression(Production node)
         {
             IList childValues = GetChildValues(node);
-            var destTypeParts = (string[])childValues[1];
-            var isArray = (bool)childValues[2];
-            var op = new CastElement((BaseExpressionElement)childValues[0], destTypeParts, isArray, context);
+            string[] destTypeParts = (string[])childValues[1];
+            bool isArray = (bool)childValues[2];
+            CastElement op = new CastElement((BaseExpressionElement)childValues[0], destTypeParts, isArray, context);
             node.AddValue(op);
             return node;
         }
@@ -238,14 +238,14 @@ namespace Yale.Parser
         public override Node ExitCastTypeExpression(Production node)
         {
             IList childValues = GetChildValues(node);
-            var parts = new List<string>();
+            List<string> parts = new List<string>();
 
             foreach (string part in childValues)
             {
                 parts.Add(part);
             }
 
-            var isArray = false;
+            bool isArray = false;
 
             if (parts[parts.Count - 1] == "[]")
             {
@@ -267,26 +267,26 @@ namespace Yale.Parser
         public override Node ExitFieldPropertyExpression(Production node)
         {
             //string name = ((Token)node.GetChildAt(0))?.Image;
-            var name = node.GetChildAt(0).GetValue(0).ToString();
-            var elem = new IdentifierElement(name);
+            string name = node.GetChildAt(0).GetValue(0).ToString();
+            IdentifierElement elem = new IdentifierElement(name);
             node.AddValue(elem);
             return node;
         }
 
         public override Node ExitFunctionCallExpression(Production node)
         {
-            var childValues = GetChildValues(node);
-            var name = (string)childValues[0];
+            ArrayList childValues = GetChildValues(node);
+            string name = (string)childValues[0];
             childValues.RemoveAt(0);
-            var args = new ArgumentList(childValues);
-            var funcCall = new FunctionCallElement(name, args);
+            ArgumentList args = new ArgumentList(childValues);
+            FunctionCallElement funcCall = new FunctionCallElement(name, args);
             node.AddValue(funcCall);
             return node;
         }
 
         public override Node ExitArgumentList(Production node)
         {
-            var childValues = GetChildValues(node);
+            ArrayList childValues = GetChildValues(node);
             node.AddValues((ArrayList)childValues);
             return node;
         }
@@ -314,7 +314,7 @@ namespace Yale.Parser
 
             if (childValues.Count == 2)
             {
-                var element = (UnaryElement)Activator.CreateInstance(elementType, childValues[1]);
+                UnaryElement element = (UnaryElement)Activator.CreateInstance(elementType, childValues[1]);
                 node.AddValue(element);
             }
             else
@@ -329,7 +329,7 @@ namespace Yale.Parser
 
             if (childValues.Count > 1)
             {
-                var expressionElement = BinaryExpressionElement.CreateElement(childValues, elementType);
+                BinaryExpressionElement expressionElement = BinaryExpressionElement.CreateElement(childValues, elementType);
                 node.AddValue(expressionElement);
             }
             else if (childValues.Count == 1)
@@ -344,7 +344,7 @@ namespace Yale.Parser
 
         public override Node ExitReal(PerCederberg.Grammatica.Runtime.Token node)
         {
-            var element = RealLiteralElement.Create(node.Image, context.BuilderOptions);
+            object? element = RealLiteralElement.Create(node.Image, context.BuilderOptions);
 
             node.AddValue(element);
             return node;
@@ -352,14 +352,14 @@ namespace Yale.Parser
 
         public override Node ExitInteger(PerCederberg.Grammatica.Runtime.Token node)
         {
-            var element = IntegralLiteralElement.Create(node.Image, false, inUnaryNegate, context.BuilderOptions);
+            LiteralElement element = IntegralLiteralElement.Create(node.Image, false, inUnaryNegate, context.BuilderOptions);
             node.AddValue(element);
             return node;
         }
 
         public override Node ExitHexliteral(PerCederberg.Grammatica.Runtime.Token node)
         {
-            var element = IntegralLiteralElement.Create(node.Image, true, inUnaryNegate, context.BuilderOptions);
+            LiteralElement element = IntegralLiteralElement.Create(node.Image, true, inUnaryNegate, context.BuilderOptions);
             node.AddValue(element);
             return node;
         }
@@ -384,31 +384,31 @@ namespace Yale.Parser
 
         public override Node ExitStringLiteral(PerCederberg.Grammatica.Runtime.Token node)
         {
-            var s = DoEscapes(node.Image);
-            var element = new StringLiteralElement(s);
+            string s = DoEscapes(node.Image);
+            StringLiteralElement element = new StringLiteralElement(s);
             node.AddValue(element);
             return node;
         }
 
         public override Node ExitCharLiteral(PerCederberg.Grammatica.Runtime.Token node)
         {
-            var s = DoEscapes(node.Image);
+            string s = DoEscapes(node.Image);
             node.AddValue(new CharLiteralElement(s[0]));
             return node;
         }
 
         public override Node ExitDatetime(PerCederberg.Grammatica.Runtime.Token node)
         {
-            var image = node.Image.Substring(1, node.Image.Length - 2);
-            var element = new DateTimeLiteralElement(image, context);
+            string image = node.Image.Substring(1, node.Image.Length - 2);
+            DateTimeLiteralElement element = new DateTimeLiteralElement(image, context);
             node.AddValue(element);
             return node;
         }
 
         public override Node ExitTimeSpan(PerCederberg.Grammatica.Runtime.Token node)
         {
-            var image = node.Image.Substring(2, node.Image.Length - 3);
-            var element = new TimeSpanLiteralElement(image);
+            string image = node.Image.Substring(2, node.Image.Length - 3);
+            TimeSpanLiteralElement element = new TimeSpanLiteralElement(image);
             node.AddValue(element);
             return node;
         }
@@ -424,7 +424,7 @@ namespace Yale.Parser
 
         private static string? RegularEscapeMatcher(Match match)
         {
-            var matchValue = match.Value;
+            string matchValue = match.Value;
             // Remove leading \
             matchValue = matchValue.Remove(0, 1);
 
@@ -455,11 +455,11 @@ namespace Yale.Parser
 
         private string UnicodeEscapeMatcher(Match m)
         {
-            var value = m.Value;
+            string value = m.Value;
             // Remove \u
             value = value.Remove(0, 2);
-            var code = int.Parse(value, NumberStyles.AllowHexSpecifier);
-            var c = Convert.ToChar(code);
+            int code = int.Parse(value, NumberStyles.AllowHexSpecifier);
+            char c = Convert.ToChar(code);
             return c.ToString();
         }
 

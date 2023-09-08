@@ -41,8 +41,8 @@ namespace Yale.Parser
 
         private void CreatePatterns()
         {
-            var pattern = new ProductionPattern((int)Token.EXPRESSION, "Expression");
-            var alt = new ProductionPatternAlternative();
+            ProductionPattern pattern = new ProductionPattern((int)Token.EXPRESSION, "Expression");
+            ProductionPatternAlternative alt = new ProductionPatternAlternative();
             alt.AddProduction((int)Token.XOR_EXPRESSION, 1, 1);
             pattern.AddAlternative(alt);
             AddPattern(pattern);
@@ -194,10 +194,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            
+
             pattern = new ProductionPattern((int)Token.IF_EXPRESSION, "IfExpression");
             //if(expr;expr;expr)
-            alt = new ProductionPatternAlternative(); 
+            alt = new ProductionPatternAlternative();
             alt.AddToken((int)Token.IF, 1, 1);
             alt.AddToken((int)Token.LEFT_PAREN, 1, 1);
             alt.AddProduction((int)Token.EXPRESSION, 1, 1);

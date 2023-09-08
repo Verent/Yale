@@ -25,8 +25,8 @@ namespace Yale.Parser.Internal
         {
             foreach (MethodInfo methodInfo in match)
             {
-                var parameters = methodInfo.GetParameters();
-                var firstParameter = parameters[0];
+                ParameterInfo[] parameters = methodInfo.GetParameters();
+                ParameterInfo firstParameter = parameters[0];
                 if (ReferenceEquals(firstParameter.ParameterType, argType) & object.ReferenceEquals(methodInfo.ReturnType, returnType))
                 {
                     return methodInfo;

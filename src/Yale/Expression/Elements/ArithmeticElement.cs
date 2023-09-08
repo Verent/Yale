@@ -24,8 +24,8 @@ namespace Yale.Expression.Elements
 
         protected override Type? GetResultType(Type leftType, Type rightType)
         {
-            var binaryResultType = ImplicitConverter.GetBinaryResultType(leftType, rightType);
-            var overloadedMethod = GetOverloadedArithmeticOperator();
+            Type binaryResultType = ImplicitConverter.GetBinaryResultType(leftType, rightType);
+            MethodInfo? overloadedMethod = GetOverloadedArithmeticOperator();
 
             // Is an overloaded operator defined for our left and right children?
             if (overloadedMethod != null)
@@ -67,7 +67,7 @@ namespace Yale.Expression.Elements
         private MethodInfo? GetOverloadedArithmeticOperator()
         {
             //Get the name of the operator
-            var name = GetOverloadedOperatorFunctionName(operation);
+            string name = GetOverloadedOperatorFunctionName(operation);
             return GetOverloadedBinaryOperator(name, operation);
         }
 
@@ -92,7 +92,7 @@ namespace Yale.Expression.Elements
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            var overloadedMethod = GetOverloadedArithmeticOperator();
+            MethodInfo? overloadedMethod = GetOverloadedArithmeticOperator();
 
             if (overloadedMethod != null)
             {
@@ -121,10 +121,10 @@ namespace Yale.Expression.Elements
         /// </summary>
         private void EmitArithmeticOperation(BinaryArithmeticOperation operation, YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            var options = context.BuilderOptions;
-            var unsigned = IsUnsignedForArithmetic(LeftChild.ResultType) & IsUnsignedForArithmetic(RightChild.ResultType);
-            var integral = Utility.IsIntegralType(LeftChild.ResultType) & Utility.IsIntegralType(RightChild.ResultType);
-            var emitOverflow = integral & options.OverflowChecked;
+            ExpressionBuilderOptions options = context.BuilderOptions;
+            bool unsigned = IsUnsignedForArithmetic(LeftChild.ResultType) & IsUnsignedForArithmetic(RightChild.ResultType);
+            bool integral = Utility.IsIntegralType(LeftChild.ResultType) & Utility.IsIntegralType(RightChild.ResultType);
+            bool emitOverflow = integral & options.OverflowChecked;
 
             EmitChildWithConvert(LeftChild, ResultType, ilGenerator, context);
 
@@ -193,7 +193,7 @@ namespace Yale.Expression.Elements
 
         private void EmitOptimizedPower(YaleIlGenerator ilGenerator, bool emitOverflow, bool unsigned)
         {
-            var right = (Int32LiteralElement)RightChild;
+            Int32LiteralElement right = (Int32LiteralElement)RightChild;
 
             if (right.Value == 0)
             {
@@ -209,12 +209,12 @@ namespace Yale.Expression.Elements
             }
 
             // Start at 1 since left operand has already been emited once
-            for (var i = 1; i <= right.Value - 1; i++)
+            for (int i = 1; i <= right.Value - 1; i++)
             {
                 ilGenerator.Emit(OpCodes.Dup);
             }
 
-            for (var i = 1; i <= right.Value - 1; i++)
+            for (int i = 1; i <= right.Value - 1; i++)
             {
                 EmitMultiply(ilGenerator, emitOverflow, unsigned);
             }

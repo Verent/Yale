@@ -8,12 +8,12 @@ namespace Yale.Tests.ExpressionTests
     [TestClass]
     public class ObjectReference
     {
-        private readonly ComputeInstance _instance = new ComputeInstance();
+        private readonly ComputeInstance _instance = new();
 
         [TestMethod]
         public void CallInstanceMethod()
         {
-            var testObject = new TestClass<string>(nameof(CallInstanceMethod));
+            TestClass<string> testObject = new(nameof(CallInstanceMethod));
 
             _instance.Variables.Add("testObject", testObject);
             _instance.AddExpression<string>("e", "testObject.GetCaller()");
