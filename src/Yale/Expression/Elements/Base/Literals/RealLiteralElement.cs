@@ -62,7 +62,7 @@ namespace Yale.Expression.Elements.Base.Literals
 
         private static LiteralElement? CreateImplicitReal(string image)
         {
-            var realType = builderOptions.RealLiteralDataType;
+            RealLiteralDataType realType = builderOptions.RealLiteralDataType;
 
             switch (realType)
             {

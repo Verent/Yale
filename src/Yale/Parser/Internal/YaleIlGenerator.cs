@@ -21,7 +21,7 @@ namespace Yale.Parser.Internal
 
         public int GetTempLocalIndex(Type localType)
         {
-            if (_localBuilderTemp.TryGetValue(localType, out var local) == false)
+            if (_localBuilderTemp.TryGetValue(localType, out LocalBuilder? local) == false)
             {
                 local = _ilGenerator.DeclareLocal(localType);
                 _localBuilderTemp.Add(localType, local);
@@ -132,7 +132,7 @@ namespace Yale.Parser.Internal
 
         private void RecordOpcode(OpCode op)
         {
-            var operandLength = GetOpcodeOperandSize(op.OperandType);
+            int operandLength = GetOpcodeOperandSize(op.OperandType);
             Length += op.Size + operandLength;
         }
 
@@ -176,7 +176,7 @@ namespace Yale.Parser.Internal
         [Conditional("DEBUG")]
         public void ValidateLength()
         {
-            var ilGen = IlGeneratorLength;
+            int ilGen = IlGeneratorLength;
             Debug.Assert(Length == ilGen || ilGen == -1, "YaleIlGenerator length mismatch");
         }
 

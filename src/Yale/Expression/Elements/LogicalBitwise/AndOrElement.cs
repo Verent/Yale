@@ -20,7 +20,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
 
         protected override Type? GetResultType(Type leftType, Type rightType)
         {
-            var bitwiseOpType = Utility.GetBitwiseOpType(leftType, rightType);
+            Type bitwiseOpType = Utility.GetBitwiseOpType(leftType, rightType);
             if (bitwiseOpType != null)
             {
                 return bitwiseOpType;
@@ -36,7 +36,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            var resultType = ResultType;
+            Type resultType = ResultType;
 
             if (ReferenceEquals(resultType, typeof(bool)))
             {
@@ -72,9 +72,9 @@ namespace Yale.Expression.Elements.LogicalBitwise
         private void DoEmitLogical(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
             // We have to do a 'fake' emit so we can get the positions of the labels
-            var info = new ShortCircuitInfo();
+            ShortCircuitInfo info = new ShortCircuitInfo();
             // Create a temporary IL generator
-            var ilgTemp = CreateTempIlGenerator(ilGenerator);
+            YaleIlGenerator ilgTemp = CreateTempIlGenerator(ilGenerator);
 
             // We have to make sure that the label count for the temp YaleIlGenerator matches our real YaleIlGenerator
             Utility.SyncFleeIlGeneratorLabels(ilGenerator, ilgTemp);
@@ -111,11 +111,11 @@ namespace Yale.Expression.Elements.LogicalBitwise
             EmitLogicalShortCircuit(ilg, info, context);
 
             // Get the last operand
-            var terminalOperand = (BaseExpressionElement)info.Operands.Pop();
+            BaseExpressionElement terminalOperand = (BaseExpressionElement)info.Operands.Pop();
             // Emit it
             EmitOperand(terminalOperand, info, ilg, context);
             // And jump to the end
-            var endLabel = info.Branches.FindLabel(OurEndLabelKey);
+            Label endLabel = info.Branches.FindLabel(OurEndLabelKey);
             ilg.Emit(OpCodes.Br_S, endLabel);
 
             // Emit our true/false terminals
@@ -136,15 +136,15 @@ namespace Yale.Expression.Elements.LogicalBitwise
             while (info.Operators.Count != 0)
             {
                 // Get the operator
-                var op = (AndOrElement)info.Operators.Pop();
+                AndOrElement op = (AndOrElement)info.Operators.Pop();
                 // Get the left operand
-                var leftOperand = (BaseExpressionElement)info.Operands.Pop();
+                BaseExpressionElement leftOperand = (BaseExpressionElement)info.Operands.Pop();
 
                 // Emit the left
                 EmitOperand(leftOperand, info, ilg, context);
 
                 // Get the label for the short-circuit case
-                var label = GetShortCircuitLabel(op, info, ilg);
+                Label label = GetShortCircuitLabel(op, info, ilg);
                 // Emit the branch
                 EmitBranch(op, ilg, label, info);
             }
@@ -157,7 +157,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
                 info.Branches.AddBranch(ilg, target);
 
                 // Temp mode; just emit a short branch and return
-                var shortBranch = GetBranchOpcode(op, false);
+                OpCode shortBranch = GetBranchOpcode(op, false);
                 ilg.Emit(shortBranch, target);
 
                 return;
@@ -166,10 +166,10 @@ namespace Yale.Expression.Elements.LogicalBitwise
             // Emit the proper branch opcode
 
             // Determine if it is a long branch
-            var longBranch = info.Branches.IsLongBranch(ilg, target);
+            bool longBranch = info.Branches.IsLongBranch(ilg, target);
 
             // Get the branch opcode
-            var brOpcode = GetBranchOpcode(op, longBranch);
+            OpCode brOpcode = GetBranchOpcode(op, longBranch);
 
             // Emit the branch
             ilg.Emit(brOpcode, target);
@@ -194,8 +194,8 @@ namespace Yale.Expression.Elements.LogicalBitwise
         private static Label GetShortCircuitLabel(AndOrElement current, ShortCircuitInfo info, YaleIlGenerator ilg)
         {
             // We modify the given stacks so we need to clone them
-            var cloneOperands = (Stack)info.Operands.Clone();
-            var cloneOperators = (Stack)info.Operators.Clone();
+            Stack cloneOperands = (Stack)info.Operands.Clone();
+            Stack cloneOperators = (Stack)info.Operators.Clone();
 
             // Pop all siblings
             current.PopRightChild(cloneOperands, cloneOperators);
@@ -204,13 +204,13 @@ namespace Yale.Expression.Elements.LogicalBitwise
             while (cloneOperators.Count > 0)
             {
                 // Get the top operator
-                var top = (AndOrElement)cloneOperators.Pop();
+                AndOrElement top = (AndOrElement)cloneOperators.Pop();
 
                 // Is is a different operation?
                 if (top.myOperation != current.myOperation)
                 {
                     // Yes, so return a label to its right operand
-                    var nextOperand = cloneOperands.Pop();
+                    object nextOperand = cloneOperands.Pop();
                     return GetLabel(nextOperand, ilg, info);
                 }
 
@@ -278,7 +278,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
             if (info.Branches.HasLabel(operand))
             {
                 // Yes, so mark it
-                var leftLabel = info.Branches.FindLabel(operand);
+                Label leftLabel = info.Branches.FindLabel(operand);
                 ilg.MarkLabel(leftLabel);
 
                 // Note the label's position
@@ -300,7 +300,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
             // Emit the false case if it was used
             if (info.Branches.HasLabel(OurFalseTerminalKey))
             {
-                var falseLabel = info.Branches.FindLabel(OurFalseTerminalKey);
+                Label falseLabel = info.Branches.FindLabel(OurFalseTerminalKey);
 
                 // Mark the label and note its position
                 ilg.MarkLabel(falseLabel);

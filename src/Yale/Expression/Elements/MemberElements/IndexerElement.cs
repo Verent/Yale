@@ -36,7 +36,7 @@ namespace Yale.Expression.Elements.MemberElements
 
         protected override void ResolveInternal()
         {
-            var target = Previous.TargetType;
+            Type target = Previous.TargetType;
 
             // Are we are indexing on an array?
             if (target.IsArray)
@@ -70,21 +70,21 @@ namespace Yale.Expression.Elements.MemberElements
         private bool FindIndexer(Type targetType)
         {
             // Get the default members
-            var members = targetType.GetDefaultMembers();
+            MemberInfo[] members = targetType.GetDefaultMembers();
 
-            var methods = new List<MethodInfo>();
+            List<MethodInfo> methods = new List<MethodInfo>();
 
             // Use the first one that's valid for our indexer type
-            foreach (var memberInfo in members)
+            foreach (MemberInfo? memberInfo in members)
             {
-                var propertyInfo = memberInfo as PropertyInfo;
+                PropertyInfo? propertyInfo = memberInfo as PropertyInfo;
                 if (propertyInfo != null)
                 {
                     methods.Add(propertyInfo.GetGetMethod(true));
                 }
             }
 
-            var functionCallElement = new FunctionCallElement("Indexer", methods.ToArray(), _indexerElements);
+            FunctionCallElement functionCallElement = new FunctionCallElement("Indexer", methods.ToArray(), _indexerElements);
             functionCallElement.Resolve(Context);
             _indexerElement = functionCallElement;
 
@@ -110,7 +110,7 @@ namespace Yale.Expression.Elements.MemberElements
             _indexerElement.Emit(ilg, context);
             ImplicitConverter.EmitImplicitConvert(_indexerElement.ResultType, typeof(Int32), ilg);
 
-            var elementType = ResultType;
+            Type elementType = ResultType;
 
             if (elementType.IsValueType == false)
             {
@@ -137,7 +137,7 @@ namespace Yale.Expression.Elements.MemberElements
 
         private void EmitIndexer(YaleIlGenerator ilg, ExpressionContext context)
         {
-            var functionCallElement = (FunctionCallElement)_indexerElement;
+            FunctionCallElement functionCallElement = (FunctionCallElement)_indexerElement;
             functionCallElement.EmitFunctionCall(NextRequiresAddress, ilg, context);
         }
     }

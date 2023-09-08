@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Yale.Tests.Annotations;
 
 namespace Yale.Tests.Helper
 {

@@ -17,7 +17,7 @@ namespace Yale.Parser
 
         private void CreatePatterns()
         {
-            var pattern = new TokenPattern((int)Token.ADD, "ADD", PatternType.STRING, "+");
+            TokenPattern pattern = new TokenPattern((int)Token.ADD, "ADD", PatternType.STRING, "+");
             AddPattern(pattern);
 
             pattern = new TokenPattern((int)Token.SUB, "SUB", PatternType.STRING, "-");
@@ -98,7 +98,7 @@ namespace Yale.Parser
             pattern = new TokenPattern((int)Token.RIGHT_SHIFT, "RIGHT_SHIFT", PatternType.STRING, ">>");
             AddPattern(pattern);
 
-            pattern = new TokenPattern((int)Token.WHITESPACE, "WHITESPACE", PatternType.REGEXP, "\\s+"){ Ignore = true };
+            pattern = new TokenPattern((int)Token.WHITESPACE, "WHITESPACE", PatternType.REGEXP, "\\s+") { Ignore = true };
             AddPattern(pattern);
 
             pattern = new TokenPattern((int)Token.INTEGER, "INTEGER", PatternType.REGEXP, "\\d+(u|l|ul|lu|f|m)?");

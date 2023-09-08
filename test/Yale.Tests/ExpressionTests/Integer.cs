@@ -7,18 +7,18 @@ namespace Yale.Tests.ExpressionTests
     [TestClass]
     public class Integer
     {
-        private readonly ComputeInstance _instance = new ComputeInstance();
+        private readonly ComputeInstance _instance = new();
 
         [TestMethod]
         public void IntegerEqualsInteger_IsInteger()
         {
             _instance.AddExpression("a", "1");
-            var result = _instance.GetResult("a");
+            object result = _instance.GetResult("a");
             Assert.AreEqual(typeof(int), result.GetType());
             Assert.AreEqual(1, result);
 
             _instance.AddExpression<int>("b", "2");
-            var result2 = _instance.GetResult<int>("b");
+            int result2 = _instance.GetResult<int>("b");
             Assert.AreEqual(typeof(int), result2.GetType());
             Assert.AreEqual(2, result2);
         }
@@ -40,7 +40,7 @@ namespace Yale.Tests.ExpressionTests
         public void AddExpression_ReturnCorrectValue(string a, string symbol, string b, object expectedResult)
         {
             _instance.AddExpression("a", $"{a}{symbol}{b}");
-            var result = _instance.GetResult("a");
+            object result = _instance.GetResult("a");
             Assert.AreEqual(expectedResult.GetType(), result.GetType());
             Assert.AreEqual(expectedResult, result);
         }
@@ -49,12 +49,12 @@ namespace Yale.Tests.ExpressionTests
         public void IntegerPowerInteger_IsInteger()
         {
             _instance.AddExpression("a", "2^2");
-            var result = _instance.GetResult("a");
+            object result = _instance.GetResult("a");
             Assert.AreEqual(typeof(int), result.GetType());
             Assert.AreEqual(4, result);
 
             _instance.AddExpression<int>("b", "3^2");
-            var result2 = _instance.GetResult<int>("b");
+            int result2 = _instance.GetResult<int>("b");
             Assert.AreEqual(typeof(int), result2.GetType());
             Assert.AreEqual(9, result2);
         }
@@ -72,12 +72,12 @@ namespace Yale.Tests.ExpressionTests
         public void IntegerAdditionInteger_IsInteger()
         {
             _instance.AddExpression("a", "2+2");
-            var result = _instance.GetResult("a");
+            object result = _instance.GetResult("a");
             Assert.AreEqual(typeof(int), result.GetType());
             Assert.AreEqual(4, result);
 
             _instance.AddExpression<int>("b", "3+3");
-            var result2 = _instance.GetResult<int>("b");
+            int result2 = _instance.GetResult<int>("b");
             Assert.AreEqual(typeof(int), result2.GetType());
             Assert.AreEqual(6, result2);
         }
@@ -93,12 +93,12 @@ namespace Yale.Tests.ExpressionTests
         public void IntegerSubtractionInteger_IsInteger()
         {
             _instance.AddExpression("a", "2-2");
-            var result = _instance.GetResult("a");
+            object result = _instance.GetResult("a");
             Assert.AreEqual(typeof(int), result.GetType());
             Assert.AreEqual(0, result);
 
             _instance.AddExpression<int>("b", "3-3");
-            var result2 = _instance.GetResult<int>("b");
+            int result2 = _instance.GetResult<int>("b");
             Assert.AreEqual(typeof(int), result2.GetType());
             Assert.AreEqual(0, result2);
         }
@@ -114,12 +114,12 @@ namespace Yale.Tests.ExpressionTests
         public void IntegerMultiplicationInteger_IsInteger()
         {
             _instance.AddExpression("a", "2*2");
-            var result = _instance.GetResult("a");
+            object result = _instance.GetResult("a");
             Assert.AreEqual(typeof(int), result.GetType());
             Assert.AreEqual(4, result);
 
             _instance.AddExpression<int>("b", "3*3");
-            var result2 = _instance.GetResult<int>("b");
+            int result2 = _instance.GetResult<int>("b");
             Assert.AreEqual(typeof(int), result2.GetType());
             Assert.AreEqual(9, result2);
         }
@@ -128,12 +128,12 @@ namespace Yale.Tests.ExpressionTests
         public void IntegerDivisionInteger_IsInteger()
         {
             _instance.AddExpression("a", "4/2");
-            var result = _instance.GetResult("a");
+            object result = _instance.GetResult("a");
             Assert.AreEqual(typeof(int), result.GetType());
             Assert.AreEqual(2, result);
 
             _instance.AddExpression<int>("b", "7/3");
-            var result2 = _instance.GetResult<int>("b");
+            int result2 = _instance.GetResult<int>("b");
             Assert.AreEqual(typeof(int), result2.GetType());
             Assert.AreEqual(2, result2);
         }
@@ -142,7 +142,7 @@ namespace Yale.Tests.ExpressionTests
         public void IntegerNegation()
         {
             _instance.AddExpression("a", "-6 + 10");
-            var result = _instance.GetResult("a");
+            object result = _instance.GetResult("a");
 
             Assert.AreEqual(4, result);
         }
@@ -152,7 +152,7 @@ namespace Yale.Tests.ExpressionTests
         {
             //Unsigned 32/64 bit
             _instance.AddExpression("e1", "100U + 100LU");
-            var result = _instance.GetResult("e1");
+            object result = _instance.GetResult("e1");
             Assert.AreEqual(typeof(UInt64), result.GetType());
             Assert.AreEqual((ulong)200, (UInt64)result);
             //Signed 32/64 bit

@@ -22,9 +22,9 @@ namespace Yale.Expression.Elements
 
         protected override Type GetResultType(Type childType)
         {
-            var typeCode = Type.GetTypeCode(childType);
+            TypeCode typeCode = Type.GetTypeCode(childType);
 
-            var methodInfo = Utility.GetSimpleOverloadedOperator(UnaryNegation, childType, childType);
+            System.Reflection.MethodInfo methodInfo = Utility.GetSimpleOverloadedOperator(UnaryNegation, childType, childType);
             if (methodInfo != null)
             {
                 return methodInfo.ReturnType;
@@ -48,11 +48,11 @@ namespace Yale.Expression.Elements
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            var resultType = ResultType;
+            Type resultType = ResultType;
             MyChild.Emit(ilGenerator, context);
             ImplicitConverter.EmitImplicitConvert(MyChild.ResultType, resultType, ilGenerator);
 
-            var methodInfo = Utility.GetSimpleOverloadedOperator(UnaryNegation, resultType, resultType);
+            System.Reflection.MethodInfo methodInfo = Utility.GetSimpleOverloadedOperator(UnaryNegation, resultType, resultType);
 
             if (methodInfo == null)
             {

@@ -51,48 +51,48 @@ namespace Yale.Expression
 
         internal Expression<T> BuildExpression<T>(string expressionName, string expression)
         {
-            var owner = DefaultExpressionOwner.Instance;
-            var ownerType = DefaultExpressionOwner.Type;
+            object owner = DefaultExpressionOwner.Instance;
+            Type ownerType = DefaultExpressionOwner.Type;
 
             Imports.ImportOwner(ownerType);
 
-            var context = new ExpressionContext(Options, expressionName, owner)
+            ExpressionContext context = new ExpressionContext(Options, expressionName, owner)
             {
                 Variables = Variables,
                 Imports = Imports,
                 ComputeInstance = ComputeInstance,
             };
 
-            var topElement = Parse(expression, context);
+            BaseExpressionElement topElement = Parse(expression, context);
 
-            var rootElement = new RootExpressionElement(topElement, typeof(T));
-            var dynamicMethod = CreateDynamicMethod<T>(ownerType);
+            RootExpressionElement rootElement = new RootExpressionElement(topElement, typeof(T));
+            DynamicMethod dynamicMethod = CreateDynamicMethod<T>(ownerType);
 
-            var ilGenerator = new YaleIlGenerator(dynamicMethod.GetILGenerator());
+            YaleIlGenerator ilGenerator = new YaleIlGenerator(dynamicMethod.GetILGenerator());
             rootElement.Emit(ilGenerator, context);
 
 #if DEBUG
             ilGenerator.ValidateLength();
 #endif
 
-            var delegateType = typeof(ExpressionEvaluator<>).MakeGenericType(typeof(T));
-            var evaluator = (ExpressionEvaluator<T>)dynamicMethod.CreateDelegate(delegateType);
+            Type delegateType = typeof(ExpressionEvaluator<>).MakeGenericType(typeof(T));
+            ExpressionEvaluator<T> evaluator = (ExpressionEvaluator<T>)dynamicMethod.CreateDelegate(delegateType);
 
             return new Expression<T>(expression, evaluator, context);
         }
 
         private BaseExpressionElement Parse(string expression, ExpressionContext context)
         {
-            var stringReader = new StringReader(expression);
+            StringReader stringReader = new StringReader(expression);
 
             Parser.Reset(stringReader);
-            var analyzer = (YaleExpressionAnalyzer)Parser.Analyzer;
+            YaleExpressionAnalyzer analyzer = (YaleExpressionAnalyzer)Parser.Analyzer;
 
             analyzer.SetContext(context);
-            var rootNode = Parse();
+            Node rootNode = Parse();
             analyzer.Reset();
 
-            var topElement = (BaseExpressionElement)rootNode.Values[0];
+            BaseExpressionElement topElement = (BaseExpressionElement)rootNode.Values[0];
             return topElement;
         }
 

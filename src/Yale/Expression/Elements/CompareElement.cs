@@ -31,9 +31,9 @@ namespace Yale.Expression.Elements
 
         protected override Type GetResultType(Type leftType, Type rightType)
         {
-            var binaryResultType = ImplicitConverter.GetBinaryResultType(leftType, rightType);
-            var overloadedOperator = GetOverloadedCompareOperator();
-            var isEqualityOp = IsOpTypeEqualOrNotEqual(operation);
+            Type binaryResultType = ImplicitConverter.GetBinaryResultType(leftType, rightType);
+            MethodInfo overloadedOperator = GetOverloadedCompareOperator();
+            bool isEqualityOp = IsOpTypeEqualOrNotEqual(operation);
 
             // Use our string equality instead of overloaded operator
             if (ReferenceEquals(leftType, typeof(string)) & ReferenceEquals(rightType, typeof(string)) & isEqualityOp)
@@ -76,7 +76,7 @@ namespace Yale.Expression.Elements
 
         private MethodInfo GetOverloadedCompareOperator()
         {
-            var name = GetCompareOperatorName(operation);
+            string name = GetCompareOperatorName(operation);
             return GetOverloadedBinaryOperator(name, operation);
         }
 
@@ -110,8 +110,8 @@ namespace Yale.Expression.Elements
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            var binaryResultType = ImplicitConverter.GetBinaryResultType(LeftChild.ResultType, RightChild.ResultType);
-            var overloadedOperator = GetOverloadedCompareOperator();
+            Type binaryResultType = ImplicitConverter.GetBinaryResultType(LeftChild.ResultType, RightChild.ResultType);
+            MethodInfo overloadedOperator = GetOverloadedCompareOperator();
 
             if (AreBothChildrenOfType(typeof(string)))
             {
@@ -161,13 +161,13 @@ namespace Yale.Expression.Elements
         private static void EmitStringEquality(YaleIlGenerator ilg, LogicalCompareOperation op, ExpressionContext context)
         {
             // Get the StringComparison from the options
-            var options = context.BuilderOptions;
-            var int32LiteralElement = new Int32LiteralElement((int)options.StringComparison);
+            ExpressionBuilderOptions options = context.BuilderOptions;
+            Int32LiteralElement int32LiteralElement = new Int32LiteralElement((int)options.StringComparison);
 
             int32LiteralElement.Emit(ilg, context);
 
             // and emit the method call
-            var methodInfo = typeof(string).GetMethod("Equals", new[] { typeof(string), typeof(string), typeof(StringComparison) }, null);
+            MethodInfo methodInfo = typeof(string).GetMethod("Equals", new[] { typeof(string), typeof(string), typeof(StringComparison) }, null);
             ilg.Emit(OpCodes.Call, methodInfo);
 
             if (op == LogicalCompareOperation.NotEqual)
@@ -199,8 +199,8 @@ namespace Yale.Expression.Elements
         /// <param name="op"></param>
         private void EmitCompareOperation(YaleIlGenerator ilg, LogicalCompareOperation op)
         {
-            var ltOpcode = GetCompareGTLTOpcode(false);
-            var gtOpcode = GetCompareGTLTOpcode(true);
+            OpCode ltOpcode = GetCompareGTLTOpcode(false);
+            OpCode gtOpcode = GetCompareGTLTOpcode(true);
 
             switch (op)
             {
@@ -247,7 +247,7 @@ namespace Yale.Expression.Elements
         /// <returns></returns>
         private OpCode GetCompareGTLTOpcode(bool greaterThan)
         {
-            var leftType = LeftChild.ResultType;
+            Type leftType = LeftChild.ResultType;
 
             if (ReferenceEquals(leftType, RightChild.ResultType))
             {

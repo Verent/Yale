@@ -24,11 +24,11 @@ namespace Yale.Parser.Internal
 
         public override MethodBase SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers)
         {
-            foreach (var methodBase in match)
+            foreach (MethodBase methodBase in match)
             {
-                var parameters = methodBase.GetParameters();
-                var leftValid = ImplicitConverter.EmitImplicitConvert(leftType, parameters[0].ParameterType, null);
-                var rightValid = ImplicitConverter.EmitImplicitConvert(rightType, parameters[1].ParameterType, null);
+                ParameterInfo[] parameters = methodBase.GetParameters();
+                bool leftValid = ImplicitConverter.EmitImplicitConvert(leftType, parameters[0].ParameterType, null);
+                bool rightValid = ImplicitConverter.EmitImplicitConvert(rightType, parameters[1].ParameterType, null);
 
                 if (leftValid & rightValid)
                 {

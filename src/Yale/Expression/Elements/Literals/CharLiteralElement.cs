@@ -15,7 +15,7 @@ namespace Yale.Expression.Elements.Literals
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            var intValue = Convert.ToInt32(_value);
+            int intValue = Convert.ToInt32(_value);
             EmitLoad(intValue, ilGenerator);
         }
 

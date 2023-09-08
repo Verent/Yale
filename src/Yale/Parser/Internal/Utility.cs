@@ -89,7 +89,7 @@ namespace Yale.Parser.Internal
 
         public static void EmitArrayLoad(YaleIlGenerator ilg, Type elementType)
         {
-            var typeCode = Type.GetTypeCode(elementType);
+            TypeCode typeCode = Type.GetTypeCode(elementType);
 
             switch (typeCode)
             {
@@ -146,7 +146,7 @@ namespace Yale.Parser.Internal
 
         public static void EmitArrayStore(YaleIlGenerator ilg, Type elementType)
         {
-            var typeCode = Type.GetTypeCode(elementType);
+            TypeCode typeCode = Type.GetTypeCode(elementType);
 
             switch (typeCode)
             {
@@ -201,7 +201,7 @@ namespace Yale.Parser.Internal
 
         public static bool IsIntegralType(Type t)
         {
-            var typeCode = Type.GetTypeCode(t);
+            TypeCode typeCode = Type.GetTypeCode(t);
             switch (typeCode)
             {
                 case TypeCode.Byte:
@@ -238,7 +238,7 @@ namespace Yale.Parser.Internal
         /// <returns>The operator's method or null of no match is found</returns>
         public static MethodInfo GetSimpleOverloadedOperator(string name, Type sourceType, Type destinationType)
         {
-            var data = new Hashtable
+            Hashtable data = new Hashtable
             {
                 {"Name", string.Concat("op_", name)},
                 { "sourceType", sourceType},
@@ -248,7 +248,7 @@ namespace Yale.Parser.Internal
             const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
 
             // Look on the source type
-            var members = sourceType.FindMembers(MemberTypes.Method, flags, SimpleOverloadedOperatorFilter, data);
+            MemberInfo[] members = sourceType.FindMembers(MemberTypes.Method, flags, SimpleOverloadedOperatorFilter, data);
 
             if (members.Length == 0)
             {
@@ -276,25 +276,25 @@ namespace Yale.Parser.Internal
         /// <remarks></remarks>
         private static bool SimpleOverloadedOperatorFilter(MemberInfo member, object value)
         {
-            var data = (IDictionary)value;
-            var methodInfo = (MethodInfo)member;
+            IDictionary data = (IDictionary)value;
+            MethodInfo methodInfo = (MethodInfo)member;
 
-            var nameMatch = methodInfo.IsSpecialName && methodInfo.Name.Equals((string)data["Name"], StringComparison.OrdinalIgnoreCase);
+            bool nameMatch = methodInfo.IsSpecialName && methodInfo.Name.Equals((string)data["Name"], StringComparison.OrdinalIgnoreCase);
 
             if (nameMatch == false)
             {
                 return false;
             }
 
-            var returnTypeMatch = ReferenceEquals(methodInfo.ReturnType, (Type)data["destType"]);
+            bool returnTypeMatch = ReferenceEquals(methodInfo.ReturnType, (Type)data["destType"]);
 
             if (returnTypeMatch == false)
             {
                 return false;
             }
 
-            var parameters = methodInfo.GetParameters();
-            var argumentMatch = parameters.Length > 0 && ReferenceEquals(parameters[0].ParameterType, (Type)data["sourceType"]);
+            ParameterInfo[] parameters = methodInfo.GetParameters();
+            bool argumentMatch = parameters.Length > 0 && ReferenceEquals(parameters[0].ParameterType, (Type)data["sourceType"]);
 
             return argumentMatch;
         }
@@ -302,14 +302,14 @@ namespace Yale.Parser.Internal
         public static MethodInfo GetOverloadedOperator(string name, Type sourceType, Binder binder, params Type[] argumentTypes)
         {
             name = string.Concat("op_", name);
-            var mi = sourceType.GetMethod(name, BindingFlags.Public | BindingFlags.Static, binder, CallingConventions.Any, argumentTypes, null);
+            MethodInfo mi = sourceType.GetMethod(name, BindingFlags.Public | BindingFlags.Static, binder, CallingConventions.Any, argumentTypes, null);
 
             return mi == null || mi.IsSpecialName == false ? null : mi;
         }
 
         public static int GetIlGeneratorLength(ILGenerator ilg)
         {
-            var fi = typeof(ILGenerator).GetField("m_length", BindingFlags.Instance | BindingFlags.NonPublic) ??
+            FieldInfo fi = typeof(ILGenerator).GetField("m_length", BindingFlags.Instance | BindingFlags.NonPublic) ??
                 typeof(ILGenerator).GetField("code_len", BindingFlags.Instance | BindingFlags.NonPublic);
             return fi != null ? (int)fi.GetValue(ilg) : -1;
         }
@@ -321,7 +321,7 @@ namespace Yale.Parser.Internal
 
         public static string FormatList(string[] items)
         {
-            var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ";
+            string separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ";
             return string.Join(separator, items);
         }
     }

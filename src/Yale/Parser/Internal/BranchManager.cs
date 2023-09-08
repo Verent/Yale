@@ -25,9 +25,9 @@ namespace Yale.Parser.Internal
         /// <remarks></remarks>
         public void ComputeBranches()
         {
-            var betweenBranches = new List<BranchInfo>();
+            List<BranchInfo> betweenBranches = new List<BranchInfo>();
 
-            foreach (var branchInfo in branchInfos)
+            foreach (BranchInfo branchInfo in branchInfos)
             {
                 betweenBranches.Clear();
 
@@ -35,16 +35,16 @@ namespace Yale.Parser.Internal
                 FindBetweenBranches(branchInfo, betweenBranches);
 
                 // Count the number of long branches in the above set
-                var longBranchesBetween = CountLongBranches(betweenBranches);
+                int longBranchesBetween = CountLongBranches(betweenBranches);
 
                 // Adjust the branch as necessary
                 branchInfo.AdjustForLongBranchesBetween(longBranchesBetween);
             }
 
-            var longBranchCount = 0;
+            int longBranchCount = 0;
 
             // Adjust the start location of each branch
-            foreach (var branchInfo in branchInfos)
+            foreach (BranchInfo branchInfo in branchInfos)
             {
                 // Save the short/long branch type
                 branchInfo.BakeIsLongBranch();
@@ -65,9 +65,9 @@ namespace Yale.Parser.Internal
         /// <remarks></remarks>
         private int CountLongBranches(ICollection<BranchInfo> dest)
         {
-            var count = 0;
+            int count = 0;
 
-            foreach (var branchInfo in dest)
+            foreach (BranchInfo branchInfo in dest)
             {
                 count += Convert.ToInt32(branchInfo.ComputeIsLongBranch());
             }
@@ -83,7 +83,7 @@ namespace Yale.Parser.Internal
         /// <remarks></remarks>
         private void FindBetweenBranches(BranchInfo target, ICollection<BranchInfo> dest)
         {
-            foreach (var branchInfo in branchInfos)
+            foreach (BranchInfo branchInfo in branchInfos)
             {
                 if (branchInfo.IsBetween(target))
                 {
@@ -101,10 +101,10 @@ namespace Yale.Parser.Internal
         /// <remarks></remarks>
         public bool IsLongBranch(YaleIlGenerator ilg, Label target)
         {
-            var startLoc = new ILLocation(ilg.Length);
-            var branchInfo = new BranchInfo(startLoc, target);
+            ILLocation startLoc = new ILLocation(ilg.Length);
+            BranchInfo branchInfo = new BranchInfo(startLoc, target);
 
-            var index = branchInfos.IndexOf(branchInfo);
+            int index = branchInfos.IndexOf(branchInfo);
             branchInfo = branchInfos[index];
 
             return branchInfo.IsLongBranch;
@@ -118,8 +118,8 @@ namespace Yale.Parser.Internal
         /// <remarks></remarks>
         public void AddBranch(YaleIlGenerator ilg, Label target)
         {
-            var startLoc = new ILLocation(ilg.Length);
-            var branchInfo = new BranchInfo(startLoc, target);
+            ILLocation startLoc = new ILLocation(ilg.Length);
+            BranchInfo branchInfo = new BranchInfo(startLoc, target);
 
             branchInfos.Add(branchInfo);
         }
@@ -141,7 +141,7 @@ namespace Yale.Parser.Internal
         /// <remarks></remarks>
         public Label GetLabel(object key, YaleIlGenerator ilg)
         {
-            if (keyLabelMap.TryGetValue(key, out var lbl) == false)
+            if (keyLabelMap.TryGetValue(key, out Label lbl) == false)
             {
                 lbl = ilg.DefineLabel();
                 keyLabelMap.Add(key, lbl);
@@ -165,9 +165,9 @@ namespace Yale.Parser.Internal
         /// <remarks></remarks>
         public void MarkLabel(YaleIlGenerator ilg, Label target)
         {
-            var pos = ilg.Length;
+            int pos = ilg.Length;
 
-            foreach (var branchInfo in branchInfos)
+            foreach (BranchInfo branchInfo in branchInfos)
             {
                 branchInfo.Mark(target, pos);
             }
@@ -175,9 +175,9 @@ namespace Yale.Parser.Internal
 
         public override string ToString()
         {
-            var arr = new string[branchInfos.Count];
+            string[] arr = new string[branchInfos.Count];
 
-            for (var i = 0; i <= branchInfos.Count - 1; i++)
+            for (int i = 0; i <= branchInfos.Count - 1; i++)
             {
                 arr[i] = branchInfos[i].ToString();
             }

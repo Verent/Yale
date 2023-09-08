@@ -20,11 +20,11 @@ namespace Yale.Expression.Elements.Literals.Real
 
         public static SingleLiteralElement Parse(string image)
         {
-            var element = new SingleLiteralElement();
+            SingleLiteralElement element = new SingleLiteralElement();
 
             try
             {
-                var value = float.Parse(image, CultureInfo.InvariantCulture);
+                float value = float.Parse(image, CultureInfo.InvariantCulture);
                 return new SingleLiteralElement(value);
             }
             catch (OverflowException)

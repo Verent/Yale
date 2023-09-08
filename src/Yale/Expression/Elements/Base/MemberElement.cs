@@ -124,7 +124,7 @@ namespace Yale.Expression.Elements.Base
 
         protected static bool IsGetTypeMethod(MethodInfo mi)
         {
-            var miGetType = typeof(object).GetMethod("gettype", BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+            MethodInfo miGetType = typeof(object).GetMethod("gettype", BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
             return mi.MethodHandle.Equals(miGetType.MethodHandle);
         }
 
@@ -169,7 +169,7 @@ namespace Yale.Expression.Elements.Base
 
         protected static void EmitValueTypeLoadAddress(YaleIlGenerator ilg, Type targetType)
         {
-            var index = ilg.GetTempLocalIndex(targetType);
+            int index = ilg.GetTempLocalIndex(targetType);
             Utility.EmitStoreLocal(ilg, index);
             ilg.Emit(OpCodes.Ldloca_S, Convert.ToByte(index));
         }
@@ -178,7 +178,7 @@ namespace Yale.Expression.Elements.Base
         {
             ilg.Emit(OpCodes.Ldarg_0);
 
-            var ownerType = Context.OwnerType;
+            Type? ownerType = Context.OwnerType;
 
             if (ownerType.IsValueType == false)
             {
@@ -202,21 +202,21 @@ namespace Yale.Expression.Elements.Base
         /// <returns></returns>
         private static bool IsMemberPublic(MemberInfo member)
         {
-            var fieldInfo = member as FieldInfo;
+            FieldInfo? fieldInfo = member as FieldInfo;
 
             if (fieldInfo != null)
             {
                 return fieldInfo.IsPublic;
             }
 
-            var propertyInfo = member as PropertyInfo;
+            PropertyInfo? propertyInfo = member as PropertyInfo;
             if (propertyInfo != null)
             {
-                var method = propertyInfo.GetGetMethod(true);
+                MethodInfo method = propertyInfo.GetGetMethod(true);
                 return method.IsPublic;
             }
 
-            var methodInfo = member as MethodInfo;
+            MethodInfo? methodInfo = member as MethodInfo;
             if (methodInfo != null)
             {
                 return methodInfo.IsPublic;
@@ -228,10 +228,10 @@ namespace Yale.Expression.Elements.Base
 
         protected MemberInfo[] GetAccessibleMembers(MemberInfo[] members)
         {
-            var accessible = new List<MemberInfo>();
+            List<MemberInfo> accessible = new List<MemberInfo>();
 
             // Keep all members that are accessible
-            foreach (var memberInfo in members)
+            foreach (MemberInfo memberInfo in members)
             {
                 if (IsMemberAccessible(memberInfo))
                 {
@@ -277,7 +277,7 @@ namespace Yale.Expression.Elements.Base
         protected MemberInfo[] GetDefaultNamespaceMembers(string name, MemberTypes memberType)
         {
             // Search the owner first
-            var members = Imports.FindOwnerMembers(name, memberType);
+            MemberInfo[] members = Imports.FindOwnerMembers(name, memberType);
 
             // Keep only the accessible members
             members = GetAccessibleMembers(members);

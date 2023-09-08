@@ -79,7 +79,7 @@ namespace Yale.Engine
 
         private void TagResultsAsDirty(object sender, PropertyChangedEventArgs e)
         {
-            foreach (var dependent in dependencies.GetDependents(e.PropertyName))
+            foreach (string dependent in dependencies.GetDependents(e.PropertyName))
             {
                 TagNodeAndDependentsAsDirty(dependent);
             }
@@ -87,10 +87,10 @@ namespace Yale.Engine
 
         private void TagNodeAndDependentsAsDirty(string key)
         {
-            var node = nameNodeMap[key];
+            IExpressionResult node = nameNodeMap[key];
             node.Dirty = true;
 
-            foreach (var dependent in dependencies.GetDependents(key))
+            foreach (string dependent in dependencies.GetDependents(key))
             {
                 RecalculateNodeAndDependents(dependent);
             }
@@ -98,7 +98,7 @@ namespace Yale.Engine
 
         private void RecalculateValues(object sender, PropertyChangedEventArgs e)
         {
-            foreach (var dependent in dependencies.GetDependents(e.PropertyName))
+            foreach (string dependent in dependencies.GetDependents(e.PropertyName))
             {
                 RecalculateNodeAndDependents(dependent);
             }
@@ -106,14 +106,14 @@ namespace Yale.Engine
 
         private void RecalculateNodeAndDependents(string key)
         {
-            var node = nameNodeMap[key];
-            var result = node.ResultAsObject;
+            IExpressionResult node = nameNodeMap[key];
+            object result = node.ResultAsObject;
             node.Recalculate();
 
             //No need to recalculate dependents if value is the same.
             if (result.Equals(node.ResultAsObject)) return;
 
-            foreach (var dependent in dependencies.GetDependents(key))
+            foreach (string dependent in dependencies.GetDependents(key))
             {
                 RecalculateNodeAndDependents(dependent);
             }
@@ -121,9 +121,9 @@ namespace Yale.Engine
 
         private void RecalculateIfNeeded(string key)
         {
-            if (nameNodeMap.TryGetValue(key, out var node) && node.Dirty)
+            if (nameNodeMap.TryGetValue(key, out IExpressionResult? node) && node.Dirty)
             {
-                foreach (var dependent in dependencies.GetDirectPrecedents(key))
+                foreach (string dependent in dependencies.GetDirectPrecedents(key))
                 {
                     RecalculateIfNeeded(dependent);
                 }
@@ -151,7 +151,7 @@ namespace Yale.Engine
 
             AddExpression<T>(key, expression);
 
-            foreach (var dependent in dependencies.GetDependents(key))
+            foreach (string dependent in dependencies.GetDependents(key))
             {
                 if (ShouldRecalculate)
                 {
@@ -174,7 +174,7 @@ namespace Yale.Engine
             if (key == null) throw new ArgumentNullException(nameof(key));
             if (expression == null) throw new ArgumentNullException(nameof(expression));
 
-            var result = Builder.BuildExpression<object>(key, expression);
+            Expression<object> result = Builder.BuildExpression<object>(key, expression);
             nameNodeMap.Add(key, new ExpressionResult<object>(key, result));
         }
 
@@ -188,7 +188,7 @@ namespace Yale.Engine
             if (key == null) throw new ArgumentNullException(nameof(key));
             if (expression == null) throw new ArgumentNullException(nameof(expression));
 
-            var result = Builder.BuildExpression<T>(key, expression);
+            Expression<T> result = Builder.BuildExpression<T>(key, expression);
             nameNodeMap.Add(key, new ExpressionResult<T>(key, result));
         }
 
@@ -252,7 +252,7 @@ namespace Yale.Engine
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
 
-            var result = (ExpressionResult<object>)nameNodeMap[key];
+            ExpressionResult<object> result = (ExpressionResult<object>)nameNodeMap[key];
             return result.Expression.ExpressionText;
         }
 
@@ -260,7 +260,7 @@ namespace Yale.Engine
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
 
-            var result = (ExpressionResult<T>)nameNodeMap[key];
+            ExpressionResult<T> result = (ExpressionResult<T>)nameNodeMap[key];
             return result.Expression.ExpressionText;
         }
 
@@ -299,13 +299,13 @@ namespace Yale.Engine
         /// <param name="ilGenerator"></param>
         internal void EmitLoad(string expressionKey, YaleIlGenerator ilGenerator)
         {
-            var propertyInfo = typeof(ExpressionContext).GetProperty(nameof(ExpressionContext.ComputeInstance));
+            PropertyInfo propertyInfo = typeof(ExpressionContext).GetProperty(nameof(ExpressionContext.ComputeInstance));
             ilGenerator.Emit(OpCodes.Callvirt, propertyInfo.GetGetMethod());
 
             //Find and load expression result
-            var members = typeof(ComputeInstance).FindMembers(MemberTypes.Method, BindingFlags.Instance | BindingFlags.Public, Type.FilterName, "GetResult");
-            var methodInfo = members.Cast<MethodInfo>().First(method => method.IsGenericMethod);
-            var resultType = ResultType(expressionKey);
+            MemberInfo[] members = typeof(ComputeInstance).FindMembers(MemberTypes.Method, BindingFlags.Instance | BindingFlags.Public, Type.FilterName, "GetResult");
+            MethodInfo methodInfo = members.Cast<MethodInfo>().First(method => method.IsGenericMethod);
+            Type? resultType = ResultType(expressionKey);
             methodInfo = methodInfo.MakeGenericMethod(resultType);
 
             ilGenerator.Emit(OpCodes.Ldstr, expressionKey);

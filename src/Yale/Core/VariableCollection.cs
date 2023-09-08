@@ -60,14 +60,14 @@ namespace Yale.Core
 
         public bool TryGetValue(string key, out object? value)
         {
-            var success = _values.TryGetValue(key, out var result);
+            bool success = _values.TryGetValue(key, out IVariable? result);
             value = result?.ValueAsObject;
             return success;
         }
 
         public bool TryGetValue<T>(string key, out T value)
         {
-            var success = _values.TryGetValue(key, out var result);
+            bool success = _values.TryGetValue(key, out IVariable? result);
             value = (T)result;
             return success;
         }
@@ -98,7 +98,7 @@ namespace Yale.Core
         /// <returns></returns>
         internal static MethodInfo GetVariableLoadMethod(Type variableType)
         {
-            var methodInfo = typeof(VariableCollection).GetMethod("GetVariableValueInternal", BindingFlags.Public | BindingFlags.Instance);
+            MethodInfo methodInfo = typeof(VariableCollection).GetMethod("GetVariableValueInternal", BindingFlags.Public | BindingFlags.Instance);
             // ReSharper disable once PossibleNullReferenceException
             return methodInfo.MakeGenericMethod(variableType);
         }

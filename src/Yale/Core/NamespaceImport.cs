@@ -44,7 +44,7 @@ namespace Yale.Core
 
         protected override void AddMembers(string memberName, MemberTypes memberType, ICollection<MemberInfo> targetCollection)
         {
-            foreach (var import in NonContainerImports)
+            foreach (ImportBase import in NonContainerImports)
             {
                 AddImportMembers(import, memberName, memberType, targetCollection);
             }
@@ -62,7 +62,7 @@ namespace Yale.Core
 
         internal override ImportBase? FindImport(string name)
         {
-            foreach (var import in _imports)
+            foreach (ImportBase import in _imports)
             {
                 if (import.IsMatch(name))
                 {
@@ -81,9 +81,9 @@ namespace Yale.Core
         {
             get
             {
-                var found = new List<ImportBase>();
+                List<ImportBase> found = new List<ImportBase>();
 
-                foreach (var import in _imports)
+                foreach (ImportBase import in _imports)
                 {
                     if (import.IsContainer == false)
                     {

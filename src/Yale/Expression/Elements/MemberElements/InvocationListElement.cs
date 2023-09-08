@@ -31,9 +31,9 @@ namespace Yale.Expression.Elements.MemberElements
         /// <param name="elements"></param>
         private static void LinkElements(IList elements)
         {
-            for (var i = 0; i <= elements.Count - 1; i++)
+            for (int i = 0; i <= elements.Count - 1; i++)
             {
-                var currentElement = (MemberElement)elements[i];
+                MemberElement currentElement = (MemberElement)elements[i];
                 MemberElement nextElement = null;
                 if (i + 1 < elements.Count)
                 {
@@ -45,13 +45,13 @@ namespace Yale.Expression.Elements.MemberElements
 
         private void HandleFirstElement(IList elements, ExpressionContext context)
         {
-            var firstElement = (BaseExpressionElement)elements[0];
+            BaseExpressionElement firstElement = (BaseExpressionElement)elements[0];
 
             // If the first element is not a member element, then we assume it
             //is an expression and replace it with the correct member element
             if (!(firstElement is MemberElement))
             {
-                var actualFirst = new ExpressionMemberElement(firstElement);
+                ExpressionMemberElement actualFirst = new ExpressionMemberElement(firstElement);
                 elements[0] = actualFirst;
             }
             else
@@ -66,13 +66,13 @@ namespace Yale.Expression.Elements.MemberElements
 
             while (true)
             {
-                var name = GetName(elements);
+                string name = GetName(elements);
                 if (name == null)
                 {
                     break; // TODO: might not be correct. Was : Exit While
                 }
 
-                var import = currentImport.FindImport(name);
+                ImportBase? import = currentImport.FindImport(name);
                 if (import == null)
                 {
                     break; // TODO: might not be correct. Was : Exit While
@@ -83,7 +83,7 @@ namespace Yale.Expression.Elements.MemberElements
 
                 if (elements.Count > 0)
                 {
-                    var newFirst = (MemberElement)elements[0];
+                    MemberElement newFirst = (MemberElement)elements[0];
                     newFirst.SetImport(currentImport);
                 }
             }
@@ -100,7 +100,7 @@ namespace Yale.Expression.Elements.MemberElements
             {
                 return null;
             }
-            var fpe = elements[0] as IdentifierElement;
+            IdentifierElement? fpe = elements[0] as IdentifierElement;
             return fpe?.MemberName;
         }
 

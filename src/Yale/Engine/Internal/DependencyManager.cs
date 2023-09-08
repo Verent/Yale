@@ -48,10 +48,10 @@ namespace Yale.Engine.Internal
 
         public string[] GetDependents(string key)
         {
-            var dependents = new List<string>();
+            List<string> dependents = new List<string>();
             if (Nodes.ContainsKey(key) == false) return dependents.ToArray();
 
-            foreach (var pair in Nodes[key].Dependents)
+            foreach (string pair in Nodes[key].Dependents)
             {
                 GetDependentsRecursive(pair, dependents);
             }
@@ -62,7 +62,7 @@ namespace Yale.Engine.Internal
         private void GetDependentsRecursive(string nodeKey, ICollection<string> dependents)
         {
             dependents.Add(nodeKey);
-            foreach (var pair in Nodes[nodeKey].Dependents)
+            foreach (string pair in Nodes[nodeKey].Dependents)
             {
                 GetDependentsRecursive(pair, dependents);
             }
@@ -82,12 +82,12 @@ namespace Yale.Engine.Internal
         {
             get
             {
-                var lines = new string[Nodes.Count];
-                var index = 0;
-                foreach (var node in Nodes)
+                string[] lines = new string[Nodes.Count];
+                int index = 0;
+                foreach (KeyValuePair<string, DependencyNode> node in Nodes)
                 {
-                    var key = node.Key;
-                    var dependencies = string.Join(",", node.Value.Dependents);
+                    string key = node.Key;
+                    string dependencies = string.Join(",", node.Value.Dependents);
                     lines[index] = $"{key} -> {dependencies}";
                     index += 1;
                 }

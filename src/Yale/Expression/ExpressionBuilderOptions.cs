@@ -47,11 +47,11 @@ namespace Yale.Expression
 
         private static void AssertTypeIsAccessibleInternal(Type t)
         {
-            var isPublic = t.IsNested ? t.IsNestedPublic : t.IsPublic;
+            bool isPublic = t.IsNested ? t.IsNestedPublic : t.IsPublic;
 
             if (isPublic == false)
             {
-                var msg = string.Format(GeneralErrors.TypeNotAccessibleToExpression, t.Name);
+                string msg = string.Format(GeneralErrors.TypeNotAccessibleToExpression, t.Name);
                 throw new ArgumentException(msg);
             }
         }

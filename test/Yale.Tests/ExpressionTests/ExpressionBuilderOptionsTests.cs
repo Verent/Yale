@@ -10,7 +10,7 @@ namespace Yale.Tests.ExpressionTests
     [TestClass]
     public class ExpressionBuilderOptionsTests
     {
-        private ComputeInstance _instance = new ComputeInstance();
+        private ComputeInstance _instance = new();
 
         [TestMethod]
         public void DefaultValues()

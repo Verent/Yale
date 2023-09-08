@@ -32,15 +32,15 @@ namespace Yale.Expression.Elements.MemberElements
         protected override void ResolveInternal()
         {
             // Get the types of our arguments
-            var argTypes = arguments.GetArgumentTypes();
+            Type[] argTypes = arguments.GetArgumentTypes();
             // Find all methods with our name on the type
-            var methods = this.methods;
+            ICollection<MethodInfo>? methods = this.methods;
 
             if (methods == null)
             {
                 // Convert member info to method info
-                var arr = GetMembers(MemberTypes.Method);
-                var arr2 = new MethodInfo[arr.Length];
+                MemberInfo[] arr = GetMembers(MemberTypes.Method);
+                MethodInfo[] arr2 = new MethodInfo[arr.Length];
                 Array.Copy(arr, arr2, arr.Length);
                 methods = arr2;
             }
@@ -98,20 +98,20 @@ namespace Yale.Expression.Elements.MemberElements
         /// <param name="argTypes"></param>
         private void BindToMethod(ICollection<MethodInfo> methods, MemberElement previous, Type[] argTypes)
         {
-            var customInfoList = new List<CustomMethodInfo>();
+            List<CustomMethodInfo> customInfoList = new List<CustomMethodInfo>();
 
             // Wrap the MethodInfo in our custom class
-            foreach (var methodInfo in methods)
+            foreach (MethodInfo methodInfo in methods)
             {
-                var customMethodInfo = new CustomMethodInfo(methodInfo);
+                CustomMethodInfo customMethodInfo = new CustomMethodInfo(methodInfo);
                 customInfoList.Add(customMethodInfo);
             }
 
             // Discard any methods that cannot qualify as overloads
-            var infoArray = customInfoList.ToArray();
+            CustomMethodInfo[] infoArray = customInfoList.ToArray();
             customInfoList.Clear();
 
-            foreach (var methodInfo in infoArray)
+            foreach (CustomMethodInfo methodInfo in infoArray)
             {
                 if (methodInfo.IsMatch(argTypes))
                 {
@@ -140,7 +140,7 @@ namespace Yale.Expression.Elements.MemberElements
         private void ResolveOverloads(CustomMethodInfo[] customInfoArray, MemberElement previous, Type[] argTypes)
         {
             // Compute a score for each candidate
-            foreach (var customMethodInfo in customInfoArray)
+            foreach (CustomMethodInfo customMethodInfo in customInfoArray)
             {
                 customMethodInfo.ComputeScore(argTypes);
             }
@@ -166,9 +166,9 @@ namespace Yale.Expression.Elements.MemberElements
 
         private CustomMethodInfo[] GetAccessibleInfos(CustomMethodInfo[] infos)
         {
-            var accessible = new List<CustomMethodInfo>();
+            List<CustomMethodInfo> accessible = new List<CustomMethodInfo>();
 
-            foreach (var customMethodInfo in infos)
+            foreach (CustomMethodInfo customMethodInfo in infos)
             {
                 if (customMethodInfo.IsAccessible(this))
                 {
@@ -185,11 +185,11 @@ namespace Yale.Expression.Elements.MemberElements
         /// <param name="infos"></param>
         private void DetectAmbiguousMatches(CustomMethodInfo[] infos)
         {
-            var sameScores = new List<CustomMethodInfo>();
-            var first = infos[0];
+            List<CustomMethodInfo> sameScores = new List<CustomMethodInfo>();
+            CustomMethodInfo first = infos[0];
 
             // Find all matches with the same score as the best match
-            foreach (var customMethodInfo in infos)
+            foreach (CustomMethodInfo customMethodInfo in infos)
             {
                 if (((IEquatable<CustomMethodInfo>)customMethodInfo).Equals(first))
                 {
@@ -234,7 +234,7 @@ namespace Yale.Expression.Elements.MemberElements
             //    return;
             //}
 
-            var isOwnerMember = Context.OwnerType.IsAssignableFrom(Method.ReflectedType);
+            bool isOwnerMember = Context.OwnerType.IsAssignableFrom(Method.ReflectedType);
 
             // Load the owner if required
             if (Previous == null && isOwnerMember && IsStatic == false)
@@ -249,18 +249,18 @@ namespace Yale.Expression.Elements.MemberElements
         private void EmitParamArrayArguments(ParameterInfo[] parameters, BaseExpressionElement[] elements, YaleIlGenerator ilGenerator, ExpressionContext context)
         {
             // Get the fixed parameters
-            var fixedParameters = new ParameterInfo[targetMethodInfo.FixedArgTypes.Length];
+            ParameterInfo[] fixedParameters = new ParameterInfo[targetMethodInfo.FixedArgTypes.Length];
             Array.Copy(parameters, fixedParameters, fixedParameters.Length);
 
             // Get the corresponding fixed parameters
-            var fixedElements = new BaseExpressionElement[targetMethodInfo.FixedArgTypes.Length];
+            BaseExpressionElement[] fixedElements = new BaseExpressionElement[targetMethodInfo.FixedArgTypes.Length];
             Array.Copy(elements, fixedElements, fixedElements.Length);
 
             // Emit the fixed arguments
             EmitRegularFunctionInternal(fixedParameters, fixedElements, ilGenerator, context);
 
             // Get the paramArray arguments
-            var paramArrayElements = new BaseExpressionElement[elements.Length - fixedElements.Length];
+            BaseExpressionElement[] paramArrayElements = new BaseExpressionElement[elements.Length - fixedElements.Length];
             Array.Copy(elements, fixedElements.Length, paramArrayElements, 0, paramArrayElements.Length);
 
             // Emit them into an array
@@ -279,18 +279,18 @@ namespace Yale.Expression.Elements.MemberElements
             ilg.Emit(OpCodes.Newarr, arrayElementType);
 
             // Store the new array in a unique local and remember the index
-            var local = ilg.DeclareLocal(arrayElementType.MakeArrayType());
-            var arrayLocalIndex = local.LocalIndex;
+            LocalBuilder local = ilg.DeclareLocal(arrayElementType.MakeArrayType());
+            int arrayLocalIndex = local.LocalIndex;
             Utility.EmitStoreLocal(ilg, arrayLocalIndex);
 
-            for (var i = 0; i <= elements.Length - 1; i++)
+            for (int i = 0; i <= elements.Length - 1; i++)
             {
                 // Load the array
                 Utility.EmitLoadLocal(ilg, arrayLocalIndex);
                 // Load the index
                 LiteralElement.EmitLoad(i, ilg);
                 // Emit the element (with any required conversions)
-                var element = elements[i];
+                BaseExpressionElement element = elements[i];
                 element.Emit(ilg, context);
                 ImplicitConverter.EmitImplicitConvert(element.ResultType, arrayElementType, ilg);
                 // Store it into the array
@@ -303,8 +303,8 @@ namespace Yale.Expression.Elements.MemberElements
 
         public void EmitFunctionCall(bool nextRequiresAddress, YaleIlGenerator ilg, ExpressionContext context)
         {
-            var parameters = Method.GetParameters();
-            var elements = arguments.ToArray();
+            ParameterInfo[] parameters = Method.GetParameters();
+            BaseExpressionElement[] elements = arguments.ToArray();
 
             // Emit either a regular or paramArray call
             if (targetMethodInfo.IsParamArray == false)
@@ -327,12 +327,12 @@ namespace Yale.Expression.Elements.MemberElements
             Debug.Assert(parameters.Length == elements.Length, "argument count mismatch");
 
             // Emit each element and any required conversions to the actual parameter type
-            for (var i = 0; i <= parameters.Length - 1; i++)
+            for (int i = 0; i <= parameters.Length - 1; i++)
             {
-                var element = elements[i];
-                var pi = parameters[i];
+                BaseExpressionElement element = elements[i];
+                ParameterInfo pi = parameters[i];
                 element.Emit(ilg, context);
-                var success = ImplicitConverter.EmitImplicitConvert(element.ResultType, pi.ParameterType, ilg);
+                bool success = ImplicitConverter.EmitImplicitConvert(element.ResultType, pi.ParameterType, ilg);
                 Debug.Assert(success, "conversion failed");
             }
         }

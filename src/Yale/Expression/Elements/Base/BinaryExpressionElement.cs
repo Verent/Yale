@@ -25,14 +25,14 @@ namespace Yale.Expression.Elements.Base
         /// <returns></returns>
         public static BinaryExpressionElement CreateElement(IList childValues, Type elementType)
         {
-            var firstElement = (BinaryExpressionElement)Activator.CreateInstance(elementType);
+            BinaryExpressionElement firstElement = (BinaryExpressionElement)Activator.CreateInstance(elementType);
             firstElement.Configure((BaseExpressionElement)childValues[0], (BaseExpressionElement)childValues[2], childValues[1]);
 
-            var lastElement = firstElement;
+            BinaryExpressionElement lastElement = firstElement;
 
-            for (var i = 3; i <= childValues.Count - 1; i += 2)
+            for (int i = 3; i <= childValues.Count - 1; i += 2)
             {
-                var element = (BinaryExpressionElement)Activator.CreateInstance(elementType);
+                BinaryExpressionElement element = (BinaryExpressionElement)Activator.CreateInstance(elementType);
                 element.Configure(lastElement, (BaseExpressionElement)childValues[i + 1], childValues[i]);
                 lastElement = element;
             }
@@ -54,9 +54,9 @@ namespace Yale.Expression.Elements.Base
 
         protected MethodInfo? GetOverloadedBinaryOperator(string name, object operation)
         {
-            var leftType = LeftChild.ResultType;
-            var rightType = RightChild.ResultType;
-            var binder = new BinaryOperatorBinder(leftType, rightType);
+            Type leftType = LeftChild.ResultType;
+            Type rightType = RightChild.ResultType;
+            BinaryOperatorBinder binder = new BinaryOperatorBinder(leftType, rightType);
 
             // If both arguments are of the same type, pick either as the owner type
             if (ReferenceEquals(leftType, rightType))
@@ -65,8 +65,8 @@ namespace Yale.Expression.Elements.Base
             }
 
             // Get the operator for both types
-            var leftMethod = Utility.GetOverloadedOperator(name, leftType, binder, leftType, rightType);
-            var rightMethod = Utility.GetOverloadedOperator(name, rightType, binder, leftType, rightType);
+            MethodInfo? leftMethod = Utility.GetOverloadedOperator(name, leftType, binder, leftType, rightType);
+            MethodInfo? rightMethod = Utility.GetOverloadedOperator(name, rightType, binder, leftType, rightType);
 
             // Pick the right one
             if (leftMethod == null & rightMethod == null)
@@ -92,9 +92,9 @@ namespace Yale.Expression.Elements.Base
 
         protected void EmitOverloadedOperatorCall(MethodInfo method, YaleIlGenerator ilg, ExpressionContext context)
         {
-            var parameters = method.GetParameters();
-            var parameterInfoLeft = parameters[0];
-            var parameterInfoRight = parameters[1];
+            ParameterInfo[] parameters = method.GetParameters();
+            ParameterInfo parameterInfoLeft = parameters[0];
+            ParameterInfo parameterInfoRight = parameters[1];
 
             EmitChildWithConvert(LeftChild, parameterInfoLeft.ParameterType, ilg, context);
             EmitChildWithConvert(RightChild, parameterInfoRight.ParameterType, ilg, context);
@@ -111,7 +111,7 @@ namespace Yale.Expression.Elements.Base
         protected static void EmitChildWithConvert(BaseExpressionElement child, Type resultType, YaleIlGenerator ilg, ExpressionContext context)
         {
             child.Emit(ilg, context);
-            var converted = ImplicitConverter.EmitImplicitConvert(child.ResultType, resultType, ilg);
+            bool converted = ImplicitConverter.EmitImplicitConvert(child.ResultType, resultType, ilg);
             Debug.Assert(converted, "convert failed");
         }
 
@@ -145,6 +145,6 @@ namespace Yale.Expression.Elements.Base
             ValidateInternal(op);
         }
 
-        public override sealed Type ResultType => resultType;
+        public sealed override Type ResultType => resultType;
     }
 }

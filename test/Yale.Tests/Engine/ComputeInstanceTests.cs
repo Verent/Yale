@@ -12,18 +12,18 @@ namespace Yale.Tests.Engine
     [TestClass]
     public class ComputeInstanceTests
     {
-        private readonly ComputeInstance instance = new ComputeInstance();
+        private readonly ComputeInstance instance = new();
 
         [TestMethod]
         public void AddExpression_WithAValue_ReturnsValue()
         {
             const int a = 1;
             instance.Variables.Add("a", a);
-            var aResult = instance.Variables.Get<int>("a");
+            int aResult = instance.Variables.Get<int>("a");
             Assert.AreEqual(a, aResult);
 
             instance.AddExpression("ea", "a");
-            var aeResult = instance.GetResult("ea");
+            object aeResult = instance.GetResult("ea");
 
             Assert.AreEqual(aResult, aeResult);
         }
@@ -81,7 +81,7 @@ namespace Yale.Tests.Engine
         {
             instance.Variables.Add("a", 10);
             instance.AddExpression<int>("b", "a");
-            var result = instance.GetResult<int>("b");
+            int result = instance.GetResult<int>("b");
             Assert.AreEqual(typeof(int), result.GetType());
             Assert.AreEqual(10, result);
         }
@@ -91,7 +91,7 @@ namespace Yale.Tests.Engine
         {
             instance.Variables.Add("a", 10);
             instance.AddExpression("b", "a");
-            var result = instance.GetResult("b");
+            object result = instance.GetResult("b");
             Assert.AreEqual(10, result);
         }
 
@@ -119,7 +119,7 @@ namespace Yale.Tests.Engine
         public void Generic_GetExpression_ExpressionExists_ReturnsExpression()
         {
             instance.AddExpression<bool>("a", "true");
-            var expression = instance.GetExpression<bool>("a");
+            string expression = instance.GetExpression<bool>("a");
 
             Assert.AreEqual("true", expression);
         }
@@ -134,7 +134,7 @@ namespace Yale.Tests.Engine
         [TestMethod]
         public void ContainsExpression_False()
         {
-            var result = instance.ContainsExpression("a");
+            bool result = instance.ContainsExpression("a");
             Assert.IsFalse(result);
         }
 
@@ -142,7 +142,7 @@ namespace Yale.Tests.Engine
         public void ContainsExpression_True()
         {
             instance.AddExpression<int>("a", "10");
-            var result = instance.ContainsExpression("a");
+            bool result = instance.ContainsExpression("a");
             Assert.IsTrue(result);
 
             instance.AddExpression("b", "10");

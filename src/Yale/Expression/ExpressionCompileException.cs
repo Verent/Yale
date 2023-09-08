@@ -1,9 +1,7 @@
-﻿using System;
+﻿using PerCederberg.Grammatica.Runtime;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
-
-using PerCederberg.Grammatica.Runtime;
-
 using Yale.Resources;
 
 namespace Yale.Expression

@@ -35,11 +35,11 @@ namespace Yale.Expression.Elements.Literals.Real
 
         public static DecimalLiteralElement Parse(string image)
         {
-            var element = new DecimalLiteralElement();
+            DecimalLiteralElement element = new DecimalLiteralElement();
 
             try
             {
-                var value = decimal.Parse(image, CultureInfo.InvariantCulture);
+                decimal value = decimal.Parse(image, CultureInfo.InvariantCulture);
                 return new DecimalLiteralElement(value);
             }
             catch (OverflowException)
@@ -51,15 +51,15 @@ namespace Yale.Expression.Elements.Literals.Real
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            var index = ilGenerator.GetTempLocalIndex(typeof(decimal));
+            int index = ilGenerator.GetTempLocalIndex(typeof(decimal));
             Utility.EmitLoadLocalAddress(ilGenerator, index);
 
-            var bits = decimal.GetBits(_value);
+            int[] bits = decimal.GetBits(_value);
             EmitLoad(bits[0], ilGenerator);
             EmitLoad(bits[1], ilGenerator);
             EmitLoad(bits[2], ilGenerator);
 
-            var flags = bits[3];
+            int flags = bits[3];
 
             EmitLoad((flags >> 31) == -1, ilGenerator);
 

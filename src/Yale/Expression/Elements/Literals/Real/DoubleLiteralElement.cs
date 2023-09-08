@@ -21,11 +21,11 @@ namespace Yale.Expression.Elements.Literals.Real
 
         public static DoubleLiteralElement? Parse(string image)
         {
-            var element = new DoubleLiteralElement();
+            DoubleLiteralElement element = new DoubleLiteralElement();
 
             try
             {
-                var value = double.Parse(image, CultureInfo.InvariantCulture);
+                double value = double.Parse(image, CultureInfo.InvariantCulture);
                 return new DoubleLiteralElement(value);
             }
             catch (OverflowException)

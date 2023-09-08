@@ -6,7 +6,7 @@ namespace Yale.Tests.ExpressionTests
     [TestClass]
     public class Negate
     {
-        private readonly ComputeInstance instance = new ComputeInstance();
+        private readonly ComputeInstance instance = new();
 
         [TestMethod]
         public void Negate_PositiveInteger_IsNegative()

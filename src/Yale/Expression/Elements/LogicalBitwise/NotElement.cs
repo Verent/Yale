@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
 
 using Yale.Expression.Elements.Base;
@@ -46,7 +45,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
             {
                 return typeof(bool);
             }
-            var result = Utility.IsIntegralType(childType) ?
+            Type result = Utility.IsIntegralType(childType) ?
                 childType :
                 throw CreateCompileException(CompileErrors.OperationNotDefinedForType, CompileExceptionReason.TypeMismatch, MyChild.ResultType.Name);
 

@@ -7,7 +7,7 @@ namespace Yale.Tests.Parser
     [TestClass]
     public class Core
     {
-        private readonly ComputeInstance instance = new ComputeInstance();
+        private readonly ComputeInstance instance = new();
 
         [TestMethod]
         public void Parse_InvalidToken_ThrowsException()

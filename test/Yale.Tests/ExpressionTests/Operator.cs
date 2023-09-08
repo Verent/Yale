@@ -6,7 +6,7 @@ namespace Yale.Tests.ExpressionTests
     [TestClass]
     public class Operator
     {
-        private readonly ComputeInstance _instance = new ComputeInstance();
+        private readonly ComputeInstance _instance = new();
 
         [TestMethod]
         public void BitShift()

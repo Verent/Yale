@@ -38,7 +38,7 @@ namespace Yale.Expression.Elements.MemberElements
                 return;
             }
 
-            var computeInstance = Context.ComputeInstance;
+            Engine.ComputeInstance computeInstance = Context.ComputeInstance;
             // Variable lookup
             if (Context.Variables.TryGetValue(MemberName, out IVariable value))
             {
@@ -67,8 +67,8 @@ namespace Yale.Expression.Elements.MemberElements
 
         private bool ResolveFieldProperty(MemberElement previous)
         {
-            var allMembers = GetMembers(MemberTypes.Field | MemberTypes.Property);
-            var members = GetAccessibleMembers(allMembers);
+            MemberInfo[] allMembers = GetMembers(MemberTypes.Field | MemberTypes.Property);
+            MemberInfo[] members = GetAccessibleMembers(allMembers);
 
             if (members.Length == 0)
             {
@@ -113,7 +113,7 @@ namespace Yale.Expression.Elements.MemberElements
                 return false;
             }
 
-            var properties = TypeDescriptor.GetProperties(previous.ResultType);
+            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(previous.ResultType);
             propertyDescriptor = properties.Find(MemberName, true);
             return propertyDescriptor != null;
         }
@@ -159,7 +159,7 @@ namespace Yale.Expression.Elements.MemberElements
                 return;
             }
 
-            var isVariable = valueType != null;
+            bool isVariable = valueType != null;
             if (isVariable)
             {
                 EmitLoadVariables(ilg);
@@ -176,7 +176,7 @@ namespace Yale.Expression.Elements.MemberElements
         /// <param name="ilg"></param>
         private void EmitVariableLoad(YaleIlGenerator ilg)
         {
-            var methodInfo = VariableCollection.GetVariableLoadMethod(valueType);
+            MethodInfo methodInfo = VariableCollection.GetVariableLoadMethod(valueType);
             ilg.Emit(OpCodes.Ldstr, MemberName);
             EmitMethodCall(methodInfo, ilg);
         }
@@ -226,9 +226,9 @@ namespace Yale.Expression.Elements.MemberElements
         /// <param name="context"></param>
         private static void EmitLiteral(FieldInfo fi, YaleIlGenerator ilg, ExpressionContext context)
         {
-            var value = fi.GetValue(null);
-            var type = value.GetType();
-            var typeCode = Type.GetTypeCode(type);
+            object value = fi.GetValue(null);
+            Type type = value.GetType();
+            TypeCode typeCode = Type.GetTypeCode(type);
             LiteralElement elem;
 
             switch (typeCode)
@@ -281,7 +281,7 @@ namespace Yale.Expression.Elements.MemberElements
 
         private void EmitPropertyLoad(PropertyInfo pi, YaleIlGenerator ilg)
         {
-            var getter = pi.GetGetMethod(true);
+            MethodInfo getter = pi.GetGetMethod(true);
             EmitMethodCall(getter, ilg);
         }
 
@@ -357,7 +357,7 @@ namespace Yale.Expression.Elements.MemberElements
                     return field.FieldType;
                 }
 
-                var methodInfo = property.GetGetMethod(true);
+                MethodInfo methodInfo = property.GetGetMethod(true);
                 return methodInfo.ReturnType;
             }
         }
@@ -388,7 +388,7 @@ namespace Yale.Expression.Elements.MemberElements
                     return field.IsPublic;
                 }
 
-                var methodInfo = property.GetGetMethod(true);
+                MethodInfo methodInfo = property.GetGetMethod(true);
                 return methodInfo.IsPublic;
             }
         }
@@ -471,7 +471,7 @@ namespace Yale.Expression.Elements.MemberElements
                     return false;
                 }
 
-                var methodInfo = property.GetGetMethod(true);
+                MethodInfo methodInfo = property.GetGetMethod(true);
                 return methodInfo.IsStatic;
             }
         }
