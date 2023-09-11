@@ -31,7 +31,7 @@ namespace Yale.Core
         /// <param name="options"></param>
         public NamespaceImport(string importNamespace, ExpressionBuilderOptions options) : base(options)
         {
-            if (importNamespace == null) throw new ArgumentNullException(nameof(importNamespace));
+            if (importNamespace is null) throw new ArgumentNullException(nameof(importNamespace));
 
             if (importNamespace.Length == 0)
             {
@@ -102,7 +102,7 @@ namespace Yale.Core
 
         public void Add(ImportBase item)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
+            if (item is null) throw new ArgumentNullException(nameof(item));
             _imports.Add(item);
         }
 

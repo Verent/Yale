@@ -66,7 +66,7 @@ namespace Yale.Expression.Elements.Base
 
         protected virtual void Validate()
         {
-            if (Previous == null)
+            if (Previous is null)
             {
                 return;
             }
@@ -252,10 +252,10 @@ namespace Yale.Expression.Elements.Base
 
         protected MemberInfo[] GetMembers(MemberTypes targets)
         {
-            if (Previous == null)
+            if (Previous is null)
             {
                 // Do we have a namespace?
-                if (Import == null)
+                if (Import is null)
                 {
                     // Get all members in the default namespace
                     return GetDefaultNamespaceMembers(MemberName, targets);

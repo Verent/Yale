@@ -54,7 +54,7 @@ namespace Yale.Expression.Elements
 
             System.Reflection.MethodInfo methodInfo = Utility.GetSimpleOverloadedOperator(UnaryNegation, resultType, resultType);
 
-            if (methodInfo == null)
+            if (methodInfo is null)
             {
                 ilGenerator.Emit(OpCodes.Neg);
             }

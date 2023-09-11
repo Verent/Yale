@@ -19,7 +19,7 @@ namespace Yale.Expression.Elements
             this.castExpression = castExpression;
             destType = GetDestType(destintaionTypeParts, context);
 
-            if (destType == null)
+            if (destType is null)
             {
                 throw CreateCompileException(CompileErrors.CouldNotResolveType, CompileExceptionReason.UndefinedName, GetDestinationTypeString(destintaionTypeParts, isArray));
             }
@@ -135,17 +135,17 @@ namespace Yale.Expression.Elements
             MethodInfo? miSource = Utility.GetOverloadedOperator("Explicit", sourceType, methodBinder, sourceType);
             MethodInfo? miDest = Utility.GetOverloadedOperator("Explicit", destType, methodBinder, sourceType);
 
-            if (miSource == null & miDest == null)
+            if (miSource is null & miDest is null)
             {
                 return null;
             }
 
-            if (miSource == null)
+            if (miSource is null)
             {
                 return miDest;
             }
 
-            if (miDest == null)
+            if (miDest is null)
             {
                 return miSource;
             }

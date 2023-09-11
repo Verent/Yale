@@ -304,7 +304,7 @@ namespace Yale.Parser.Internal
             name = string.Concat("op_", name);
             MethodInfo mi = sourceType.GetMethod(name, BindingFlags.Public | BindingFlags.Static, binder, CallingConventions.Any, argumentTypes, null);
 
-            return mi == null || mi.IsSpecialName == false ? null : mi;
+            return mi is null || mi.IsSpecialName == false ? null : mi;
         }
 
         public static int GetIlGeneratorLength(ILGenerator ilg)

@@ -12,10 +12,7 @@ namespace Yale.Core
     {
         private readonly IDictionary<string, IVariable> _values = new Dictionary<string, IVariable>();
 
-        public void Clear()
-        {
-            _values.Clear();
-        }
+        public void Clear() => _values.Clear();
 
         public int Count => _values.Keys.Count;
 
@@ -24,39 +21,24 @@ namespace Yale.Core
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void Add(string key, object value)
-        {
-            _values.Add(key, new Variable(value));
-        }
+        public void Add(string key, object value) => _values.Add(key, new Variable(value));
 
         /// <summary>
         /// Returns the current value registered to a variable in this instance.
         /// </summary>
         /// <param name="key"></param>
         /// 
-        public object Get(string key)
-        {
-            return _values[key].ValueAsObject;
-        }
+        public object Get(string key) => _values[key].ValueAsObject;
 
         /// <summary>
         /// Returns the current value registered to a variable in this instance.
         /// </summary>
         /// <param name="key"></param>
-        public T Get<T>(string key)
-        {
-            return (T)Get(key);
-        }
+        public T Get<T>(string key) => (T)Get(key);
 
-        public bool ContainsKey(string key)
-        {
-            return _values.ContainsKey(key);
-        }
+        public bool ContainsKey(string key) => _values.ContainsKey(key);
 
-        public bool Remove(string key)
-        {
-            return _values.Remove(key);
-        }
+        public bool Remove(string key) => _values.Remove(key);
 
         public bool TryGetValue(string key, out object? value)
         {
@@ -103,20 +85,11 @@ namespace Yale.Core
             return methodInfo.MakeGenericMethod(variableType);
         }
 
-        public T GetVariableValueInternal<T>(string name)
-        {
-            return (T)_values[name].ValueAsObject;
-        }
+        public T GetVariableValueInternal<T>(string name) => (T)_values[name].ValueAsObject;
 
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
-        {
-            return new VariableEnumerator(_values);
-        }
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => new VariableEnumerator(_values);
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public event PropertyChangedEventHandler? PropertyChanged;
     }

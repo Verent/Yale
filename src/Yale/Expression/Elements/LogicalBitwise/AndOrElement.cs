@@ -13,10 +13,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
         private static readonly object OurFalseTerminalKey = new object();
         private static readonly object OurEndLabelKey = new object();
 
-        protected override void GetOperation(object operation)
-        {
-            myOperation = (AndOrOperation)operation;
-        }
+        protected override void GetOperation(object operation) => myOperation = (AndOrOperation)operation;
 
         protected override Type? GetResultType(Type leftType, Type rightType)
         {
@@ -262,7 +259,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
 
             andOrChild = RightChild as AndOrElement;
 
-            if (andOrChild == null)
+            if (andOrChild is null)
             {
                 operands.Pop();
             }
@@ -342,10 +339,8 @@ namespace Yale.Expression.Elements.LogicalBitwise
             }
         }
 
-        private static Label GetLabel(object key, YaleIlGenerator ilg, ShortCircuitInfo info)
-        {
-            return info.Branches.GetLabel(key, ilg);
-        }
+        private static Label GetLabel(object key, YaleIlGenerator ilg, ShortCircuitInfo info) 
+            => info.Branches.GetLabel(key, ilg);
 
         /// <summary>
         /// Visit the nodes of the tree (right then left) and populate some data structures
@@ -371,7 +366,7 @@ namespace Yale.Expression.Elements.LogicalBitwise
             // Do the same thing for the left child
             andOrChild = LeftChild as AndOrElement;
 
-            if (andOrChild == null)
+            if (andOrChild is null)
             {
                 info.Operands.Push(LeftChild);
             }

@@ -46,7 +46,7 @@ namespace Yale.Expression.Elements.Base
         {
             resultType = GetResultType(LeftChild.ResultType, RightChild.ResultType);
 
-            if (resultType == null)
+            if (resultType is null)
             {
                 ThrowOperandTypeMismatch(op, LeftChild.ResultType, RightChild.ResultType);
             }
@@ -69,18 +69,18 @@ namespace Yale.Expression.Elements.Base
             MethodInfo? rightMethod = Utility.GetOverloadedOperator(name, rightType, binder, leftType, rightType);
 
             // Pick the right one
-            if (leftMethod == null & rightMethod == null)
+            if (leftMethod is null & rightMethod is null)
             {
                 // No operator defined for either
                 return null;
             }
 
-            if (leftMethod == null)
+            if (leftMethod is null)
             {
                 return rightMethod;
             }
 
-            if (rightMethod == null)
+            if (rightMethod is null)
             {
                 return leftMethod;
             }
@@ -101,10 +101,7 @@ namespace Yale.Expression.Elements.Base
             ilg.Emit(OpCodes.Call, method);
         }
 
-        protected void ThrowOperandTypeMismatch(object operation, Type leftType, Type rightType)
-        {
-            throw CreateCompileException(CompileErrors.OperationNotDefinedForTypes, CompileExceptionReason.TypeMismatch, operation, leftType.Name, rightType.Name);
-        }
+        protected void ThrowOperandTypeMismatch(object operation, Type leftType, Type rightType) => throw CreateCompileException(CompileErrors.OperationNotDefinedForTypes, CompileExceptionReason.TypeMismatch, operation, leftType.Name, rightType.Name);
 
         protected abstract Type? GetResultType(Type leftType, Type rightType);
 
@@ -115,20 +112,11 @@ namespace Yale.Expression.Elements.Base
             Debug.Assert(converted, "convert failed");
         }
 
-        protected bool AreBothChildrenOfType(Type target)
-        {
-            return IsChildOfType(LeftChild, target) & IsChildOfType(RightChild, target);
-        }
+        protected bool AreBothChildrenOfType(Type target) => IsChildOfType(LeftChild, target) & IsChildOfType(RightChild, target);
 
-        protected bool IsEitherChildOfType(Type target)
-        {
-            return IsChildOfType(LeftChild, target) || IsChildOfType(RightChild, target);
-        }
+        protected bool IsEitherChildOfType(Type target) => IsChildOfType(LeftChild, target) || IsChildOfType(RightChild, target);
 
-        protected static bool IsChildOfType(BaseExpressionElement child, Type t)
-        {
-            return ReferenceEquals(child.ResultType, t);
-        }
+        protected static bool IsChildOfType(BaseExpressionElement child, Type t) => ReferenceEquals(child.ResultType, t);
 
         /// <summary>
         /// Set the left and right operands, get the operation, and get the result type

@@ -55,7 +55,7 @@ namespace Yale.Expression.Elements.MemberElements
                 return;
             }
 
-            if (Previous == null)
+            if (Previous is null)
             {
                 throw CreateCompileException(CompileErrors.NoIdentifierWithName, CompileExceptionReason.UndefinedName, MemberName);
             }
@@ -79,7 +79,7 @@ namespace Yale.Expression.Elements.MemberElements
             if (members.Length > 1)
             {
                 // More than one accessible member
-                if (previous == null)
+                if (previous is null)
                 {
                     throw CreateCompileException(CompileErrors.IdentifierIsAmbiguous, CompileExceptionReason.AmbiguousMatch, MemberName);
                 }
@@ -107,7 +107,7 @@ namespace Yale.Expression.Elements.MemberElements
 
         private bool ResolveVirtualProperty(MemberElement previous)
         {
-            if (previous == null)
+            if (previous is null)
             {
                 // We can't use virtual properties if we are the first element
                 return false;
@@ -362,7 +362,7 @@ namespace Yale.Expression.Elements.MemberElements
             }
         }
 
-        protected override bool RequiresAddress => propertyDescriptor == null;
+        protected override bool RequiresAddress => propertyDescriptor is null;
 
         protected override bool IsPublic
         {
@@ -409,14 +409,14 @@ namespace Yale.Expression.Elements.MemberElements
                     return false;
                 }
 
-                if (Context.OwnerType.IsAssignableFrom(MemberOwnerType) && Previous == null)
+                if (Context.OwnerType.IsAssignableFrom(MemberOwnerType) && Previous is null)
                 {
                     // Owner members support static if we are the first element
                     return true;
                 }
 
                 // Support static if we are the first (ie: we are a static import)
-                return Previous == null;
+                return Previous is null;
             }
         }
 
@@ -436,7 +436,7 @@ namespace Yale.Expression.Elements.MemberElements
                     return true;
                 }
 
-                if (Context.OwnerType.IsAssignableFrom(MemberOwnerType) && Previous == null)
+                if (Context.OwnerType.IsAssignableFrom(MemberOwnerType) && Previous is null)
                 {
                     // Owner members support instance if we are the first element
                     return true;

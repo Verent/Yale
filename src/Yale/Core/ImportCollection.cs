@@ -48,10 +48,7 @@ namespace Yale.Core
             };
         }
 
-        internal void ImportOwner(Type ownerType)
-        {
-            ownerImport = new TypeImport(ownerType, OwnerFlags, false, options);
-        }
+        internal void ImportOwner(Type ownerType) => ownerImport = new TypeImport(ownerType, OwnerFlags, false, options);
 
         private NamespaceImport GetImport(string ns)
         {
@@ -69,10 +66,7 @@ namespace Yale.Core
             return import;
         }
 
-        internal MemberInfo[] FindOwnerMembers(string memberName, MemberTypes memberType)
-        {
-            return ownerImport.FindMembers(memberName, memberType);
-        }
+        internal MemberInfo[] FindOwnerMembers(string memberName, MemberTypes memberType) => ownerImport.FindMembers(memberName, memberType);
 
         internal Type? FindType(string[] typeNameParts)
         {
@@ -85,7 +79,7 @@ namespace Yale.Core
             foreach (string ns in namespaces)
             {
                 currentImport = currentImport.FindImport(ns);
-                if (currentImport == null)
+                if (currentImport is null)
                 {
                     break;
                 }
@@ -94,15 +88,12 @@ namespace Yale.Core
             return currentImport?.FindType(typeName);
         }
 
-        internal static Type? GetBuiltinType(string name)
-        {
-            return OurBuiltinTypeMap.TryGetValue(name, out Type? type) ? type : null;
-        }
+        internal static Type? GetBuiltinType(string name) => OurBuiltinTypeMap.TryGetValue(name, out Type? type) ? type : null;
 
         public void AddType(Type type, string @namespace)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-            if (@namespace == null) throw new ArgumentNullException(nameof(@namespace));
+            if (type is null) throw new ArgumentNullException(nameof(type));
+            if (@namespace is null) throw new ArgumentNullException(nameof(@namespace));
 
             const BindingFlags publicStatic = BindingFlags.Public | BindingFlags.Static;
             options.AssertTypeIsAccessible(type);
@@ -111,20 +102,17 @@ namespace Yale.Core
             import.Add(new TypeImport(type, publicStatic, false, options));
         }
 
-        public void AddType(Type type)
-        {
-            AddType(type, string.Empty);
-        }
+        public void AddType(Type type) => AddType(type, string.Empty);
 
         public void AddMethod(string methodName, Type type, string @namespace)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-            if (@namespace == null) throw new ArgumentNullException(nameof(@namespace));
-            if (methodName == null) throw new ArgumentNullException(nameof(methodName));
+            if (type is null) throw new ArgumentNullException(nameof(type));
+            if (@namespace is null) throw new ArgumentNullException(nameof(@namespace));
+            if (methodName is null) throw new ArgumentNullException(nameof(methodName));
 
             MethodInfo methodInfo = type.GetMethod(methodName, PublicStaticIgnoreCase);
 
-            if (methodInfo == null)
+            if (methodInfo is null)
             {
                 string msg = string.Format(CultureInfo.InvariantCulture, GeneralErrors.CouldNotFindPublicStaticMethodOnType, methodName, type.Name);
                 throw new ArgumentException(msg);
@@ -135,8 +123,8 @@ namespace Yale.Core
 
         private void AddMethod(MethodInfo methodInfo, string @namespace)
         {
-            if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
-            if (@namespace == null) throw new ArgumentNullException(nameof(@namespace));
+            if (methodInfo is null) throw new ArgumentNullException(nameof(methodInfo));
+            if (@namespace is null) throw new ArgumentNullException(nameof(@namespace));
 
             options.AssertTypeIsAccessible(methodInfo.ReflectedType);
 

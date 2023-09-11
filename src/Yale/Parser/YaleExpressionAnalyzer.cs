@@ -29,15 +29,9 @@ namespace Yale.Parser
         private bool inUnaryNegate;
         private ExpressionContext? context;
 
-        public void SetContext(ExpressionContext context)
-        {
-            this.context = context;
-        }
+        public void SetContext(ExpressionContext context) => this.context = context;
 
-        public override void Reset()
-        {
-            context = null;
-        }
+        public override void Reset() => context = null;
 
         public override Node ExitExpression(Production node)
         {
@@ -247,7 +241,7 @@ namespace Yale.Parser
 
             bool isArray = false;
 
-            if (parts[parts.Count - 1] == "[]")
+            if (parts[^1] == "[]")
             {
                 isArray = true;
                 parts.RemoveAt(parts.Count - 1);
@@ -303,10 +297,7 @@ namespace Yale.Parser
             return node;
         }
 
-        private void AddFirstChildValue(Production node)
-        {
-            node.AddValue(GetChildAt(node, 0).Values[0]);
-        }
+        private void AddFirstChildValue(Production node) => node.AddValue(GetChildAt(node, 0).Values[0]);
 
         private void AddUnaryOp(Production node, Type elementType)
         {
@@ -399,7 +390,7 @@ namespace Yale.Parser
 
         public override Node ExitDatetime(PerCederberg.Grammatica.Runtime.Token node)
         {
-            string image = node.Image.Substring(1, node.Image.Length - 2);
+            string image = node.Image[1..^1];
             DateTimeLiteralElement element = new DateTimeLiteralElement(image, context);
             node.AddValue(element);
             return node;
@@ -407,7 +398,7 @@ namespace Yale.Parser
 
         public override Node ExitTimeSpan(PerCederberg.Grammatica.Runtime.Token node)
         {
-            string image = node.Image.Substring(2, node.Image.Length - 3);
+            string image = node.Image[2..^1];
             TimeSpanLiteralElement element = new TimeSpanLiteralElement(image);
             node.AddValue(element);
             return node;
@@ -416,7 +407,7 @@ namespace Yale.Parser
         private string DoEscapes(string image)
         {
             // Remove outer quotes
-            image = image.Substring(1, image.Length - 2);
+            image = image[1..^1];
             image = unicodeEscapeRegex.Replace(image, UnicodeEscapeMatcher);
             image = regularEscapeRegex.Replace(image, RegularEscapeMatcher);
             return image;

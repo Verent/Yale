@@ -60,7 +60,7 @@ namespace Yale.Expression.Elements
             // Try to find a collection type
             targetCollectionType = GetTargetCollectionType();
 
-            if (targetCollectionType == null)
+            if (targetCollectionType is null)
             {
                 throw CreateCompileException(CompileErrors.SearchArgIsNotKnownCollectionType, CompileExceptionReason.TypeMismatch, targetCollectionElement.ResultType.Name);
             }

@@ -36,7 +36,7 @@ namespace Yale.Expression.Elements.MemberElements
             // Find all methods with our name on the type
             ICollection<MethodInfo>? methods = this.methods;
 
-            if (methods == null)
+            if (methods is null)
             {
                 // Convert member info to method info
                 MemberInfo[] arr = GetMembers(MemberTypes.Method);
@@ -54,7 +54,7 @@ namespace Yale.Expression.Elements.MemberElements
 
             // No methods with this name exist; try to bind to an on-demand function
             //_onDemandFunctionReturnType = Context.Variables.ResolveOnDemandFunction(Name, argTypes);
-            //if (_onDemandFunctionReturnType == null)
+            //if (_onDemandFunctionReturnType is null)
             //{
             //}
 
@@ -63,7 +63,7 @@ namespace Yale.Expression.Elements.MemberElements
 
         private void ThrowFunctionNotFoundException(MemberElement previous)
         {
-            if (previous == null)
+            if (previous is null)
             {
                 throw CreateCompileException(CompileErrors.UndefinedFunction, CompileExceptionReason.UndefinedName, MemberName, arguments);
             }
@@ -75,7 +75,7 @@ namespace Yale.Expression.Elements.MemberElements
 
         private void ThrowNoAccessibleMethodsException(MemberElement previous)
         {
-            if (previous == null)
+            if (previous is null)
             {
                 throw CreateCompileException(CompileErrors.NoAccessibleMatches, CompileExceptionReason.AccessDenied, MemberName, arguments);
             }
@@ -237,7 +237,7 @@ namespace Yale.Expression.Elements.MemberElements
             bool isOwnerMember = Context.OwnerType.IsAssignableFrom(Method.ReflectedType);
 
             // Load the owner if required
-            if (Previous == null && isOwnerMember && IsStatic == false)
+            if (Previous is null && isOwnerMember && IsStatic == false)
             {
                 EmitLoadOwner(ilGenerator);
             }

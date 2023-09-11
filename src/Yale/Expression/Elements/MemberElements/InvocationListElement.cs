@@ -67,13 +67,13 @@ namespace Yale.Expression.Elements.MemberElements
             while (true)
             {
                 string name = GetName(elements);
-                if (name == null)
+                if (name is null)
                 {
                     break; // TODO: might not be correct. Was : Exit While
                 }
 
                 ImportBase? import = currentImport.FindImport(name);
-                if (import == null)
+                if (import is null)
                 {
                     break; // TODO: might not be correct. Was : Exit While
                 }

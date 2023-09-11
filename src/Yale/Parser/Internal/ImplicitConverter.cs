@@ -157,7 +157,7 @@ namespace Yale.Parser.Internal
             // Look for an implicit operator on the destination type
             System.Reflection.MethodInfo methodInfo = Utility.GetSimpleOverloadedOperator("Implicit", sourceType, destinationType);
 
-            if (methodInfo == null)
+            if (methodInfo is null)
             {
                 return false;
             }
