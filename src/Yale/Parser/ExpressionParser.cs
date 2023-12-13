@@ -30,21 +30,15 @@ public class ExpressionParser : RecursiveDescentParser
     }
 
     public ExpressionParser(TextReader input)
-        : base(new ExpressionTokenizer(input))
-    {
-        CreatePatterns();
-    }
+        : base(new ExpressionTokenizer(input)) => CreatePatterns();
 
     public ExpressionParser(TextReader input, Analyzer analyzer)
-        : base(new ExpressionTokenizer(input), analyzer)
-    {
-        CreatePatterns();
-    }
+        : base(new ExpressionTokenizer(input), analyzer) => CreatePatterns();
 
     private void CreatePatterns()
     {
-        ProductionPattern pattern = new ProductionPattern((int)Token.EXPRESSION, "Expression");
-        ProductionPatternAlternative alt = new ProductionPatternAlternative();
+        ProductionPattern pattern = new((int)Token.EXPRESSION, "Expression");
+        ProductionPatternAlternative alt = new();
         alt.AddProduction((int)Token.XOR_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);

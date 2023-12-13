@@ -9,9 +9,9 @@ namespace Yale.Expression.Elements.LogicalBitwise;
 internal class AndOrElement : BinaryExpressionElement
 {
     private AndOrOperation myOperation;
-    private static readonly object OurTrueTerminalKey = new object();
-    private static readonly object OurFalseTerminalKey = new object();
-    private static readonly object OurEndLabelKey = new object();
+    private static readonly object OurTrueTerminalKey = new();
+    private static readonly object OurFalseTerminalKey = new();
+    private static readonly object OurEndLabelKey = new();
 
     protected override void GetOperation(object operation) =>
         myOperation = (AndOrOperation)operation;
@@ -70,7 +70,7 @@ internal class AndOrElement : BinaryExpressionElement
     private void DoEmitLogical(YaleIlGenerator ilGenerator, ExpressionContext context)
     {
         // We have to do a 'fake' emit so we can get the positions of the labels
-        ShortCircuitInfo info = new ShortCircuitInfo();
+        ShortCircuitInfo info = new();
         // Create a temporary IL generator
         YaleIlGenerator ilgTemp = CreateTempIlGenerator(ilGenerator);
 
@@ -262,7 +262,7 @@ internal class AndOrElement : BinaryExpressionElement
     {
         operators.Pop();
 
-        if (!(LeftChild is AndOrElement andOrChild))
+        if (LeftChild is not AndOrElement andOrChild)
         {
             operands.Pop();
         }
@@ -368,7 +368,7 @@ internal class AndOrElement : BinaryExpressionElement
     private void PopulateData(ShortCircuitInfo info)
     {
         // Is our right child a leaf or another And/Or expression?
-        if (!(RightChild is AndOrElement andOrChild))
+        if (RightChild is not AndOrElement andOrChild)
         {
             // Leaf so push it on the stack
             info.Operands.Push(RightChild);

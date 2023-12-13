@@ -40,7 +40,7 @@ internal class IdentifierElement : MemberElement
 
         Engine.ComputeInstance computeInstance = Context.ComputeInstance;
         // Variable lookup
-        if (Context.Variables.TryGetValue(MemberName, out IVariable value))
+        if (Context.Variables.TryGetValue(MemberName, out IVariable? value))
         {
             valueType = value.Type;
             computeInstance?.AddDependency(Context.ExpressionName, MemberName);
@@ -245,7 +245,7 @@ internal class IdentifierElement : MemberElement
         object value = fi.GetValue(null);
         Type type = value.GetType();
         TypeCode typeCode = Type.GetTypeCode(type);
-        LiteralElement elem;
+        LiteralElement? elem;
 
         switch (typeCode)
         {
@@ -351,7 +351,7 @@ internal class IdentifierElement : MemberElement
                 return field.FieldType;
             }
 
-            MethodInfo methodInfo = property.GetGetMethod(true);
+            var methodInfo = property.GetGetMethod(true);
             return methodInfo.ReturnType;
         }
     }

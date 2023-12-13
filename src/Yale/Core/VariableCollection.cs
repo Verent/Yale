@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Yale.Core.Interfaces;
@@ -23,7 +24,11 @@ public sealed class VariableCollection
     /// </summary>
     /// <param name="key"></param>
     /// <param name="value"></param>
-    public void Add(string key, object value) => _values.Add(key, new Variable(value));
+    public void Add(string key, object value)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+        _values.Add(key, new Variable(value));
+    }
 
     /// <summary>
     /// Returns the current value registered to a variable in this instance.
@@ -49,10 +54,11 @@ public sealed class VariableCollection
         return success;
     }
 
-    public bool TryGetValue<T>(string key, out T value)
+    public bool TryGetValue<T>(string key, [NotNullWhen(true)] out T? value)
+        where T : class
     {
         bool success = _values.TryGetValue(key, out IVariable? result);
-        value = (T)result;
+        value = result as T;
         return success;
     }
 
@@ -61,6 +67,8 @@ public sealed class VariableCollection
         get => _values[key].ValueAsObject;
         set
         {
+            ArgumentNullException.ThrowIfNull(value);
+
             if (_values.ContainsKey(key) && _values[key].Equals(value))
                 return;
 
@@ -86,12 +94,12 @@ public sealed class VariableCollection
     /// <returns></returns>
     internal static MethodInfo GetVariableLoadMethod(Type variableType)
     {
-        MethodInfo methodInfo = typeof(VariableCollection).GetMethod(
-            "GetVariableValueInternal",
+        var methodInfo = typeof(VariableCollection).GetMethod(
+            nameof(GetVariableValueInternal),
             BindingFlags.Public | BindingFlags.Instance
         );
-        // ReSharper disable once PossibleNullReferenceException
-        return methodInfo.MakeGenericMethod(variableType);
+
+        return methodInfo!.MakeGenericMethod(variableType);
     }
 
     public T GetVariableValueInternal<T>(string name) => (T)_values[name].ValueAsObject;

@@ -9,12 +9,8 @@ public class DependencyManager
 {
     private readonly ComputeInstance[] _instances =
     {
-        new ComputeInstance(
-            new ComputeInstanceOptions { AutoRecalculate = true, LazyRecalculate = false }
-        ),
-        new ComputeInstance(
-            new ComputeInstanceOptions { AutoRecalculate = true, LazyRecalculate = true }
-        )
+        new(new ComputeInstanceOptions { AutoRecalculate = true, LazyRecalculate = false }),
+        new(new ComputeInstanceOptions { AutoRecalculate = true, LazyRecalculate = true })
     };
 
     [TestMethod]

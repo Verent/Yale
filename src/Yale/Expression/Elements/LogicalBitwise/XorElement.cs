@@ -7,7 +7,7 @@ namespace Yale.Expression.Elements.LogicalBitwise;
 
 internal class XorElement : BinaryExpressionElement
 {
-    protected override Type GetResultType(Type leftType, Type rightType)
+    protected override Type? GetResultType(Type leftType, Type rightType)
     {
         Type bitwiseType = Utility.GetBitwiseOpType(leftType, rightType);
 

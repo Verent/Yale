@@ -10,7 +10,7 @@ internal class ShiftElement : BinaryExpressionElement
 {
     private ShiftOperation operation;
 
-    protected override Type GetResultType(Type leftType, Type rightType)
+    protected override Type? GetResultType(Type leftType, Type rightType)
     {
         // Right argument (shift count) must be convertible to int32
         if (ImplicitConverter.EmitImplicitNumericConvert(rightType, typeof(Int32), null) == false)
@@ -50,10 +50,8 @@ internal class ShiftElement : BinaryExpressionElement
         }
     }
 
-    protected override void GetOperation(object operation)
-    {
+    protected override void GetOperation(object operation) =>
         this.operation = (ShiftOperation)operation;
-    }
 
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
     {
@@ -95,7 +93,7 @@ internal class ShiftElement : BinaryExpressionElement
     private void EmitShift(YaleIlGenerator ilg)
     {
         TypeCode typeCode = Type.GetTypeCode(LeftChild.ResultType);
-        OpCode opCode = default(OpCode);
+        OpCode opCode = default;
 
         switch (typeCode)
         {

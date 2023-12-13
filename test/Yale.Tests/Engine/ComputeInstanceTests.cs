@@ -95,16 +95,12 @@ public class ComputeInstanceTests
     }
 
     [TestMethod]
-    public void Generic_GetResult_DoesNotExist()
-    {
+    public void Generic_GetResult_DoesNotExist() =>
         Assert.ThrowsException<KeyNotFoundException>(() => instance.GetResult<int>("a"));
-    }
 
     [TestMethod]
-    public void GetResult_DoesNotExist()
-    {
+    public void GetResult_DoesNotExist() =>
         Assert.ThrowsException<KeyNotFoundException>(() => instance.GetResult("a"));
-    }
 
     [TestMethod]
     public void GetExpression_ContainsExpression()

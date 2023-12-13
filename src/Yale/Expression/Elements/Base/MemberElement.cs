@@ -33,10 +33,7 @@ internal abstract class MemberElement : BaseExpressionElement
 
     protected MemberElement() { }
 
-    protected MemberElement(string name)
-    {
-        MemberName = name;
-    }
+    protected MemberElement(string name) => MemberName = name;
 
     public void Link(MemberElement nextElement)
     {
@@ -54,10 +51,7 @@ internal abstract class MemberElement : BaseExpressionElement
         Validate();
     }
 
-    public void SetImport(ImportBase import)
-    {
-        Import = import;
-    }
+    public void SetImport(ImportBase import) => Import = import;
 
     protected abstract void ResolveInternal();
 
@@ -89,29 +83,23 @@ internal abstract class MemberElement : BaseExpressionElement
         }
     }
 
-    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
-    {
+    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context) =>
         Previous?.Emit(ilGenerator, context);
-    }
 
     /// <summary>
     /// Loads the 2nd argument to the evaluation stack.
     /// </summary>
     /// <param name="ilGenerator"></param>
-    protected static void EmitLoadVariables(YaleIlGenerator ilGenerator)
-    {
+    protected static void EmitLoadVariables(YaleIlGenerator ilGenerator) =>
         ilGenerator.Emit(OpCodes.Ldarg_2);
-    }
 
     /// <summary>
     /// Handles a call emit for static, instance methods of reference/value types
     /// </summary>
     /// <param name="mi"></param>
     /// <param name="ilg"></param>
-    protected void EmitMethodCall(MethodInfo mi, YaleIlGenerator ilg)
-    {
+    protected void EmitMethodCall(MethodInfo mi, YaleIlGenerator ilg) =>
         EmitMethodCall(ResultType, NextRequiresAddress, mi, ilg);
-    }
 
     protected static void EmitMethodCall(
         Type resultType,
@@ -178,10 +166,8 @@ internal abstract class MemberElement : BaseExpressionElement
         }
     }
 
-    private static void EmitReferenceTypeMethodCall(MethodInfo mi, YaleIlGenerator ilg)
-    {
+    private static void EmitReferenceTypeMethodCall(MethodInfo mi, YaleIlGenerator ilg) =>
         ilg.Emit(mi.IsStatic ? OpCodes.Call : OpCodes.Callvirt, mi);
-    }
 
     protected static void EmitValueTypeLoadAddress(YaleIlGenerator ilg, Type targetType)
     {
@@ -244,7 +230,7 @@ internal abstract class MemberElement : BaseExpressionElement
 
     protected MemberInfo[] GetAccessibleMembers(MemberInfo[] members)
     {
-        List<MemberInfo> accessible = new List<MemberInfo>();
+        List<MemberInfo> accessible = new();
 
         // Keep all members that are accessible
         foreach (MemberInfo memberInfo in members)
@@ -306,10 +292,7 @@ internal abstract class MemberElement : BaseExpressionElement
         return members.Length > 0 ? members : Imports.RootImport.FindMembers(name, memberType);
     }
 
-    protected static bool IsElementPublic(MemberElement e)
-    {
-        return e.IsPublic;
-    }
+    protected static bool IsElementPublic(MemberElement e) => e.IsPublic;
 
     protected bool NextRequiresAddress => Next != null && Next.RequiresAddress;
 

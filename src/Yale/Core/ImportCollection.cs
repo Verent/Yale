@@ -59,7 +59,7 @@ public sealed class ImportCollection
             return RootImport;
         }
 
-        if (!(RootImport.FindImport(ns) is NamespaceImport import))
+        if (RootImport.FindImport(ns) is not NamespaceImport import)
         {
             import = new NamespaceImport(ns, options);
             RootImport.Add(import);

@@ -8,15 +8,9 @@ internal class TestClass<T> : INotifyPropertyChanged
     private readonly string _caller;
     private T _value;
 
-    public TestClass(string caller)
-    {
-        _caller = caller;
-    }
+    public TestClass(string caller) => _caller = caller;
 
-    public string GetCaller()
-    {
-        return _caller;
-    }
+    public string GetCaller() => _caller;
 
     public T Value
     {
@@ -30,9 +24,6 @@ internal class TestClass<T> : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler PropertyChanged;
 
-    [NotifyPropertyChangedInvocator]
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-    {
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 }

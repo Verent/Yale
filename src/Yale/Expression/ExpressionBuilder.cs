@@ -24,12 +24,11 @@ public class ExpressionBuilder
     internal VariableCollection Variables { get; } = new VariableCollection();
 
     public ImportCollection Imports { get; }
-    public ComputeInstance Instance { get; }
 
     public ExpressionBuilder(ComputeInstance instance)
     {
         Options = new ExpressionBuilderOptions();
-        Instance = instance;
+        ComputeInstance = instance;
         Imports = new ImportCollection(Options);
         Analyzer = new YaleExpressionAnalyzer();
         Parser = new ExpressionParser(TextReader.Null, Analyzer);
@@ -38,6 +37,7 @@ public class ExpressionBuilder
     public ExpressionBuilder(ExpressionBuilderOptions options, ComputeInstance instance)
     {
         Options = options;
+        ComputeInstance = instance;
         Imports = new ImportCollection(Options);
         Analyzer = new YaleExpressionAnalyzer();
         Parser = new ExpressionParser(TextReader.Null, Analyzer);

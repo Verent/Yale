@@ -28,10 +28,8 @@ internal class ArithmeticElement : BinaryExpressionElement
 
     private BinaryArithmeticOperation operation;
 
-    protected override void GetOperation(object operation)
-    {
+    protected override void GetOperation(object operation) =>
         this.operation = (BinaryArithmeticOperation)operation;
-    }
 
     protected override Type? GetResultType(Type leftType, Type rightType)
     {
@@ -66,10 +64,8 @@ internal class ArithmeticElement : BinaryExpressionElement
         return null;
     }
 
-    private Type GetPowerResultType(Type leftType)
-    {
-        return IsOptimizablePower ? leftType : typeof(double);
-    }
+    private Type GetPowerResultType(Type leftType) =>
+        IsOptimizablePower ? leftType : typeof(double);
 
     /// <summary>
     /// Return an methodInfo based on the type of the left and right child
@@ -125,10 +121,8 @@ internal class ArithmeticElement : BinaryExpressionElement
         }
     }
 
-    private static bool IsUnsignedForArithmetic(Type type)
-    {
-        return ReferenceEquals(type, typeof(UInt32)) | ReferenceEquals(type, typeof(UInt64));
-    }
+    private static bool IsUnsignedForArithmetic(Type type) =>
+        ReferenceEquals(type, typeof(UInt32)) | ReferenceEquals(type, typeof(UInt64));
 
     /// <summary>
     /// Emit an arithmetic operation with handling for unsigned and checked contexts

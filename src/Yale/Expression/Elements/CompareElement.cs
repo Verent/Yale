@@ -28,7 +28,7 @@ internal class CompareElement : BinaryExpressionElement
     protected override void GetOperation(object operation) =>
         this.operation = (LogicalCompareOperation)operation;
 
-    protected override Type GetResultType(Type leftType, Type rightType)
+    protected override Type? GetResultType(Type leftType, Type rightType)
     {
         Type binaryResultType = ImplicitConverter.GetBinaryResultType(leftType, rightType);
         MethodInfo overloadedOperator = GetOverloadedCompareOperator();
@@ -181,7 +181,7 @@ internal class CompareElement : BinaryExpressionElement
         int32LiteralElement.Emit(ilg, context);
 
         // and emit the method call
-        MethodInfo methodInfo = typeof(string).GetMethod(
+        var methodInfo = typeof(string).GetMethod(
             "Equals",
             new[] { typeof(string), typeof(string), typeof(StringComparison) },
             null

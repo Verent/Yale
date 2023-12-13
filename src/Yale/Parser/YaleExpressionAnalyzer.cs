@@ -23,14 +23,10 @@ namespace Yale.Parser;
 /// </summary>
 internal class YaleExpressionAnalyzer : ExpressionAnalyzer
 {
-    private readonly Regex unicodeEscapeRegex = new Regex(
-        "\\\\u[0-9a-f]{4}",
-        RegexOptions.IgnoreCase | RegexOptions.Compiled
-    );
-    private readonly Regex regularEscapeRegex = new Regex(
-        "\\\\[\\\\\"'trn]",
-        RegexOptions.IgnoreCase | RegexOptions.Compiled
-    );
+    private readonly Regex unicodeEscapeRegex =
+        new("\\\\u[0-9a-f]{4}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private readonly Regex regularEscapeRegex =
+        new("\\\\[\\\\\"'trn]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     private bool inUnaryNegate;
     private ExpressionContext? context;
@@ -260,7 +256,7 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
     public override Node ExitCastTypeExpression(Production node)
     {
         IList childValues = GetChildValues(node);
-        List<string> parts = new List<string>();
+        List<string> parts = new();
 
         foreach (string part in childValues)
         {
@@ -290,7 +286,7 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
     {
         //string name = ((Token)node.GetChildAt(0))?.Image;
         string name = node.GetChildAt(0).GetValue(0).ToString();
-        IdentifierElement elem = new IdentifierElement(name);
+        IdentifierElement elem = new(name);
         node.AddValue(elem);
         return node;
     }
@@ -300,8 +296,8 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
         ArrayList childValues = GetChildValues(node);
         string name = (string)childValues[0];
         childValues.RemoveAt(0);
-        ArgumentList args = new ArgumentList(childValues);
-        FunctionCallElement funcCall = new FunctionCallElement(name, args);
+        ArgumentList args = new(childValues);
+        FunctionCallElement funcCall = new(name, args);
         node.AddValue(funcCall);
         return node;
     }
@@ -309,7 +305,7 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
     public override Node ExitArgumentList(Production node)
     {
         ArrayList childValues = GetChildValues(node);
-        node.AddValues((ArrayList)childValues);
+        node.AddValues(childValues);
         return node;
     }
 
@@ -419,7 +415,7 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
     public override Node ExitStringLiteral(PerCederberg.Grammatica.Runtime.Token node)
     {
         string s = DoEscapes(node.Image);
-        StringLiteralElement element = new StringLiteralElement(s);
+        StringLiteralElement element = new(s);
         node.AddValue(element);
         return node;
     }
@@ -434,7 +430,7 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
     public override Node ExitDatetime(PerCederberg.Grammatica.Runtime.Token node)
     {
         string image = node.Image[1..^1];
-        DateTimeLiteralElement element = new DateTimeLiteralElement(image, context);
+        DateTimeLiteralElement element = new(image, context);
         node.AddValue(element);
         return node;
     }
@@ -442,7 +438,7 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
     public override Node ExitTimeSpan(PerCederberg.Grammatica.Runtime.Token node)
     {
         string image = node.Image[2..^1];
-        TimeSpanLiteralElement element = new TimeSpanLiteralElement(image);
+        TimeSpanLiteralElement element = new(image);
         node.AddValue(element);
         return node;
     }
