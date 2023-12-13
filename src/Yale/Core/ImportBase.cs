@@ -16,21 +16,40 @@ namespace Yale.Core
             Options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
-        protected abstract void AddMembers(string memberName, MemberTypes memberType, ICollection<MemberInfo> targetCollection);
+        protected abstract void AddMembers(
+            string memberName,
+            MemberTypes memberType,
+            ICollection<MemberInfo> targetCollection
+        );
 
-        protected abstract void AddMembers(MemberTypes memberType, ICollection<MemberInfo> targetCollection);
+        protected abstract void AddMembers(
+            MemberTypes memberType,
+            ICollection<MemberInfo> targetCollection
+        );
 
-        protected static void AddImportMembers(ImportBase import, string memberName, MemberTypes memberType, ICollection<MemberInfo> destination)
+        protected static void AddImportMembers(
+            ImportBase import,
+            string memberName,
+            MemberTypes memberType,
+            ICollection<MemberInfo> destination
+        )
         {
             import.AddMembers(memberName, memberType, destination);
         }
 
-        protected static void AddImportMembers(ImportBase import, MemberTypes memberType, ICollection<MemberInfo> destination)
+        protected static void AddImportMembers(
+            ImportBase import,
+            MemberTypes memberType,
+            ICollection<MemberInfo> destination
+        )
         {
             import.AddMembers(memberType, destination);
         }
 
-        protected static void AddMemberRange(ICollection<MemberInfo> members, ICollection<MemberInfo> destination)
+        protected static void AddMemberRange(
+            ICollection<MemberInfo> members,
+            ICollection<MemberInfo> destination
+        )
         {
             foreach (MemberInfo memberInfo in members)
             {

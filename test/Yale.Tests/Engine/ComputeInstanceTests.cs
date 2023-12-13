@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 using Yale.Expression;
 
@@ -62,14 +62,17 @@ public class ComputeInstanceTests
     [TestMethod]
     public void AddExpression_ThatAreInvalid_ThrowsException()
     {
-        Assert.ThrowsException<ExpressionCompileException>(() =>
-            instance.AddExpression("a", "true > false"));
+        Assert.ThrowsException<ExpressionCompileException>(
+            () => instance.AddExpression("a", "true > false")
+        );
 
-        Assert.ThrowsException<ExpressionCompileException>(() =>
-            instance.AddExpression("a", "Hello there < 1"));
+        Assert.ThrowsException<ExpressionCompileException>(
+            () => instance.AddExpression("a", "Hello there < 1")
+        );
 
-        Assert.ThrowsException<ExpressionCompileException>(() =>
-            instance.AddExpression("a", "1 == true"));
+        Assert.ThrowsException<ExpressionCompileException>(
+            () => instance.AddExpression("a", "1 == true")
+        );
     }
 
     [TestMethod]

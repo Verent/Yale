@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 using Yale.Expression;
 
@@ -68,7 +68,8 @@ namespace Yale.Tests.Core
             _instance.Imports.AddMethod("Sqrt", typeof(Math), "Test");
 
             Assert.ThrowsException<ExpressionCompileException>(
-                () => _instance.AddExpression("key", "Test.Pow(16)"));
+                () => _instance.AddExpression("key", "Test.Pow(16)")
+            );
         }
     }
 }

@@ -26,12 +26,15 @@ namespace Yale.Expression.Elements.Base
         public ImportCollection Imports => Context.Imports;
         public VariableCollection Variables => Context.Variables;
 
-        public const BindingFlags BindFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
+        public const BindingFlags BindFlags =
+            BindingFlags.Public
+            | BindingFlags.NonPublic
+            | BindingFlags.Instance
+            | BindingFlags.Static;
 
         public string MemberName { get; protected set; }
 
-        protected MemberElement()
-        { }
+        protected MemberElement() { }
 
         protected MemberElement(string name)
         {
@@ -73,11 +76,19 @@ namespace Yale.Expression.Elements.Base
 
             if (IsStatic && SupportsStatic == false)
             {
-                throw CreateCompileException(CompileErrors.StaticMemberCannotBeAccessedWithInstanceReference, CompileExceptionReason.TypeMismatch, MemberName);
+                throw CreateCompileException(
+                    CompileErrors.StaticMemberCannotBeAccessedWithInstanceReference,
+                    CompileExceptionReason.TypeMismatch,
+                    MemberName
+                );
             }
             else if (IsStatic == false && SupportsInstance == false)
             {
-                throw CreateCompileException(CompileErrors.ReferenceToNonSharedMemberRequiresObjectReference, CompileExceptionReason.TypeMismatch, MemberName);
+                throw CreateCompileException(
+                    CompileErrors.ReferenceToNonSharedMemberRequiresObjectReference,
+                    CompileExceptionReason.TypeMismatch,
+                    MemberName
+                );
             }
         }
 
@@ -105,7 +116,12 @@ namespace Yale.Expression.Elements.Base
             EmitMethodCall(ResultType, NextRequiresAddress, mi, ilg);
         }
 
-        protected static void EmitMethodCall(Type resultType, bool nextRequiresAddress, MethodInfo mi, YaleIlGenerator ilg)
+        protected static void EmitMethodCall(
+            Type resultType,
+            bool nextRequiresAddress,
+            MethodInfo mi,
+            YaleIlGenerator ilg
+        )
         {
             if (mi.GetType().IsValueType == false)
             {
@@ -124,7 +140,10 @@ namespace Yale.Expression.Elements.Base
 
         protected static bool IsGetTypeMethod(MethodInfo mi)
         {
-            MethodInfo miGetType = typeof(object).GetMethod("gettype", BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+            MethodInfo miGetType = typeof(object).GetMethod(
+                "gettype",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase
+            );
             return mi.MethodHandle.Equals(miGetType.MethodHandle);
         }
 
@@ -247,8 +266,7 @@ namespace Yale.Expression.Elements.Base
         /// </summary>
         /// <param name="member"></param>
         /// <returns></returns>
-        public static bool IsMemberAccessible(MemberInfo member)
-            => IsMemberPublic(member);
+        public static bool IsMemberAccessible(MemberInfo member) => IsMemberPublic(member);
 
         protected MemberInfo[] GetMembers(MemberTypes targets)
         {
@@ -265,7 +283,12 @@ namespace Yale.Expression.Elements.Base
             }
 
             // We are not the first element; find all members with our name on the type of the previous member
-            return Previous.TargetType.FindMembers(targets, BindFlags, Context.BuilderOptions.MemberFilter, MemberName);
+            return Previous.TargetType.FindMembers(
+                targets,
+                BindFlags,
+                Context.BuilderOptions.MemberFilter,
+                MemberName
+            );
         }
 
         /// <summary>
@@ -283,9 +306,7 @@ namespace Yale.Expression.Elements.Base
             members = GetAccessibleMembers(members);
 
             // If we have some matches, return them. Else search the imports.
-            return members.Length > 0 ?
-                members :
-                Imports.RootImport.FindMembers(name, memberType);
+            return members.Length > 0 ? members : Imports.RootImport.FindMembers(name, memberType);
         }
 
         protected static bool IsElementPublic(MemberElement e)

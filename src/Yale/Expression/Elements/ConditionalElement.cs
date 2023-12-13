@@ -13,7 +13,11 @@ namespace Yale.Expression.Elements
         private readonly BaseExpressionElement whenFalse;
         private readonly Type resultType;
 
-        public ConditionalElement(BaseExpressionElement condition, BaseExpressionElement whenTrue, BaseExpressionElement whenFalse)
+        public ConditionalElement(
+            BaseExpressionElement condition,
+            BaseExpressionElement whenTrue,
+            BaseExpressionElement whenFalse
+        )
         {
             this.condition = condition;
             this.whenTrue = whenTrue;
@@ -21,21 +25,41 @@ namespace Yale.Expression.Elements
 
             if (!ReferenceEquals(this.condition.ResultType, typeof(bool)))
             {
-                throw CreateCompileException(CompileErrors.FirstArgNotBoolean, CompileExceptionReason.TypeMismatch);
+                throw CreateCompileException(
+                    CompileErrors.FirstArgNotBoolean,
+                    CompileExceptionReason.TypeMismatch
+                );
             }
 
             // The result type is the type that is common to the true/false operands
-            if (ImplicitConverter.EmitImplicitConvert(this.whenFalse.ResultType, this.whenTrue.ResultType, null))
+            if (
+                ImplicitConverter.EmitImplicitConvert(
+                    this.whenFalse.ResultType,
+                    this.whenTrue.ResultType,
+                    null
+                )
+            )
             {
                 resultType = this.whenTrue.ResultType;
             }
-            else if (ImplicitConverter.EmitImplicitConvert(this.whenTrue.ResultType, this.whenFalse.ResultType, null))
+            else if (
+                ImplicitConverter.EmitImplicitConvert(
+                    this.whenTrue.ResultType,
+                    this.whenFalse.ResultType,
+                    null
+                )
+            )
             {
                 resultType = this.whenFalse.ResultType;
             }
             else
             {
-                throw CreateCompileException(CompileErrors.NeitherArgIsConvertibleToTheOther, CompileExceptionReason.TypeMismatch, this.whenTrue.ResultType.Name, this.whenFalse.ResultType.Name);
+                throw CreateCompileException(
+                    CompileErrors.NeitherArgIsConvertibleToTheOther,
+                    CompileExceptionReason.TypeMismatch,
+                    this.whenTrue.ResultType.Name,
+                    this.whenFalse.ResultType.Name
+                );
             }
         }
 
@@ -64,7 +88,11 @@ namespace Yale.Expression.Elements
             EmitConditional(ilGenerator, context, branchManager);
         }
 
-        private void EmitConditional(YaleIlGenerator ilg, ExpressionContext context, BranchManager branchManager)
+        private void EmitConditional(
+            YaleIlGenerator ilg,
+            ExpressionContext context,
+            BranchManager branchManager
+        )
         {
             Label falseLabel = branchManager.FindLabel("falseLabel");
             Label endLabel = branchManager.FindLabel("endLabel");

@@ -23,9 +23,17 @@ namespace Yale.Expression.Elements.Base
 
         protected string Name => GetType().Name;
 
-        protected ExpressionCompileException CreateCompileException(string messageTemplate, CompileExceptionReason reason, params object[] arguments)
+        protected ExpressionCompileException CreateCompileException(
+            string messageTemplate,
+            CompileExceptionReason reason,
+            params object[] arguments
+        )
         {
-            string message = string.Format(CultureInfo.InvariantCulture, messageTemplate, arguments);
+            string message = string.Format(
+                CultureInfo.InvariantCulture,
+                messageTemplate,
+                arguments
+            );
             message = string.Concat(Name, ": ", message);
             return new ExpressionCompileException(message, reason);
         }

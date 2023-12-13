@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection.Emit;
-
 using Yale.Expression.Elements.Base;
 using Yale.Parser.Internal;
 using Yale.Resources;
@@ -8,13 +7,14 @@ using Yale.Resources;
 namespace Yale.Expression.Elements.LogicalBitwise
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     internal class NotElement : UnaryElement
     {
         public override Type ResultType { get; }
 
-        public NotElement(BaseExpressionElement child) : base(child)
+        public NotElement(BaseExpressionElement child)
+            : base(child)
         {
             ResultType = GetResultType(child.ResultType);
         }
@@ -45,9 +45,13 @@ namespace Yale.Expression.Elements.LogicalBitwise
             {
                 return typeof(bool);
             }
-            Type result = Utility.IsIntegralType(childType) ?
-                childType :
-                throw CreateCompileException(CompileErrors.OperationNotDefinedForType, CompileExceptionReason.TypeMismatch, MyChild.ResultType.Name);
+            Type result = Utility.IsIntegralType(childType)
+                ? childType
+                : throw CreateCompileException(
+                    CompileErrors.OperationNotDefinedForType,
+                    CompileExceptionReason.TypeMismatch,
+                    MyChild.ResultType.Name
+                );
 
             return result;
         }

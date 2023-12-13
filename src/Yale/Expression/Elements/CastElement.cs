@@ -14,14 +14,23 @@ namespace Yale.Expression.Elements
         private readonly BaseExpressionElement castExpression;
         private readonly Type? destType;
 
-        public CastElement(BaseExpressionElement castExpression, string[] destintaionTypeParts, bool isArray, ExpressionContext context)
+        public CastElement(
+            BaseExpressionElement castExpression,
+            string[] destintaionTypeParts,
+            bool isArray,
+            ExpressionContext context
+        )
         {
             this.castExpression = castExpression;
             destType = GetDestType(destintaionTypeParts, context);
 
             if (destType is null)
             {
-                throw CreateCompileException(CompileErrors.CouldNotResolveType, CompileExceptionReason.UndefinedName, GetDestinationTypeString(destintaionTypeParts, isArray));
+                throw CreateCompileException(
+                    CompileErrors.CouldNotResolveType,
+                    CompileExceptionReason.UndefinedName,
+                    GetDestinationTypeString(destintaionTypeParts, isArray)
+                );
             }
 
             if (isArray)
@@ -120,7 +129,8 @@ namespace Yale.Expression.Elements
                 // Can only succeed if the reference type is a base of the value type or
                 // it is one of the interfaces the value type implements
                 Type[] interfaces = destType.GetInterfaces();
-                return IsBaseType(destType, sourceType) || Array.IndexOf(interfaces, sourceType) != -1;
+                return IsBaseType(destType, sourceType)
+                    || Array.IndexOf(interfaces, sourceType) != -1;
             }
 
             // Reference type to reference type
@@ -129,11 +139,24 @@ namespace Yale.Expression.Elements
 
         private MethodInfo? GetExplictOverloadedOperator(Type sourceType, Type destType)
         {
-            ExplicitOperatorMethodBinder methodBinder = new ExplicitOperatorMethodBinder(destType, sourceType);
+            ExplicitOperatorMethodBinder methodBinder = new ExplicitOperatorMethodBinder(
+                destType,
+                sourceType
+            );
 
             // Look for an operator on the source type and dest types
-            MethodInfo? miSource = Utility.GetOverloadedOperator("Explicit", sourceType, methodBinder, sourceType);
-            MethodInfo? miDest = Utility.GetOverloadedOperator("Explicit", destType, methodBinder, sourceType);
+            MethodInfo? miSource = Utility.GetOverloadedOperator(
+                "Explicit",
+                sourceType,
+                methodBinder,
+                sourceType
+            );
+            MethodInfo? miDest = Utility.GetOverloadedOperator(
+                "Explicit",
+                destType,
+                methodBinder,
+                sourceType
+            );
 
             if (miSource is null & miDest is null)
             {
@@ -150,8 +173,13 @@ namespace Yale.Expression.Elements
                 return miSource;
             }
 
-            throw CreateCompileException(CompileErrors.AmbiguousOverloadedOperator, CompileExceptionReason.AmbiguousMatch,
-                sourceType.Name, destType.Name, "Explicit");
+            throw CreateCompileException(
+                CompileErrors.AmbiguousOverloadedOperator,
+                CompileExceptionReason.AmbiguousMatch,
+                sourceType.Name,
+                destType.Name,
+                "Explicit"
+            );
         }
 
         private bool IsValidExplicitEnumCast(Type sourceType, Type destType)
@@ -163,7 +191,10 @@ namespace Yale.Expression.Elements
 
         private bool IsValidExplicitReferenceCast(Type sourceType, Type destType)
         {
-            Debug.Assert(sourceType.IsValueType == false & destType.IsValueType == false, "expecting reference types");
+            Debug.Assert(
+                sourceType.IsValueType == false & destType.IsValueType == false,
+                "expecting reference types"
+            );
 
             if (ReferenceEquals(sourceType, typeof(object)))
             {
@@ -204,7 +235,8 @@ namespace Yale.Expression.Elements
             if (sourceType.IsClass & destType.IsInterface)
             {
                 // From any class-type S to any interface-type T, provided S is not sealed and provided S does not implement T
-                return sourceType.IsSealed == false & ImplementsInterface(sourceType, destType) == false;
+                return sourceType.IsSealed == false
+                    & ImplementsInterface(sourceType, destType) == false;
             }
 
             if (sourceType.IsInterface & destType.IsClass)
@@ -246,7 +278,12 @@ namespace Yale.Expression.Elements
 
         private void ThrowInvalidCastException()
         {
-            throw CreateCompileException(CompileErrors.CannotConvertType, CompileExceptionReason.InvalidExplicitCast, castExpression.ResultType.Name, destType.Name);
+            throw CreateCompileException(
+                CompileErrors.CannotConvertType,
+                CompileExceptionReason.InvalidExplicitCast,
+                castExpression.ResultType.Name,
+                destType.Name
+            );
         }
 
         private static bool IsCastableNumericType(Type t)
@@ -269,7 +306,12 @@ namespace Yale.Expression.Elements
             EmitCast(ilGenerator, sourceType, destType, context);
         }
 
-        private void EmitCast(YaleIlGenerator ilg, Type sourceType, Type destType, ExpressionContext context)
+        private void EmitCast(
+            YaleIlGenerator ilg,
+            Type sourceType,
+            Type destType,
+            ExpressionContext context
+        )
         {
             MethodInfo? explicitOperator = GetExplictOverloadedOperator(sourceType, destType);
             if (ReferenceEquals(sourceType, destType))
@@ -320,7 +362,12 @@ namespace Yale.Expression.Elements
             }
         }
 
-        private void EmitEnumCast(YaleIlGenerator ilg, Type sourceType, Type destType, ExpressionContext context)
+        private void EmitEnumCast(
+            YaleIlGenerator ilg,
+            Type sourceType,
+            Type destType,
+            ExpressionContext context
+        )
         {
             if (destType.IsValueType == false)
             {
@@ -338,7 +385,12 @@ namespace Yale.Expression.Elements
             }
         }
 
-        private static void EmitExplicitNumericCast(YaleIlGenerator ilg, Type sourceType, Type destType, ExpressionContext context)
+        private static void EmitExplicitNumericCast(
+            YaleIlGenerator ilg,
+            Type sourceType,
+            Type destType,
+            ExpressionContext context
+        )
         {
             TypeCode desttc = Type.GetTypeCode(destType);
             TypeCode sourcetc = Type.GetTypeCode(sourceType);

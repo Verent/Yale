@@ -236,24 +236,38 @@ namespace Yale.Parser.Internal
         /// <param name="sourceType">The type to convert from</param>
         /// <param name="destinationType">The type to convert to</param>
         /// <returns>The operator's method or null of no match is found</returns>
-        public static MethodInfo GetSimpleOverloadedOperator(string name, Type sourceType, Type destinationType)
+        public static MethodInfo GetSimpleOverloadedOperator(
+            string name,
+            Type sourceType,
+            Type destinationType
+        )
         {
             Hashtable data = new Hashtable
             {
-                {"Name", string.Concat("op_", name)},
-                { "sourceType", sourceType},
-                { "destType", destinationType}
+                { "Name", string.Concat("op_", name) },
+                { "sourceType", sourceType },
+                { "destType", destinationType }
             };
 
             const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
 
             // Look on the source type
-            MemberInfo[] members = sourceType.FindMembers(MemberTypes.Method, flags, SimpleOverloadedOperatorFilter, data);
+            MemberInfo[] members = sourceType.FindMembers(
+                MemberTypes.Method,
+                flags,
+                SimpleOverloadedOperatorFilter,
+                data
+            );
 
             if (members.Length == 0)
             {
                 // Look on the destination type
-                members = destinationType.FindMembers(MemberTypes.Method, flags, SimpleOverloadedOperatorFilter, data);
+                members = destinationType.FindMembers(
+                    MemberTypes.Method,
+                    flags,
+                    SimpleOverloadedOperatorFilter,
+                    data
+                );
             }
 
             Debug.Assert(members.Length < 2, "Multiple overloaded operators found");
@@ -279,7 +293,9 @@ namespace Yale.Parser.Internal
             IDictionary data = (IDictionary)value;
             MethodInfo methodInfo = (MethodInfo)member;
 
-            bool nameMatch = methodInfo.IsSpecialName && methodInfo.Name.Equals((string)data["Name"], StringComparison.OrdinalIgnoreCase);
+            bool nameMatch =
+                methodInfo.IsSpecialName
+                && methodInfo.Name.Equals((string)data["Name"], StringComparison.OrdinalIgnoreCase);
 
             if (nameMatch == false)
             {
@@ -294,23 +310,44 @@ namespace Yale.Parser.Internal
             }
 
             ParameterInfo[] parameters = methodInfo.GetParameters();
-            bool argumentMatch = parameters.Length > 0 && ReferenceEquals(parameters[0].ParameterType, (Type)data["sourceType"]);
+            bool argumentMatch =
+                parameters.Length > 0
+                && ReferenceEquals(parameters[0].ParameterType, (Type)data["sourceType"]);
 
             return argumentMatch;
         }
 
-        public static MethodInfo GetOverloadedOperator(string name, Type sourceType, Binder binder, params Type[] argumentTypes)
+        public static MethodInfo GetOverloadedOperator(
+            string name,
+            Type sourceType,
+            Binder binder,
+            params Type[] argumentTypes
+        )
         {
             name = string.Concat("op_", name);
-            MethodInfo mi = sourceType.GetMethod(name, BindingFlags.Public | BindingFlags.Static, binder, CallingConventions.Any, argumentTypes, null);
+            MethodInfo mi = sourceType.GetMethod(
+                name,
+                BindingFlags.Public | BindingFlags.Static,
+                binder,
+                CallingConventions.Any,
+                argumentTypes,
+                null
+            );
 
             return mi is null || mi.IsSpecialName == false ? null : mi;
         }
 
         public static int GetIlGeneratorLength(ILGenerator ilg)
         {
-            FieldInfo fi = typeof(ILGenerator).GetField("m_length", BindingFlags.Instance | BindingFlags.NonPublic) ??
-                typeof(ILGenerator).GetField("code_len", BindingFlags.Instance | BindingFlags.NonPublic);
+            FieldInfo fi =
+                typeof(ILGenerator).GetField(
+                    "m_length",
+                    BindingFlags.Instance | BindingFlags.NonPublic
+                )
+                ?? typeof(ILGenerator).GetField(
+                    "code_len",
+                    BindingFlags.Instance | BindingFlags.NonPublic
+                );
             return fi != null ? (int)fi.GetValue(ilg) : -1;
         }
 

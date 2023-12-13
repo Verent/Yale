@@ -11,7 +11,11 @@ namespace Yale.Expression
             ExpressionName = expressionName;
         }
 
-        public ExpressionContext(ExpressionBuilderOptions builderOptions, string expressionName, object owner)
+        public ExpressionContext(
+            ExpressionBuilderOptions builderOptions,
+            string expressionName,
+            object owner
+        )
         {
             BuilderOptions = builderOptions;
             ExpressionName = expressionName;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
-
 using Yale.Expression;
 using Yale.Resources;
 
@@ -10,8 +9,13 @@ namespace Yale.Core
 {
     public sealed class ImportCollection
     {
-        private const BindingFlags OwnerFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
-        private const BindingFlags PublicStaticIgnoreCase = BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase;
+        private const BindingFlags OwnerFlags =
+            BindingFlags.Public
+            | BindingFlags.NonPublic
+            | BindingFlags.Instance
+            | BindingFlags.Static;
+        private const BindingFlags PublicStaticIgnoreCase =
+            BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase;
 
         internal NamespaceImport RootImport { get; }
         private TypeImport ownerImport;
@@ -30,25 +34,26 @@ namespace Yale.Core
         {
             return new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)
             {
-                {"boolean", typeof(bool)},
-                {"byte", typeof(byte)},
-                {"sbyte", typeof(sbyte)},
-                {"short", typeof(short)},
-                {"ushort", typeof(UInt16)},
-                {"int", typeof(Int32)},
-                {"uint", typeof(UInt32)},
-                {"long", typeof(long)},
-                {"ulong", typeof(ulong)},
-                {"single", typeof(float)},
-                {"double", typeof(double)},
-                {"decimal", typeof(decimal)},
-                {"char", typeof(char)},
-                {"object", typeof(object)},
-                {"string", typeof(string)}
+                { "boolean", typeof(bool) },
+                { "byte", typeof(byte) },
+                { "sbyte", typeof(sbyte) },
+                { "short", typeof(short) },
+                { "ushort", typeof(UInt16) },
+                { "int", typeof(Int32) },
+                { "uint", typeof(UInt32) },
+                { "long", typeof(long) },
+                { "ulong", typeof(ulong) },
+                { "single", typeof(float) },
+                { "double", typeof(double) },
+                { "decimal", typeof(decimal) },
+                { "char", typeof(char) },
+                { "object", typeof(object) },
+                { "string", typeof(string) }
             };
         }
 
-        internal void ImportOwner(Type ownerType) => ownerImport = new TypeImport(ownerType, OwnerFlags, false, options);
+        internal void ImportOwner(Type ownerType) =>
+            ownerImport = new TypeImport(ownerType, OwnerFlags, false, options);
 
         private NamespaceImport GetImport(string ns)
         {
@@ -66,7 +71,8 @@ namespace Yale.Core
             return import;
         }
 
-        internal MemberInfo[] FindOwnerMembers(string memberName, MemberTypes memberType) => ownerImport.FindMembers(memberName, memberType);
+        internal MemberInfo[] FindOwnerMembers(string memberName, MemberTypes memberType) =>
+            ownerImport.FindMembers(memberName, memberType);
 
         internal Type? FindType(string[] typeNameParts)
         {
@@ -88,12 +94,15 @@ namespace Yale.Core
             return currentImport?.FindType(typeName);
         }
 
-        internal static Type? GetBuiltinType(string name) => OurBuiltinTypeMap.TryGetValue(name, out Type? type) ? type : null;
+        internal static Type? GetBuiltinType(string name) =>
+            OurBuiltinTypeMap.TryGetValue(name, out Type? type) ? type : null;
 
         public void AddType(Type type, string @namespace)
         {
-            if (type is null) throw new ArgumentNullException(nameof(type));
-            if (@namespace is null) throw new ArgumentNullException(nameof(@namespace));
+            if (type is null)
+                throw new ArgumentNullException(nameof(type));
+            if (@namespace is null)
+                throw new ArgumentNullException(nameof(@namespace));
 
             const BindingFlags publicStatic = BindingFlags.Public | BindingFlags.Static;
             options.AssertTypeIsAccessible(type);
@@ -106,15 +115,23 @@ namespace Yale.Core
 
         public void AddMethod(string methodName, Type type, string @namespace)
         {
-            if (type is null) throw new ArgumentNullException(nameof(type));
-            if (@namespace is null) throw new ArgumentNullException(nameof(@namespace));
-            if (methodName is null) throw new ArgumentNullException(nameof(methodName));
+            if (type is null)
+                throw new ArgumentNullException(nameof(type));
+            if (@namespace is null)
+                throw new ArgumentNullException(nameof(@namespace));
+            if (methodName is null)
+                throw new ArgumentNullException(nameof(methodName));
 
             MethodInfo methodInfo = type.GetMethod(methodName, PublicStaticIgnoreCase);
 
             if (methodInfo is null)
             {
-                string msg = string.Format(CultureInfo.InvariantCulture, GeneralErrors.CouldNotFindPublicStaticMethodOnType, methodName, type.Name);
+                string msg = string.Format(
+                    CultureInfo.InvariantCulture,
+                    GeneralErrors.CouldNotFindPublicStaticMethodOnType,
+                    methodName,
+                    type.Name
+                );
                 throw new ArgumentException(msg);
             }
 
@@ -123,8 +140,10 @@ namespace Yale.Core
 
         private void AddMethod(MethodInfo methodInfo, string @namespace)
         {
-            if (methodInfo is null) throw new ArgumentNullException(nameof(methodInfo));
-            if (@namespace is null) throw new ArgumentNullException(nameof(@namespace));
+            if (methodInfo is null)
+                throw new ArgumentNullException(nameof(methodInfo));
+            if (@namespace is null)
+                throw new ArgumentNullException(nameof(@namespace));
 
             options.AssertTypeIsAccessible(methodInfo.ReflectedType);
 

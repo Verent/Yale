@@ -10,21 +10,31 @@ namespace Yale.Core
     /// </summary>
     internal sealed class MethodImport : ImportBase
     {
-        public MethodImport(MethodInfo importMethod, IExpressionOptions options) : base(options)
+        public MethodImport(MethodInfo importMethod, IExpressionOptions options)
+            : base(options)
         {
             Target = importMethod ?? throw new ArgumentNullException(nameof(importMethod));
         }
 
-        protected override void AddMembers(string memberName, MemberTypes memberType, ICollection<MemberInfo> targetCollection)
+        protected override void AddMembers(
+            string memberName,
+            MemberTypes memberType,
+            ICollection<MemberInfo> targetCollection
+        )
         {
-            if (string.Equals(memberName, Target.Name, Options.MemberStringComparison) &&
-                (memberType & MemberTypes.Method) != 0)
+            if (
+                string.Equals(memberName, Target.Name, Options.MemberStringComparison)
+                && (memberType & MemberTypes.Method) != 0
+            )
             {
                 targetCollection.Add(Target);
             }
         }
 
-        protected override void AddMembers(MemberTypes memberType, ICollection<MemberInfo> targetCollection)
+        protected override void AddMembers(
+            MemberTypes memberType,
+            ICollection<MemberInfo> targetCollection
+        )
         {
             if ((memberType & MemberTypes.Method) != 0)
             {
@@ -44,7 +54,8 @@ namespace Yale.Core
 
         protected override bool EqualsInternal(ImportBase import)
         {
-            return import is MethodImport otherSameType && Target.MethodHandle.Equals(otherSameType.Target.MethodHandle);
+            return import is MethodImport otherSameType
+                && Target.MethodHandle.Equals(otherSameType.Target.MethodHandle);
         }
 
         public override string Name => Target.Name;

@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 
 namespace Yale.Tests.ExpressionTests
@@ -37,7 +37,12 @@ namespace Yale.Tests.ExpressionTests
         [DataRow("10", "-", "3.1", 6.9)]
         [DataRow("10", "/", "0.0", double.PositiveInfinity)]
         [DataRow("-10", "/", "0.0", double.NegativeInfinity)]
-        public void AddExpression_ReturnCorrectValue(string a, string symbol, string b, object expectedResult)
+        public void AddExpression_ReturnCorrectValue(
+            string a,
+            string symbol,
+            string b,
+            object expectedResult
+        )
         {
             _instance.AddExpression("a", $"{a}{symbol}{b}");
             object result = _instance.GetResult("a");
@@ -85,8 +90,12 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void IntegerAdditionIntegerOverFlow_Exception()
         {
-            Assert.ThrowsException<OverflowException>(() => _instance.AddExpression("a", $"{long.MaxValue} + 1"));
-            Assert.ThrowsException<OverflowException>(() => _instance.AddExpression<long>("b", $"{long.MaxValue} + 1"));
+            Assert.ThrowsException<OverflowException>(
+                () => _instance.AddExpression("a", $"{long.MaxValue} + 1")
+            );
+            Assert.ThrowsException<OverflowException>(
+                () => _instance.AddExpression<long>("b", $"{long.MaxValue} + 1")
+            );
         }
 
         [TestMethod]
@@ -106,8 +115,12 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void IntegerSubtractionIntegerOverFlow_Exception()
         {
-            Assert.ThrowsException<OverflowException>(() => _instance.AddExpression("a", $"{long.MinValue} - 1"));
-            Assert.ThrowsException<OverflowException>(() => _instance.AddExpression<long>("b", $"{long.MinValue} - 1"));
+            Assert.ThrowsException<OverflowException>(
+                () => _instance.AddExpression("a", $"{long.MinValue} - 1")
+            );
+            Assert.ThrowsException<OverflowException>(
+                () => _instance.AddExpression<long>("b", $"{long.MinValue} - 1")
+            );
         }
 
         [TestMethod]

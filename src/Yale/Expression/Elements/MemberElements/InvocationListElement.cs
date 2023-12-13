@@ -90,7 +90,11 @@ namespace Yale.Expression.Elements.MemberElements
 
             if (elements.Count == 0)
             {
-                throw CreateCompileException(CompileErrors.NamespaceCannotBeUsedAsType, CompileExceptionReason.TypeMismatch, currentImport.Name);
+                throw CreateCompileException(
+                    CompileErrors.NamespaceCannotBeUsedAsType,
+                    CompileExceptionReason.TypeMismatch,
+                    currentImport.Name
+                );
             }
         }
 

@@ -36,9 +36,16 @@ namespace Yale.Expression.Elements
 
         private void Validate()
         {
-            if (ImplicitConverter.EmitImplicitConvert(_child.ResultType, _resultType, null) == false)
+            if (
+                ImplicitConverter.EmitImplicitConvert(_child.ResultType, _resultType, null) == false
+            )
             {
-                throw CreateCompileException(CompileErrors.CannotConvertTypeToExpressionResult, CompileExceptionReason.TypeMismatch, _child.ResultType.Name, _resultType.Name);
+                throw CreateCompileException(
+                    CompileErrors.CannotConvertTypeToExpressionResult,
+                    CompileExceptionReason.TypeMismatch,
+                    _child.ResultType.Name,
+                    _resultType.Name
+                );
             }
         }
 

@@ -6,12 +6,25 @@ namespace Yale.Parser.Internal
 {
     internal abstract class CustomBinder : Binder
     {
-        public override FieldInfo BindToField(BindingFlags bindingAttr, FieldInfo[] match, object value, CultureInfo culture)
+        public override FieldInfo BindToField(
+            BindingFlags bindingAttr,
+            FieldInfo[] match,
+            object value,
+            CultureInfo culture
+        )
         {
             return null;
         }
 
-        public MethodBase BindToMethod(BindingFlags bindingAttr, MethodBase[] match, ref object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] names, ref object state)
+        public MethodBase BindToMethod(
+            BindingFlags bindingAttr,
+            MethodBase[] match,
+            ref object[] args,
+            ParameterModifier[] modifiers,
+            CultureInfo culture,
+            string[] names,
+            ref object state
+        )
         {
             return null;
         }
@@ -21,11 +34,15 @@ namespace Yale.Parser.Internal
             return null;
         }
 
-        public override void ReorderArgumentArray(ref object[] args, object state)
-        {
-        }
+        public override void ReorderArgumentArray(ref object[] args, object state) { }
 
-        public override PropertyInfo SelectProperty(BindingFlags bindingAttr, PropertyInfo[] match, Type returnType, Type[] indexes, ParameterModifier[] modifiers)
+        public override PropertyInfo SelectProperty(
+            BindingFlags bindingAttr,
+            PropertyInfo[] match,
+            Type returnType,
+            Type[] indexes,
+            ParameterModifier[] modifiers
+        )
         {
             return null;
         }

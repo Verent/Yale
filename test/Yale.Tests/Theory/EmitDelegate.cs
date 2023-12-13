@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Yale.Tests.Theory
 {
@@ -33,7 +33,10 @@ namespace Yale.Tests.Theory
             DynamicMethod dynamicMethod = new("my_method", typeof(int), null);
             ILGenerator ilGenerator = dynamicMethod.GetILGenerator();
 
-            MethodInfo staticMethodInfo = typeof(Emit).GetMethod("StaticMethodNoParamsThatReturnInt", BindingFlags.Public | BindingFlags.Static);
+            MethodInfo staticMethodInfo = typeof(Emit).GetMethod(
+                "StaticMethodNoParamsThatReturnInt",
+                BindingFlags.Public | BindingFlags.Static
+            );
             ilGenerator.Emit(OpCodes.Call, staticMethodInfo);
             ilGenerator.Emit(OpCodes.Ret);
             object result = dynamicMethod.Invoke(null, null);
@@ -53,9 +56,15 @@ namespace Yale.Tests.Theory
             DynamicMethod dynamicMethod = new("my_method", typeof(int), null);
             ILGenerator ilGenerator = dynamicMethod.GetILGenerator();
 
-            MethodInfo staticMethodInfo = typeof(Emit).GetMethod("StaticMethodThatReturnInt", BindingFlags.Public | BindingFlags.Static);
+            MethodInfo staticMethodInfo = typeof(Emit).GetMethod(
+                "StaticMethodThatReturnInt",
+                BindingFlags.Public | BindingFlags.Static
+            );
             ilGenerator.Emit(OpCodes.Ldc_I4, value);
-            ilGenerator.Emit(OpCodes.Call, staticMethodInfo ?? throw new InvalidOperationException());
+            ilGenerator.Emit(
+                OpCodes.Call,
+                staticMethodInfo ?? throw new InvalidOperationException()
+            );
             ilGenerator.Emit(OpCodes.Ret);
             object result = dynamicMethod.Invoke(null, null);
 
@@ -70,12 +79,15 @@ namespace Yale.Tests.Theory
         [TestMethod]
         public void CreateDynamicMethodThatCallsAnInstanceMethod()
         {
-            DynamicMethod dynamicMethod = new("my_method", typeof(object),
-                new Type[] { typeof(InternalClassForTest) });
+            DynamicMethod dynamicMethod =
+                new("my_method", typeof(object), new Type[] { typeof(InternalClassForTest) });
 
             ILGenerator ilGenerator = dynamicMethod.GetILGenerator();
 
-            MethodInfo methodInfo = typeof(InternalClassForTest).GetMethod("GetValue", BindingFlags.Public | BindingFlags.Instance);
+            MethodInfo methodInfo = typeof(InternalClassForTest).GetMethod(
+                "GetValue",
+                BindingFlags.Public | BindingFlags.Instance
+            );
             Assert.AreEqual(false, methodInfo != null && methodInfo.IsStatic);
 
             ilGenerator.Emit(OpCodes.Ldarg_0); //Load instance (InternalClassForTest) that has the method

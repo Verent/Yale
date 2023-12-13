@@ -30,7 +30,6 @@ namespace Yale.Expression.Elements.LogicalBitwise
             ilGenerator.Emit(OpCodes.Xor);
         }
 
-        protected override void GetOperation(object operation)
-        { }
+        protected override void GetOperation(object operation) { }
     }
 }

@@ -29,9 +29,11 @@ namespace Yale.Core
         /// </summary>
         /// <param name="importNamespace">The name of the namespace to import</param>
         /// <param name="options"></param>
-        public NamespaceImport(string importNamespace, ExpressionBuilderOptions options) : base(options)
+        public NamespaceImport(string importNamespace, ExpressionBuilderOptions options)
+            : base(options)
         {
-            if (importNamespace is null) throw new ArgumentNullException(nameof(importNamespace));
+            if (importNamespace is null)
+                throw new ArgumentNullException(nameof(importNamespace));
 
             if (importNamespace.Length == 0)
             {
@@ -42,7 +44,11 @@ namespace Yale.Core
             _imports = new List<ImportBase>();
         }
 
-        protected override void AddMembers(string memberName, MemberTypes memberType, ICollection<MemberInfo> targetCollection)
+        protected override void AddMembers(
+            string memberName,
+            MemberTypes memberType,
+            ICollection<MemberInfo> targetCollection
+        )
         {
             foreach (ImportBase import in NonContainerImports)
             {
@@ -50,8 +56,10 @@ namespace Yale.Core
             }
         }
 
-        protected override void AddMembers(MemberTypes memberType, ICollection<MemberInfo> targetCollection)
-        { }
+        protected override void AddMembers(
+            MemberTypes memberType,
+            ICollection<MemberInfo> targetCollection
+        ) { }
 
         internal override Type? FindType(string typeName)
         {
@@ -96,13 +104,14 @@ namespace Yale.Core
 
         protected override bool EqualsInternal(ImportBase import)
         {
-            return import is NamespaceImport otherSameType &&
-                   _namespace.Equals(otherSameType._namespace, Options.MemberStringComparison);
+            return import is NamespaceImport otherSameType
+                && _namespace.Equals(otherSameType._namespace, Options.MemberStringComparison);
         }
 
         public void Add(ImportBase item)
         {
-            if (item is null) throw new ArgumentNullException(nameof(item));
+            if (item is null)
+                throw new ArgumentNullException(nameof(item));
             _imports.Add(item);
         }
 

@@ -14,7 +14,11 @@ namespace Yale.Expression.Elements.Literals
         {
             if (TimeSpan.TryParse(image, out _value) == false)
             {
-                throw CreateCompileException(CompileErrors.CannotParseType, CompileExceptionReason.InvalidFormat, typeof(TimeSpan).Name);
+                throw CreateCompileException(
+                    CompileErrors.CannotParseType,
+                    CompileExceptionReason.InvalidFormat,
+                    typeof(TimeSpan).Name
+                );
             }
         }
 
@@ -26,7 +30,9 @@ namespace Yale.Expression.Elements.Literals
 
             EmitLoad(_value.Ticks, ilGenerator);
 
-            System.Reflection.ConstructorInfo constructorInfo = typeof(TimeSpan).GetConstructor(new[] { typeof(Int64) });
+            System.Reflection.ConstructorInfo constructorInfo = typeof(TimeSpan).GetConstructor(
+                new[] { typeof(Int64) }
+            );
 
             ilGenerator.Emit(OpCodes.Call, constructorInfo);
 

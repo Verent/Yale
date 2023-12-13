@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-
 using Yale.Core;
 using Yale.Engine.Interface;
 using Yale.Engine.Internal;
@@ -32,14 +31,12 @@ namespace Yale.Engine
         /// <summary>
         /// Expression results
         /// </summary>
-        private readonly Dictionary<string, IExpressionResult> nameNodeMap = new Dictionary<string, IExpressionResult>();
+        private readonly Dictionary<string, IExpressionResult> nameNodeMap =
+            new Dictionary<string, IExpressionResult>();
 
         public ComputeInstance()
         {
-            Builder = new ExpressionBuilder
-            {
-                ComputeInstance = this
-            };
+            Builder = new ExpressionBuilder { ComputeInstance = this };
 
             options = ComputeInstanceOptions.Default;
             nameNodeMap = new Dictionary<string, IExpressionResult>();
@@ -49,21 +46,22 @@ namespace Yale.Engine
 
         public ComputeInstance(ComputeInstanceOptions options)
         {
-            if (options is null) throw new ArgumentNullException(nameof(options));
+            if (options is null)
+                throw new ArgumentNullException(nameof(options));
 
-            Builder = new ExpressionBuilder(options.ExpressionOptions)
-            {
-                ComputeInstance = this
-            };
+            Builder = new ExpressionBuilder(options.ExpressionOptions) { ComputeInstance = this };
             this.options = options ?? throw new ArgumentNullException(nameof(options));
-            nameNodeMap = new Dictionary<string, IExpressionResult>(options.ExpressionOptions.StringComparer);
+            nameNodeMap = new Dictionary<string, IExpressionResult>(
+                options.ExpressionOptions.StringComparer
+            );
 
             BindToValuesEvents();
         }
 
         #region Recalculate
 
-        private bool ShouldRecalculate => options.AutoRecalculate && options.LazyRecalculate == false;
+        private bool ShouldRecalculate =>
+            options.AutoRecalculate && options.LazyRecalculate == false;
 
         private void BindToValuesEvents()
         {
@@ -111,7 +109,8 @@ namespace Yale.Engine
             node.Recalculate();
 
             //No need to recalculate dependents if value is the same.
-            if (result.Equals(node.ResultAsObject)) return;
+            if (result.Equals(node.ResultAsObject))
+                return;
 
             foreach (string dependent in dependencies.GetDependents(key))
             {
@@ -135,16 +134,20 @@ namespace Yale.Engine
 
         public void SetExpression(string key, string expression)
         {
-            if (key is null) throw new ArgumentNullException(nameof(key));
-            if (expression is null) throw new ArgumentNullException(nameof(expression));
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
+            if (expression is null)
+                throw new ArgumentNullException(nameof(expression));
 
             SetExpression<object>(key, expression);
         }
 
         public void SetExpression<T>(string key, string expression)
         {
-            if (key is null) throw new ArgumentNullException(nameof(key));
-            if (expression is null) throw new ArgumentNullException(nameof(expression));
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
+            if (expression is null)
+                throw new ArgumentNullException(nameof(expression));
 
             dependencies.RemovePrecedents(key);
             nameNodeMap.Remove(key);
@@ -171,8 +174,10 @@ namespace Yale.Engine
         /// <param name="expression"></param>
         public void AddExpression(string key, string expression)
         {
-            if (key is null) throw new ArgumentNullException(nameof(key));
-            if (expression is null) throw new ArgumentNullException(nameof(expression));
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
+            if (expression is null)
+                throw new ArgumentNullException(nameof(expression));
 
             Expression<object> result = Builder.BuildExpression<object>(key, expression);
             nameNodeMap.Add(key, new ExpressionResult<object>(key, result));
@@ -185,8 +190,10 @@ namespace Yale.Engine
         /// <param name="expression"></param>
         public void AddExpression<T>(string key, string expression)
         {
-            if (key is null) throw new ArgumentNullException(nameof(key));
-            if (expression is null) throw new ArgumentNullException(nameof(expression));
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
+            if (expression is null)
+                throw new ArgumentNullException(nameof(expression));
 
             Expression<T> result = Builder.BuildExpression<T>(key, expression);
             nameNodeMap.Add(key, new ExpressionResult<T>(key, result));
@@ -199,7 +206,8 @@ namespace Yale.Engine
         /// <returns></returns>
         public object GetResult(string key)
         {
-            if (key is null) throw new ArgumentNullException(nameof(key));
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
 
             if (options.AutoRecalculate)
             {
@@ -215,14 +223,16 @@ namespace Yale.Engine
         /// <returns></returns>
         public T GetResult<T>(string key)
         {
-            if (key is null) throw new ArgumentNullException(nameof(key));
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
 
             return (T)GetResult(key);
         }
 
         public bool TryGetResult(string key, out object result)
         {
-            if (key is null) throw new ArgumentNullException(nameof(key));
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
 
             result = nameNodeMap.ContainsKey(key) ? GetResult(key) : default;
             return result != null;
@@ -230,7 +240,8 @@ namespace Yale.Engine
 
         public bool TryGetResult<T>(string key, out T result)
         {
-            if (key is null) throw new ArgumentNullException(nameof(key));
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
 
             result = nameNodeMap.ContainsKey(key) ? (T)GetResult(key) : default;
             return result != null;
@@ -243,14 +254,16 @@ namespace Yale.Engine
         /// <returns></returns>
         public Type? ResultType(string key)
         {
-            if (key is null) throw new ArgumentNullException(nameof(key));
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
 
             return nameNodeMap[key].ResultType;
         }
 
         public string GetExpression(string key)
         {
-            if (key is null) throw new ArgumentNullException(nameof(key));
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
 
             ExpressionResult<object> result = (ExpressionResult<object>)nameNodeMap[key];
             return result.Expression.ExpressionText;
@@ -258,7 +271,8 @@ namespace Yale.Engine
 
         public string GetExpression<T>(string key)
         {
-            if (key is null) throw new ArgumentNullException(nameof(key));
+            if (key is null)
+                throw new ArgumentNullException(nameof(key));
 
             ExpressionResult<T> result = (ExpressionResult<T>)nameNodeMap[key];
             return result.Expression.ExpressionText;
@@ -286,7 +300,9 @@ namespace Yale.Engine
         {
             if (ContainsExpression(dependsOn) == false && Variables.ContainsKey(dependsOn) == false)
             {
-                throw new InvalidOperationException($"Dependent expression or variable {dependsOn} does not exist");
+                throw new InvalidOperationException(
+                    $"Dependent expression or variable {dependsOn} does not exist"
+                );
             }
 
             dependencies.AddDependency(expressionKey, dependsOn);
@@ -299,12 +315,21 @@ namespace Yale.Engine
         /// <param name="ilGenerator"></param>
         internal void EmitLoad(string expressionKey, YaleIlGenerator ilGenerator)
         {
-            PropertyInfo propertyInfo = typeof(ExpressionContext).GetProperty(nameof(ExpressionContext.ComputeInstance));
+            PropertyInfo propertyInfo = typeof(ExpressionContext).GetProperty(
+                nameof(ExpressionContext.ComputeInstance)
+            );
             ilGenerator.Emit(OpCodes.Callvirt, propertyInfo.GetGetMethod());
 
             //Find and load expression result
-            MemberInfo[] members = typeof(ComputeInstance).FindMembers(MemberTypes.Method, BindingFlags.Instance | BindingFlags.Public, Type.FilterName, "GetResult");
-            MethodInfo methodInfo = members.Cast<MethodInfo>().First(method => method.IsGenericMethod);
+            MemberInfo[] members = typeof(ComputeInstance).FindMembers(
+                MemberTypes.Method,
+                BindingFlags.Instance | BindingFlags.Public,
+                Type.FilterName,
+                "GetResult"
+            );
+            MethodInfo methodInfo = members
+                .Cast<MethodInfo>()
+                .First(method => method.IsGenericMethod);
             Type? resultType = ResultType(expressionKey);
             methodInfo = methodInfo.MakeGenericMethod(resultType);
 

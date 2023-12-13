@@ -15,7 +15,11 @@ namespace Yale.Expression
 
         private readonly ExpressionContext context;
 
-        internal Expression(string expression, ExpressionEvaluator<T> evaluator, ExpressionContext context)
+        internal Expression(
+            string expression,
+            ExpressionEvaluator<T> evaluator,
+            ExpressionContext context
+        )
         {
             this.context = context;
             this.evaluator = evaluator;

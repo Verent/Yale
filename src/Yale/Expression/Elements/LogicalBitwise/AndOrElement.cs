@@ -13,7 +13,8 @@ namespace Yale.Expression.Elements.LogicalBitwise
         private static readonly object OurFalseTerminalKey = new object();
         private static readonly object OurEndLabelKey = new object();
 
-        protected override void GetOperation(object operation) => myOperation = (AndOrOperation)operation;
+        protected override void GetOperation(object operation) =>
+            myOperation = (AndOrOperation)operation;
 
         protected override Type? GetResultType(Type leftType, Type rightType)
         {
@@ -42,9 +43,17 @@ namespace Yale.Expression.Elements.LogicalBitwise
             else
             {
                 LeftChild.Emit(ilGenerator, context);
-                ImplicitConverter.EmitImplicitConvert(LeftChild.ResultType, resultType, ilGenerator);
+                ImplicitConverter.EmitImplicitConvert(
+                    LeftChild.ResultType,
+                    resultType,
+                    ilGenerator
+                );
                 RightChild.Emit(ilGenerator, context);
-                ImplicitConverter.EmitImplicitConvert(RightChild.ResultType, resultType, ilGenerator);
+                ImplicitConverter.EmitImplicitConvert(
+                    RightChild.ResultType,
+                    resultType,
+                    ilGenerator
+                );
                 EmitBitwiseOperation(ilGenerator, myOperation);
             }
         }
@@ -96,7 +105,11 @@ namespace Yale.Expression.Elements.LogicalBitwise
         /// or we reach the root (emit a branch to a true/false).
         /// Repeat the process for all operands and then emit the true/false/last operand end cases.
         /// </summary>
-        private void EmitLogical(YaleIlGenerator ilg, ShortCircuitInfo info, ExpressionContext context)
+        private void EmitLogical(
+            YaleIlGenerator ilg,
+            ShortCircuitInfo info,
+            ExpressionContext context
+        )
         {
             // We always have an end label
             info.Branches.GetLabel(OurEndLabelKey, ilg);
@@ -128,7 +141,11 @@ namespace Yale.Expression.Elements.LogicalBitwise
         /// <param name="ilg"></param>
         /// <param name="info"></param>
         /// <param name="services"></param>
-        private static void EmitLogicalShortCircuit(YaleIlGenerator ilg, ShortCircuitInfo info, ExpressionContext context)
+        private static void EmitLogicalShortCircuit(
+            YaleIlGenerator ilg,
+            ShortCircuitInfo info,
+            ExpressionContext context
+        )
         {
             while (info.Operators.Count != 0)
             {
@@ -147,7 +164,12 @@ namespace Yale.Expression.Elements.LogicalBitwise
             }
         }
 
-        private static void EmitBranch(AndOrElement op, YaleIlGenerator ilg, Label target, ShortCircuitInfo info)
+        private static void EmitBranch(
+            AndOrElement op,
+            YaleIlGenerator ilg,
+            Label target,
+            ShortCircuitInfo info
+        )
         {
             if (ilg.IsTemp)
             {
@@ -188,7 +210,11 @@ namespace Yale.Expression.Elements.LogicalBitwise
         /// <summary>
         /// Get the label for a short-circuit
         /// </summary>
-        private static Label GetShortCircuitLabel(AndOrElement current, ShortCircuitInfo info, YaleIlGenerator ilg)
+        private static Label GetShortCircuitLabel(
+            AndOrElement current,
+            ShortCircuitInfo info,
+            YaleIlGenerator ilg
+        )
         {
             // We modify the given stacks so we need to clone them
             Stack cloneOperands = (Stack)info.Operands.Clone();
@@ -269,7 +295,12 @@ namespace Yale.Expression.Elements.LogicalBitwise
             }
         }
 
-        private static void EmitOperand(BaseExpressionElement operand, ShortCircuitInfo info, YaleIlGenerator ilg, ExpressionContext context)
+        private static void EmitOperand(
+            BaseExpressionElement operand,
+            ShortCircuitInfo info,
+            YaleIlGenerator ilg,
+            ExpressionContext context
+        )
         {
             // Is this operand the target of a label?
             if (info.Branches.HasLabel(operand))
@@ -292,7 +323,11 @@ namespace Yale.Expression.Elements.LogicalBitwise
         /// <param name="info"></param>
         /// <param name="ilg"></param>
         /// <param name="endLabel"></param>
-        private static void EmitTerminals(ShortCircuitInfo info, YaleIlGenerator ilg, Label endLabel)
+        private static void EmitTerminals(
+            ShortCircuitInfo info,
+            YaleIlGenerator ilg,
+            Label endLabel
+        )
         {
             // Emit the false case if it was used
             if (info.Branches.HasLabel(OurFalseTerminalKey))
@@ -331,7 +366,11 @@ namespace Yale.Expression.Elements.LogicalBitwise
         /// <param name="info"></param>
         /// <param name="target"></param>
         /// <param name="ilg"></param>
-        private static void MarkBranchTarget(ShortCircuitInfo info, Label target, YaleIlGenerator ilg)
+        private static void MarkBranchTarget(
+            ShortCircuitInfo info,
+            Label target,
+            YaleIlGenerator ilg
+        )
         {
             if (ilg.IsTemp)
             {
@@ -339,8 +378,8 @@ namespace Yale.Expression.Elements.LogicalBitwise
             }
         }
 
-        private static Label GetLabel(object key, YaleIlGenerator ilg, ShortCircuitInfo info) 
-            => info.Branches.GetLabel(key, ilg);
+        private static Label GetLabel(object key, YaleIlGenerator ilg, ShortCircuitInfo info) =>
+            info.Branches.GetLabel(key, ilg);
 
         /// <summary>
         /// Visit the nodes of the tree (right then left) and populate some data structures

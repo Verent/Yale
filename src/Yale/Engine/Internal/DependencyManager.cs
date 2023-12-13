@@ -11,7 +11,8 @@ namespace Yale.Engine.Internal
         /// <summary>
         /// Map of a node with edges
         /// </summary>
-        private Dictionary<string, DependencyNode> Nodes { get; } = new Dictionary<string, DependencyNode>();
+        private Dictionary<string, DependencyNode> Nodes { get; } =
+            new Dictionary<string, DependencyNode>();
 
         public void Clear()
         {
@@ -49,7 +50,8 @@ namespace Yale.Engine.Internal
         public string[] GetDependents(string key)
         {
             List<string> dependents = new List<string>();
-            if (Nodes.ContainsKey(key) == false) return dependents.ToArray();
+            if (Nodes.ContainsKey(key) == false)
+                return dependents.ToArray();
 
             foreach (string pair in Nodes[key].Dependents)
             {
@@ -75,7 +77,8 @@ namespace Yale.Engine.Internal
 
         public void RemovePrecedents(string nodeKey)
         {
-            if (Nodes.ContainsKey(nodeKey)) Nodes[nodeKey].ClearPredecessors();
+            if (Nodes.ContainsKey(nodeKey))
+                Nodes[nodeKey].ClearPredecessors();
         }
 
         public string DependencyGraph

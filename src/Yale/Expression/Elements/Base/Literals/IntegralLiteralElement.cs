@@ -15,7 +15,12 @@ namespace Yale.Expression.Elements.Base.Literals
         /// <param name="negated"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static LiteralElement Create(string image, bool isHex, bool negated, ExpressionBuilderOptions options)
+        public static LiteralElement Create(
+            string image,
+            bool isHex,
+            bool negated,
+            ExpressionBuilderOptions options
+        )
         {
             const StringComparison comparison = StringComparison.OrdinalIgnoreCase;
 

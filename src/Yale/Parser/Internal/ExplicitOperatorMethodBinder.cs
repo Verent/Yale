@@ -15,19 +15,34 @@ namespace Yale.Parser.Internal
             this.argType = argType;
         }
 
-        public override MethodBase BindToMethod(BindingFlags bindingAttr, MethodBase[] match, ref object[] args, ParameterModifier[] modifiers,
-            CultureInfo culture, string[] names, out object state)
+        public override MethodBase BindToMethod(
+            BindingFlags bindingAttr,
+            MethodBase[] match,
+            ref object[] args,
+            ParameterModifier[] modifiers,
+            CultureInfo culture,
+            string[] names,
+            out object state
+        )
         {
             throw new NotImplementedException();
         }
 
-        public override MethodBase? SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers)
+        public override MethodBase? SelectMethod(
+            BindingFlags bindingAttr,
+            MethodBase[] match,
+            Type[] types,
+            ParameterModifier[] modifiers
+        )
         {
             foreach (MethodInfo methodInfo in match)
             {
                 ParameterInfo[] parameters = methodInfo.GetParameters();
                 ParameterInfo firstParameter = parameters[0];
-                if (ReferenceEquals(firstParameter.ParameterType, argType) & object.ReferenceEquals(methodInfo.ReturnType, returnType))
+                if (
+                    ReferenceEquals(firstParameter.ParameterType, argType)
+                    & object.ReferenceEquals(methodInfo.ReturnType, returnType)
+                )
                 {
                     return methodInfo;
                 }

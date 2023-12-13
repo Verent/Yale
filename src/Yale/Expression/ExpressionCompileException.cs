@@ -1,25 +1,32 @@
-﻿using PerCederberg.Grammatica.Runtime;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
+using PerCederberg.Grammatica.Runtime;
 using Yale.Resources;
 
 namespace Yale.Expression
 {
-    [SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "<Pending>")]
+    [SuppressMessage(
+        "Design",
+        "CA1032:Implement standard exception constructors",
+        Justification = "<Pending>"
+    )]
     public sealed class ExpressionCompileException : Exception
     {
-        internal ExpressionCompileException(string message, CompileExceptionReason reason) : base(message)
+        internal ExpressionCompileException(string message, CompileExceptionReason reason)
+            : base(message)
         {
             Reason = reason;
         }
 
-        internal ExpressionCompileException(ParserLogException parseException) : base(string.Empty, parseException)
+        internal ExpressionCompileException(ParserLogException parseException)
+            : base(string.Empty, parseException)
         {
             Reason = CompileExceptionReason.SyntaxError;
         }
 
-        private ExpressionCompileException(SerializationInfo info, StreamingContext context) : base(info, context)
+        private ExpressionCompileException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
             Reason = (CompileExceptionReason)info.GetInt32("Reason");
         }
@@ -36,7 +43,8 @@ namespace Yale.Expression
             {
                 if (Reason == CompileExceptionReason.SyntaxError)
                 {
-                    return $"{CompileErrors.SyntaxError}: {InnerException?.Message}"; ;
+                    return $"{CompileErrors.SyntaxError}: {InnerException?.Message}";
+                    ;
                 }
 
                 return base.Message;

@@ -10,9 +10,7 @@ namespace Yale.Expression.Elements.Literals.Real
     {
         private readonly double value;
 
-        private DoubleLiteralElement()
-        {
-        }
+        private DoubleLiteralElement() { }
 
         public DoubleLiteralElement(double value)
         {

@@ -1,10 +1,10 @@
-﻿using PerCederberg.Grammatica.Runtime;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using PerCederberg.Grammatica.Runtime;
 using Yale.Expression;
 using Yale.Expression.Elements;
 using Yale.Expression.Elements.Base;
@@ -23,8 +23,14 @@ namespace Yale.Parser
     /// </summary>
     internal class YaleExpressionAnalyzer : ExpressionAnalyzer
     {
-        private readonly Regex unicodeEscapeRegex = new Regex("\\\\u[0-9a-f]{4}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        private readonly Regex regularEscapeRegex = new Regex("\\\\[\\\\\"'trn]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private readonly Regex unicodeEscapeRegex = new Regex(
+            "\\\\u[0-9a-f]{4}",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled
+        );
+        private readonly Regex regularEscapeRegex = new Regex(
+            "\\\\[\\\\\"'trn]",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled
+        );
 
         private bool inUnaryNegate;
         private ExpressionContext? context;
@@ -105,16 +111,23 @@ namespace Yale.Parser
             IList childValues = GetChildValues(node);
 
             // Get last child
-            BaseExpressionElement childElement = (BaseExpressionElement)childValues[childValues.Count - 1];
+            BaseExpressionElement childElement = (BaseExpressionElement)
+                childValues[childValues.Count - 1];
 
             // Is it an signed integer constant?
-            if (ReferenceEquals(childElement.GetType(), typeof(Int32LiteralElement)) & childValues.Count == 2)
+            if (
+                ReferenceEquals(childElement.GetType(), typeof(Int32LiteralElement))
+                & childValues.Count == 2
+            )
             {
                 ((Int32LiteralElement)childElement).Negate();
                 // Add it directly instead of the negate element since it will already be negated
                 node.AddValue(childElement);
             }
-            else if (ReferenceEquals(childElement.GetType(), typeof(Int64LiteralElement)) & childValues.Count == 2)
+            else if (
+                ReferenceEquals(childElement.GetType(), typeof(Int64LiteralElement))
+                & childValues.Count == 2
+            )
             {
                 ((Int64LiteralElement)childElement).Negate();
                 // Add it directly instead of the negate element since it will already be negated
@@ -140,7 +153,10 @@ namespace Yale.Parser
             }
             else
             {
-                InvocationListElement invocationListElement = new InvocationListElement(childValues, context);
+                InvocationListElement invocationListElement = new InvocationListElement(
+                    childValues,
+                    context
+                );
                 node.AddValue(invocationListElement);
             }
 
@@ -171,7 +187,11 @@ namespace Yale.Parser
         public override Node ExitIfExpression(Production node)
         {
             IList childValues = GetChildValues(node);
-            ConditionalElement op = new ConditionalElement((BaseExpressionElement)childValues[0], (BaseExpressionElement)childValues[1], (BaseExpressionElement)childValues[2]);
+            ConditionalElement op = new ConditionalElement(
+                (BaseExpressionElement)childValues[0],
+                (BaseExpressionElement)childValues[1],
+                (BaseExpressionElement)childValues[2]
+            );
             node.AddValue(op);
             return node;
         }
@@ -198,7 +218,10 @@ namespace Yale.Parser
             }
             else
             {
-                InvocationListElement invocationListElement = new InvocationListElement(childValues, context);
+                InvocationListElement invocationListElement = new InvocationListElement(
+                    childValues,
+                    context
+                );
                 op = new InElement(operand, invocationListElement);
             }
 
@@ -224,7 +247,12 @@ namespace Yale.Parser
             IList childValues = GetChildValues(node);
             string[] destTypeParts = (string[])childValues[1];
             bool isArray = (bool)childValues[2];
-            CastElement op = new CastElement((BaseExpressionElement)childValues[0], destTypeParts, isArray, context);
+            CastElement op = new CastElement(
+                (BaseExpressionElement)childValues[0],
+                destTypeParts,
+                isArray,
+                context
+            );
             node.AddValue(op);
             return node;
         }
@@ -297,7 +325,8 @@ namespace Yale.Parser
             return node;
         }
 
-        private void AddFirstChildValue(Production node) => node.AddValue(GetChildAt(node, 0).Values[0]);
+        private void AddFirstChildValue(Production node) =>
+            node.AddValue(GetChildAt(node, 0).Values[0]);
 
         private void AddUnaryOp(Production node, Type elementType)
         {
@@ -305,7 +334,8 @@ namespace Yale.Parser
 
             if (childValues.Count == 2)
             {
-                UnaryElement element = (UnaryElement)Activator.CreateInstance(elementType, childValues[1]);
+                UnaryElement element = (UnaryElement)
+                    Activator.CreateInstance(elementType, childValues[1]);
                 node.AddValue(element);
             }
             else
@@ -320,7 +350,10 @@ namespace Yale.Parser
 
             if (childValues.Count > 1)
             {
-                BinaryExpressionElement expressionElement = BinaryExpressionElement.CreateElement(childValues, elementType);
+                BinaryExpressionElement expressionElement = BinaryExpressionElement.CreateElement(
+                    childValues,
+                    elementType
+                );
                 node.AddValue(expressionElement);
             }
             else if (childValues.Count == 1)
@@ -343,14 +376,24 @@ namespace Yale.Parser
 
         public override Node ExitInteger(PerCederberg.Grammatica.Runtime.Token node)
         {
-            LiteralElement element = IntegralLiteralElement.Create(node.Image, false, inUnaryNegate, context.BuilderOptions);
+            LiteralElement element = IntegralLiteralElement.Create(
+                node.Image,
+                false,
+                inUnaryNegate,
+                context.BuilderOptions
+            );
             node.AddValue(element);
             return node;
         }
 
         public override Node ExitHexliteral(PerCederberg.Grammatica.Runtime.Token node)
         {
-            LiteralElement element = IntegralLiteralElement.Create(node.Image, true, inUnaryNegate, context.BuilderOptions);
+            LiteralElement element = IntegralLiteralElement.Create(
+                node.Image,
+                true,
+                inUnaryNegate,
+                context.BuilderOptions
+            );
             node.AddValue(element);
             return node;
         }

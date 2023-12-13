@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 using Yale.Expression;
 
@@ -170,18 +170,25 @@ namespace Yale.Tests.ExpressionTests
             _instance.AddExpression("a", "x * 2");
             _instance.Variables.Add("y", 1);
 
-            Assert.ThrowsException<ExpressionCompileException>(() => { _instance.AddExpression("b", "a + y + b"); });
+            Assert.ThrowsException<ExpressionCompileException>(() =>
+            {
+                _instance.AddExpression("b", "a + y + b");
+            });
         }
 
         [TestMethod]
         public void Flee_Boolean_Expression()
         {
             const string expression = "a AND NOT b AND NOT c AND d";
-            Dictionary<string, object> expressionVariables = new() { { "a", 1 }, { "b", 0 }, { "c", 0 }, { "d", 1 } };
+            Dictionary<string, object> expressionVariables =
+                new() { { "a", 1 }, { "b", 0 }, { "c", 0 }, { "d", 1 } };
 
             foreach (string expressionVariable in expressionVariables.Keys)
             {
-                _instance.Variables.Add(expressionVariable, expressionVariables[expressionVariable]);
+                _instance.Variables.Add(
+                    expressionVariable,
+                    expressionVariables[expressionVariable]
+                );
             }
 
             _instance.AddExpression("e", expression);

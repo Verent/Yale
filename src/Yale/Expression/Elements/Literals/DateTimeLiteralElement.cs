@@ -15,9 +15,21 @@ namespace Yale.Expression.Elements.Literals
         {
             ExpressionBuilderOptions options = context.BuilderOptions;
 
-            if (DateTime.TryParseExact(image, options.DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _value) == false)
+            if (
+                DateTime.TryParseExact(
+                    image,
+                    options.DateTimeFormat,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out _value
+                ) == false
+            )
             {
-                throw CreateCompileException(CompileErrors.CannotParseType, CompileExceptionReason.InvalidFormat, typeof(DateTime).Name);
+                throw CreateCompileException(
+                    CompileErrors.CannotParseType,
+                    CompileExceptionReason.InvalidFormat,
+                    typeof(DateTime).Name
+                );
             }
         }
 
@@ -29,7 +41,9 @@ namespace Yale.Expression.Elements.Literals
 
             EmitLoad(_value.Ticks, ilGenerator);
 
-            System.Reflection.ConstructorInfo constructor = typeof(DateTime).GetConstructor(new[] { typeof(Int64) });
+            System.Reflection.ConstructorInfo constructor = typeof(DateTime).GetConstructor(
+                new[] { typeof(Int64) }
+            );
 
             ilGenerator.Emit(OpCodes.Call, constructor);
 

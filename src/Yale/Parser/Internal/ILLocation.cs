@@ -19,9 +19,7 @@ namespace Yale.Parser.Internal
         /// </summary>
         private const int BrSLength = 2;
 
-        public ILLocation()
-        {
-        }
+        public ILLocation() { }
 
         public ILLocation(int position)
         {
