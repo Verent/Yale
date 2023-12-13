@@ -45,7 +45,7 @@ internal class InElement : BaseExpressionElement
 
     private void ResolveForListSearch()
     {
-        CompareElement compareElement = new CompareElement();
+        CompareElement compareElement = new();
 
         // Validate that our operand is comparable to all elements in the list
         foreach (BaseExpressionElement argumentElement in arguments)
@@ -138,7 +138,7 @@ internal class InElement : BaseExpressionElement
         }
         else
         {
-            BranchManager branchManager = new BranchManager();
+            BranchManager branchManager = new();
             branchManager.GetLabel("endLabel", ilGenerator);
             branchManager.GetLabel("trueTerminal", ilGenerator);
 
@@ -202,7 +202,7 @@ internal class InElement : BaseExpressionElement
         BranchManager branchManager
     )
     {
-        CompareElement compareElement = new CompareElement();
+        CompareElement compareElement = new();
         Label endLabel = branchManager.FindLabel("endLabel");
         Label trueTerminal = branchManager.FindLabel("trueTerminal");
 
@@ -214,7 +214,7 @@ internal class InElement : BaseExpressionElement
         Utility.EmitStoreLocal(ilg, targetIndex);
 
         // Wrap our operand in a local shim
-        LocalBasedElement targetShim = new LocalBasedElement(operand, targetIndex);
+        LocalBasedElement targetShim = new(operand, targetIndex);
 
         // Emit the compares
         foreach (BaseExpressionElement argumentElement in arguments)

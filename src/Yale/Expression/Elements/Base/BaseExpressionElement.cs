@@ -29,14 +29,14 @@ internal abstract class BaseExpressionElement
         params object[] arguments
     )
     {
-        string message = string.Format(CultureInfo.InvariantCulture, messageTemplate, arguments);
+        var message = string.Format(CultureInfo.InvariantCulture, messageTemplate, arguments);
         message = string.Concat(Name, ": ", message);
         return new ExpressionCompileException(message, reason);
     }
 
     protected YaleIlGenerator CreateTempIlGenerator(YaleIlGenerator ilgCurrent)
     {
-        DynamicMethod dynamicMethod = new DynamicMethod("temp", typeof(int), null, GetType());
+        DynamicMethod dynamicMethod = new("temp", typeof(int), null, GetType());
         return new YaleIlGenerator(dynamicMethod.GetILGenerator(), ilgCurrent.Length, true);
     }
 }

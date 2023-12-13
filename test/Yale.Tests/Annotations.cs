@@ -111,24 +111,19 @@ public sealed class ItemCanBeNullAttribute : Attribute { }
 ///   ShowError("Failed: {0}"); // Warning: Non-existing argument in format string
 /// }
 /// </code></example>
+/// <param name="formatParameterName">
+/// Specifies which parameter of an annotated method should be treated as format-string
+/// </param>
 [AttributeUsage(
     AttributeTargets.Constructor
         | AttributeTargets.Method
         | AttributeTargets.Property
         | AttributeTargets.Delegate
 )]
-public sealed class StringFormatMethodAttribute : Attribute
+public sealed class StringFormatMethodAttribute([NotNull] string formatParameterName) : Attribute
 {
-    /// <param name="formatParameterName">
-    /// Specifies which parameter of an annotated method should be treated as format-string
-    /// </param>
-    public StringFormatMethodAttribute([NotNull] string formatParameterName)
-    {
-        FormatParameterName = formatParameterName;
-    }
-
     [NotNull]
-    public string FormatParameterName { get; private set; }
+    public string FormatParameterName { get; private set; } = formatParameterName;
 }
 
 /// <summary>
@@ -141,10 +136,7 @@ public sealed class StringFormatMethodAttribute : Attribute
 )]
 public sealed class ValueProviderAttribute : Attribute
 {
-    public ValueProviderAttribute([NotNull] string name)
-    {
-        Name = name;
-    }
+    public ValueProviderAttribute([NotNull] string name) => Name = name;
 
     [NotNull]
     public string Name { get; private set; }
@@ -207,10 +199,7 @@ public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
 {
     public NotifyPropertyChangedInvocatorAttribute() { }
 
-    public NotifyPropertyChangedInvocatorAttribute([NotNull] string parameterName)
-    {
-        ParameterName = parameterName;
-    }
+    public NotifyPropertyChangedInvocatorAttribute([NotNull] string parameterName) => ParameterName = parameterName;
 
     [CanBeNull]
     public string ParameterName { get; private set; }
@@ -293,10 +282,7 @@ public sealed class LocalizationRequiredAttribute : Attribute
     public LocalizationRequiredAttribute()
         : this(true) { }
 
-    public LocalizationRequiredAttribute(bool required)
-    {
-        Required = required;
-    }
+    public LocalizationRequiredAttribute(bool required) => Required = required;
 
     public bool Required { get; private set; }
 }
@@ -339,10 +325,7 @@ public sealed class CannotApplyEqualityOperatorAttribute : Attribute { }
 [BaseTypeRequired(typeof(Attribute))]
 public sealed class BaseTypeRequiredAttribute : Attribute
 {
-    public BaseTypeRequiredAttribute([NotNull] Type baseType)
-    {
-        BaseType = baseType;
-    }
+    public BaseTypeRequiredAttribute([NotNull] Type baseType) => BaseType = baseType;
 
     [NotNull]
     public Type BaseType { get; private set; }
@@ -457,10 +440,7 @@ public sealed class PublicAPIAttribute : Attribute
 {
     public PublicAPIAttribute() { }
 
-    public PublicAPIAttribute([NotNull] string comment)
-    {
-        Comment = comment;
-    }
+    public PublicAPIAttribute([NotNull] string comment) => Comment = comment;
 
     [CanBeNull]
     public string Comment { get; private set; }
@@ -496,10 +476,7 @@ public sealed class MustUseReturnValueAttribute : Attribute
 {
     public MustUseReturnValueAttribute() { }
 
-    public MustUseReturnValueAttribute([NotNull] string justification)
-    {
-        Justification = justification;
-    }
+    public MustUseReturnValueAttribute([NotNull] string justification) => Justification = justification;
 
     [CanBeNull]
     public string Justification { get; private set; }
@@ -541,10 +518,7 @@ public sealed class PathReferenceAttribute : Attribute
 {
     public PathReferenceAttribute() { }
 
-    public PathReferenceAttribute([NotNull, PathReference] string basePath)
-    {
-        BasePath = basePath;
-    }
+    public PathReferenceAttribute([NotNull, PathReference] string basePath) => BasePath = basePath;
 
     [CanBeNull]
     public string BasePath { get; private set; }
@@ -638,10 +612,7 @@ public sealed class MacroAttribute : Attribute
 )]
 public sealed class AspMvcAreaMasterLocationFormatAttribute : Attribute
 {
-    public AspMvcAreaMasterLocationFormatAttribute([NotNull] string format)
-    {
-        Format = format;
-    }
+    public AspMvcAreaMasterLocationFormatAttribute([NotNull] string format) => Format = format;
 
     [NotNull]
     public string Format { get; private set; }
@@ -653,10 +624,7 @@ public sealed class AspMvcAreaMasterLocationFormatAttribute : Attribute
 )]
 public sealed class AspMvcAreaPartialViewLocationFormatAttribute : Attribute
 {
-    public AspMvcAreaPartialViewLocationFormatAttribute([NotNull] string format)
-    {
-        Format = format;
-    }
+    public AspMvcAreaPartialViewLocationFormatAttribute([NotNull] string format) => Format = format;
 
     [NotNull]
     public string Format { get; private set; }
@@ -668,10 +636,7 @@ public sealed class AspMvcAreaPartialViewLocationFormatAttribute : Attribute
 )]
 public sealed class AspMvcAreaViewLocationFormatAttribute : Attribute
 {
-    public AspMvcAreaViewLocationFormatAttribute([NotNull] string format)
-    {
-        Format = format;
-    }
+    public AspMvcAreaViewLocationFormatAttribute([NotNull] string format) => Format = format;
 
     [NotNull]
     public string Format { get; private set; }
@@ -683,10 +648,7 @@ public sealed class AspMvcAreaViewLocationFormatAttribute : Attribute
 )]
 public sealed class AspMvcMasterLocationFormatAttribute : Attribute
 {
-    public AspMvcMasterLocationFormatAttribute([NotNull] string format)
-    {
-        Format = format;
-    }
+    public AspMvcMasterLocationFormatAttribute([NotNull] string format) => Format = format;
 
     [NotNull]
     public string Format { get; private set; }
@@ -698,10 +660,7 @@ public sealed class AspMvcMasterLocationFormatAttribute : Attribute
 )]
 public sealed class AspMvcPartialViewLocationFormatAttribute : Attribute
 {
-    public AspMvcPartialViewLocationFormatAttribute([NotNull] string format)
-    {
-        Format = format;
-    }
+    public AspMvcPartialViewLocationFormatAttribute([NotNull] string format) => Format = format;
 
     [NotNull]
     public string Format { get; private set; }
@@ -713,10 +672,7 @@ public sealed class AspMvcPartialViewLocationFormatAttribute : Attribute
 )]
 public sealed class AspMvcViewLocationFormatAttribute : Attribute
 {
-    public AspMvcViewLocationFormatAttribute([NotNull] string format)
-    {
-        Format = format;
-    }
+    public AspMvcViewLocationFormatAttribute([NotNull] string format) => Format = format;
 
     [NotNull]
     public string Format { get; private set; }
@@ -733,10 +689,7 @@ public sealed class AspMvcActionAttribute : Attribute
 {
     public AspMvcActionAttribute() { }
 
-    public AspMvcActionAttribute([NotNull] string anonymousProperty)
-    {
-        AnonymousProperty = anonymousProperty;
-    }
+    public AspMvcActionAttribute([NotNull] string anonymousProperty) => AnonymousProperty = anonymousProperty;
 
     [CanBeNull]
     public string AnonymousProperty { get; private set; }
@@ -752,10 +705,7 @@ public sealed class AspMvcAreaAttribute : Attribute
 {
     public AspMvcAreaAttribute() { }
 
-    public AspMvcAreaAttribute([NotNull] string anonymousProperty)
-    {
-        AnonymousProperty = anonymousProperty;
-    }
+    public AspMvcAreaAttribute([NotNull] string anonymousProperty) => AnonymousProperty = anonymousProperty;
 
     [CanBeNull]
     public string AnonymousProperty { get; private set; }
@@ -772,10 +722,7 @@ public sealed class AspMvcControllerAttribute : Attribute
 {
     public AspMvcControllerAttribute() { }
 
-    public AspMvcControllerAttribute([NotNull] string anonymousProperty)
-    {
-        AnonymousProperty = anonymousProperty;
-    }
+    public AspMvcControllerAttribute([NotNull] string anonymousProperty) => AnonymousProperty = anonymousProperty;
 
     [CanBeNull]
     public string AnonymousProperty { get; private set; }
@@ -876,10 +823,7 @@ public sealed class HtmlElementAttributesAttribute : Attribute
 {
     public HtmlElementAttributesAttribute() { }
 
-    public HtmlElementAttributesAttribute([NotNull] string name)
-    {
-        Name = name;
-    }
+    public HtmlElementAttributesAttribute([NotNull] string name) => Name = name;
 
     [CanBeNull]
     public string Name { get; private set; }
@@ -888,10 +832,7 @@ public sealed class HtmlElementAttributesAttribute : Attribute
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
 public sealed class HtmlAttributeValueAttribute : Attribute
 {
-    public HtmlAttributeValueAttribute([NotNull] string name)
-    {
-        Name = name;
-    }
+    public HtmlAttributeValueAttribute([NotNull] string name) => Name = name;
 
     [NotNull]
     public string Name { get; private set; }
@@ -912,10 +853,7 @@ public sealed class RazorSectionAttribute : Attribute { }
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Property)]
 public sealed class CollectionAccessAttribute : Attribute
 {
-    public CollectionAccessAttribute(CollectionAccessType collectionAccessType)
-    {
-        CollectionAccessType = collectionAccessType;
-    }
+    public CollectionAccessAttribute(CollectionAccessType collectionAccessType) => CollectionAccessType = collectionAccessType;
 
     public CollectionAccessType CollectionAccessType { get; private set; }
 }
@@ -952,10 +890,7 @@ public sealed class AssertionMethodAttribute : Attribute { }
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class AssertionConditionAttribute : Attribute
 {
-    public AssertionConditionAttribute(AssertionConditionType conditionType)
-    {
-        ConditionType = conditionType;
-    }
+    public AssertionConditionAttribute(AssertionConditionType conditionType) => ConditionType = conditionType;
 
     public AssertionConditionType ConditionType { get; private set; }
 }
@@ -1068,10 +1003,7 @@ public sealed class AspMethodPropertyAttribute : Attribute { }
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public sealed class AspRequiredAttributeAttribute : Attribute
 {
-    public AspRequiredAttributeAttribute([NotNull] string attribute)
-    {
-        Attribute = attribute;
-    }
+    public AspRequiredAttributeAttribute([NotNull] string attribute) => Attribute = attribute;
 
     [NotNull]
     public string Attribute { get; private set; }
@@ -1082,19 +1014,13 @@ public sealed class AspTypePropertyAttribute : Attribute
 {
     public bool CreateConstructorReferences { get; private set; }
 
-    public AspTypePropertyAttribute(bool createConstructorReferences)
-    {
-        CreateConstructorReferences = createConstructorReferences;
-    }
+    public AspTypePropertyAttribute(bool createConstructorReferences) => CreateConstructorReferences = createConstructorReferences;
 }
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
 public sealed class RazorImportNamespaceAttribute : Attribute
 {
-    public RazorImportNamespaceAttribute([NotNull] string name)
-    {
-        Name = name;
-    }
+    public RazorImportNamespaceAttribute([NotNull] string name) => Name = name;
 
     [NotNull]
     public string Name { get; private set; }
@@ -1119,10 +1045,7 @@ public sealed class RazorInjectionAttribute : Attribute
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
 public sealed class RazorDirectiveAttribute : Attribute
 {
-    public RazorDirectiveAttribute([NotNull] string directive)
-    {
-        Directive = directive;
-    }
+    public RazorDirectiveAttribute([NotNull] string directive) => Directive = directive;
 
     [NotNull]
     public string Directive { get; private set; }
@@ -1131,10 +1054,7 @@ public sealed class RazorDirectiveAttribute : Attribute
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
 public sealed class RazorPageBaseTypeAttribute : Attribute
 {
-    public RazorPageBaseTypeAttribute([NotNull] string baseType)
-    {
-        BaseType = baseType;
-    }
+    public RazorPageBaseTypeAttribute([NotNull] string baseType) => BaseType = baseType;
 
     public RazorPageBaseTypeAttribute([NotNull] string baseType, string pageName)
     {

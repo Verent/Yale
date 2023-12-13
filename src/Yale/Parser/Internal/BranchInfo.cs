@@ -19,30 +19,18 @@ internal class BranchInfo : IEquatable<BranchInfo>
         end = new ILLocation();
     }
 
-    public void AdjustForLongBranches(int longBranchCount)
-    {
+    public void AdjustForLongBranches(int longBranchCount) =>
         start.AdjustForLongBranch(longBranchCount);
-    }
 
-    public void BakeIsLongBranch()
-    {
-        IsLongBranch = ComputeIsLongBranch();
-    }
+    public void BakeIsLongBranch() => IsLongBranch = ComputeIsLongBranch();
 
-    public void AdjustForLongBranchesBetween(int betweenLongBranchCount)
-    {
+    public void AdjustForLongBranchesBetween(int betweenLongBranchCount) =>
         end.AdjustForLongBranch(betweenLongBranchCount);
-    }
 
-    public bool IsBetween(BranchInfo other)
-    {
-        return start.CompareTo(other.start) > 0 && start.CompareTo(other.end) < 0;
-    }
+    public bool IsBetween(BranchInfo other) =>
+        start.CompareTo(other.start) > 0 && start.CompareTo(other.end) < 0;
 
-    public bool ComputeIsLongBranch()
-    {
-        return start.IsLongBranch(end);
-    }
+    public bool ComputeIsLongBranch() => start.IsLongBranch(end);
 
     public void Mark(Label target, int position)
     {
@@ -52,20 +40,12 @@ internal class BranchInfo : IEquatable<BranchInfo>
         }
     }
 
-    public bool Equals1(BranchInfo other)
-    {
-        return start.Equals1(other.start) && myLabel.Equals(other.myLabel);
-    }
+    public bool Equals1(BranchInfo other) =>
+        start.Equals1(other.start) && myLabel.Equals(other.myLabel);
 
-    bool IEquatable<BranchInfo>.Equals(BranchInfo other)
-    {
-        return Equals1(other);
-    }
+    bool IEquatable<BranchInfo>.Equals(BranchInfo other) => Equals1(other);
 
-    public override string ToString()
-    {
-        return $"{start} -> {end} (L={start.IsLongBranch(end)})";
-    }
+    public override string ToString() => $"{start} -> {end} (L={start.IsLongBranch(end)})";
 
     public bool IsLongBranch { get; private set; }
 }

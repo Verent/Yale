@@ -19,11 +19,11 @@ internal class BinaryOperatorBinder : CustomBinder
     public override MethodBase BindToMethod(
         BindingFlags bindingAttr,
         MethodBase[] match,
-        ref object[] args,
-        ParameterModifier[] modifiers,
-        CultureInfo culture,
-        string[] names,
-        out object state
+        ref object?[] args,
+        ParameterModifier[]? modifiers,
+        CultureInfo? culture,
+        string[]? names,
+        out object? state
     )
     {
         return customBinderImplementation.BindToMethod(
@@ -36,6 +36,9 @@ internal class BinaryOperatorBinder : CustomBinder
             out state
         );
     }
+
+    public override object ChangeType(object value, Type type, CultureInfo? culture) =>
+        throw new NotImplementedException();
 
     public override MethodBase SelectMethod(
         BindingFlags bindingAttr,

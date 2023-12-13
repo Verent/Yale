@@ -22,10 +22,7 @@ internal class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<Cust
 
     public Type? ParamArrayElementType;
 
-    public CustomMethodInfo(MethodInfo target)
-    {
-        Target = target;
-    }
+    public CustomMethodInfo(MethodInfo target) => Target = target;
 
     public void ComputeScore(Type[] argTypes)
     {
@@ -77,7 +74,7 @@ internal class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<Cust
 
     private float ComputeScoreForParamArray(ParameterInfo[] parameters, Type[] argTypes)
     {
-        ParameterInfo paramArrayParameter = parameters[parameters.Length - 1];
+        ParameterInfo paramArrayParameter = parameters[^1];
         int fixedParameterCount = paramArrayParameter.Position;
         ParameterInfo[] fixedParameters = new ParameterInfo[fixedParameterCount];
 
@@ -101,10 +98,7 @@ internal class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<Cust
         return score + 1;
     }
 
-    public bool IsAccessible(MemberElement owner)
-    {
-        return MemberElement.IsMemberAccessible(Target);
-    }
+    public bool IsAccessible(MemberElement owner) => MemberElement.IsMemberAccessible(Target);
 
     /// <summary>
     /// Is the given MethodInfo usable as an overload?
@@ -128,7 +122,7 @@ internal class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<Cust
         }
 
         // Is the last parameter a paramArray?
-        ParameterInfo lastParam = parameters[parameters.Length - 1];
+        ParameterInfo lastParam = parameters[^1];
 
         if (lastParam.IsDefined(typeof(ParamArrayAttribute), false) == false)
         {
@@ -229,18 +223,9 @@ internal class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<Cust
         return true;
     }
 
-    public int CompareTo(CustomMethodInfo other)
-    {
-        return score.CompareTo(other.score);
-    }
+    public int CompareTo(CustomMethodInfo other) => score.CompareTo(other.score);
 
-    private bool Equals1(CustomMethodInfo other)
-    {
-        return score == other.score;
-    }
+    private bool Equals1(CustomMethodInfo other) => score == other.score;
 
-    bool IEquatable<CustomMethodInfo>.Equals(CustomMethodInfo other)
-    {
-        return Equals1(other);
-    }
+    bool IEquatable<CustomMethodInfo>.Equals(CustomMethodInfo other) => Equals1(other);
 }

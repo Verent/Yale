@@ -305,30 +305,8 @@ internal class IdentifierElement : MemberElement
     /// Load a PropertyDescriptor based property
     /// </summary>
     /// <param name="ilg"></param>
-    private void EmitVirtualPropertyLoad(YaleIlGenerator ilg)
-    {
-        throw new NotImplementedException();
-        //// The previous value is already on the top of the stack but we need it at the bottom
-
-        //// Get a temporary local index
-        //var index = ilg.GetTempLocalIndex(Previous.ResultType);
-
-        //// Store the previous value there
-        //Utility.EmitStoreLocal(ilg, index);
-
-        //// Load the variable collection
-        //EmitLoadVariables(ilg);
-        //// Load the property name
-        //ilg.Emit(OpCodes.Ldstr, Name);
-
-        //// Load the previous value and convert it to object
-        //Utility.EmitLoadLocal(ilg, index);
-        //ImplicitConverter.EmitImplicitConvert(Previous.ResultType, typeof(object), ilg);
-
-        //// Call the method to get the actual value
-        //var methodInfo = VariableCollection.GetVirtualPropertyLoadMethod(ResultType);
-        //EmitMethodCall(methodInfo, ilg);
-    }
+    private void EmitVirtualPropertyLoad(YaleIlGenerator ilg) =>
+        throw new NotImplementedException(); //// The previous value is already on the top of the stack but we need it at the bottom//// Get a temporary local index//var index = ilg.GetTempLocalIndex(Previous.ResultType);//// Store the previous value there//Utility.EmitStoreLocal(ilg, index);//// Load the variable collection//EmitLoadVariables(ilg);//// Load the property name//ilg.Emit(OpCodes.Ldstr, Name);//// Load the previous value and convert it to object//Utility.EmitLoadLocal(ilg, index);//ImplicitConverter.EmitImplicitConvert(Previous.ResultType, typeof(object), ilg);//// Call the method to get the actual value//var methodInfo = VariableCollection.GetVirtualPropertyLoadMethod(ResultType);//EmitMethodCall(methodInfo, ilg);
 
     //Todo: Get rid of this! One owner type to rule them all
     private Type MemberOwnerType
@@ -345,7 +323,7 @@ internal class IdentifierElement : MemberElement
                 return propertyDescriptor.ComponentType;
             }
 
-            return property != null ? property.ReflectedType : null;
+            return property?.ReflectedType;
         }
     }
 

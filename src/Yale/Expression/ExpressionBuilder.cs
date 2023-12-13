@@ -24,25 +24,21 @@ public class ExpressionBuilder
     internal VariableCollection Variables { get; } = new VariableCollection();
 
     public ImportCollection Imports { get; }
+    public ComputeInstance Instance { get; }
 
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-    public ExpressionBuilder()
+    public ExpressionBuilder(ComputeInstance instance)
     {
         Options = new ExpressionBuilderOptions();
+        Instance = instance;
         Imports = new ImportCollection(Options);
-        CreateParser();
+        Analyzer = new YaleExpressionAnalyzer();
+        Parser = new ExpressionParser(TextReader.Null, Analyzer);
     }
 
-    public ExpressionBuilder(ExpressionBuilderOptions builderOptions)
+    public ExpressionBuilder(ExpressionBuilderOptions options, ComputeInstance instance)
     {
-        Options = builderOptions;
+        Options = options;
         Imports = new ImportCollection(Options);
-        CreateParser();
-    }
-#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-
-    private void CreateParser()
-    {
         Analyzer = new YaleExpressionAnalyzer();
         Parser = new ExpressionParser(TextReader.Null, Analyzer);
     }
@@ -54,19 +50,20 @@ public class ExpressionBuilder
 
         Imports.ImportOwner(ownerType);
 
-        ExpressionContext context = new ExpressionContext(Options, expressionName, owner)
-        {
-            Variables = Variables,
-            Imports = Imports,
-            ComputeInstance = ComputeInstance,
-        };
+        ExpressionContext context =
+            new(Options, expressionName, owner)
+            {
+                Variables = Variables,
+                Imports = Imports,
+                ComputeInstance = ComputeInstance,
+            };
 
         BaseExpressionElement topElement = Parse(expression, context);
 
-        RootExpressionElement rootElement = new RootExpressionElement(topElement, typeof(T));
+        RootExpressionElement rootElement = new(topElement, typeof(T));
         DynamicMethod dynamicMethod = CreateDynamicMethod<T>(ownerType);
 
-        YaleIlGenerator ilGenerator = new YaleIlGenerator(dynamicMethod.GetILGenerator());
+        YaleIlGenerator ilGenerator = new(dynamicMethod.GetILGenerator());
         rootElement.Emit(ilGenerator, context);
 
 #if DEBUG
@@ -82,7 +79,7 @@ public class ExpressionBuilder
 
     private BaseExpressionElement Parse(string expression, ExpressionContext context)
     {
-        StringReader stringReader = new StringReader(expression);
+        StringReader stringReader = new(expression);
 
         Parser.Reset(stringReader);
         YaleExpressionAnalyzer analyzer = (YaleExpressionAnalyzer)Parser.Analyzer;

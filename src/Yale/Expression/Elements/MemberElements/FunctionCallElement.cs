@@ -19,10 +19,7 @@ internal class FunctionCallElement : MemberElement
     private CustomMethodInfo targetMethodInfo;
 
     public FunctionCallElement(string name, ArgumentList arguments)
-        : base(name)
-    {
-        this.arguments = arguments;
-    }
+        : base(name) => this.arguments = arguments;
 
     internal FunctionCallElement(
         string name,
@@ -135,12 +132,12 @@ internal class FunctionCallElement : MemberElement
         Type[] argTypes
     )
     {
-        List<CustomMethodInfo> customInfoList = new List<CustomMethodInfo>();
+        List<CustomMethodInfo> customInfoList = new();
 
         // Wrap the MethodInfo in our custom class
         foreach (MethodInfo methodInfo in methods)
         {
-            CustomMethodInfo customMethodInfo = new CustomMethodInfo(methodInfo);
+            CustomMethodInfo customMethodInfo = new(methodInfo);
             customInfoList.Add(customMethodInfo);
         }
 
@@ -207,7 +204,7 @@ internal class FunctionCallElement : MemberElement
 
     private CustomMethodInfo[] GetAccessibleInfos(CustomMethodInfo[] infos)
     {
-        List<CustomMethodInfo> accessible = new List<CustomMethodInfo>();
+        List<CustomMethodInfo> accessible = new();
 
         foreach (CustomMethodInfo customMethodInfo in infos)
         {
@@ -226,7 +223,7 @@ internal class FunctionCallElement : MemberElement
     /// <param name="infos"></param>
     private void DetectAmbiguousMatches(CustomMethodInfo[] infos)
     {
-        List<CustomMethodInfo> sameScores = new List<CustomMethodInfo>();
+        List<CustomMethodInfo> sameScores = new();
         CustomMethodInfo first = infos[0];
 
         // Find all matches with the same score as the best match

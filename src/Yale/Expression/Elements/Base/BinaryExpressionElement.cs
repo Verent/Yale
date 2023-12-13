@@ -66,7 +66,7 @@ internal abstract class BinaryExpressionElement : BaseExpressionElement
     {
         Type leftType = LeftChild.ResultType;
         Type rightType = RightChild.ResultType;
-        BinaryOperatorBinder binder = new BinaryOperatorBinder(leftType, rightType);
+        BinaryOperatorBinder binder = new(leftType, rightType);
 
         // If both arguments are of the same type, pick either as the owner type
         if (ReferenceEquals(leftType, rightType))

@@ -21,25 +21,17 @@ internal class ILLocation : IEquatable<ILLocation>, IComparable<ILLocation>
 
     public ILLocation() { }
 
-    public ILLocation(int position)
-    {
-        _position = position;
-    }
+    public ILLocation(int position) => _position = position;
 
-    public void SetPosition(int position)
-    {
-        _position = position;
-    }
+    public void SetPosition(int position) => _position = position;
 
     /// <summary>
     /// Adjust our position by a certain amount of long branches
     /// </summary>
     /// <param name="longBranchCount"></param>
     /// <remarks></remarks>
-    public void AdjustForLongBranch(int longBranchCount)
-    {
+    public void AdjustForLongBranch(int longBranchCount) =>
         _position += longBranchCount * LongBranchAdjust;
-    }
 
     /// <summary>
     /// Determine if this branch is long
@@ -47,29 +39,15 @@ internal class ILLocation : IEquatable<ILLocation>, IComparable<ILLocation>
     /// <param name="target"></param>
     /// <returns></returns>
     /// <remarks></remarks>
-    public bool IsLongBranch(ILLocation target)
-    {
+    public bool IsLongBranch(ILLocation target) =>
         // The branch offset is relative to the instruction *after* the branch so we add 2 (length of a br_s) to our position
-        return Utility.IsLongBranch(_position + BrSLength, target._position);
-    }
+        Utility.IsLongBranch(_position + BrSLength, target._position);
 
-    public bool Equals1(ILLocation other)
-    {
-        return _position == other._position;
-    }
+    public bool Equals1(ILLocation other) => _position == other._position;
 
-    bool IEquatable<ILLocation>.Equals(ILLocation other)
-    {
-        return Equals1(other);
-    }
+    bool IEquatable<ILLocation>.Equals(ILLocation other) => Equals1(other);
 
-    public override string ToString()
-    {
-        return _position.ToString("x");
-    }
+    public override string ToString() => _position.ToString("x");
 
-    public int CompareTo(ILLocation other)
-    {
-        return _position.CompareTo(other._position);
-    }
+    public int CompareTo(ILLocation other) => _position.CompareTo(other._position);
 }

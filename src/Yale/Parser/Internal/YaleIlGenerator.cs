@@ -114,10 +114,7 @@ internal class YaleIlGenerator
         _ilGenerator.Emit(op, arg);
     }
 
-    public void MarkLabel(Label lbl)
-    {
-        _ilGenerator.MarkLabel(lbl);
-    }
+    public void MarkLabel(Label lbl) => _ilGenerator.MarkLabel(lbl);
 
     public Label DefineLabel()
     {
@@ -125,10 +122,7 @@ internal class YaleIlGenerator
         return _ilGenerator.DefineLabel();
     }
 
-    public LocalBuilder DeclareLocal(Type localType)
-    {
-        return _ilGenerator.DeclareLocal(localType);
-    }
+    public LocalBuilder DeclareLocal(Type localType) => _ilGenerator.DeclareLocal(localType);
 
     private void RecordOpcode(OpCode op)
     {

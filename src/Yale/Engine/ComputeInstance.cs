@@ -20,7 +20,7 @@ public class ComputeInstance
 
     public ImportCollection Imports => Builder.Imports;
 
-    private readonly DependencyManager dependencies = new DependencyManager();
+    private readonly DependencyManager dependencies = new();
 
     /// <summary>
     /// Variables available in expressions
@@ -32,12 +32,11 @@ public class ComputeInstance
     /// <summary>
     /// Expression results
     /// </summary>
-    private readonly Dictionary<string, IExpressionResult> nameNodeMap =
-        new Dictionary<string, IExpressionResult>();
+    private readonly Dictionary<string, IExpressionResult> nameNodeMap = new();
 
     public ComputeInstance()
     {
-        Builder = new ExpressionBuilder { ComputeInstance = this };
+        Builder = new ExpressionBuilder(instance: this);
 
         options = ComputeInstanceOptions.Default;
         nameNodeMap = new Dictionary<string, IExpressionResult>();
@@ -50,8 +49,8 @@ public class ComputeInstance
         if (options is null)
             throw new ArgumentNullException(nameof(options));
 
-        Builder = new ExpressionBuilder(options.ExpressionOptions) { ComputeInstance = this };
-        this.options = options ?? throw new ArgumentNullException(nameof(options));
+        Builder = new ExpressionBuilder(options: options.ExpressionOptions, instance: this);
+        this.options = options;
         nameNodeMap = new Dictionary<string, IExpressionResult>(
             options.ExpressionOptions.StringComparer
         );
@@ -75,9 +74,9 @@ public class ComputeInstance
         }
     }
 
-    private void TagResultsAsDirty(object sender, PropertyChangedEventArgs e)
+    private void TagResultsAsDirty(object? sender, PropertyChangedEventArgs e)
     {
-        foreach (string dependent in dependencies.GetDependents(e.PropertyName))
+        foreach (string dependent in dependencies.GetDependents(e.PropertyName!))
         {
             TagNodeAndDependentsAsDirty(dependent);
         }
@@ -94,9 +93,9 @@ public class ComputeInstance
         }
     }
 
-    private void RecalculateValues(object sender, PropertyChangedEventArgs e)
+    private void RecalculateValues(object? sender, PropertyChangedEventArgs e)
     {
-        foreach (string dependent in dependencies.GetDependents(e.PropertyName))
+        foreach (string dependent in dependencies.GetDependents(e.PropertyName!))
         {
             RecalculateNodeAndDependents(dependent);
         }
@@ -316,9 +315,10 @@ public class ComputeInstance
     /// <param name="ilGenerator"></param>
     internal void EmitLoad(string expressionKey, YaleIlGenerator ilGenerator)
     {
-        PropertyInfo propertyInfo = typeof(ExpressionContext).GetProperty(
+        var propertyInfo = typeof(ExpressionContext).GetProperty(
             nameof(ExpressionContext.ComputeInstance)
         );
+
         ilGenerator.Emit(OpCodes.Callvirt, propertyInfo.GetGetMethod());
 
         //Find and load expression result

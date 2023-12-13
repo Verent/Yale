@@ -74,7 +74,7 @@ public sealed class ImportCollection
     internal Type? FindType(string[] typeNameParts)
     {
         string[] namespaces = new string[typeNameParts.Length - 1];
-        string typeName = typeNameParts[typeNameParts.Length - 1];
+        string typeName = typeNameParts[^1];
 
         Array.Copy(typeNameParts, namespaces, namespaces.Length);
         ImportBase? currentImport = RootImport;
@@ -119,8 +119,7 @@ public sealed class ImportCollection
         if (methodName is null)
             throw new ArgumentNullException(nameof(methodName));
 
-        MethodInfo methodInfo = type.GetMethod(methodName, PublicStaticIgnoreCase);
-
+        MethodInfo? methodInfo = type.GetMethod(methodName, PublicStaticIgnoreCase);
         if (methodInfo is null)
         {
             string msg = string.Format(
@@ -137,11 +136,6 @@ public sealed class ImportCollection
 
     private void AddMethod(MethodInfo methodInfo, string @namespace)
     {
-        if (methodInfo is null)
-            throw new ArgumentNullException(nameof(methodInfo));
-        if (@namespace is null)
-            throw new ArgumentNullException(nameof(@namespace));
-
         options.AssertTypeIsAccessible(methodInfo.ReflectedType);
 
         if (methodInfo.IsStatic == false | methodInfo.IsPublic == false)

@@ -23,15 +23,10 @@ internal class CompareElement : BinaryExpressionElement
         RightChild = (Int32LiteralElement)rightChild;
     }
 
-    public void Validate()
-    {
-        ValidateInternal(operation);
-    }
+    public void Validate() => ValidateInternal(operation);
 
-    protected override void GetOperation(object operation)
-    {
+    protected override void GetOperation(object operation) =>
         this.operation = (LogicalCompareOperation)operation;
-    }
 
     protected override Type GetResultType(Type leftType, Type rightType)
     {
@@ -181,9 +176,7 @@ internal class CompareElement : BinaryExpressionElement
     {
         // Get the StringComparison from the options
         ExpressionBuilderOptions options = context.BuilderOptions;
-        Int32LiteralElement int32LiteralElement = new Int32LiteralElement(
-            (int)options.StringComparison
-        );
+        Int32LiteralElement int32LiteralElement = new((int)options.StringComparison);
 
         int32LiteralElement.Emit(ilg, context);
 
@@ -202,22 +195,14 @@ internal class CompareElement : BinaryExpressionElement
         }
     }
 
-    private static bool IsOpTypeEqualOrNotEqual(LogicalCompareOperation op)
-    {
-        return op == LogicalCompareOperation.Equal | op == LogicalCompareOperation.NotEqual;
-    }
+    private static bool IsOpTypeEqualOrNotEqual(LogicalCompareOperation op) =>
+        op == LogicalCompareOperation.Equal | op == LogicalCompareOperation.NotEqual;
 
-    private bool AreBothChildrenReferenceTypes()
-    {
-        return LeftChild.ResultType.IsValueType == false
-            & RightChild.ResultType.IsValueType == false;
-    }
+    private bool AreBothChildrenReferenceTypes() =>
+        LeftChild.ResultType.IsValueType == false & RightChild.ResultType.IsValueType == false;
 
-    private bool AreBothChildrenSameEnum()
-    {
-        return LeftChild.ResultType.IsEnum
-            && ReferenceEquals(LeftChild.ResultType, RightChild.ResultType);
-    }
+    private bool AreBothChildrenSameEnum() =>
+        LeftChild.ResultType.IsEnum && ReferenceEquals(LeftChild.ResultType, RightChild.ResultType);
 
     /// <summary>
     /// Emit the actual compare
@@ -292,8 +277,6 @@ internal class CompareElement : BinaryExpressionElement
         return GetCompareOpcode(greaterThan);
     }
 
-    private static OpCode GetCompareOpcode(bool greaterThan)
-    {
-        return greaterThan ? OpCodes.Cgt : OpCodes.Clt;
-    }
+    private static OpCode GetCompareOpcode(bool greaterThan) =>
+        greaterThan ? OpCodes.Cgt : OpCodes.Clt;
 }

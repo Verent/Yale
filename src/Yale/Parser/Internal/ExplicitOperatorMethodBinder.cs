@@ -23,10 +23,10 @@ internal class ExplicitOperatorMethodBinder : CustomBinder
         CultureInfo culture,
         string[] names,
         out object state
-    )
-    {
+    ) => throw new NotImplementedException();
+
+    public override object ChangeType(object value, Type type, CultureInfo? culture) =>
         throw new NotImplementedException();
-    }
 
     public override MethodBase? SelectMethod(
         BindingFlags bindingAttr,
