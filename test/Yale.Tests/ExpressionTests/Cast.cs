@@ -1,28 +1,27 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 
-namespace Yale.Tests.ExpressionTests
+namespace Yale.Tests.ExpressionTests;
+
+[TestClass]
+public class Cast
 {
-    [TestClass]
-    public class Cast
+    private readonly ComputeInstance _instance = new();
+
+    [TestMethod]
+    public void CastToInt()
     {
-        private readonly ComputeInstance _instance = new();
+        _instance.AddExpression("cast", "cast(100.25; int)");
 
-        [TestMethod]
-        public void CastToInt()
-        {
-            _instance.AddExpression("cast", "cast(100.25; int)");
+        Assert.AreEqual(100, _instance.GetResult("cast"));
+    }
 
-            Assert.AreEqual(100, _instance.GetResult("cast"));
-        }
+    [TestMethod]
+    public void PowerFloatVariable()
+    {
+        _instance.Variables.Add("a", 4.0);
+        _instance.AddExpression("b", "a^2");
 
-        [TestMethod]
-        public void PowerFloatVariable()
-        {
-            _instance.Variables.Add("a", 4.0);
-            _instance.AddExpression("b", "a^2");
-
-            Assert.AreEqual(16.0, (double)_instance.GetResult("b"));
-        }
+        Assert.AreEqual(16.0, (double)_instance.GetResult("b"));
     }
 }

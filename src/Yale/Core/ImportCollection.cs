@@ -5,155 +5,151 @@ using System.Reflection;
 using Yale.Expression;
 using Yale.Resources;
 
-namespace Yale.Core
+namespace Yale.Core;
+
+public sealed class ImportCollection
 {
-    public sealed class ImportCollection
+    private const BindingFlags OwnerFlags =
+        BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
+    private const BindingFlags PublicStaticIgnoreCase =
+        BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase;
+
+    internal NamespaceImport RootImport { get; }
+    private TypeImport ownerImport;
+    private readonly ExpressionBuilderOptions options;
+
+    private static readonly Dictionary<string, Type> OurBuiltinTypeMap = CreateBuiltinTypeMap();
+
+    internal ImportCollection(ExpressionBuilderOptions options)
     {
-        private const BindingFlags OwnerFlags =
-            BindingFlags.Public
-            | BindingFlags.NonPublic
-            | BindingFlags.Instance
-            | BindingFlags.Static;
-        private const BindingFlags PublicStaticIgnoreCase =
-            BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase;
+        this.options = options;
+        RootImport = new NamespaceImport("true", this.options);
+        ImportOwner(typeof(object));
+    }
 
-        internal NamespaceImport RootImport { get; }
-        private TypeImport ownerImport;
-        private readonly ExpressionBuilderOptions options;
-
-        private static readonly Dictionary<string, Type> OurBuiltinTypeMap = CreateBuiltinTypeMap();
-
-        internal ImportCollection(ExpressionBuilderOptions options)
+    private static Dictionary<string, Type> CreateBuiltinTypeMap()
+    {
+        return new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)
         {
-            this.options = options;
-            RootImport = new NamespaceImport("true", this.options);
-            ImportOwner(typeof(object));
+            { "boolean", typeof(bool) },
+            { "byte", typeof(byte) },
+            { "sbyte", typeof(sbyte) },
+            { "short", typeof(short) },
+            { "ushort", typeof(UInt16) },
+            { "int", typeof(Int32) },
+            { "uint", typeof(UInt32) },
+            { "long", typeof(long) },
+            { "ulong", typeof(ulong) },
+            { "single", typeof(float) },
+            { "double", typeof(double) },
+            { "decimal", typeof(decimal) },
+            { "char", typeof(char) },
+            { "object", typeof(object) },
+            { "string", typeof(string) }
+        };
+    }
+
+    internal void ImportOwner(Type ownerType) =>
+        ownerImport = new TypeImport(ownerType, OwnerFlags, false, options);
+
+    private NamespaceImport GetImport(string ns)
+    {
+        if (ns.Length == 0)
+        {
+            return RootImport;
         }
 
-        private static Dictionary<string, Type> CreateBuiltinTypeMap()
+        if (!(RootImport.FindImport(ns) is NamespaceImport import))
         {
-            return new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)
-            {
-                { "boolean", typeof(bool) },
-                { "byte", typeof(byte) },
-                { "sbyte", typeof(sbyte) },
-                { "short", typeof(short) },
-                { "ushort", typeof(UInt16) },
-                { "int", typeof(Int32) },
-                { "uint", typeof(UInt32) },
-                { "long", typeof(long) },
-                { "ulong", typeof(ulong) },
-                { "single", typeof(float) },
-                { "double", typeof(double) },
-                { "decimal", typeof(decimal) },
-                { "char", typeof(char) },
-                { "object", typeof(object) },
-                { "string", typeof(string) }
-            };
+            import = new NamespaceImport(ns, options);
+            RootImport.Add(import);
         }
 
-        internal void ImportOwner(Type ownerType) =>
-            ownerImport = new TypeImport(ownerType, OwnerFlags, false, options);
+        return import;
+    }
 
-        private NamespaceImport GetImport(string ns)
+    internal MemberInfo[] FindOwnerMembers(string memberName, MemberTypes memberType) =>
+        ownerImport.FindMembers(memberName, memberType);
+
+    internal Type? FindType(string[] typeNameParts)
+    {
+        string[] namespaces = new string[typeNameParts.Length - 1];
+        string typeName = typeNameParts[typeNameParts.Length - 1];
+
+        Array.Copy(typeNameParts, namespaces, namespaces.Length);
+        ImportBase? currentImport = RootImport;
+
+        foreach (string ns in namespaces)
         {
-            if (ns.Length == 0)
+            currentImport = currentImport.FindImport(ns);
+            if (currentImport is null)
             {
-                return RootImport;
+                break;
             }
-
-            if (!(RootImport.FindImport(ns) is NamespaceImport import))
-            {
-                import = new NamespaceImport(ns, options);
-                RootImport.Add(import);
-            }
-
-            return import;
         }
 
-        internal MemberInfo[] FindOwnerMembers(string memberName, MemberTypes memberType) =>
-            ownerImport.FindMembers(memberName, memberType);
+        return currentImport?.FindType(typeName);
+    }
 
-        internal Type? FindType(string[] typeNameParts)
+    internal static Type? GetBuiltinType(string name) =>
+        OurBuiltinTypeMap.TryGetValue(name, out Type? type) ? type : null;
+
+    public void AddType(Type type, string @namespace)
+    {
+        if (type is null)
+            throw new ArgumentNullException(nameof(type));
+        if (@namespace is null)
+            throw new ArgumentNullException(nameof(@namespace));
+
+        const BindingFlags publicStatic = BindingFlags.Public | BindingFlags.Static;
+        options.AssertTypeIsAccessible(type);
+
+        NamespaceImport import = GetImport(@namespace);
+        import.Add(new TypeImport(type, publicStatic, false, options));
+    }
+
+    public void AddType(Type type) => AddType(type, string.Empty);
+
+    public void AddMethod(string methodName, Type type, string @namespace)
+    {
+        if (type is null)
+            throw new ArgumentNullException(nameof(type));
+        if (@namespace is null)
+            throw new ArgumentNullException(nameof(@namespace));
+        if (methodName is null)
+            throw new ArgumentNullException(nameof(methodName));
+
+        MethodInfo methodInfo = type.GetMethod(methodName, PublicStaticIgnoreCase);
+
+        if (methodInfo is null)
         {
-            string[] namespaces = new string[typeNameParts.Length - 1];
-            string typeName = typeNameParts[typeNameParts.Length - 1];
-
-            Array.Copy(typeNameParts, namespaces, namespaces.Length);
-            ImportBase? currentImport = RootImport;
-
-            foreach (string ns in namespaces)
-            {
-                currentImport = currentImport.FindImport(ns);
-                if (currentImport is null)
-                {
-                    break;
-                }
-            }
-
-            return currentImport?.FindType(typeName);
+            string msg = string.Format(
+                CultureInfo.InvariantCulture,
+                GeneralErrors.CouldNotFindPublicStaticMethodOnType,
+                methodName,
+                type.Name
+            );
+            throw new ArgumentException(msg);
         }
 
-        internal static Type? GetBuiltinType(string name) =>
-            OurBuiltinTypeMap.TryGetValue(name, out Type? type) ? type : null;
+        AddMethod(methodInfo, @namespace);
+    }
 
-        public void AddType(Type type, string @namespace)
+    private void AddMethod(MethodInfo methodInfo, string @namespace)
+    {
+        if (methodInfo is null)
+            throw new ArgumentNullException(nameof(methodInfo));
+        if (@namespace is null)
+            throw new ArgumentNullException(nameof(@namespace));
+
+        options.AssertTypeIsAccessible(methodInfo.ReflectedType);
+
+        if (methodInfo.IsStatic == false | methodInfo.IsPublic == false)
         {
-            if (type is null)
-                throw new ArgumentNullException(nameof(type));
-            if (@namespace is null)
-                throw new ArgumentNullException(nameof(@namespace));
-
-            const BindingFlags publicStatic = BindingFlags.Public | BindingFlags.Static;
-            options.AssertTypeIsAccessible(type);
-
-            NamespaceImport import = GetImport(@namespace);
-            import.Add(new TypeImport(type, publicStatic, false, options));
+            throw new ArgumentException(GeneralErrors.OnlyPublicStaticMethodsCanBeImported);
         }
 
-        public void AddType(Type type) => AddType(type, string.Empty);
-
-        public void AddMethod(string methodName, Type type, string @namespace)
-        {
-            if (type is null)
-                throw new ArgumentNullException(nameof(type));
-            if (@namespace is null)
-                throw new ArgumentNullException(nameof(@namespace));
-            if (methodName is null)
-                throw new ArgumentNullException(nameof(methodName));
-
-            MethodInfo methodInfo = type.GetMethod(methodName, PublicStaticIgnoreCase);
-
-            if (methodInfo is null)
-            {
-                string msg = string.Format(
-                    CultureInfo.InvariantCulture,
-                    GeneralErrors.CouldNotFindPublicStaticMethodOnType,
-                    methodName,
-                    type.Name
-                );
-                throw new ArgumentException(msg);
-            }
-
-            AddMethod(methodInfo, @namespace);
-        }
-
-        private void AddMethod(MethodInfo methodInfo, string @namespace)
-        {
-            if (methodInfo is null)
-                throw new ArgumentNullException(nameof(methodInfo));
-            if (@namespace is null)
-                throw new ArgumentNullException(nameof(@namespace));
-
-            options.AssertTypeIsAccessible(methodInfo.ReflectedType);
-
-            if (methodInfo.IsStatic == false | methodInfo.IsPublic == false)
-            {
-                throw new ArgumentException(GeneralErrors.OnlyPublicStaticMethodsCanBeImported);
-            }
-
-            NamespaceImport import = GetImport(@namespace);
-            import.Add(new MethodImport(methodInfo, options));
-        }
+        NamespaceImport import = GetImport(@namespace);
+        import.Add(new MethodImport(methodInfo, options));
     }
 }

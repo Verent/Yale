@@ -1,30 +1,29 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Yale.Expression
+namespace Yale.Expression;
+
+/// <summary>
+/// Defines values to indicate the data type to use for storing real literals.
+/// </summary>
+[SuppressMessage(
+    "Documentation",
+    "CA1200:Avoid using cref tags with a prefix",
+    Justification = "Because they represent types"
+)]
+public enum RealLiteralDataType
 {
     /// <summary>
-    /// Defines values to indicate the data type to use for storing real literals.
+    /// Specifies that real literals will be stored using the <see cref="T:System.Single"/> data type.
     /// </summary>
-    [SuppressMessage(
-        "Documentation",
-        "CA1200:Avoid using cref tags with a prefix",
-        Justification = "Because they represent types"
-    )]
-    public enum RealLiteralDataType
-    {
-        /// <summary>
-        /// Specifies that real literals will be stored using the <see cref="T:System.Single"/> data type.
-        /// </summary>
-        Single,
+    Single,
 
-        /// <summary>
-        /// Specifies that real literals will be stored using the <see cref="T:System.Double"/> data type.
-        /// </summary>
-        Double,
+    /// <summary>
+    /// Specifies that real literals will be stored using the <see cref="T:System.Double"/> data type.
+    /// </summary>
+    Double,
 
-        /// <summary>
-        /// Specifies that real literals will be stored using the <see cref="T:System.Decimal"/> data type.
-        /// </summary>
-        Decimal
-    }
+    /// <summary>
+    /// Specifies that real literals will be stored using the <see cref="T:System.Decimal"/> data type.
+    /// </summary>
+    Decimal
 }

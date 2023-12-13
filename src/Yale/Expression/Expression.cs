@@ -1,39 +1,38 @@
 ﻿using System;
 
-namespace Yale.Expression
+namespace Yale.Expression;
+
+/// <summary>
+/// This class contains information about an expression and the delegate used to evaluate it.
+/// </summary>
+/// <typeparam name="T"></typeparam>
+internal class Expression<T>
 {
     /// <summary>
-    /// This class contains information about an expression and the delegate used to evaluate it.
+    /// The compiled delegate used to evaluate the expression
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    internal class Expression<T>
+    private readonly ExpressionEvaluator<T> evaluator;
+
+    private readonly ExpressionContext context;
+
+    internal Expression(
+        string expression,
+        ExpressionEvaluator<T> evaluator,
+        ExpressionContext context
+    )
     {
-        /// <summary>
-        /// The compiled delegate used to evaluate the expression
-        /// </summary>
-        private readonly ExpressionEvaluator<T> evaluator;
+        this.context = context;
+        this.evaluator = evaluator;
+        ExpressionText = expression;
+        ResultType = typeof(T);
+    }
 
-        private readonly ExpressionContext context;
+    public string ExpressionText { get; }
 
-        internal Expression(
-            string expression,
-            ExpressionEvaluator<T> evaluator,
-            ExpressionContext context
-        )
-        {
-            this.context = context;
-            this.evaluator = evaluator;
-            ExpressionText = expression;
-            ResultType = typeof(T);
-        }
+    public Type ResultType { get; }
 
-        public string ExpressionText { get; }
-
-        public Type ResultType { get; }
-
-        internal T Evaluate()
-        {
-            return evaluator(context.Owner, context, context.Variables);
-        }
+    internal T Evaluate()
+    {
+        return evaluator(context.Owner, context, context.Variables);
     }
 }

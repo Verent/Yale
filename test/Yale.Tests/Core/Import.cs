@@ -3,73 +3,72 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 using Yale.Expression;
 
-namespace Yale.Tests.Core
+namespace Yale.Tests.Core;
+
+[TestClass]
+public class Import
 {
-    [TestClass]
-    public class Import
+    private readonly ComputeInstance _instance = new();
+
+    [TestMethod]
+    public void Parse_ValidImportedTypeProperty_Executes()
     {
-        private readonly ComputeInstance _instance = new();
+        _instance.Imports.AddType(typeof(Math));
 
-        [TestMethod]
-        public void Parse_ValidImportedTypeProperty_Executes()
-        {
-            _instance.Imports.AddType(typeof(Math));
+        const string key = "math_constant";
 
-            const string key = "math_constant";
+        _instance.AddExpression(key, "E");
+        object result = _instance.GetResult(key);
 
-            _instance.AddExpression(key, "E");
-            object result = _instance.GetResult(key);
+        Assert.AreEqual(Math.E, result);
+    }
 
-            Assert.AreEqual(Math.E, result);
-        }
+    [TestMethod]
+    public void Parse_ValidImportedTypeMethod_Executes()
+    {
+        _instance.Imports.AddType(typeof(Math));
 
-        [TestMethod]
-        public void Parse_ValidImportedTypeMethod_Executes()
-        {
-            _instance.Imports.AddType(typeof(Math));
+        const string key = "math_function";
 
-            const string key = "math_function";
+        _instance.AddExpression(key, "Sqrt(16)");
+        object result = _instance.GetResult(key);
 
-            _instance.AddExpression(key, "Sqrt(16)");
-            object result = _instance.GetResult(key);
+        Assert.AreEqual(4.0, result);
+    }
 
-            Assert.AreEqual(4.0, result);
-        }
+    [TestMethod]
+    public void Parse_ValidImportedTypeWithNSMethod_Executes()
+    {
+        _instance.Imports.AddType(typeof(Math), "Test");
 
-        [TestMethod]
-        public void Parse_ValidImportedTypeWithNSMethod_Executes()
-        {
-            _instance.Imports.AddType(typeof(Math), "Test");
+        const string key = "math_function";
 
-            const string key = "math_function";
+        _instance.AddExpression(key, "Test.Sqrt(16)");
+        object result = _instance.GetResult(key);
 
-            _instance.AddExpression(key, "Test.Sqrt(16)");
-            object result = _instance.GetResult(key);
+        Assert.AreEqual(4.0, result);
+    }
 
-            Assert.AreEqual(4.0, result);
-        }
+    [TestMethod]
+    public void Parse_ImportedMethod_Executes()
+    {
+        _instance.Imports.AddMethod("Sqrt", typeof(Math), "Test");
 
-        [TestMethod]
-        public void Parse_ImportedMethod_Executes()
-        {
-            _instance.Imports.AddMethod("Sqrt", typeof(Math), "Test");
+        const string key = "math_function";
 
-            const string key = "math_function";
+        _instance.AddExpression(key, "Test.Sqrt(16)");
+        object result = _instance.GetResult(key);
 
-            _instance.AddExpression(key, "Test.Sqrt(16)");
-            object result = _instance.GetResult(key);
+        Assert.AreEqual(4.0, result);
+    }
 
-            Assert.AreEqual(4.0, result);
-        }
+    [TestMethod]
+    public void Parse_MethodNotImported_ThrowsException()
+    {
+        _instance.Imports.AddMethod("Sqrt", typeof(Math), "Test");
 
-        [TestMethod]
-        public void Parse_MethodNotImported_ThrowsException()
-        {
-            _instance.Imports.AddMethod("Sqrt", typeof(Math), "Test");
-
-            Assert.ThrowsException<ExpressionCompileException>(
-                () => _instance.AddExpression("key", "Test.Pow(16)")
-            );
-        }
+        Assert.ThrowsException<ExpressionCompileException>(
+            () => _instance.AddExpression("key", "Test.Pow(16)")
+        );
     }
 }

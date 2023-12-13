@@ -1,39 +1,38 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Yale.Tests.Helper
+namespace Yale.Tests.Helper;
+
+internal class TestClass<T> : INotifyPropertyChanged
 {
-    internal class TestClass<T> : INotifyPropertyChanged
+    private readonly string _caller;
+    private T _value;
+
+    public TestClass(string caller)
     {
-        private readonly string _caller;
-        private T _value;
+        _caller = caller;
+    }
 
-        public TestClass(string caller)
+    public string GetCaller()
+    {
+        return _caller;
+    }
+
+    public T Value
+    {
+        get => _value;
+        set
         {
-            _caller = caller;
+            _value = value;
+            OnPropertyChanged(nameof(Value));
         }
+    }
 
-        public string GetCaller()
-        {
-            return _caller;
-        }
+    public event PropertyChangedEventHandler PropertyChanged;
 
-        public T Value
-        {
-            get => _value;
-            set
-            {
-                _value = value;
-                OnPropertyChanged(nameof(Value));
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+    [NotifyPropertyChangedInvocator]
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

@@ -4,41 +4,40 @@ using Yale.Expression.Elements.Base.Literals;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
-namespace Yale.Expression.Elements.Literals
+namespace Yale.Expression.Elements.Literals;
+
+internal class TimeSpanLiteralElement : LiteralElement
 {
-    internal class TimeSpanLiteralElement : LiteralElement
+    private readonly TimeSpan _value;
+
+    public TimeSpanLiteralElement(string image)
     {
-        private readonly TimeSpan _value;
-
-        public TimeSpanLiteralElement(string image)
+        if (TimeSpan.TryParse(image, out _value) == false)
         {
-            if (TimeSpan.TryParse(image, out _value) == false)
-            {
-                throw CreateCompileException(
-                    CompileErrors.CannotParseType,
-                    CompileExceptionReason.InvalidFormat,
-                    typeof(TimeSpan).Name
-                );
-            }
-        }
-
-        public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
-        {
-            int index = ilGenerator.GetTempLocalIndex(typeof(TimeSpan));
-
-            Utility.EmitLoadLocalAddress(ilGenerator, index);
-
-            EmitLoad(_value.Ticks, ilGenerator);
-
-            System.Reflection.ConstructorInfo constructorInfo = typeof(TimeSpan).GetConstructor(
-                new[] { typeof(Int64) }
+            throw CreateCompileException(
+                CompileErrors.CannotParseType,
+                CompileExceptionReason.InvalidFormat,
+                typeof(TimeSpan).Name
             );
-
-            ilGenerator.Emit(OpCodes.Call, constructorInfo);
-
-            Utility.EmitLoadLocal(ilGenerator, index);
         }
-
-        public override Type ResultType => typeof(TimeSpan);
     }
+
+    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
+    {
+        int index = ilGenerator.GetTempLocalIndex(typeof(TimeSpan));
+
+        Utility.EmitLoadLocalAddress(ilGenerator, index);
+
+        EmitLoad(_value.Ticks, ilGenerator);
+
+        System.Reflection.ConstructorInfo constructorInfo = typeof(TimeSpan).GetConstructor(
+            new[] { typeof(Int64) }
+        );
+
+        ilGenerator.Emit(OpCodes.Call, constructorInfo);
+
+        Utility.EmitLoadLocal(ilGenerator, index);
+    }
+
+    public override Type ResultType => typeof(TimeSpan);
 }

@@ -2,19 +2,18 @@
 using Yale.Engine;
 using Yale.Expression;
 
-namespace Yale.Tests.Parser
-{
-    [TestClass]
-    public class Core
-    {
-        private readonly ComputeInstance instance = new();
+namespace Yale.Tests.Parser;
 
-        [TestMethod]
-        public void Parse_InvalidToken_ThrowsException()
-        {
-            Assert.ThrowsException<ExpressionCompileException>(
-                () => instance.AddExpression<int>("a", "b")
-            );
-        }
+[TestClass]
+public class Core
+{
+    private readonly ComputeInstance instance = new();
+
+    [TestMethod]
+    public void Parse_InvalidToken_ThrowsException()
+    {
+        Assert.ThrowsException<ExpressionCompileException>(
+            () => instance.AddExpression<int>("a", "b")
+        );
     }
 }

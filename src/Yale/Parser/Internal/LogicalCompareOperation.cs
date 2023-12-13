@@ -1,12 +1,11 @@
-﻿namespace Yale.Parser.Internal
+﻿namespace Yale.Parser.Internal;
+
+internal enum LogicalCompareOperation
 {
-    internal enum LogicalCompareOperation
-    {
-        LessThan,
-        GreaterThan,
-        Equal,
-        NotEqual,
-        LessThanOrEqual,
-        GreaterThanOrEqual
-    }
+    LessThan,
+    GreaterThan,
+    Equal,
+    NotEqual,
+    LessThanOrEqual,
+    GreaterThanOrEqual
 }

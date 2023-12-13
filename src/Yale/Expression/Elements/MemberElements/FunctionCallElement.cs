@@ -9,430 +9,427 @@ using Yale.Expression.Elements.Base.Literals;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
-namespace Yale.Expression.Elements.MemberElements
+namespace Yale.Expression.Elements.MemberElements;
+
+internal class FunctionCallElement : MemberElement
 {
-    internal class FunctionCallElement : MemberElement
+    private readonly ArgumentList arguments;
+    private readonly ICollection<MethodInfo> methods;
+
+    private CustomMethodInfo targetMethodInfo;
+
+    public FunctionCallElement(string name, ArgumentList arguments)
+        : base(name)
     {
-        private readonly ArgumentList arguments;
-        private readonly ICollection<MethodInfo> methods;
+        this.arguments = arguments;
+    }
 
-        private CustomMethodInfo targetMethodInfo;
+    internal FunctionCallElement(
+        string name,
+        ICollection<MethodInfo> methods,
+        ArgumentList arguments
+    )
+        : base(name)
+    {
+        this.arguments = arguments;
+        this.methods = methods;
+    }
 
-        public FunctionCallElement(string name, ArgumentList arguments)
-            : base(name)
+    protected override void ResolveInternal()
+    {
+        // Get the types of our arguments
+        Type[] argTypes = arguments.GetArgumentTypes();
+        // Find all methods with our name on the type
+        ICollection<MethodInfo>? methods = this.methods;
+
+        if (methods is null)
         {
-            this.arguments = arguments;
+            // Convert member info to method info
+            MemberInfo[] arr = GetMembers(MemberTypes.Method);
+            MethodInfo[] arr2 = new MethodInfo[arr.Length];
+            Array.Copy(arr, arr2, arr.Length);
+            methods = arr2;
         }
 
-        internal FunctionCallElement(
-            string name,
-            ICollection<MethodInfo> methods,
-            ArgumentList arguments
-        )
-            : base(name)
+        if (methods.Any())
         {
-            this.arguments = arguments;
-            this.methods = methods;
+            // More than one method exists with this name
+            BindToMethod(methods, Previous, argTypes);
+            return;
         }
 
-        protected override void ResolveInternal()
-        {
-            // Get the types of our arguments
-            Type[] argTypes = arguments.GetArgumentTypes();
-            // Find all methods with our name on the type
-            ICollection<MethodInfo>? methods = this.methods;
+        // No methods with this name exist; try to bind to an on-demand function
+        //_onDemandFunctionReturnType = Context.Variables.ResolveOnDemandFunction(Name, argTypes);
+        //if (_onDemandFunctionReturnType is null)
+        //{
+        //}
 
-            if (methods is null)
-            {
-                // Convert member info to method info
-                MemberInfo[] arr = GetMembers(MemberTypes.Method);
-                MethodInfo[] arr2 = new MethodInfo[arr.Length];
-                Array.Copy(arr, arr2, arr.Length);
-                methods = arr2;
-            }
+        ThrowFunctionNotFoundException(Previous);
+    }
 
-            if (methods.Any())
-            {
-                // More than one method exists with this name
-                BindToMethod(methods, Previous, argTypes);
-                return;
-            }
-
-            // No methods with this name exist; try to bind to an on-demand function
-            //_onDemandFunctionReturnType = Context.Variables.ResolveOnDemandFunction(Name, argTypes);
-            //if (_onDemandFunctionReturnType is null)
-            //{
-            //}
-
-            ThrowFunctionNotFoundException(Previous);
-        }
-
-        private void ThrowFunctionNotFoundException(MemberElement previous)
-        {
-            if (previous is null)
-            {
-                throw CreateCompileException(
-                    CompileErrors.UndefinedFunction,
-                    CompileExceptionReason.UndefinedName,
-                    MemberName,
-                    arguments
-                );
-            }
-            else
-            {
-                throw CreateCompileException(
-                    CompileErrors.UndefinedFunctionOnType,
-                    CompileExceptionReason.UndefinedName,
-                    MemberName,
-                    arguments,
-                    previous.TargetType.Name
-                );
-            }
-        }
-
-        private void ThrowNoAccessibleMethodsException(MemberElement previous)
-        {
-            if (previous is null)
-            {
-                throw CreateCompileException(
-                    CompileErrors.NoAccessibleMatches,
-                    CompileExceptionReason.AccessDenied,
-                    MemberName,
-                    arguments
-                );
-            }
-            else
-            {
-                throw CreateCompileException(
-                    CompileErrors.NoAccessibleMatchesOnType,
-                    CompileExceptionReason.AccessDenied,
-                    MemberName,
-                    arguments,
-                    previous.TargetType.Name
-                );
-            }
-        }
-
-        private void ThrowAmbiguousMethodCallException()
+    private void ThrowFunctionNotFoundException(MemberElement previous)
+    {
+        if (previous is null)
         {
             throw CreateCompileException(
-                CompileErrors.AmbiguousCallOfFunction,
-                CompileExceptionReason.AmbiguousMatch,
+                CompileErrors.UndefinedFunction,
+                CompileExceptionReason.UndefinedName,
                 MemberName,
                 arguments
             );
         }
-
-        /// <summary>
-        /// Try to find a match from a set of methods
-        /// </summary>
-        /// <param name="methods"></param>
-        /// <param name="previous"></param>
-        /// <param name="argTypes"></param>
-        private void BindToMethod(
-            ICollection<MethodInfo> methods,
-            MemberElement previous,
-            Type[] argTypes
-        )
+        else
         {
-            List<CustomMethodInfo> customInfoList = new List<CustomMethodInfo>();
-
-            // Wrap the MethodInfo in our custom class
-            foreach (MethodInfo methodInfo in methods)
-            {
-                CustomMethodInfo customMethodInfo = new CustomMethodInfo(methodInfo);
-                customInfoList.Add(customMethodInfo);
-            }
-
-            // Discard any methods that cannot qualify as overloads
-            CustomMethodInfo[] infoArray = customInfoList.ToArray();
-            customInfoList.Clear();
-
-            foreach (CustomMethodInfo methodInfo in infoArray)
-            {
-                if (methodInfo.IsMatch(argTypes))
-                {
-                    customInfoList.Add(methodInfo);
-                }
-            }
-
-            if (customInfoList.Count == 0)
-            {
-                // We have no methods that can qualify as overloads; throw exception
-                ThrowFunctionNotFoundException(previous);
-            }
-            else
-            {
-                // At least one method matches our criteria; do our custom overload resolution
-                ResolveOverloads(customInfoList.ToArray(), previous, argTypes);
-            }
-        }
-
-        /// <summary>
-        /// Find the best match from a set of overloaded methods
-        /// </summary>
-        /// <param name="customInfoArray"></param>
-        /// <param name="previous"></param>
-        /// <param name="argTypes"></param>
-        private void ResolveOverloads(
-            CustomMethodInfo[] customInfoArray,
-            MemberElement previous,
-            Type[] argTypes
-        )
-        {
-            // Compute a score for each candidate
-            foreach (CustomMethodInfo customMethodInfo in customInfoArray)
-            {
-                customMethodInfo.ComputeScore(argTypes);
-            }
-
-            // Sort array from best to worst matches
-            Array.Sort(customInfoArray);
-
-            // Discard any matches that aren't accessible
-            customInfoArray = GetAccessibleInfos(customInfoArray);
-
-            // No accessible methods left
-            if (customInfoArray.Length == 0)
-            {
-                ThrowNoAccessibleMethodsException(previous);
-            }
-
-            // Handle case where we have more than one match with the same score
-            DetectAmbiguousMatches(customInfoArray);
-
-            // If we get here, then there is only one best match
-            targetMethodInfo = customInfoArray[0];
-        }
-
-        private CustomMethodInfo[] GetAccessibleInfos(CustomMethodInfo[] infos)
-        {
-            List<CustomMethodInfo> accessible = new List<CustomMethodInfo>();
-
-            foreach (CustomMethodInfo customMethodInfo in infos)
-            {
-                if (customMethodInfo.IsAccessible(this))
-                {
-                    accessible.Add(customMethodInfo);
-                }
-            }
-
-            return accessible.ToArray();
-        }
-
-        /// <summary>
-        ///  Handle case where we have overloads with the same score
-        /// </summary>
-        /// <param name="infos"></param>
-        private void DetectAmbiguousMatches(CustomMethodInfo[] infos)
-        {
-            List<CustomMethodInfo> sameScores = new List<CustomMethodInfo>();
-            CustomMethodInfo first = infos[0];
-
-            // Find all matches with the same score as the best match
-            foreach (CustomMethodInfo customMethodInfo in infos)
-            {
-                if (((IEquatable<CustomMethodInfo>)customMethodInfo).Equals(first))
-                {
-                    sameScores.Add(customMethodInfo);
-                }
-            }
-
-            // More than one accessible match with the same score exists
-            if (sameScores.Count > 1)
-            {
-                ThrowAmbiguousMethodCallException();
-            }
-        }
-
-        protected override void Validate()
-        {
-            base.Validate();
-
-            //Todo: What is this?
-            //if (_myOnDemandFunctionReturnType != null)
-            //{
-            //    return;
-            //}
-
-            // Any function reference in an expression must return a value
-            if (ReferenceEquals(Method.ReturnType, typeof(void)))
-            {
-                throw CreateCompileException(
-                    CompileErrors.FunctionHasNoReturnValue,
-                    CompileExceptionReason.FunctionHasNoReturnValue,
-                    MemberName
-                );
-            }
-        }
-
-        public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
-        {
-            base.Emit(ilGenerator, context);
-
-            //Todo: What is this?
-            //var elements = _arguments.ToArray();
-            // If we are an on-demand function, then emit that and exit
-            //if (_myOnDemandFunctionReturnType != null)
-            //{
-            //    EmitOnDemandFunction(elements, ilg, services);
-            //    return;
-            //}
-
-            bool isOwnerMember = Context.OwnerType.IsAssignableFrom(Method.ReflectedType);
-
-            // Load the owner if required
-            if (Previous is null && isOwnerMember && IsStatic == false)
-            {
-                EmitLoadOwner(ilGenerator);
-            }
-
-            EmitFunctionCall(NextRequiresAddress, ilGenerator, context);
-        }
-
-        // Emit the arguments to a paramArray method call
-        private void EmitParamArrayArguments(
-            ParameterInfo[] parameters,
-            BaseExpressionElement[] elements,
-            YaleIlGenerator ilGenerator,
-            ExpressionContext context
-        )
-        {
-            // Get the fixed parameters
-            ParameterInfo[] fixedParameters = new ParameterInfo[
-                targetMethodInfo.FixedArgTypes.Length
-            ];
-            Array.Copy(parameters, fixedParameters, fixedParameters.Length);
-
-            // Get the corresponding fixed parameters
-            BaseExpressionElement[] fixedElements = new BaseExpressionElement[
-                targetMethodInfo.FixedArgTypes.Length
-            ];
-            Array.Copy(elements, fixedElements, fixedElements.Length);
-
-            // Emit the fixed arguments
-            EmitRegularFunctionInternal(fixedParameters, fixedElements, ilGenerator, context);
-
-            // Get the paramArray arguments
-            BaseExpressionElement[] paramArrayElements = new BaseExpressionElement[
-                elements.Length - fixedElements.Length
-            ];
-            Array.Copy(
-                elements,
-                fixedElements.Length,
-                paramArrayElements,
-                0,
-                paramArrayElements.Length
-            );
-
-            // Emit them into an array
-            EmitElementArrayLoad(
-                paramArrayElements,
-                targetMethodInfo.ParamArrayElementType,
-                ilGenerator,
-                context
+            throw CreateCompileException(
+                CompileErrors.UndefinedFunctionOnType,
+                CompileExceptionReason.UndefinedName,
+                MemberName,
+                arguments,
+                previous.TargetType.Name
             );
         }
+    }
 
-        /// <summary>
-        /// Emit elements into an array
-        /// </summary>
-        private static void EmitElementArrayLoad(
-            BaseExpressionElement[] elements,
-            Type arrayElementType,
-            YaleIlGenerator ilg,
-            ExpressionContext context
-        )
+    private void ThrowNoAccessibleMethodsException(MemberElement previous)
+    {
+        if (previous is null)
         {
-            // Load the array length
-            LiteralElement.EmitLoad(elements.Length, ilg);
+            throw CreateCompileException(
+                CompileErrors.NoAccessibleMatches,
+                CompileExceptionReason.AccessDenied,
+                MemberName,
+                arguments
+            );
+        }
+        else
+        {
+            throw CreateCompileException(
+                CompileErrors.NoAccessibleMatchesOnType,
+                CompileExceptionReason.AccessDenied,
+                MemberName,
+                arguments,
+                previous.TargetType.Name
+            );
+        }
+    }
 
-            // Create the array
-            ilg.Emit(OpCodes.Newarr, arrayElementType);
+    private void ThrowAmbiguousMethodCallException()
+    {
+        throw CreateCompileException(
+            CompileErrors.AmbiguousCallOfFunction,
+            CompileExceptionReason.AmbiguousMatch,
+            MemberName,
+            arguments
+        );
+    }
 
-            // Store the new array in a unique local and remember the index
-            LocalBuilder local = ilg.DeclareLocal(arrayElementType.MakeArrayType());
-            int arrayLocalIndex = local.LocalIndex;
-            Utility.EmitStoreLocal(ilg, arrayLocalIndex);
+    /// <summary>
+    /// Try to find a match from a set of methods
+    /// </summary>
+    /// <param name="methods"></param>
+    /// <param name="previous"></param>
+    /// <param name="argTypes"></param>
+    private void BindToMethod(
+        ICollection<MethodInfo> methods,
+        MemberElement previous,
+        Type[] argTypes
+    )
+    {
+        List<CustomMethodInfo> customInfoList = new List<CustomMethodInfo>();
 
-            for (int i = 0; i <= elements.Length - 1; i++)
+        // Wrap the MethodInfo in our custom class
+        foreach (MethodInfo methodInfo in methods)
+        {
+            CustomMethodInfo customMethodInfo = new CustomMethodInfo(methodInfo);
+            customInfoList.Add(customMethodInfo);
+        }
+
+        // Discard any methods that cannot qualify as overloads
+        CustomMethodInfo[] infoArray = customInfoList.ToArray();
+        customInfoList.Clear();
+
+        foreach (CustomMethodInfo methodInfo in infoArray)
+        {
+            if (methodInfo.IsMatch(argTypes))
             {
-                // Load the array
-                Utility.EmitLoadLocal(ilg, arrayLocalIndex);
-                // Load the index
-                LiteralElement.EmitLoad(i, ilg);
-                // Emit the element (with any required conversions)
-                BaseExpressionElement element = elements[i];
-                element.Emit(ilg, context);
-                ImplicitConverter.EmitImplicitConvert(element.ResultType, arrayElementType, ilg);
-                // Store it into the array
-                Utility.EmitArrayStore(ilg, arrayElementType);
+                customInfoList.Add(methodInfo);
             }
+        }
 
+        if (customInfoList.Count == 0)
+        {
+            // We have no methods that can qualify as overloads; throw exception
+            ThrowFunctionNotFoundException(previous);
+        }
+        else
+        {
+            // At least one method matches our criteria; do our custom overload resolution
+            ResolveOverloads(customInfoList.ToArray(), previous, argTypes);
+        }
+    }
+
+    /// <summary>
+    /// Find the best match from a set of overloaded methods
+    /// </summary>
+    /// <param name="customInfoArray"></param>
+    /// <param name="previous"></param>
+    /// <param name="argTypes"></param>
+    private void ResolveOverloads(
+        CustomMethodInfo[] customInfoArray,
+        MemberElement previous,
+        Type[] argTypes
+    )
+    {
+        // Compute a score for each candidate
+        foreach (CustomMethodInfo customMethodInfo in customInfoArray)
+        {
+            customMethodInfo.ComputeScore(argTypes);
+        }
+
+        // Sort array from best to worst matches
+        Array.Sort(customInfoArray);
+
+        // Discard any matches that aren't accessible
+        customInfoArray = GetAccessibleInfos(customInfoArray);
+
+        // No accessible methods left
+        if (customInfoArray.Length == 0)
+        {
+            ThrowNoAccessibleMethodsException(previous);
+        }
+
+        // Handle case where we have more than one match with the same score
+        DetectAmbiguousMatches(customInfoArray);
+
+        // If we get here, then there is only one best match
+        targetMethodInfo = customInfoArray[0];
+    }
+
+    private CustomMethodInfo[] GetAccessibleInfos(CustomMethodInfo[] infos)
+    {
+        List<CustomMethodInfo> accessible = new List<CustomMethodInfo>();
+
+        foreach (CustomMethodInfo customMethodInfo in infos)
+        {
+            if (customMethodInfo.IsAccessible(this))
+            {
+                accessible.Add(customMethodInfo);
+            }
+        }
+
+        return accessible.ToArray();
+    }
+
+    /// <summary>
+    ///  Handle case where we have overloads with the same score
+    /// </summary>
+    /// <param name="infos"></param>
+    private void DetectAmbiguousMatches(CustomMethodInfo[] infos)
+    {
+        List<CustomMethodInfo> sameScores = new List<CustomMethodInfo>();
+        CustomMethodInfo first = infos[0];
+
+        // Find all matches with the same score as the best match
+        foreach (CustomMethodInfo customMethodInfo in infos)
+        {
+            if (((IEquatable<CustomMethodInfo>)customMethodInfo).Equals(first))
+            {
+                sameScores.Add(customMethodInfo);
+            }
+        }
+
+        // More than one accessible match with the same score exists
+        if (sameScores.Count > 1)
+        {
+            ThrowAmbiguousMethodCallException();
+        }
+    }
+
+    protected override void Validate()
+    {
+        base.Validate();
+
+        //Todo: What is this?
+        //if (_myOnDemandFunctionReturnType != null)
+        //{
+        //    return;
+        //}
+
+        // Any function reference in an expression must return a value
+        if (ReferenceEquals(Method.ReturnType, typeof(void)))
+        {
+            throw CreateCompileException(
+                CompileErrors.FunctionHasNoReturnValue,
+                CompileExceptionReason.FunctionHasNoReturnValue,
+                MemberName
+            );
+        }
+    }
+
+    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
+    {
+        base.Emit(ilGenerator, context);
+
+        //Todo: What is this?
+        //var elements = _arguments.ToArray();
+        // If we are an on-demand function, then emit that and exit
+        //if (_myOnDemandFunctionReturnType != null)
+        //{
+        //    EmitOnDemandFunction(elements, ilg, services);
+        //    return;
+        //}
+
+        bool isOwnerMember = Context.OwnerType.IsAssignableFrom(Method.ReflectedType);
+
+        // Load the owner if required
+        if (Previous is null && isOwnerMember && IsStatic == false)
+        {
+            EmitLoadOwner(ilGenerator);
+        }
+
+        EmitFunctionCall(NextRequiresAddress, ilGenerator, context);
+    }
+
+    // Emit the arguments to a paramArray method call
+    private void EmitParamArrayArguments(
+        ParameterInfo[] parameters,
+        BaseExpressionElement[] elements,
+        YaleIlGenerator ilGenerator,
+        ExpressionContext context
+    )
+    {
+        // Get the fixed parameters
+        ParameterInfo[] fixedParameters = new ParameterInfo[targetMethodInfo.FixedArgTypes.Length];
+        Array.Copy(parameters, fixedParameters, fixedParameters.Length);
+
+        // Get the corresponding fixed parameters
+        BaseExpressionElement[] fixedElements = new BaseExpressionElement[
+            targetMethodInfo.FixedArgTypes.Length
+        ];
+        Array.Copy(elements, fixedElements, fixedElements.Length);
+
+        // Emit the fixed arguments
+        EmitRegularFunctionInternal(fixedParameters, fixedElements, ilGenerator, context);
+
+        // Get the paramArray arguments
+        BaseExpressionElement[] paramArrayElements = new BaseExpressionElement[
+            elements.Length - fixedElements.Length
+        ];
+        Array.Copy(
+            elements,
+            fixedElements.Length,
+            paramArrayElements,
+            0,
+            paramArrayElements.Length
+        );
+
+        // Emit them into an array
+        EmitElementArrayLoad(
+            paramArrayElements,
+            targetMethodInfo.ParamArrayElementType,
+            ilGenerator,
+            context
+        );
+    }
+
+    /// <summary>
+    /// Emit elements into an array
+    /// </summary>
+    private static void EmitElementArrayLoad(
+        BaseExpressionElement[] elements,
+        Type arrayElementType,
+        YaleIlGenerator ilg,
+        ExpressionContext context
+    )
+    {
+        // Load the array length
+        LiteralElement.EmitLoad(elements.Length, ilg);
+
+        // Create the array
+        ilg.Emit(OpCodes.Newarr, arrayElementType);
+
+        // Store the new array in a unique local and remember the index
+        LocalBuilder local = ilg.DeclareLocal(arrayElementType.MakeArrayType());
+        int arrayLocalIndex = local.LocalIndex;
+        Utility.EmitStoreLocal(ilg, arrayLocalIndex);
+
+        for (int i = 0; i <= elements.Length - 1; i++)
+        {
             // Load the array
             Utility.EmitLoadLocal(ilg, arrayLocalIndex);
+            // Load the index
+            LiteralElement.EmitLoad(i, ilg);
+            // Emit the element (with any required conversions)
+            BaseExpressionElement element = elements[i];
+            element.Emit(ilg, context);
+            ImplicitConverter.EmitImplicitConvert(element.ResultType, arrayElementType, ilg);
+            // Store it into the array
+            Utility.EmitArrayStore(ilg, arrayElementType);
         }
 
-        public void EmitFunctionCall(
-            bool nextRequiresAddress,
-            YaleIlGenerator ilg,
-            ExpressionContext context
-        )
-        {
-            ParameterInfo[] parameters = Method.GetParameters();
-            BaseExpressionElement[] elements = arguments.ToArray();
-
-            // Emit either a regular or paramArray call
-            if (targetMethodInfo.IsParamArray == false)
-            {
-                EmitRegularFunctionInternal(parameters, elements, ilg, context);
-            }
-            else
-            {
-                EmitParamArrayArguments(parameters, elements, ilg, context);
-            }
-
-            EmitMethodCall(ResultType, nextRequiresAddress, Method, ilg);
-        }
-
-        /// <summary>
-        ///  Emit the arguments to a regular method call
-        /// </summary>
-        private void EmitRegularFunctionInternal(
-            ParameterInfo[] parameters,
-            BaseExpressionElement[] elements,
-            YaleIlGenerator ilg,
-            ExpressionContext context
-        )
-        {
-            Debug.Assert(parameters.Length == elements.Length, "argument count mismatch");
-
-            // Emit each element and any required conversions to the actual parameter type
-            for (int i = 0; i <= parameters.Length - 1; i++)
-            {
-                BaseExpressionElement element = elements[i];
-                ParameterInfo pi = parameters[i];
-                element.Emit(ilg, context);
-                bool success = ImplicitConverter.EmitImplicitConvert(
-                    element.ResultType,
-                    pi.ParameterType,
-                    ilg
-                );
-                Debug.Assert(success, "conversion failed");
-            }
-        }
-
-        /// <summary>
-        /// The method info we will be calling
-        /// </summary>
-        private MethodInfo Method => targetMethodInfo.Target;
-
-        public override Type ResultType => Method.ReturnType;
-
-        protected override bool RequiresAddress => !IsGetTypeMethod(Method);
-
-        protected override bool IsPublic => Method.IsPublic;
-
-        public override bool IsStatic => Method.IsStatic;
+        // Load the array
+        Utility.EmitLoadLocal(ilg, arrayLocalIndex);
     }
+
+    public void EmitFunctionCall(
+        bool nextRequiresAddress,
+        YaleIlGenerator ilg,
+        ExpressionContext context
+    )
+    {
+        ParameterInfo[] parameters = Method.GetParameters();
+        BaseExpressionElement[] elements = arguments.ToArray();
+
+        // Emit either a regular or paramArray call
+        if (targetMethodInfo.IsParamArray == false)
+        {
+            EmitRegularFunctionInternal(parameters, elements, ilg, context);
+        }
+        else
+        {
+            EmitParamArrayArguments(parameters, elements, ilg, context);
+        }
+
+        EmitMethodCall(ResultType, nextRequiresAddress, Method, ilg);
+    }
+
+    /// <summary>
+    ///  Emit the arguments to a regular method call
+    /// </summary>
+    private void EmitRegularFunctionInternal(
+        ParameterInfo[] parameters,
+        BaseExpressionElement[] elements,
+        YaleIlGenerator ilg,
+        ExpressionContext context
+    )
+    {
+        Debug.Assert(parameters.Length == elements.Length, "argument count mismatch");
+
+        // Emit each element and any required conversions to the actual parameter type
+        for (int i = 0; i <= parameters.Length - 1; i++)
+        {
+            BaseExpressionElement element = elements[i];
+            ParameterInfo pi = parameters[i];
+            element.Emit(ilg, context);
+            bool success = ImplicitConverter.EmitImplicitConvert(
+                element.ResultType,
+                pi.ParameterType,
+                ilg
+            );
+            Debug.Assert(success, "conversion failed");
+        }
+    }
+
+    /// <summary>
+    /// The method info we will be calling
+    /// </summary>
+    private MethodInfo Method => targetMethodInfo.Target;
+
+    public override Type ResultType => Method.ReturnType;
+
+    protected override bool RequiresAddress => !IsGetTypeMethod(Method);
+
+    protected override bool IsPublic => Method.IsPublic;
+
+    public override bool IsStatic => Method.IsStatic;
 }

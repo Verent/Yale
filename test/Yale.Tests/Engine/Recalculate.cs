@@ -2,185 +2,174 @@
 using Yale.Engine;
 using Yale.Tests.Helper;
 
-namespace Yale.Tests.Engine
+namespace Yale.Tests.Engine;
+
+[TestClass]
+public class Recalculate
 {
-    [TestClass]
-    public class Recalculate
+    private readonly ComputeInstance autoInstance =
+        new(new ComputeInstanceOptions { AutoRecalculate = true });
+
+    private readonly ComputeInstance lazyInstance =
+        new(new ComputeInstanceOptions { AutoRecalculate = true, LazyRecalculate = true });
+
+    private readonly ComputeInstance noRecalculateInstance =
+        new(new ComputeInstanceOptions { AutoRecalculate = false, LazyRecalculate = false });
+
+    [TestMethod]
+    public void AutoRecalculate_ValueUpdated_ReturnsUpdatedValue()
     {
-        private readonly ComputeInstance autoInstance =
-            new(new ComputeInstanceOptions { AutoRecalculate = true });
+        autoInstance.Variables.Add("a", 10);
+        autoInstance.AddExpression<int>("b", "a");
 
-        private readonly ComputeInstance lazyInstance =
-            new(new ComputeInstanceOptions { AutoRecalculate = true, LazyRecalculate = true });
+        autoInstance.Variables["a"] = 20;
+        object result = autoInstance.GetResult("b");
 
-        private readonly ComputeInstance noRecalculateInstance =
-            new(new ComputeInstanceOptions { AutoRecalculate = false, LazyRecalculate = false });
+        Assert.AreEqual(20, result);
+    }
 
-        [TestMethod]
-        public void AutoRecalculate_ValueUpdated_ReturnsUpdatedValue()
-        {
-            autoInstance.Variables.Add("a", 10);
-            autoInstance.AddExpression<int>("b", "a");
+    [TestMethod]
+    public void AutoRecalculate_ValueUpdatedDependentExpression_ReturnUpdatedValue()
+    {
+        autoInstance.Variables.Add("a", 10);
+        autoInstance.AddExpression<int>("b", "a");
+        autoInstance.AddExpression<int>("c", "b");
 
-            autoInstance.Variables["a"] = 20;
-            object result = autoInstance.GetResult("b");
+        autoInstance.Variables["a"] = 20;
+        object result = autoInstance.GetResult("c");
 
-            Assert.AreEqual(20, result);
-        }
+        Assert.AreEqual(20, result);
+    }
 
-        [TestMethod]
-        public void AutoRecalculate_ValueUpdatedDependentExpression_ReturnUpdatedValue()
-        {
-            autoInstance.Variables.Add("a", 10);
-            autoInstance.AddExpression<int>("b", "a");
-            autoInstance.AddExpression<int>("c", "b");
+    [TestMethod]
+    public void AutoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
+    {
+        TestClass<string> testObject =
+            new(nameof(AutoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
+        string expected = "a string";
 
-            autoInstance.Variables["a"] = 20;
-            object result = autoInstance.GetResult("c");
+        testObject.Value = expected;
 
-            Assert.AreEqual(20, result);
-        }
+        autoInstance.Variables["o"] = testObject;
+        autoInstance.AddExpression<string>("e", "o.Value");
 
-        [TestMethod]
-        public void AutoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
-        {
-            TestClass<string> testObject =
-                new(
-                    nameof(
-                        AutoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue
-                    )
-                );
-            string expected = "a string";
+        Assert.AreEqual(expected, autoInstance.GetResult("e"));
 
-            testObject.Value = expected;
+        expected = "a new string";
+        testObject.Value = expected;
 
-            autoInstance.Variables["o"] = testObject;
-            autoInstance.AddExpression<string>("e", "o.Value");
+        Assert.AreEqual(expected, autoInstance.GetResult("e"));
+    }
 
-            Assert.AreEqual(expected, autoInstance.GetResult("e"));
+    [TestMethod]
+    public void AutoRecalculate_Int_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
+    {
+        TestClass<int> testObject =
+            new(
+                nameof(
+                    AutoRecalculate_Int_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue
+                )
+            );
+        int expected = 1;
 
-            expected = "a new string";
-            testObject.Value = expected;
+        testObject.Value = expected;
 
-            Assert.AreEqual(expected, autoInstance.GetResult("e"));
-        }
+        autoInstance.Variables["o"] = testObject;
+        autoInstance.AddExpression<int>("e", "o.Value");
 
-        [TestMethod]
-        public void AutoRecalculate_Int_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
-        {
-            TestClass<int> testObject =
-                new(
-                    nameof(
-                        AutoRecalculate_Int_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue
-                    )
-                );
-            int expected = 1;
+        Assert.AreEqual(expected, autoInstance.GetResult("e"));
 
-            testObject.Value = expected;
+        expected = 2;
+        testObject.Value = expected;
 
-            autoInstance.Variables["o"] = testObject;
-            autoInstance.AddExpression<int>("e", "o.Value");
+        Assert.AreEqual(expected, autoInstance.GetResult("e"));
+    }
 
-            Assert.AreEqual(expected, autoInstance.GetResult("e"));
+    [TestMethod]
+    public void LazyRecalculate_ValueUpdated_ReturnUpdatedValue()
+    {
+        lazyInstance.Variables.Add("a", 10);
+        lazyInstance.AddExpression<int>("b", "a");
 
-            expected = 2;
-            testObject.Value = expected;
+        lazyInstance.Variables["a"] = 20;
+        object result = lazyInstance.GetResult("b");
 
-            Assert.AreEqual(expected, autoInstance.GetResult("e"));
-        }
+        Assert.AreEqual(20, result);
+    }
 
-        [TestMethod]
-        public void LazyRecalculate_ValueUpdated_ReturnUpdatedValue()
-        {
-            lazyInstance.Variables.Add("a", 10);
-            lazyInstance.AddExpression<int>("b", "a");
+    [TestMethod]
+    public void LazyRecalculate_ValueUpdatedDependentExpression_ReturnUpdatedValue()
+    {
+        lazyInstance.Variables.Add("a", 10);
+        lazyInstance.AddExpression<int>("b", "a");
+        lazyInstance.AddExpression<int>("c", "b");
 
-            lazyInstance.Variables["a"] = 20;
-            object result = lazyInstance.GetResult("b");
+        lazyInstance.Variables["a"] = 20;
+        object result = lazyInstance.GetResult("c");
 
-            Assert.AreEqual(20, result);
-        }
+        Assert.AreEqual(20, result);
+    }
 
-        [TestMethod]
-        public void LazyRecalculate_ValueUpdatedDependentExpression_ReturnUpdatedValue()
-        {
-            lazyInstance.Variables.Add("a", 10);
-            lazyInstance.AddExpression<int>("b", "a");
-            lazyInstance.AddExpression<int>("c", "b");
+    [TestMethod]
+    public void LazyRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
+    {
+        TestClass<string> testObject =
+            new(nameof(LazyRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
+        string expected = "a string";
 
-            lazyInstance.Variables["a"] = 20;
-            object result = lazyInstance.GetResult("c");
+        testObject.Value = expected;
 
-            Assert.AreEqual(20, result);
-        }
+        lazyInstance.Variables["o"] = testObject;
+        lazyInstance.AddExpression<string>("e", "o.Value");
 
-        [TestMethod]
-        public void LazyRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
-        {
-            TestClass<string> testObject =
-                new(
-                    nameof(
-                        LazyRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue
-                    )
-                );
-            string expected = "a string";
+        Assert.AreEqual(expected, lazyInstance.GetResult("e"));
 
-            testObject.Value = expected;
+        expected = "a new string";
+        testObject.Value = expected;
 
-            lazyInstance.Variables["o"] = testObject;
-            lazyInstance.AddExpression<string>("e", "o.Value");
+        Assert.AreEqual(expected, lazyInstance.GetResult("e"));
+    }
 
-            Assert.AreEqual(expected, lazyInstance.GetResult("e"));
+    [TestMethod]
+    public void NoRecalculate_ValueUpdated_ReturnStartValue()
+    {
+        noRecalculateInstance.Variables.Add("a", 10);
+        noRecalculateInstance.AddExpression<int>("b", "a");
 
-            expected = "a new string";
-            testObject.Value = expected;
+        noRecalculateInstance.Variables["a"] = 20;
+        object result = noRecalculateInstance.GetResult("b");
 
-            Assert.AreEqual(expected, lazyInstance.GetResult("e"));
-        }
+        Assert.AreEqual(10, result);
+    }
 
-        [TestMethod]
-        public void NoRecalculate_ValueUpdated_ReturnStartValue()
-        {
-            noRecalculateInstance.Variables.Add("a", 10);
-            noRecalculateInstance.AddExpression<int>("b", "a");
+    [TestMethod]
+    public void NoRecalculate_ValueUpdatedDependentExpression_ReturnStartValue()
+    {
+        noRecalculateInstance.Variables.Add("a", 10);
+        noRecalculateInstance.AddExpression<int>("b", "a");
+        noRecalculateInstance.AddExpression<int>("c", "b");
 
-            noRecalculateInstance.Variables["a"] = 20;
-            object result = noRecalculateInstance.GetResult("b");
+        noRecalculateInstance.Variables["a"] = 20;
+        object result = noRecalculateInstance.GetResult("c");
 
-            Assert.AreEqual(10, result);
-        }
+        Assert.AreEqual(10, result);
+    }
 
-        [TestMethod]
-        public void NoRecalculate_ValueUpdatedDependentExpression_ReturnStartValue()
-        {
-            noRecalculateInstance.Variables.Add("a", 10);
-            noRecalculateInstance.AddExpression<int>("b", "a");
-            noRecalculateInstance.AddExpression<int>("c", "b");
+    [TestMethod]
+    public void NoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
+    {
+        TestClass<string> testObject =
+            new(nameof(NoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
+        string expected = "a string";
 
-            noRecalculateInstance.Variables["a"] = 20;
-            object result = noRecalculateInstance.GetResult("c");
+        testObject.Value = expected;
 
-            Assert.AreEqual(10, result);
-        }
+        noRecalculateInstance.Variables.Add("o", testObject);
+        noRecalculateInstance.AddExpression<string>("e", "o.Value");
 
-        [TestMethod]
-        public void NoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
-        {
-            TestClass<string> testObject =
-                new(
-                    nameof(NoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue)
-                );
-            string expected = "a string";
+        Assert.AreEqual(expected, noRecalculateInstance.GetResult("e"));
 
-            testObject.Value = expected;
-
-            noRecalculateInstance.Variables.Add("o", testObject);
-            noRecalculateInstance.AddExpression<string>("e", "o.Value");
-
-            Assert.AreEqual(expected, noRecalculateInstance.GetResult("e"));
-
-            testObject.Value = "a new string";
-            Assert.AreEqual(expected, noRecalculateInstance.GetResult("e"));
-        }
+        testObject.Value = "a new string";
+        Assert.AreEqual(expected, noRecalculateInstance.GetResult("e"));
     }
 }

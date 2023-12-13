@@ -3,79 +3,77 @@ using System.Globalization;
 using Yale.Expression.Elements.Base.Literals;
 using Yale.Parser.Internal;
 
-namespace Yale.Expression.Elements.Literals.Integral
+namespace Yale.Expression.Elements.Literals.Integral;
+
+internal class Int64LiteralElement : IntegralLiteralElement
 {
-    internal class Int64LiteralElement : IntegralLiteralElement
+    private Int64 _value;
+    private const string MinValue = "9223372036854775808";
+    private readonly bool _isMinValue;
+
+    public Int64LiteralElement(Int64 value)
     {
-        private Int64 _value;
-        private const string MinValue = "9223372036854775808";
-        private readonly bool _isMinValue;
+        _value = value;
+    }
 
-        public Int64LiteralElement(Int64 value)
+    private Int64LiteralElement()
+    {
+        _isMinValue = true;
+    }
+
+    public static Int64LiteralElement TryCreate(string image, bool isHex, bool negated)
+    {
+        if (negated & image == MinValue)
         {
-            _value = value;
+            return new Int64LiteralElement();
         }
 
-        private Int64LiteralElement()
+        if (isHex)
         {
-            _isMinValue = true;
-        }
-
-        public static Int64LiteralElement TryCreate(string image, bool isHex, bool negated)
-        {
-            if (negated & image == MinValue)
+            if (
+                Int64.TryParse(image, NumberStyles.AllowHexSpecifier, null, out long value) == false
+            )
             {
-                return new Int64LiteralElement();
-            }
-
-            if (isHex)
-            {
-                if (
-                    Int64.TryParse(image, NumberStyles.AllowHexSpecifier, null, out long value)
-                    == false
-                )
-                {
-                    return null;
-                }
-
-                //Todo: What does this do?
-                if (value >= 0 & value <= Int64.MaxValue)
-                {
-                    return new Int64LiteralElement(value);
-                }
-
                 return null;
             }
-            else
+
+            //Todo: What does this do?
+            if (value >= 0 & value <= Int64.MaxValue)
             {
-                if (Int64.TryParse(image, out long value))
-                {
-                    return new Int64LiteralElement(value);
-                }
-                else
-                {
-                    return null;
-                }
+                return new Int64LiteralElement(value);
             }
-        }
 
-        public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
-        {
-            EmitLoad(_value, ilGenerator);
+            return null;
         }
-
-        public void Negate()
+        else
         {
-            if (_isMinValue)
+            if (Int64.TryParse(image, out long value))
             {
-                _value = Int64.MinValue;
+                return new Int64LiteralElement(value);
             }
             else
             {
-                _value = -_value;
+                return null;
             }
         }
-
-        public override Type ResultType => typeof(Int64);
     }
+
+    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
+    {
+        EmitLoad(_value, ilGenerator);
+    }
+
+    public void Negate()
+    {
+        if (_isMinValue)
+        {
+            _value = Int64.MinValue;
+        }
+        else
+        {
+            _value = -_value;
+        }
+    }
+
+    public override Type ResultType => typeof(Int64);
 }

@@ -1,8 +1,7 @@
-﻿namespace Yale.Parser.Internal
+﻿namespace Yale.Parser.Internal;
+
+internal enum AndOrOperation
 {
-    internal enum AndOrOperation
-    {
-        And,
-        Or
-    }
+    And,
+    Or
 }
