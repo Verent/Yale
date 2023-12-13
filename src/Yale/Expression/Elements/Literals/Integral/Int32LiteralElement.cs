@@ -37,7 +37,10 @@ namespace Yale.Expression.Elements.Literals.Integral
             if (isHex)
             {
                 // Since Int32.TryParse will succeed for a string like 0xFFFFFFFF we have to do some special handling
-                if (int.TryParse(image, NumberStyles.AllowHexSpecifier, null, out int value) == false)
+                if (
+                    int.TryParse(image, NumberStyles.AllowHexSpecifier, null, out int value)
+                    == false
+                )
                 {
                     return null;
                 }

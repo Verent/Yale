@@ -13,9 +13,7 @@ namespace Yale.Expression.Elements.MemberElements
             _myElement = element;
         }
 
-        protected override void ResolveInternal()
-        {
-        }
+        protected override void ResolveInternal() { }
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {

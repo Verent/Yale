@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-
 using Yale.Core.Interfaces;
 
 namespace Yale.Core
@@ -14,7 +13,11 @@ namespace Yale.Core
             enumerator = values.GetEnumerator();
         }
 
-        public KeyValuePair<string, object> Current => new KeyValuePair<string, object>(enumerator.Current.Key, enumerator.Current.Value.ValueAsObject);
+        public KeyValuePair<string, object> Current =>
+            new KeyValuePair<string, object>(
+                enumerator.Current.Key,
+                enumerator.Current.Value.ValueAsObject
+            );
 
         object IEnumerator.Current => Current;
 

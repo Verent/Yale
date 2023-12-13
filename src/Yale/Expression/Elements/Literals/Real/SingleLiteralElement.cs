@@ -10,8 +10,7 @@ namespace Yale.Expression.Elements.Literals.Real
     {
         private readonly float _value;
 
-        private SingleLiteralElement()
-        { }
+        private SingleLiteralElement() { }
 
         public SingleLiteralElement(float value)
         {

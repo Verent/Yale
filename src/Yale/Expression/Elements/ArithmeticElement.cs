@@ -11,9 +11,20 @@ namespace Yale.Expression.Elements
 {
     internal class ArithmeticElement : BinaryExpressionElement
     {
-        private static readonly MethodInfo powerMethodInfo = typeof(Math).GetMethod(nameof(Math.Pow), BindingFlags.Public | BindingFlags.Static);
-        private static readonly MethodInfo stringConcatMethodInfo = typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(string), typeof(string) }, null);
-        private static readonly MethodInfo objectConcatMethodInfo = typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(object), typeof(object) }, null);
+        private static readonly MethodInfo powerMethodInfo = typeof(Math).GetMethod(
+            nameof(Math.Pow),
+            BindingFlags.Public | BindingFlags.Static
+        );
+        private static readonly MethodInfo stringConcatMethodInfo = typeof(string).GetMethod(
+            nameof(string.Concat),
+            new[] { typeof(string), typeof(string) },
+            null
+        );
+        private static readonly MethodInfo objectConcatMethodInfo = typeof(string).GetMethod(
+            nameof(string.Concat),
+            new[] { typeof(object), typeof(object) },
+            null
+        );
 
         private BinaryArithmeticOperation operation;
 
@@ -86,7 +97,10 @@ namespace Yale.Expression.Elements
                 BinaryArithmeticOperation.Divide => "Division",
                 BinaryArithmeticOperation.Mod => "Modulus",
                 BinaryArithmeticOperation.Power => "Exponent",
-                _ => throw new InvalidOperationException($"Operation {operation} is not a valid arithmetic operation"),
+                _
+                    => throw new InvalidOperationException(
+                        $"Operation {operation} is not a valid arithmetic operation"
+                    ),
             };
         }
 
@@ -119,11 +133,19 @@ namespace Yale.Expression.Elements
         /// <summary>
         /// Emit an arithmetic operation with handling for unsigned and checked contexts
         /// </summary>
-        private void EmitArithmeticOperation(BinaryArithmeticOperation operation, YaleIlGenerator ilGenerator, ExpressionContext context)
+        private void EmitArithmeticOperation(
+            BinaryArithmeticOperation operation,
+            YaleIlGenerator ilGenerator,
+            ExpressionContext context
+        )
         {
             ExpressionBuilderOptions options = context.BuilderOptions;
-            bool unsigned = IsUnsignedForArithmetic(LeftChild.ResultType) & IsUnsignedForArithmetic(RightChild.ResultType);
-            bool integral = Utility.IsIntegralType(LeftChild.ResultType) & Utility.IsIntegralType(RightChild.ResultType);
+            bool unsigned =
+                IsUnsignedForArithmetic(LeftChild.ResultType)
+                & IsUnsignedForArithmetic(RightChild.ResultType);
+            bool integral =
+                Utility.IsIntegralType(LeftChild.ResultType)
+                & Utility.IsIntegralType(RightChild.ResultType);
             bool emitOverflow = integral & options.OverflowChecked;
 
             EmitChildWithConvert(LeftChild, ResultType, ilGenerator, context);
@@ -191,7 +213,11 @@ namespace Yale.Expression.Elements
             }
         }
 
-        private void EmitOptimizedPower(YaleIlGenerator ilGenerator, bool emitOverflow, bool unsigned)
+        private void EmitOptimizedPower(
+            YaleIlGenerator ilGenerator,
+            bool emitOverflow,
+            bool unsigned
+        )
         {
             Int32LiteralElement right = (Int32LiteralElement)RightChild;
 
@@ -199,7 +225,11 @@ namespace Yale.Expression.Elements
             {
                 ilGenerator.Emit(OpCodes.Pop);
                 IntegralLiteralElement.EmitLoad(1, ilGenerator);
-                ImplicitConverter.EmitImplicitNumericConvert(typeof(Int32), LeftChild.ResultType, ilGenerator);
+                ImplicitConverter.EmitImplicitNumericConvert(
+                    typeof(Int32),
+                    LeftChild.ResultType,
+                    ilGenerator
+                );
                 return;
             }
 
@@ -220,7 +250,11 @@ namespace Yale.Expression.Elements
             }
         }
 
-        private static void EmitMultiply(YaleIlGenerator ilGenerator, bool emitOverflow, bool unsigned)
+        private static void EmitMultiply(
+            YaleIlGenerator ilGenerator,
+            bool emitOverflow,
+            bool unsigned
+        )
         {
             if (emitOverflow)
             {
@@ -267,7 +301,10 @@ namespace Yale.Expression.Elements
         {
             get
             {
-                if (operation != BinaryArithmeticOperation.Power || RightChild is Int32LiteralElement == false)
+                if (
+                    operation != BinaryArithmeticOperation.Power
+                    || RightChild is Int32LiteralElement == false
+                )
                 {
                     return false;
                 }

@@ -1,5 +1,5 @@
-﻿using PerCederberg.Grammatica.Runtime;
-using System.IO;
+﻿using System.IO;
+using PerCederberg.Grammatica.Runtime;
 
 namespace Yale.Parser
 {
@@ -29,12 +29,14 @@ namespace Yale.Parser
             SUBPRODUCTION_16 = 3016
         }
 
-        public ExpressionParser(TextReader input) : base(new ExpressionTokenizer(input))
+        public ExpressionParser(TextReader input)
+            : base(new ExpressionTokenizer(input))
         {
             CreatePatterns();
         }
 
-        public ExpressionParser(TextReader input, Analyzer analyzer) : base(new ExpressionTokenizer(input), analyzer)
+        public ExpressionParser(TextReader input, Analyzer analyzer)
+            : base(new ExpressionTokenizer(input), analyzer)
         {
             CreatePatterns();
         }
@@ -91,7 +93,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)Token.IN_LIST_TARGET_EXPRESSION, "InListTargetExpression");
+            pattern = new ProductionPattern(
+                (int)Token.IN_LIST_TARGET_EXPRESSION,
+                "InListTargetExpression"
+            );
             alt = new ProductionPatternAlternative();
             alt.AddToken((int)Token.LEFT_PAREN, 1, 1);
             alt.AddProduction((int)Token.ARGUMENT_LIST, 1, 1);
@@ -120,7 +125,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)Token.MULTIPLICATIVE_EXPRESSION, "MultiplicativeExpression");
+            pattern = new ProductionPattern(
+                (int)Token.MULTIPLICATIVE_EXPRESSION,
+                "MultiplicativeExpression"
+            );
             alt = new ProductionPatternAlternative();
             alt.AddProduction((int)Token.POWER_EXPRESSION, 1, 1);
             alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_12, 0, -1);
@@ -148,7 +156,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)Token.MEMBER_ACCESS_EXPRESSION, "MemberAccessExpression");
+            pattern = new ProductionPattern(
+                (int)Token.MEMBER_ACCESS_EXPRESSION,
+                "MemberAccessExpression"
+            );
             alt = new ProductionPatternAlternative();
             alt.AddToken((int)Token.DOT, 1, 1);
             alt.AddProduction((int)Token.MEMBER_FUNCTION_EXPRESSION, 1, 1);
@@ -170,7 +181,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)Token.MEMBER_FUNCTION_EXPRESSION, "MemberFunctionExpression");
+            pattern = new ProductionPattern(
+                (int)Token.MEMBER_FUNCTION_EXPRESSION,
+                "MemberFunctionExpression"
+            );
             alt = new ProductionPatternAlternative();
             alt.AddProduction((int)Token.FIELD_PROPERTY_EXPRESSION, 1, 1);
             pattern.AddAlternative(alt);
@@ -179,13 +193,19 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)Token.FIELD_PROPERTY_EXPRESSION, "FieldPropertyExpression");
+            pattern = new ProductionPattern(
+                (int)Token.FIELD_PROPERTY_EXPRESSION,
+                "FieldPropertyExpression"
+            );
             alt = new ProductionPatternAlternative();
             alt.AddToken((int)Token.IDENTIFIER, 1, 1);
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)Token.SPECIAL_FUNCTION_EXPRESSION, "SpecialFunctionExpression");
+            pattern = new ProductionPattern(
+                (int)Token.SPECIAL_FUNCTION_EXPRESSION,
+                "SpecialFunctionExpression"
+            );
             alt = new ProductionPatternAlternative();
             alt.AddProduction((int)Token.IF_EXPRESSION, 1, 1);
             pattern.AddAlternative(alt);
@@ -193,7 +213,6 @@ namespace Yale.Parser
             alt.AddProduction((int)Token.CAST_EXPRESSION, 1, 1);
             pattern.AddAlternative(alt);
             AddPattern(pattern);
-
 
             pattern = new ProductionPattern((int)Token.IF_EXPRESSION, "IfExpression");
             //if(expr;expr;expr)
@@ -236,7 +255,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)Token.FUNCTION_CALL_EXPRESSION, "FunctionCallExpression");
+            pattern = new ProductionPattern(
+                (int)Token.FUNCTION_CALL_EXPRESSION,
+                "FunctionCallExpression"
+            );
             alt = new ProductionPatternAlternative();
             alt.AddToken((int)Token.IDENTIFIER, 1, 1);
             alt.AddToken((int)Token.LEFT_PAREN, 1, 1);
@@ -282,7 +304,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)Token.BOOLEAN_LITERAL_EXPRESSION, "BooleanLiteralExpression");
+            pattern = new ProductionPattern(
+                (int)Token.BOOLEAN_LITERAL_EXPRESSION,
+                "BooleanLiteralExpression"
+            );
             alt = new ProductionPatternAlternative();
             alt.AddToken((int)Token.TRUE, 1, 1);
             pattern.AddAlternative(alt);
@@ -299,7 +324,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_1, "Subproduction1")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_1,
+                "Subproduction1"
+            )
             {
                 Synthetic = true
             };
@@ -309,7 +337,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_2, "Subproduction2")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_2,
+                "Subproduction2"
+            )
             {
                 Synthetic = true
             };
@@ -319,7 +350,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_3, "Subproduction3")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_3,
+                "Subproduction3"
+            )
             {
                 Synthetic = true
             };
@@ -329,7 +363,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_4, "Subproduction4")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_4,
+                "Subproduction4"
+            )
             {
                 Synthetic = true
             };
@@ -339,7 +376,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_5, "Subproduction5")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_5,
+                "Subproduction5"
+            )
             {
                 Synthetic = true
             };
@@ -363,7 +403,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_6, "Subproduction6")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_6,
+                "Subproduction6"
+            )
             {
                 Synthetic = true
             };
@@ -373,7 +416,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_7, "Subproduction7")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_7,
+                "Subproduction7"
+            )
             {
                 Synthetic = true
             };
@@ -385,7 +431,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_8, "Subproduction8")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_8,
+                "Subproduction8"
+            )
             {
                 Synthetic = true
             };
@@ -395,7 +444,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_9, "Subproduction9")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_9,
+                "Subproduction9"
+            )
             {
                 Synthetic = true
             };
@@ -407,7 +459,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_10, "Subproduction10")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_10,
+                "Subproduction10"
+            )
             {
                 Synthetic = true
             };
@@ -417,7 +472,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_11, "Subproduction11")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_11,
+                "Subproduction11"
+            )
             {
                 Synthetic = true
             };
@@ -432,7 +490,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_12, "Subproduction12")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_12,
+                "Subproduction12"
+            )
             {
                 Synthetic = true
             };
@@ -442,7 +503,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_13, "Subproduction13")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_13,
+                "Subproduction13"
+            )
             {
                 Synthetic = true
             };
@@ -452,7 +516,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_14, "Subproduction14")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_14,
+                "Subproduction14"
+            )
             {
                 Synthetic = true
             };
@@ -464,7 +531,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_15, "Subproduction15")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_15,
+                "Subproduction15"
+            )
             {
                 Synthetic = true
             };
@@ -474,7 +544,10 @@ namespace Yale.Parser
             pattern.AddAlternative(alt);
             AddPattern(pattern);
 
-            pattern = new ProductionPattern((int)SyntheticPatterns.SUBPRODUCTION_16, "Subproduction16")
+            pattern = new ProductionPattern(
+                (int)SyntheticPatterns.SUBPRODUCTION_16,
+                "Subproduction16"
+            )
             {
                 Synthetic = true
             };

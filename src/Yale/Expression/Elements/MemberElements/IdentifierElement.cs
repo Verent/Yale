@@ -27,8 +27,8 @@ namespace Yale.Expression.Elements.MemberElements
         //Another expression
         private Type calcEngineReferenceType;
 
-        public IdentifierElement(string name) : base(name)
-        { }
+        public IdentifierElement(string name)
+            : base(name) { }
 
         protected override void ResolveInternal()
         {
@@ -57,11 +57,20 @@ namespace Yale.Expression.Elements.MemberElements
 
             if (Previous is null)
             {
-                throw CreateCompileException(CompileErrors.NoIdentifierWithName, CompileExceptionReason.UndefinedName, MemberName);
+                throw CreateCompileException(
+                    CompileErrors.NoIdentifierWithName,
+                    CompileExceptionReason.UndefinedName,
+                    MemberName
+                );
             }
             else
             {
-                throw CreateCompileException(CompileErrors.NoIdentifierWithNameOnType, CompileExceptionReason.UndefinedName, MemberName, Previous.TargetType.Name);
+                throw CreateCompileException(
+                    CompileErrors.NoIdentifierWithNameOnType,
+                    CompileExceptionReason.UndefinedName,
+                    MemberName,
+                    Previous.TargetType.Name
+                );
             }
         }
 
@@ -81,11 +90,20 @@ namespace Yale.Expression.Elements.MemberElements
                 // More than one accessible member
                 if (previous is null)
                 {
-                    throw CreateCompileException(CompileErrors.IdentifierIsAmbiguous, CompileExceptionReason.AmbiguousMatch, MemberName);
+                    throw CreateCompileException(
+                        CompileErrors.IdentifierIsAmbiguous,
+                        CompileExceptionReason.AmbiguousMatch,
+                        MemberName
+                    );
                 }
                 else
                 {
-                    throw CreateCompileException(CompileErrors.IdentifierIsAmbiguousOnType, CompileExceptionReason.AmbiguousMatch, MemberName, previous.TargetType.Name);
+                    throw CreateCompileException(
+                        CompileErrors.IdentifierIsAmbiguousOnType,
+                        CompileExceptionReason.AmbiguousMatch,
+                        MemberName,
+                        previous.TargetType.Name
+                    );
                 }
             }
             else
@@ -113,7 +131,9 @@ namespace Yale.Expression.Elements.MemberElements
                 return false;
             }
 
-            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(previous.ResultType);
+            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(
+                previous.ResultType
+            );
             propertyDescriptor = properties.Find(MemberName, true);
             return propertyDescriptor != null;
         }
@@ -203,7 +223,11 @@ namespace Yale.Expression.Elements.MemberElements
         /// <param name="fieldInfo"></param>
         /// <param name="indirect"></param>
         /// <param name="ilGenerator"></param>
-        private static void EmitLdfld(FieldInfo fieldInfo, bool indirect, YaleIlGenerator ilGenerator)
+        private static void EmitLdfld(
+            FieldInfo fieldInfo,
+            bool indirect,
+            YaleIlGenerator ilGenerator
+        )
         {
             if (fieldInfo.IsStatic)
             {
@@ -224,7 +248,11 @@ namespace Yale.Expression.Elements.MemberElements
         /// <param name="fi"></param>
         /// <param name="ilg"></param>
         /// <param name="context"></param>
-        private static void EmitLiteral(FieldInfo fi, YaleIlGenerator ilg, ExpressionContext context)
+        private static void EmitLiteral(
+            FieldInfo fi,
+            YaleIlGenerator ilg,
+            ExpressionContext context
+        )
         {
             object value = fi.GetValue(null);
             Type type = value.GetType();

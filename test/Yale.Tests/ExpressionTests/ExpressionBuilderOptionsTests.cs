@@ -1,7 +1,5 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using System;
-
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 using Yale.Expression;
 
@@ -27,16 +25,22 @@ namespace Yale.Tests.ExpressionTests
             #region CaseSensitive
 
             //Variables
-            Assert.ThrowsException<ExpressionCompileException>(() => _instance.AddExpression("c", "A"));
+            Assert.ThrowsException<ExpressionCompileException>(
+                () => _instance.AddExpression("c", "A")
+            );
             _instance.AddExpression("c", "a");
 
             //Expression
-            Assert.ThrowsException<ExpressionCompileException>(() => _instance.AddExpression("d", "C"));
+            Assert.ThrowsException<ExpressionCompileException>(
+                () => _instance.AddExpression("d", "C")
+            );
             _instance.AddExpression("d", "c");
 
             //Members
             _instance.Variables.Add("rand", new Random());
-            Assert.ThrowsException<ExpressionCompileException>(() => _instance.AddExpression("e", "rand.nextDouble() + 100"));
+            Assert.ThrowsException<ExpressionCompileException>(
+                () => _instance.AddExpression("e", "rand.nextDouble() + 100")
+            );
             _instance.AddExpression("e", "rand.NextDouble() + 100");
 
             #endregion CaseSensitive
@@ -56,26 +60,29 @@ namespace Yale.Tests.ExpressionTests
         [TestMethod]
         public void RealLiteralDataTypeTest()
         {
-            _instance = new ComputeInstance(new ComputeInstanceOptions()
-            {
-                ExpressionOptions = new ExpressionBuilderOptions
+            _instance = new ComputeInstance(
+                new ComputeInstanceOptions()
                 {
-                    RealLiteralDataType = RealLiteralDataType.Decimal
+                    ExpressionOptions = new ExpressionBuilderOptions
+                    {
+                        RealLiteralDataType = RealLiteralDataType.Decimal
+                    }
                 }
-            });
+            );
             _instance.AddExpression("a", "4.0");
             Assert.AreEqual(typeof(decimal), _instance.GetResult("a").GetType());
 
-            _instance = new ComputeInstance(new ComputeInstanceOptions()
-            {
-                ExpressionOptions = new ExpressionBuilderOptions
+            _instance = new ComputeInstance(
+                new ComputeInstanceOptions()
                 {
-                    RealLiteralDataType = RealLiteralDataType.Single
+                    ExpressionOptions = new ExpressionBuilderOptions
+                    {
+                        RealLiteralDataType = RealLiteralDataType.Single
+                    }
                 }
-            });
+            );
             _instance.AddExpression("a", "4.0");
             Assert.AreEqual(typeof(Single), _instance.GetResult("a").GetType());
-
         }
     }
 }

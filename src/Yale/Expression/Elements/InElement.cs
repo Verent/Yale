@@ -62,16 +62,31 @@ namespace Yale.Expression.Elements
 
             if (targetCollectionType is null)
             {
-                throw CreateCompileException(CompileErrors.SearchArgIsNotKnownCollectionType, CompileExceptionReason.TypeMismatch, targetCollectionElement.ResultType.Name);
+                throw CreateCompileException(
+                    CompileErrors.SearchArgIsNotKnownCollectionType,
+                    CompileExceptionReason.TypeMismatch,
+                    targetCollectionElement.ResultType.Name
+                );
             }
 
             // Validate that the operand type is compatible with the collection
             MethodInfo methodInfo = GetCollectionContainsMethod();
             ParameterInfo firstParameter = methodInfo.GetParameters()[0];
 
-            if (ImplicitConverter.EmitImplicitConvert(operand.ResultType, firstParameter.ParameterType, null) == false)
+            if (
+                ImplicitConverter.EmitImplicitConvert(
+                    operand.ResultType,
+                    firstParameter.ParameterType,
+                    null
+                ) == false
+            )
             {
-                throw CreateCompileException(CompileErrors.OperandNotConvertibleToCollectionType, CompileExceptionReason.TypeMismatch, operand.ResultType.Name, firstParameter.ParameterType.Name);
+                throw CreateCompileException(
+                    CompileErrors.OperandNotConvertibleToCollectionType,
+                    CompileExceptionReason.TypeMismatch,
+                    operand.ResultType.Name,
+                    firstParameter.ParameterType.Name
+                );
             }
         }
 
@@ -91,7 +106,10 @@ namespace Yale.Expression.Elements
 
                 Type genericTypeDef = interfaceType.GetGenericTypeDefinition();
 
-                if (ReferenceEquals(genericTypeDef, typeof(ICollection<>)) | ReferenceEquals(genericTypeDef, typeof(IDictionary<,>)))
+                if (
+                    ReferenceEquals(genericTypeDef, typeof(ICollection<>))
+                    | ReferenceEquals(genericTypeDef, typeof(IDictionary<,>))
+                )
                 {
                     return interfaceType;
                 }
@@ -148,7 +166,11 @@ namespace Yale.Expression.Elements
             // Load the argument
             operand.Emit(ilg, context);
             // Do an implicit convert if necessary
-            ImplicitConverter.EmitImplicitConvert(operand.ResultType, firstParameter.ParameterType, ilg);
+            ImplicitConverter.EmitImplicitConvert(
+                operand.ResultType,
+                firstParameter.ParameterType,
+                ilg
+            );
             // Call the contains method
             ilg.Emit(OpCodes.Callvirt, methodInfo);
         }
@@ -157,15 +179,28 @@ namespace Yale.Expression.Elements
         {
             string methodName = "Contains";
 
-            if (targetCollectionType.IsGenericType && ReferenceEquals(targetCollectionType.GetGenericTypeDefinition(), typeof(IDictionary<,>)))
+            if (
+                targetCollectionType.IsGenericType
+                && ReferenceEquals(
+                    targetCollectionType.GetGenericTypeDefinition(),
+                    typeof(IDictionary<,>)
+                )
+            )
             {
                 methodName = "ContainsKey";
             }
 
-            return targetCollectionType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            return targetCollectionType.GetMethod(
+                methodName,
+                BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase
+            );
         }
 
-        private void EmitListIn(YaleIlGenerator ilg, ExpressionContext context, BranchManager branchManager)
+        private void EmitListIn(
+            YaleIlGenerator ilg,
+            ExpressionContext context,
+            BranchManager branchManager
+        )
         {
             CompareElement compareElement = new CompareElement();
             Label endLabel = branchManager.FindLabel("endLabel");
@@ -184,7 +219,11 @@ namespace Yale.Expression.Elements
             // Emit the compares
             foreach (BaseExpressionElement argumentElement in arguments)
             {
-                compareElement.Initialize(targetShim, argumentElement, LogicalCompareOperation.Equal);
+                compareElement.Initialize(
+                    targetShim,
+                    argumentElement,
+                    LogicalCompareOperation.Equal
+                );
                 compareElement.Emit(ilg, context);
 
                 EmitBranchToTrueTerminal(ilg, trueTerminal, branchManager);
@@ -202,7 +241,11 @@ namespace Yale.Expression.Elements
             ilg.MarkLabel(endLabel);
         }
 
-        private static void EmitBranchToTrueTerminal(YaleIlGenerator ilg, Label trueTerminal, BranchManager branchManager)
+        private static void EmitBranchToTrueTerminal(
+            YaleIlGenerator ilg,
+            Label trueTerminal,
+            BranchManager branchManager
+        )
         {
             if (ilg.IsTemp)
             {

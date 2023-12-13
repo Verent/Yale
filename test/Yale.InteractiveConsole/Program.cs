@@ -13,15 +13,20 @@ internal class Program
 
     private void Run()
     {
-        Console.WriteLine("Syntax:\nAdd value: x=3 \nAdd expression: square:x^2 \nEvaluate: square\n\n\n");
+        Console.WriteLine(
+            "Syntax:\nAdd value: x=3 \nAdd expression: square:x^2 \nEvaluate: square\n\n\n"
+        );
 
         while (true)
         {
             string input = Console.ReadLine().Trim();
 
-            if (isValue.IsMatch(input)) AddValue(input);
-            else if (isExpression.IsMatch(input)) AddExpression(input);
-            else if (isEvaluate.IsMatch(input)) TryEvaluate(input);
+            if (isValue.IsMatch(input))
+                AddValue(input);
+            else if (isExpression.IsMatch(input))
+                AddExpression(input);
+            else if (isEvaluate.IsMatch(input))
+                TryEvaluate(input);
         }
     }
 

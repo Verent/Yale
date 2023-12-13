@@ -16,19 +16,47 @@ namespace Yale.Parser.Internal
             this.rightType = rightType;
         }
 
-        public override MethodBase BindToMethod(BindingFlags bindingAttr, MethodBase[] match, ref object[] args, ParameterModifier[] modifiers,
-            CultureInfo culture, string[] names, out object state)
+        public override MethodBase BindToMethod(
+            BindingFlags bindingAttr,
+            MethodBase[] match,
+            ref object[] args,
+            ParameterModifier[] modifiers,
+            CultureInfo culture,
+            string[] names,
+            out object state
+        )
         {
-            return customBinderImplementation.BindToMethod(bindingAttr, match, ref args, modifiers, culture, names, out state);
+            return customBinderImplementation.BindToMethod(
+                bindingAttr,
+                match,
+                ref args,
+                modifiers,
+                culture,
+                names,
+                out state
+            );
         }
 
-        public override MethodBase SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers)
+        public override MethodBase SelectMethod(
+            BindingFlags bindingAttr,
+            MethodBase[] match,
+            Type[] types,
+            ParameterModifier[] modifiers
+        )
         {
             foreach (MethodBase methodBase in match)
             {
                 ParameterInfo[] parameters = methodBase.GetParameters();
-                bool leftValid = ImplicitConverter.EmitImplicitConvert(leftType, parameters[0].ParameterType, null);
-                bool rightValid = ImplicitConverter.EmitImplicitConvert(rightType, parameters[1].ParameterType, null);
+                bool leftValid = ImplicitConverter.EmitImplicitConvert(
+                    leftType,
+                    parameters[0].ParameterType,
+                    null
+                );
+                bool rightValid = ImplicitConverter.EmitImplicitConvert(
+                    rightType,
+                    parameters[1].ParameterType,
+                    null
+                );
 
                 if (leftValid & rightValid)
                 {

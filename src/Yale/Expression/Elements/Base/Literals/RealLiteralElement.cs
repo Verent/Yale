@@ -8,7 +8,10 @@ namespace Yale.Expression.Elements.Base.Literals
     {
         private static ExpressionBuilderOptions? builderOptions;
 
-        public static LiteralElement? CreateFromInteger(string image, ExpressionBuilderOptions options)
+        public static LiteralElement? CreateFromInteger(
+            string image,
+            ExpressionBuilderOptions options
+        )
         {
             builderOptions = options;
             LiteralElement element = CreateSingle(image);

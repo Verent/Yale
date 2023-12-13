@@ -12,7 +12,9 @@ namespace Yale.Tests.Parser
         [TestMethod]
         public void Parse_InvalidToken_ThrowsException()
         {
-            Assert.ThrowsException<ExpressionCompileException>(() => instance.AddExpression<int>("a", "b"));
+            Assert.ThrowsException<ExpressionCompileException>(
+                () => instance.AddExpression<int>("a", "b")
+            );
         }
     }
 }

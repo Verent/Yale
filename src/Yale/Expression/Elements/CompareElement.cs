@@ -12,7 +12,11 @@ namespace Yale.Expression.Elements
     {
         private LogicalCompareOperation operation;
 
-        public void Initialize(BaseExpressionElement leftChild, BaseExpressionElement rightChild, LogicalCompareOperation operation)
+        public void Initialize(
+            BaseExpressionElement leftChild,
+            BaseExpressionElement rightChild,
+            LogicalCompareOperation operation
+        )
         {
             this.operation = operation;
             LeftChild = leftChild;
@@ -36,7 +40,11 @@ namespace Yale.Expression.Elements
             bool isEqualityOp = IsOpTypeEqualOrNotEqual(operation);
 
             // Use our string equality instead of overloaded operator
-            if (ReferenceEquals(leftType, typeof(string)) & ReferenceEquals(rightType, typeof(string)) & isEqualityOp)
+            if (
+                ReferenceEquals(leftType, typeof(string))
+                & ReferenceEquals(rightType, typeof(string))
+                & isEqualityOp
+            )
             {
                 // String equality
                 return typeof(bool);
@@ -53,7 +61,11 @@ namespace Yale.Expression.Elements
                 return typeof(bool);
             }
 
-            if (ReferenceEquals(leftType, typeof(bool)) & ReferenceEquals(rightType, typeof(bool)) & isEqualityOp)
+            if (
+                ReferenceEquals(leftType, typeof(bool))
+                & ReferenceEquals(rightType, typeof(bool))
+                & isEqualityOp
+            )
             {
                 // Boolean equality
                 return typeof(bool);
@@ -110,7 +122,10 @@ namespace Yale.Expression.Elements
 
         public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
         {
-            Type binaryResultType = ImplicitConverter.GetBinaryResultType(LeftChild.ResultType, RightChild.ResultType);
+            Type binaryResultType = ImplicitConverter.GetBinaryResultType(
+                LeftChild.ResultType,
+                RightChild.ResultType
+            );
             MethodInfo overloadedOperator = GetOverloadedCompareOperator();
 
             if (AreBothChildrenOfType(typeof(string)))
@@ -158,16 +173,26 @@ namespace Yale.Expression.Elements
             EmitCompareOperation(ilg, operation);
         }
 
-        private static void EmitStringEquality(YaleIlGenerator ilg, LogicalCompareOperation op, ExpressionContext context)
+        private static void EmitStringEquality(
+            YaleIlGenerator ilg,
+            LogicalCompareOperation op,
+            ExpressionContext context
+        )
         {
             // Get the StringComparison from the options
             ExpressionBuilderOptions options = context.BuilderOptions;
-            Int32LiteralElement int32LiteralElement = new Int32LiteralElement((int)options.StringComparison);
+            Int32LiteralElement int32LiteralElement = new Int32LiteralElement(
+                (int)options.StringComparison
+            );
 
             int32LiteralElement.Emit(ilg, context);
 
             // and emit the method call
-            MethodInfo methodInfo = typeof(string).GetMethod("Equals", new[] { typeof(string), typeof(string), typeof(StringComparison) }, null);
+            MethodInfo methodInfo = typeof(string).GetMethod(
+                "Equals",
+                new[] { typeof(string), typeof(string), typeof(StringComparison) },
+                null
+            );
             ilg.Emit(OpCodes.Call, methodInfo);
 
             if (op == LogicalCompareOperation.NotEqual)
@@ -184,12 +209,14 @@ namespace Yale.Expression.Elements
 
         private bool AreBothChildrenReferenceTypes()
         {
-            return LeftChild.ResultType.IsValueType == false & RightChild.ResultType.IsValueType == false;
+            return LeftChild.ResultType.IsValueType == false
+                & RightChild.ResultType.IsValueType == false;
         }
 
         private bool AreBothChildrenSameEnum()
         {
-            return LeftChild.ResultType.IsEnum && ReferenceEquals(LeftChild.ResultType, RightChild.ResultType);
+            return LeftChild.ResultType.IsEnum
+                && ReferenceEquals(LeftChild.ResultType, RightChild.ResultType);
         }
 
         /// <summary>
@@ -251,7 +278,10 @@ namespace Yale.Expression.Elements
 
             if (ReferenceEquals(leftType, RightChild.ResultType))
             {
-                if (ReferenceEquals(leftType, typeof(UInt32)) | ReferenceEquals(leftType, typeof(UInt64)))
+                if (
+                    ReferenceEquals(leftType, typeof(UInt32))
+                    | ReferenceEquals(leftType, typeof(UInt64))
+                )
                 {
                     return greaterThan ? OpCodes.Cgt_Un : OpCodes.Clt_Un;
                 }

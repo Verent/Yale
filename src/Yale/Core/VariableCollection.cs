@@ -8,9 +8,12 @@ using Yale.Core.Interfaces;
 
 namespace Yale.Core
 {
-    public sealed class VariableCollection : INotifyPropertyChanged, IEnumerable<KeyValuePair<string, object>>
+    public sealed class VariableCollection
+        : INotifyPropertyChanged,
+            IEnumerable<KeyValuePair<string, object>>
     {
-        private readonly IDictionary<string, IVariable> _values = new Dictionary<string, IVariable>();
+        private readonly IDictionary<string, IVariable> _values =
+            new Dictionary<string, IVariable>();
 
         public void Clear() => _values.Clear();
 
@@ -27,7 +30,7 @@ namespace Yale.Core
         /// Returns the current value registered to a variable in this instance.
         /// </summary>
         /// <param name="key"></param>
-        /// 
+        ///
         public object Get(string key) => _values[key].ValueAsObject;
 
         /// <summary>
@@ -59,12 +62,16 @@ namespace Yale.Core
             get => _values[key].ValueAsObject;
             set
             {
-                if (_values.ContainsKey(key) && _values[key].Equals(value)) return;
+                if (_values.ContainsKey(key) && _values[key].Equals(value))
+                    return;
 
                 _values[key] = new Variable(value);
                 if (value is INotifyPropertyChanged nValue)
                 {
-                    nValue.PropertyChanged += (sender, args) => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(key)); };
+                    nValue.PropertyChanged += (sender, args) =>
+                    {
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(key));
+                    };
                 }
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(key));
             }
@@ -80,14 +87,18 @@ namespace Yale.Core
         /// <returns></returns>
         internal static MethodInfo GetVariableLoadMethod(Type variableType)
         {
-            MethodInfo methodInfo = typeof(VariableCollection).GetMethod("GetVariableValueInternal", BindingFlags.Public | BindingFlags.Instance);
+            MethodInfo methodInfo = typeof(VariableCollection).GetMethod(
+                "GetVariableValueInternal",
+                BindingFlags.Public | BindingFlags.Instance
+            );
             // ReSharper disable once PossibleNullReferenceException
             return methodInfo.MakeGenericMethod(variableType);
         }
 
         public T GetVariableValueInternal<T>(string name) => (T)_values[name].ValueAsObject;
 
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => new VariableEnumerator(_values);
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator() =>
+            new VariableEnumerator(_values);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

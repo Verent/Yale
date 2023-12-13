@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 
 namespace Yale.Tests.Engine
@@ -9,16 +9,12 @@ namespace Yale.Tests.Engine
     {
         private readonly ComputeInstance[] _instances =
         {
-            new ComputeInstance(new ComputeInstanceOptions
-            {
-                AutoRecalculate = true,
-                LazyRecalculate = false
-            }),
-            new ComputeInstance(new ComputeInstanceOptions
-            {
-                AutoRecalculate = true,
-                LazyRecalculate = true
-            })
+            new ComputeInstance(
+                new ComputeInstanceOptions { AutoRecalculate = true, LazyRecalculate = false }
+            ),
+            new ComputeInstance(
+                new ComputeInstanceOptions { AutoRecalculate = true, LazyRecalculate = true }
+            )
         };
 
         [TestMethod]
@@ -93,13 +89,13 @@ namespace Yale.Tests.Engine
             instance.Variables.Add("a", 2);
             instance.Variables.Add("b", 5);
 
-            instance.AddExpression<int>("c", "a + b");      // 7    9   12
-            instance.AddExpression<int>("d", "b");          // 5    7   7
-            instance.AddExpression<int>("e", "c + b");      // 12   16  19
-            instance.AddExpression<int>("f", "a + e");      // 14   18  24
-            instance.AddExpression<int>("g", "c + e");      // 19   25
-            instance.AddExpression<int>("h", "e + d");      // 17   23
-            instance.AddExpression<int>("i", "g + f + h");  // 50   66
+            instance.AddExpression<int>("c", "a + b"); // 7    9   12
+            instance.AddExpression<int>("d", "b"); // 5    7   7
+            instance.AddExpression<int>("e", "c + b"); // 12   16  19
+            instance.AddExpression<int>("f", "a + e"); // 14   18  24
+            instance.AddExpression<int>("g", "c + e"); // 19   25
+            instance.AddExpression<int>("h", "e + d"); // 17   23
+            instance.AddExpression<int>("i", "g + f + h"); // 50   66
 
             object result = instance.GetResult("i");
             Assert.AreEqual(50, result);

@@ -19,19 +19,20 @@ namespace Yale.Parser.Internal
         static ImplicitConverter()
         {
             // Create a table with all the primitive types
-            Type[] types = {
-            typeof(char),
-            typeof(byte),
-            typeof(sbyte),
-            typeof(short),
-            typeof(ushort),
-            typeof(int),
-            typeof(uint),
-            typeof(Int64),
-            typeof(UInt64),
-            typeof(float),
-            typeof(double)
-        };
+            Type[] types =
+            {
+                typeof(char),
+                typeof(byte),
+                typeof(sbyte),
+                typeof(short),
+                typeof(ushort),
+                typeof(int),
+                typeof(uint),
+                typeof(Int64),
+                typeof(UInt64),
+                typeof(float),
+                typeof(double)
+            };
             OurBinaryTypes = types;
             Type[,] table = new Type[types.Length, types.Length];
             OurBinaryResultTable = table;
@@ -106,9 +107,7 @@ namespace Yale.Parser.Internal
             AddEntry(typeof(char), typeof(double), typeof(double));
         }
 
-        private ImplicitConverter()
-        {
-        }
+        private ImplicitConverter() { }
 
         private static void FillIdentities(Type[] typeArray, Type[,] table)
         {
@@ -132,7 +131,11 @@ namespace Yale.Parser.Internal
             return Array.IndexOf(OurBinaryTypes, type);
         }
 
-        public static bool EmitImplicitConvert(Type sourceType, Type destinationType, YaleIlGenerator ilGenerator)
+        public static bool EmitImplicitConvert(
+            Type sourceType,
+            Type destinationType,
+            YaleIlGenerator ilGenerator
+        )
         {
             if (ReferenceEquals(sourceType, destinationType))
             {
@@ -152,10 +155,18 @@ namespace Yale.Parser.Internal
             return ImplicitConvertToValueType(sourceType, destinationType, ilGenerator);
         }
 
-        private static bool EmitOverloadedImplicitConvert(Type sourceType, Type destinationType, YaleIlGenerator ilGenerator)
+        private static bool EmitOverloadedImplicitConvert(
+            Type sourceType,
+            Type destinationType,
+            YaleIlGenerator ilGenerator
+        )
         {
             // Look for an implicit operator on the destination type
-            System.Reflection.MethodInfo methodInfo = Utility.GetSimpleOverloadedOperator("Implicit", sourceType, destinationType);
+            System.Reflection.MethodInfo methodInfo = Utility.GetSimpleOverloadedOperator(
+                "Implicit",
+                sourceType,
+                destinationType
+            );
 
             if (methodInfo is null)
             {
@@ -167,7 +178,11 @@ namespace Yale.Parser.Internal
             return true;
         }
 
-        private static bool ImplicitConvertToReferenceType(Type sourceType, Type destinationType, YaleIlGenerator ilGenerator)
+        private static bool ImplicitConvertToReferenceType(
+            Type sourceType,
+            Type destinationType,
+            YaleIlGenerator ilGenerator
+        )
         {
             if (destinationType.IsValueType)
             {
@@ -193,7 +208,11 @@ namespace Yale.Parser.Internal
             return true;
         }
 
-        private static bool ImplicitConvertToValueType(Type sourceType, Type destinationType, YaleIlGenerator ilGenerator)
+        private static bool ImplicitConvertToValueType(
+            Type sourceType,
+            Type destinationType,
+            YaleIlGenerator ilGenerator
+        )
         {
             // We only handle value types
             if (sourceType.IsValueType == false && destinationType.IsValueType == false)
@@ -219,7 +238,11 @@ namespace Yale.Parser.Internal
         /// <param name="destinationType"></param>
         /// <param name="ilGenerator"></param>
         /// <returns></returns>
-        public static bool EmitImplicitNumericConvert(Type sourceType, Type destinationType, YaleIlGenerator ilGenerator)
+        public static bool EmitImplicitNumericConvert(
+            Type sourceType,
+            Type destinationType,
+            YaleIlGenerator ilGenerator
+        )
         {
             TypeCode sourceTypeCode = Type.GetTypeCode(sourceType);
             TypeCode destTypeCode = Type.GetTypeCode(destinationType);
@@ -317,7 +340,10 @@ namespace Yale.Parser.Internal
             }
         }
 
-        private static bool ImplicitConvertToDouble(TypeCode sourceTypeCode, YaleIlGenerator ilGenerator)
+        private static bool ImplicitConvertToDouble(
+            TypeCode sourceTypeCode,
+            YaleIlGenerator ilGenerator
+        )
         {
             switch (sourceTypeCode)
             {
@@ -348,7 +374,10 @@ namespace Yale.Parser.Internal
             return true;
         }
 
-        private static bool ImplicitConvertToSingle(TypeCode sourceTypeCode, YaleIlGenerator ilGenerator)
+        private static bool ImplicitConvertToSingle(
+            TypeCode sourceTypeCode,
+            YaleIlGenerator ilGenerator
+        )
         {
             switch (sourceTypeCode)
             {
@@ -378,7 +407,10 @@ namespace Yale.Parser.Internal
             return true;
         }
 
-        private static bool ImplicitConvertToInt64(TypeCode sourceTypeCode, YaleIlGenerator ilGenerator)
+        private static bool ImplicitConvertToInt64(
+            TypeCode sourceTypeCode,
+            YaleIlGenerator ilGenerator
+        )
         {
             switch (sourceTypeCode)
             {
@@ -405,7 +437,10 @@ namespace Yale.Parser.Internal
             return true;
         }
 
-        private static bool ImplicitConvertToUInt64(TypeCode sourceTypeCode, YaleIlGenerator ilGenerator)
+        private static bool ImplicitConvertToUInt64(
+            TypeCode sourceTypeCode,
+            YaleIlGenerator ilGenerator
+        )
         {
             switch (sourceTypeCode)
             {
@@ -462,7 +497,9 @@ namespace Yale.Parser.Internal
                 return GetInverseDistanceToObject(destinationType);
             }
 
-            if (Utility.GetSimpleOverloadedOperator("Implicit", sourceType, destinationType) != null)
+            if (
+                Utility.GetSimpleOverloadedOperator("Implicit", sourceType, destinationType) != null
+            )
             {
                 // Implicit operator conversion, score it at 1 so it's just above the minimum
                 return 1;
@@ -550,9 +587,14 @@ namespace Yale.Parser.Internal
             }
         }
 
-        private static int GetReferenceTypeImplicitConvertScore(Type sourceType, Type destinationType)
+        private static int GetReferenceTypeImplicitConvertScore(
+            Type sourceType,
+            Type destinationType
+        )
         {
-            return destinationType.IsInterface ? 100 : GetInheritanceDistance(sourceType, destinationType);
+            return destinationType.IsInterface
+                ? 100
+                : GetInheritanceDistance(sourceType, destinationType);
         }
 
         private static int GetInheritanceDistance(Type sourceType, Type destinationType)

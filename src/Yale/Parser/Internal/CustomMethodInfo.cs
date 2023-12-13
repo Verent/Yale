@@ -66,7 +66,10 @@ namespace Yale.Parser.Internal
             int sum = 0;
             for (int i = 0; i <= parameters.Length - 1; i++)
             {
-                sum += ImplicitConverter.GetImplicitConvertScore(argTypes[i], parameters[i].ParameterType);
+                sum += ImplicitConverter.GetImplicitConvertScore(
+                    argTypes[i],
+                    parameters[i].ParameterType
+                );
             }
 
             return sum;
@@ -86,10 +89,14 @@ namespace Yale.Parser.Internal
 
             foreach (Type argType in ParamArrayArgTypes)
             {
-                paramArraySum += ImplicitConverter.GetImplicitConvertScore(argType, paramArrayElementType);
+                paramArraySum += ImplicitConverter.GetImplicitConvertScore(
+                    argType,
+                    paramArrayElementType
+                );
             }
 
-            float score = argTypes.Length > 0 ? (fixedSum + paramArraySum) / argTypes.Length : (float)0;
+            float score =
+                argTypes.Length > 0 ? (fixedSum + paramArraySum) / argTypes.Length : (float)0;
 
             // The param array score gets a slight penalty so that it scores worse than direct matches
             return score + 1;
@@ -139,7 +146,10 @@ namespace Yale.Parser.Internal
             // At this point, we are dealing with a paramArray call
 
             // If the parameter and argument counts are equal and there is an implicit conversion from one to the other, we are a match.
-            if (parameters.Length == argTypes.Length && AreValidArgumentsForParameters(argTypes, parameters))
+            if (
+                parameters.Length == argTypes.Length
+                && AreValidArgumentsForParameters(argTypes, parameters)
+            )
             {
                 return true;
             }
@@ -153,7 +163,11 @@ namespace Yale.Parser.Internal
             return false;
         }
 
-        private bool IsParamArrayMatch(Type[] argTypes, ParameterInfo[] parameters, ParameterInfo paramArrayParameter)
+        private bool IsParamArrayMatch(
+            Type[] argTypes,
+            ParameterInfo[] parameters,
+            ParameterInfo paramArrayParameter
+        )
         {
             // Get the count of arguments before the paramArray parameter
             int fixedParameterCount = paramArrayParameter.Position;
@@ -175,12 +189,21 @@ namespace Yale.Parser.Internal
 
             // Get the types of the arguments passed to the paramArray
             Type[] paramArrayArgTypes = new Type[argTypes.Length - fixedParameterCount];
-            Array.Copy(argTypes, fixedParameterCount, paramArrayArgTypes, 0, paramArrayArgTypes.Length);
+            Array.Copy(
+                argTypes,
+                fixedParameterCount,
+                paramArrayArgTypes,
+                0,
+                paramArrayArgTypes.Length
+            );
 
             // Check each argument
             foreach (Type argType in paramArrayArgTypes)
             {
-                if (ImplicitConverter.EmitImplicitConvert(argType, ParamArrayElementType, null) == false)
+                if (
+                    ImplicitConverter.EmitImplicitConvert(argType, ParamArrayElementType, null)
+                    == false
+                )
                 {
                     return false;
                 }
@@ -193,13 +216,22 @@ namespace Yale.Parser.Internal
             return true;
         }
 
-        private static bool AreValidArgumentsForParameters(Type[] argTypes, ParameterInfo[] parameters)
+        private static bool AreValidArgumentsForParameters(
+            Type[] argTypes,
+            ParameterInfo[] parameters
+        )
         {
             Debug.Assert(argTypes.Length == parameters.Length);
             // Match if every given argument is implicitly convertible to the method's corresponding parameter
             for (int i = 0; i <= argTypes.Length - 1; i++)
             {
-                if (ImplicitConverter.EmitImplicitConvert(argTypes[i], parameters[i].ParameterType, null) == false)
+                if (
+                    ImplicitConverter.EmitImplicitConvert(
+                        argTypes[i],
+                        parameters[i].ParameterType,
+                        null
+                    ) == false
+                )
                 {
                     return false;
                 }
@@ -222,6 +254,5 @@ namespace Yale.Parser.Internal
         {
             return Equals1(other);
         }
-
     }
 }

@@ -31,20 +31,14 @@ namespace Yale.Engine.Internal
 
         public string[] Dependents
         {
-            get
-            {
-                return dependents ?? (dependents = successors.Select(s => s.Key).ToArray());
-            }
+            get { return dependents ?? (dependents = successors.Select(s => s.Key).ToArray()); }
         }
 
         private string[]? precedents;
 
         public string[] Precedents
         {
-            get
-            {
-                return precedents ?? (precedents = predecessor.Select(s => s.Key).ToArray());
-            }
+            get { return precedents ?? (precedents = predecessor.Select(s => s.Key).ToArray()); }
         }
 
         /// <summary>

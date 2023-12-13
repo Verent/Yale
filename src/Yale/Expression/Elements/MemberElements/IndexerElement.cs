@@ -23,9 +23,11 @@ namespace Yale.Expression.Elements.MemberElements
 
         protected override bool RequiresAddress => IsArray == false;
 
-        public override Type ResultType => IsArray ? ArrayType.GetElementType() : _indexerElement.ResultType;
+        public override Type ResultType =>
+            IsArray ? ArrayType.GetElementType() : _indexerElement.ResultType;
 
-        protected override bool IsPublic => IsArray || IsElementPublic((MemberElement)_indexerElement);
+        protected override bool IsPublic =>
+            IsArray || IsElementPublic((MemberElement)_indexerElement);
 
         public override bool IsStatic => false;
 
@@ -49,7 +51,12 @@ namespace Yale.Expression.Elements.MemberElements
             // Not an array, so try to find an indexer on the type
             if (FindIndexer(target) == false)
             {
-                throw CreateCompileException(CompileErrors.TypeNotArrayAndHasNoIndexerOfType, CompileExceptionReason.TypeMismatch, target.Name, _indexerElements);
+                throw CreateCompileException(
+                    CompileErrors.TypeNotArrayAndHasNoIndexerOfType,
+                    CompileExceptionReason.TypeMismatch,
+                    target.Name,
+                    _indexerElements
+                );
             }
         }
 
@@ -59,11 +66,24 @@ namespace Yale.Expression.Elements.MemberElements
 
             if (_indexerElements.Count > 1)
             {
-                throw CreateCompileException(CompileErrors.MultiArrayIndexNotSupported, CompileExceptionReason.TypeMismatch);
+                throw CreateCompileException(
+                    CompileErrors.MultiArrayIndexNotSupported,
+                    CompileExceptionReason.TypeMismatch
+                );
             }
-            else if (ImplicitConverter.EmitImplicitConvert(_indexerElement.ResultType, typeof(Int32), null) == false)
+            else if (
+                ImplicitConverter.EmitImplicitConvert(
+                    _indexerElement.ResultType,
+                    typeof(Int32),
+                    null
+                ) == false
+            )
             {
-                throw CreateCompileException(CompileErrors.ArrayIndexersMustBeOfType, CompileExceptionReason.TypeMismatch, typeof(Int32).Name);
+                throw CreateCompileException(
+                    CompileErrors.ArrayIndexersMustBeOfType,
+                    CompileExceptionReason.TypeMismatch,
+                    typeof(Int32).Name
+                );
             }
         }
 
@@ -84,7 +104,11 @@ namespace Yale.Expression.Elements.MemberElements
                 }
             }
 
-            FunctionCallElement functionCallElement = new FunctionCallElement("Indexer", methods.ToArray(), _indexerElements);
+            FunctionCallElement functionCallElement = new FunctionCallElement(
+                "Indexer",
+                methods.ToArray(),
+                _indexerElements
+            );
             functionCallElement.Resolve(Context);
             _indexerElement = functionCallElement;
 

@@ -13,7 +13,10 @@ namespace Yale.Expression.Elements
         protected override Type GetResultType(Type leftType, Type rightType)
         {
             // Right argument (shift count) must be convertible to int32
-            if (ImplicitConverter.EmitImplicitNumericConvert(rightType, typeof(Int32), null) == false)
+            if (
+                ImplicitConverter.EmitImplicitNumericConvert(rightType, typeof(Int32), null)
+                == false
+            )
             {
                 return null;
             }

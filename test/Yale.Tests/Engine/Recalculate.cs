@@ -7,22 +7,14 @@ namespace Yale.Tests.Engine
     [TestClass]
     public class Recalculate
     {
-        private readonly ComputeInstance autoInstance = new(new ComputeInstanceOptions
-        {
-            AutoRecalculate = true
-        });
+        private readonly ComputeInstance autoInstance =
+            new(new ComputeInstanceOptions { AutoRecalculate = true });
 
-        private readonly ComputeInstance lazyInstance = new(new ComputeInstanceOptions
-        {
-            AutoRecalculate = true,
-            LazyRecalculate = true
-        });
+        private readonly ComputeInstance lazyInstance =
+            new(new ComputeInstanceOptions { AutoRecalculate = true, LazyRecalculate = true });
 
-        private readonly ComputeInstance noRecalculateInstance = new(new ComputeInstanceOptions
-        {
-            AutoRecalculate = false,
-            LazyRecalculate = false
-        });
+        private readonly ComputeInstance noRecalculateInstance =
+            new(new ComputeInstanceOptions { AutoRecalculate = false, LazyRecalculate = false });
 
         [TestMethod]
         public void AutoRecalculate_ValueUpdated_ReturnsUpdatedValue()
@@ -52,7 +44,12 @@ namespace Yale.Tests.Engine
         [TestMethod]
         public void AutoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
         {
-            TestClass<string> testObject = new(nameof(AutoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
+            TestClass<string> testObject =
+                new(
+                    nameof(
+                        AutoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue
+                    )
+                );
             string expected = "a string";
 
             testObject.Value = expected;
@@ -71,7 +68,12 @@ namespace Yale.Tests.Engine
         [TestMethod]
         public void AutoRecalculate_Int_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
         {
-            TestClass<int> testObject = new(nameof(AutoRecalculate_Int_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
+            TestClass<int> testObject =
+                new(
+                    nameof(
+                        AutoRecalculate_Int_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue
+                    )
+                );
             int expected = 1;
 
             testObject.Value = expected;
@@ -115,7 +117,12 @@ namespace Yale.Tests.Engine
         [TestMethod]
         public void LazyRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
         {
-            TestClass<string> testObject = new(nameof(LazyRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
+            TestClass<string> testObject =
+                new(
+                    nameof(
+                        LazyRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue
+                    )
+                );
             string expected = "a string";
 
             testObject.Value = expected;
@@ -159,7 +166,10 @@ namespace Yale.Tests.Engine
         [TestMethod]
         public void NoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue()
         {
-            TestClass<string> testObject = new(nameof(NoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
+            TestClass<string> testObject =
+                new(
+                    nameof(NoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue)
+                );
             string expected = "a string";
 
             testObject.Value = expected;

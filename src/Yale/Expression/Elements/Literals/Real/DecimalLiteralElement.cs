@@ -12,9 +12,7 @@ namespace Yale.Expression.Elements.Literals.Real
         private static readonly ConstructorInfo OurConstructorInfo = GetConstructor();
         private readonly decimal _value;
 
-        private DecimalLiteralElement()
-        {
-        }
+        private DecimalLiteralElement() { }
 
         public DecimalLiteralElement(decimal value)
         {
@@ -23,14 +21,21 @@ namespace Yale.Expression.Elements.Literals.Real
 
         private static ConstructorInfo GetConstructor()
         {
-            Type[] types = {
-            typeof(Int32),
-            typeof(Int32),
-            typeof(Int32),
-            typeof(bool),
-            typeof(byte)
-        };
-            return typeof(decimal).GetConstructor(BindingFlags.Instance | BindingFlags.Public, null, CallingConventions.Any, types, null);
+            Type[] types =
+            {
+                typeof(Int32),
+                typeof(Int32),
+                typeof(Int32),
+                typeof(bool),
+                typeof(byte)
+            };
+            return typeof(decimal).GetConstructor(
+                BindingFlags.Instance | BindingFlags.Public,
+                null,
+                CallingConventions.Any,
+                types,
+                null
+            );
         }
 
         public static DecimalLiteralElement Parse(string image)

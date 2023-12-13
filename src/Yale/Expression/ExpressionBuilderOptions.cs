@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-
 using Yale.Core.Interfaces;
 using Yale.Resources;
 
@@ -19,9 +18,12 @@ namespace Yale.Expression
         public StringComparison StringComparison { get; set; } = StringComparison.Ordinal;
         public RealLiteralDataType RealLiteralDataType { get; set; } = RealLiteralDataType.Double;
 
-        public StringComparer StringComparer => CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
-        public StringComparison MemberStringComparison => CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
-        public MemberFilter MemberFilter => CaseSensitive ? Type.FilterName : Type.FilterNameIgnoreCase;
+        public StringComparer StringComparer =>
+            CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
+        public StringComparison MemberStringComparison =>
+            CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+        public MemberFilter MemberFilter =>
+            CaseSensitive ? Type.FilterName : Type.FilterNameIgnoreCase;
 
         public void AssertTypeIsAccessible(Type type)
         {

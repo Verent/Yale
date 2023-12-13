@@ -1,9 +1,7 @@
-﻿using PerCederberg.Grammatica.Runtime;
-
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection.Emit;
-
+using PerCederberg.Grammatica.Runtime;
 using Yale.Core;
 using Yale.Engine;
 using Yale.Expression.Elements;
@@ -76,7 +74,8 @@ namespace Yale.Expression
 #endif
 
             Type delegateType = typeof(ExpressionEvaluator<>).MakeGenericType(typeof(T));
-            ExpressionEvaluator<T> evaluator = (ExpressionEvaluator<T>)dynamicMethod.CreateDelegate(delegateType);
+            ExpressionEvaluator<T> evaluator =
+                (ExpressionEvaluator<T>)dynamicMethod.CreateDelegate(delegateType);
 
             return new Expression<T>(expression, evaluator, context);
         }
@@ -98,7 +97,8 @@ namespace Yale.Expression
 
         private static DynamicMethod CreateDynamicMethod<T>(Type ownerType)
         {
-            Type[] parameterTypes = {
+            Type[] parameterTypes =
+            {
                 typeof(object),
                 typeof(ExpressionContext),
                 typeof(VariableCollection)

@@ -52,4 +52,11 @@
       <LastGenOutput>GeneralErrors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  
+  <!-- set CICD to 0 in CI/CD disable this -->
+  <Target Name="husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(CICD)' != 0">
+      <Exec Command="dotnet tool restore"  StandardOutputImportance="Low" StandardErrorImportance="High"/>
+      <Exec Command="dotnet husky install" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory="../../" />
+  </Target>
+  
 </Project>

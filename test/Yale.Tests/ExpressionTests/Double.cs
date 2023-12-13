@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yale.Engine;
 
 namespace Yale.Tests.ExpressionTests
@@ -18,7 +18,12 @@ namespace Yale.Tests.ExpressionTests
         [DataRow("10.0", "/", "3", 10.0 / 3.0)]
         [DataRow("10.0", "/", "0.0", double.PositiveInfinity)]
         [DataRow("-10.0", "/", "0.0", double.NegativeInfinity)]
-        public void AddExpression_ReturnCorrectValue(string a, string symbol, string b, object expectedResult)
+        public void AddExpression_ReturnCorrectValue(
+            string a,
+            string symbol,
+            string b,
+            object expectedResult
+        )
         {
             _instance.AddExpression("a", $"{a}{symbol}{b}");
             object result = _instance.GetResult("a");

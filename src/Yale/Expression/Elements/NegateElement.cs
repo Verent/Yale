@@ -1,21 +1,25 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
-
 using Yale.Expression.Elements.Base;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
 namespace Yale.Expression.Elements
 {
-    [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "<Pending>")]
+    [SuppressMessage(
+        "Performance",
+        "CA1812:Avoid uninstantiated internal classes",
+        Justification = "<Pending>"
+    )]
     internal class NegateElement : UnaryElement
     {
         private const string UnaryNegation = nameof(UnaryNegation);
 
         public override Type ResultType { get; }
 
-        public NegateElement(BaseExpressionElement child) : base(child)
+        public NegateElement(BaseExpressionElement child)
+            : base(child)
         {
             ResultType = GetResultType(child.ResultType);
         }
@@ -24,7 +28,11 @@ namespace Yale.Expression.Elements
         {
             TypeCode typeCode = Type.GetTypeCode(childType);
 
-            System.Reflection.MethodInfo methodInfo = Utility.GetSimpleOverloadedOperator(UnaryNegation, childType, childType);
+            System.Reflection.MethodInfo methodInfo = Utility.GetSimpleOverloadedOperator(
+                UnaryNegation,
+                childType,
+                childType
+            );
             if (methodInfo != null)
             {
                 return methodInfo.ReturnType;
@@ -42,7 +50,11 @@ namespace Yale.Expression.Elements
                     return typeof(Int64);
 
                 default:
-                    throw CreateCompileException(CompileErrors.OperationNotDefinedForType, CompileExceptionReason.TypeMismatch, MyChild.ResultType.Name);
+                    throw CreateCompileException(
+                        CompileErrors.OperationNotDefinedForType,
+                        CompileExceptionReason.TypeMismatch,
+                        MyChild.ResultType.Name
+                    );
             }
         }
 
@@ -52,7 +64,11 @@ namespace Yale.Expression.Elements
             MyChild.Emit(ilGenerator, context);
             ImplicitConverter.EmitImplicitConvert(MyChild.ResultType, resultType, ilGenerator);
 
-            System.Reflection.MethodInfo methodInfo = Utility.GetSimpleOverloadedOperator(UnaryNegation, resultType, resultType);
+            System.Reflection.MethodInfo methodInfo = Utility.GetSimpleOverloadedOperator(
+                UnaryNegation,
+                resultType,
+                resultType
+            );
 
             if (methodInfo is null)
             {

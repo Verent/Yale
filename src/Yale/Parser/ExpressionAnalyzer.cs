@@ -795,470 +795,355 @@ namespace Yale.Parser
             }
         }
 
-        public virtual void EnterAdd(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterAdd(GrammaticaToken node) { }
 
         public virtual Node ExitAdd(GrammaticaToken node) => node;
 
-        public virtual void EnterSub(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterSub(GrammaticaToken node) { }
 
         public virtual Node ExitSub(GrammaticaToken node) => node;
 
-        public virtual void EnterMul(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterMul(GrammaticaToken node) { }
 
         public virtual Node ExitMul(GrammaticaToken node) => node;
 
-        public virtual void EnterDiv(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterDiv(GrammaticaToken node) { }
 
         public virtual Node ExitDiv(GrammaticaToken node) => node;
 
-        public virtual void EnterPower(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterPower(GrammaticaToken node) { }
 
         public virtual Node ExitPower(GrammaticaToken node) => node;
 
-        public virtual void EnterMod(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterMod(GrammaticaToken node) { }
 
         public virtual Node ExitMod(GrammaticaToken node) => node;
 
-        public virtual void EnterLeftParen(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterLeftParen(GrammaticaToken node) { }
 
         public virtual Node ExitLeftParen(GrammaticaToken node) => node;
 
-        public virtual void EnterRightParen(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterRightParen(GrammaticaToken node) { }
 
         public virtual Node ExitRightParen(GrammaticaToken node) => node;
 
-        public virtual void EnterLeftBrace(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterLeftBrace(GrammaticaToken node) { }
 
         public virtual Node ExitLeftBrace(GrammaticaToken node) => node;
 
-        public virtual void EnterRightBrace(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterRightBrace(GrammaticaToken node) { }
 
         public virtual Node ExitRightBrace(GrammaticaToken node) => node;
 
-        public virtual void EnterEq(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterEq(GrammaticaToken node) { }
 
         public virtual Node ExitEq(GrammaticaToken node) => node;
 
-        public virtual void EnterLt(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterLt(GrammaticaToken node) { }
 
         public virtual Node ExitLt(GrammaticaToken node) => node;
 
-        public virtual void EnterGt(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterGt(GrammaticaToken node) { }
 
         public virtual Node ExitGt(GrammaticaToken node) => node;
 
-        public virtual void EnterLte(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterLte(GrammaticaToken node) { }
 
         public virtual Node ExitLte(GrammaticaToken node) => node;
 
-        public virtual void EnterGte(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterGte(GrammaticaToken node) { }
 
         public virtual Node ExitGte(GrammaticaToken node) => node;
 
-        public virtual void EnterNe(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterNe(GrammaticaToken node) { }
 
         public virtual Node ExitNe(GrammaticaToken node) => node;
 
-        public virtual void EnterAnd(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterAnd(GrammaticaToken node) { }
 
         public virtual Node ExitAnd(GrammaticaToken node) => node;
 
-        public virtual void EnterOr(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterOr(GrammaticaToken node) { }
 
         public virtual Node ExitOr(GrammaticaToken node) => node;
 
-        public virtual void EnterXor(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterXor(GrammaticaToken node) { }
 
         public virtual Node ExitXor(GrammaticaToken node) => node;
 
-        public virtual void EnterNot(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterNot(GrammaticaToken node) { }
 
         public virtual Node ExitNot(GrammaticaToken node) => node;
 
-        public virtual void EnterIn(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterIn(GrammaticaToken node) { }
 
         public virtual Node ExitIn(GrammaticaToken node) => node;
 
-        public virtual void EnterDot(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterDot(GrammaticaToken node) { }
 
         public virtual Node ExitDot(GrammaticaToken node) => node;
 
-        public virtual void EnterArgumentSeparator(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterArgumentSeparator(GrammaticaToken node) { }
 
         public virtual Node ExitArgumentSeparator(GrammaticaToken node) => node;
 
-        public virtual void EnterArrayBraces(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterArrayBraces(GrammaticaToken node) { }
 
         public virtual Node ExitArrayBraces(GrammaticaToken node) => node;
 
-        public virtual void EnterLeftShift(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterLeftShift(GrammaticaToken node) { }
 
         public virtual Node ExitLeftShift(GrammaticaToken node) => node;
 
-        public virtual void EnterRightShift(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterRightShift(GrammaticaToken node) { }
 
         public virtual Node ExitRightShift(GrammaticaToken node) => node;
 
-        public virtual void EnterInteger(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterInteger(GrammaticaToken node) { }
 
         public virtual Node ExitInteger(GrammaticaToken node) => node;
 
-        public virtual void EnterReal(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterReal(GrammaticaToken node) { }
 
         public virtual Node ExitReal(GrammaticaToken node) => node;
 
-        public virtual void EnterStringLiteral(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterStringLiteral(GrammaticaToken node) { }
 
         public virtual Node ExitStringLiteral(GrammaticaToken node) => node;
 
-        public virtual void EnterCharLiteral(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterCharLiteral(GrammaticaToken node) { }
 
         public virtual Node ExitCharLiteral(GrammaticaToken node) => node;
 
-        public virtual void EnterTrue(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterTrue(GrammaticaToken node) { }
 
         public virtual Node ExitTrue(GrammaticaToken node) => node;
 
-        public virtual void EnterFalse(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterFalse(GrammaticaToken node) { }
 
         public virtual Node ExitFalse(GrammaticaToken node) => node;
 
-        public virtual void EnterIdentifier(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterIdentifier(GrammaticaToken node) { }
 
         public virtual Node ExitIdentifier(GrammaticaToken node) => node;
 
-        public virtual void EnterHexLiteral(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterHexLiteral(GrammaticaToken node) { }
 
         public virtual Node ExitHexliteral(GrammaticaToken node) => node;
 
-        public virtual void EnterNullLiteral(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterNullLiteral(GrammaticaToken node) { }
 
         public virtual Node ExitNullLiteral(GrammaticaToken node) => node;
 
-        public virtual void EnterTimespan(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterTimespan(GrammaticaToken node) { }
 
         public virtual Node ExitTimeSpan(GrammaticaToken node) => node;
 
-        public virtual void EnterDatetime(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterDatetime(GrammaticaToken node) { }
 
         public virtual Node ExitDatetime(GrammaticaToken node) => node;
 
-        public virtual void EnterIf(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterIf(GrammaticaToken node) { }
 
         public virtual Node ExitIf(GrammaticaToken node) => node;
 
-        public virtual void EnterCast(GrammaticaToken node)
-        {
-        }
+        public virtual void EnterCast(GrammaticaToken node) { }
 
         public virtual Node ExitCast(GrammaticaToken node) => node;
 
-        public virtual void EnterExpression(Production node)
-        {
-        }
+        public virtual void EnterExpression(Production node) { }
 
         public virtual Node ExitExpression(Production node) => node;
 
         public virtual void ChildExpression(Production node, Node child) => node.AddChild(child);
 
-        public virtual void EnterXorExpression(Production node)
-        {
-        }
+        public virtual void EnterXorExpression(Production node) { }
 
         public virtual Node ExitXorExpression(Production node) => node;
 
         public virtual void ChildXorExpression(Production node, Node child) => node.AddChild(child);
 
-        public virtual void EnterOrExpression(Production node)
-        {
-        }
+        public virtual void EnterOrExpression(Production node) { }
 
         public virtual Node ExitOrExpression(Production node) => node;
 
         public virtual void ChildOrExpression(Production node, Node child) => node.AddChild(child);
 
-        public virtual void EnterAndExpression(Production node)
-        {
-        }
+        public virtual void EnterAndExpression(Production node) { }
 
         public virtual Node ExitAndExpression(Production node) => node;
 
         public virtual void ChildAndExpression(Production node, Node child) => node.AddChild(child);
 
-        public virtual void EnterNotExpression(Production node)
-        {
-        }
+        public virtual void EnterNotExpression(Production node) { }
 
         public virtual Node ExitNotExpression(Production node) => node;
 
         public virtual void ChildNotExpression(Production node, Node child) => node.AddChild(child);
 
-        public virtual void EnterInExpression(Production node)
-        {
-        }
+        public virtual void EnterInExpression(Production node) { }
 
         public virtual Node ExitInExpression(Production node) => node;
 
         public virtual void ChildInExpression(Production node, Node child) => node.AddChild(child);
 
-        public virtual void EnterInTargetExpression(Production node)
-        {
-        }
+        public virtual void EnterInTargetExpression(Production node) { }
 
         public virtual Node ExitInTargetExpression(Production node) => node;
 
-        public virtual void ChildInTargetExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildInTargetExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterInListTargetExpression(Production node)
-        {
-        }
+        public virtual void EnterInListTargetExpression(Production node) { }
 
         public virtual Node ExitInListTargetExpression(Production node) => node;
 
-        public virtual void ChildInListTargetExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildInListTargetExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterCompareExpression(Production node)
-        {
-        }
+        public virtual void EnterCompareExpression(Production node) { }
 
         public virtual Node ExitCompareExpression(Production node) => node;
 
-        public virtual void ChildCompareExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildCompareExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterShiftExpression(Production node)
-        {
-        }
+        public virtual void EnterShiftExpression(Production node) { }
 
         public virtual Node ExitShiftExpression(Production node) => node;
 
-        public virtual void ChildShiftExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildShiftExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterAdditiveExpression(Production node)
-        {
-        }
+        public virtual void EnterAdditiveExpression(Production node) { }
 
         public virtual Node ExitAdditiveExpression(Production node) => node;
 
-        public virtual void ChildAdditiveExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildAdditiveExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterMultiplicativeExpression(Production node)
-        {
-        }
+        public virtual void EnterMultiplicativeExpression(Production node) { }
 
         public virtual Node ExitMultiplicativeExpression(Production node) => node;
 
-        public virtual void ChildMultiplicativeExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildMultiplicativeExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterPowerExpression(Production node)
-        {
-        }
+        public virtual void EnterPowerExpression(Production node) { }
 
         public virtual Node ExitPowerExpression(Production node) => node;
 
-        public virtual void ChildPowerExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildPowerExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterNegateExpression(Production node)
-        {
-        }
+        public virtual void EnterNegateExpression(Production node) { }
 
         public virtual Node ExitNegateExpression(Production node) => node;
 
-        public virtual void ChildNegateExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildNegateExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterMemberExpression(Production node)
-        {
-        }
+        public virtual void EnterMemberExpression(Production node) { }
 
         public virtual Node ExitMemberExpression(Production node) => node;
 
-        public virtual void ChildMemberExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildMemberExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterMemberAccessExpression(Production node)
-        {
-        }
+        public virtual void EnterMemberAccessExpression(Production node) { }
 
         public virtual Node ExitMemberAccessExpression(Production node) => node;
 
-        public virtual void ChildMemberAccessExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildMemberAccessExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterBasicExpression(Production node)
-        {
-        }
+        public virtual void EnterBasicExpression(Production node) { }
 
         public virtual Node ExitBasicExpression(Production node) => node;
 
-        public virtual void ChildBasicExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildBasicExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterMemberFunctionExpression(Production node)
-        {
-        }
+        public virtual void EnterMemberFunctionExpression(Production node) { }
 
         public virtual Node ExitMemberFunctionExpression(Production node) => node;
 
-        public virtual void ChildMemberFunctionExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildMemberFunctionExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterFieldPropertyExpression(Production node)
-        {
-        }
+        public virtual void EnterFieldPropertyExpression(Production node) { }
 
         public virtual Node ExitFieldPropertyExpression(Production node) => node;
 
-        public virtual void ChildFieldPropertyExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildFieldPropertyExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterSpecialFunctionExpression(Production node)
-        {
-        }
+        public virtual void EnterSpecialFunctionExpression(Production node) { }
 
         public virtual Node ExitSpecialFunctionExpression(Production node) => node;
 
-        public virtual void ChildSpecialFunctionExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildSpecialFunctionExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterIfExpression(Production node)
-        {
-        }
+        public virtual void EnterIfExpression(Production node) { }
 
         public virtual Node ExitIfExpression(Production node) => node;
 
         public virtual void ChildIfExpression(Production node, Node child) => node.AddChild(child);
 
-        public virtual void EnterCastExpression(Production node)
-        {
-        }
+        public virtual void EnterCastExpression(Production node) { }
 
         public virtual Node ExitCastExpression(Production node) => node;
 
-        public virtual void ChildCastExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildCastExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterCastTypeExpression(Production node)
-        {
-        }
+        public virtual void EnterCastTypeExpression(Production node) { }
 
         public virtual Node ExitCastTypeExpression(Production node) => node;
 
-        public virtual void ChildCastTypeExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildCastTypeExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterIndexExpression(Production node)
-        {
-        }
+        public virtual void EnterIndexExpression(Production node) { }
 
         public virtual Node ExitIndexExpression(Production node) => node;
 
-        public virtual void ChildIndexExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildIndexExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterFunctionCallExpression(Production node)
-        {
-        }
+        public virtual void EnterFunctionCallExpression(Production node) { }
 
         public virtual Node ExitFunctionCallExpression(Production node) => node;
 
-        public virtual void ChildFunctionCallExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildFunctionCallExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterArgumentList(Production node)
-        {
-        }
+        public virtual void EnterArgumentList(Production node) { }
 
         public virtual Node ExitArgumentList(Production node) => node;
 
         public virtual void ChildArgumentList(Production node, Node child) => node.AddChild(child);
 
-        public virtual void EnterLiteralExpression(Production node)
-        {
-        }
+        public virtual void EnterLiteralExpression(Production node) { }
 
         public virtual Node ExitLiteralExpression(Production node) => node;
 
-        public virtual void ChildLiteralExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildLiteralExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterBooleanLiteralExpression(Production node)
-        {
-        }
+        public virtual void EnterBooleanLiteralExpression(Production node) { }
 
         public virtual Node ExitBooleanLiteralExpression(Production node) => node;
 
-        public virtual void ChildBooleanLiteralExpression(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildBooleanLiteralExpression(Production node, Node child) =>
+            node.AddChild(child);
 
-        public virtual void EnterExpressionGroup(Production node)
-        {
-        }
+        public virtual void EnterExpressionGroup(Production node) { }
 
         public virtual Node ExitExpressionGroup(Production node) => node;
 
-        public virtual void ChildExpressionGroup(Production node, Node child) => node.AddChild(child);
+        public virtual void ChildExpressionGroup(Production node, Node child) =>
+            node.AddChild(child);
     }
 }

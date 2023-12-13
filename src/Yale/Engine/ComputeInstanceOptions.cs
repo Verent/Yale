@@ -15,7 +15,8 @@ namespace Yale.Engine
         /// </summary>
         public bool LazyRecalculate { get; set; } = false;
 
-        public ExpressionBuilderOptions ExpressionOptions { get; set; } = new ExpressionBuilderOptions();
+        public ExpressionBuilderOptions ExpressionOptions { get; set; } =
+            new ExpressionBuilderOptions();
 
         public static ComputeInstanceOptions Default { get; } = new ComputeInstanceOptions();
     }
