@@ -1,12 +1,11 @@
-﻿namespace Yale.Parser.Internal
+﻿namespace Yale.Parser.Internal;
+
+internal enum BinaryArithmeticOperation
 {
-    internal enum BinaryArithmeticOperation
-    {
-        Add,
-        Subtract,
-        Multiply,
-        Divide,
-        Mod,
-        Power
-    }
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+    Mod,
+    Power
 }

@@ -1,8 +1,7 @@
-﻿namespace Yale.Parser.Internal
+﻿namespace Yale.Parser.Internal;
+
+internal enum ShiftOperation
 {
-    internal enum ShiftOperation
-    {
-        LeftShift,
-        RightShift
-    }
+    LeftShift,
+    RightShift
 }

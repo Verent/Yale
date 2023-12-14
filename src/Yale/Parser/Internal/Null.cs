@@ -1,4 +1,3 @@
-﻿namespace Yale.Parser.Internal
-{
-    internal class Null { }
-}
+﻿namespace Yale.Parser.Internal;
+
+internal class Null { }

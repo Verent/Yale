@@ -1,14 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>Yale</RootNamespace>
     <AssemblyName>Yale</AssemblyName>
     <VersionPrefix>1.0.1</VersionPrefix>
     <Authors>Espen Skaufel</Authors>
     <Description>Yet another expression parser and evaluator library for .Net</Description>
     <PackageLicenseUrl>LGPL</PackageLicenseUrl>
-    <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -18,10 +17,6 @@
 
   <ItemGroup>
     <PackageReference Include="Grammatica" Version="1.6.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
     <PackageReference Include="System.Reflection" Version="4.3.0" />
     <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />

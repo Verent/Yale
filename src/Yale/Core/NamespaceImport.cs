@@ -5,139 +5,138 @@ using System.Reflection;
 using Yale.Expression;
 using Yale.Resources;
 
-namespace Yale.Core
+namespace Yale.Core;
+
+/// <summary>
+/// Represents an imported namespace
+/// </summary>
+/// <remarks>
+/// This class acts as a container for other imports.
+/// Use it when you want to logically group expression imports.
+/// </remarks>
+internal sealed class NamespaceImport : ImportBase, ICollection<ImportBase>
 {
+    private readonly string _namespace;
+    private readonly List<ImportBase> _imports;
+
+    public override string Name => _namespace;
+    public override bool IsContainer => true;
+    public bool IsReadOnly => false;
+    public int Count => _imports.Count;
+
     /// <summary>
-    /// Represents an imported namespace
+    /// Creates a new namespace import with a given namespace name
     /// </summary>
-    /// <remarks>
-    /// This class acts as a container for other imports.
-    /// Use it when you want to logically group expression imports.
-    /// </remarks>
-    internal sealed class NamespaceImport : ImportBase, ICollection<ImportBase>
+    /// <param name="importNamespace">The name of the namespace to import</param>
+    /// <param name="options"></param>
+    public NamespaceImport(string importNamespace, ExpressionBuilderOptions options)
+        : base(options)
     {
-        private readonly string _namespace;
-        private readonly List<ImportBase> _imports;
+        if (importNamespace is null)
+            throw new ArgumentNullException(nameof(importNamespace));
 
-        public override string Name => _namespace;
-        public override bool IsContainer => true;
-        public bool IsReadOnly => false;
-        public int Count => _imports.Count;
-
-        /// <summary>
-        /// Creates a new namespace import with a given namespace name
-        /// </summary>
-        /// <param name="importNamespace">The name of the namespace to import</param>
-        /// <param name="options"></param>
-        public NamespaceImport(string importNamespace, ExpressionBuilderOptions options)
-            : base(options)
+        if (importNamespace.Length == 0)
         {
-            if (importNamespace is null)
-                throw new ArgumentNullException(nameof(importNamespace));
+            throw new ArgumentException(GeneralErrors.InvalidNamespaceName);
+        }
 
-            if (importNamespace.Length == 0)
+        _namespace = importNamespace;
+        _imports = new List<ImportBase>();
+    }
+
+    protected override void AddMembers(
+        string memberName,
+        MemberTypes memberType,
+        ICollection<MemberInfo> targetCollection
+    )
+    {
+        foreach (ImportBase import in NonContainerImports)
+        {
+            AddImportMembers(import, memberName, memberType, targetCollection);
+        }
+    }
+
+    protected override void AddMembers(
+        MemberTypes memberType,
+        ICollection<MemberInfo> targetCollection
+    ) { }
+
+    internal override Type? FindType(string typeName)
+    {
+        return NonContainerImports
+            .Select(import => import.FindType(typeName))
+            .FirstOrDefault(type => type != null);
+    }
+
+    internal override ImportBase? FindImport(string name)
+    {
+        foreach (ImportBase import in _imports)
+        {
+            if (import.IsMatch(name))
             {
-                throw new ArgumentException(GeneralErrors.InvalidNamespaceName);
-            }
-
-            _namespace = importNamespace;
-            _imports = new List<ImportBase>();
-        }
-
-        protected override void AddMembers(
-            string memberName,
-            MemberTypes memberType,
-            ICollection<MemberInfo> targetCollection
-        )
-        {
-            foreach (ImportBase import in NonContainerImports)
-            {
-                AddImportMembers(import, memberName, memberType, targetCollection);
+                return import;
             }
         }
+        return null;
+    }
 
-        protected override void AddMembers(
-            MemberTypes memberType,
-            ICollection<MemberInfo> targetCollection
-        ) { }
+    internal override bool IsMatch(string name)
+    {
+        return string.Equals(_namespace, name, Options.MemberStringComparison);
+    }
 
-        internal override Type? FindType(string typeName)
+    private ICollection<ImportBase> NonContainerImports
+    {
+        get
         {
-            return NonContainerImports
-                .Select(import => import.FindType(typeName))
-                .FirstOrDefault(type => type != null);
-        }
+            List<ImportBase> found = new List<ImportBase>();
 
-        internal override ImportBase? FindImport(string name)
-        {
             foreach (ImportBase import in _imports)
             {
-                if (import.IsMatch(name))
+                if (import.IsContainer == false)
                 {
-                    return import;
+                    found.Add(import);
                 }
             }
-            return null;
+            return found;
         }
+    }
 
-        internal override bool IsMatch(string name)
-        {
-            return string.Equals(_namespace, name, Options.MemberStringComparison);
-        }
+    protected override bool EqualsInternal(ImportBase import)
+    {
+        return import is NamespaceImport otherSameType
+            && _namespace.Equals(otherSameType._namespace, Options.MemberStringComparison);
+    }
 
-        private ICollection<ImportBase> NonContainerImports
-        {
-            get
-            {
-                List<ImportBase> found = new List<ImportBase>();
+    public void Add(ImportBase item)
+    {
+        if (item is null)
+            throw new ArgumentNullException(nameof(item));
+        _imports.Add(item);
+    }
 
-                foreach (ImportBase import in _imports)
-                {
-                    if (import.IsContainer == false)
-                    {
-                        found.Add(import);
-                    }
-                }
-                return found;
-            }
-        }
+    public void Clear()
+    {
+        _imports.Clear();
+    }
 
-        protected override bool EqualsInternal(ImportBase import)
-        {
-            return import is NamespaceImport otherSameType
-                && _namespace.Equals(otherSameType._namespace, Options.MemberStringComparison);
-        }
+    public bool Contains(ImportBase item)
+    {
+        return _imports.Contains(item);
+    }
 
-        public void Add(ImportBase item)
-        {
-            if (item is null)
-                throw new ArgumentNullException(nameof(item));
-            _imports.Add(item);
-        }
+    public void CopyTo(ImportBase[] array, int arrayIndex)
+    {
+        _imports.CopyTo(array, arrayIndex);
+    }
 
-        public void Clear()
-        {
-            _imports.Clear();
-        }
+    public bool Remove(ImportBase item)
+    {
+        return _imports.Remove(item);
+    }
 
-        public bool Contains(ImportBase item)
-        {
-            return _imports.Contains(item);
-        }
-
-        public void CopyTo(ImportBase[] array, int arrayIndex)
-        {
-            _imports.CopyTo(array, arrayIndex);
-        }
-
-        public bool Remove(ImportBase item)
-        {
-            return _imports.Remove(item);
-        }
-
-        public override IEnumerator<ImportBase> GetEnumerator()
-        {
-            return _imports.GetEnumerator();
-        }
+    public override IEnumerator<ImportBase> GetEnumerator()
+    {
+        return _imports.GetEnumerator();
     }
 }

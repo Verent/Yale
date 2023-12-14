@@ -2,68 +2,70 @@
 using System.Globalization;
 using System.Reflection;
 
-namespace Yale.Parser.Internal
+namespace Yale.Parser.Internal;
+
+internal class BinaryOperatorBinder : CustomBinder
 {
-    internal class BinaryOperatorBinder : CustomBinder
+    private readonly Type leftType;
+    private readonly Type rightType;
+    private readonly CustomBinder customBinderImplementation;
+
+    public BinaryOperatorBinder(Type leftType, Type rightType)
     {
-        private readonly Type leftType;
-        private readonly Type rightType;
-        private readonly CustomBinder customBinderImplementation;
+        this.leftType = leftType;
+        this.rightType = rightType;
+    }
 
-        public BinaryOperatorBinder(Type leftType, Type rightType)
-        {
-            this.leftType = leftType;
-            this.rightType = rightType;
-        }
+    public override MethodBase BindToMethod(
+        BindingFlags bindingAttr,
+        MethodBase[] match,
+        ref object?[] args,
+        ParameterModifier[]? modifiers,
+        CultureInfo? culture,
+        string[]? names,
+        out object? state
+    )
+    {
+        return customBinderImplementation.BindToMethod(
+            bindingAttr,
+            match,
+            ref args,
+            modifiers,
+            culture,
+            names,
+            out state
+        );
+    }
 
-        public override MethodBase BindToMethod(
-            BindingFlags bindingAttr,
-            MethodBase[] match,
-            ref object[] args,
-            ParameterModifier[] modifiers,
-            CultureInfo culture,
-            string[] names,
-            out object state
-        )
+    public override object ChangeType(object value, Type type, CultureInfo? culture) =>
+        throw new NotImplementedException();
+
+    public override MethodBase SelectMethod(
+        BindingFlags bindingAttr,
+        MethodBase[] match,
+        Type[] types,
+        ParameterModifier[] modifiers
+    )
+    {
+        foreach (MethodBase methodBase in match)
         {
-            return customBinderImplementation.BindToMethod(
-                bindingAttr,
-                match,
-                ref args,
-                modifiers,
-                culture,
-                names,
-                out state
+            ParameterInfo[] parameters = methodBase.GetParameters();
+            bool leftValid = ImplicitConverter.EmitImplicitConvert(
+                leftType,
+                parameters[0].ParameterType,
+                null
             );
-        }
+            bool rightValid = ImplicitConverter.EmitImplicitConvert(
+                rightType,
+                parameters[1].ParameterType,
+                null
+            );
 
-        public override MethodBase SelectMethod(
-            BindingFlags bindingAttr,
-            MethodBase[] match,
-            Type[] types,
-            ParameterModifier[] modifiers
-        )
-        {
-            foreach (MethodBase methodBase in match)
+            if (leftValid & rightValid)
             {
-                ParameterInfo[] parameters = methodBase.GetParameters();
-                bool leftValid = ImplicitConverter.EmitImplicitConvert(
-                    leftType,
-                    parameters[0].ParameterType,
-                    null
-                );
-                bool rightValid = ImplicitConverter.EmitImplicitConvert(
-                    rightType,
-                    parameters[1].ParameterType,
-                    null
-                );
-
-                if (leftValid & rightValid)
-                {
-                    return methodBase;
-                }
+                return methodBase;
             }
-            return null;
         }
+        return null;
     }
 }

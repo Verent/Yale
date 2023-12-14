@@ -21,6 +21,9 @@ internal class Program
         {
             string input = Console.ReadLine().Trim();
 
+            if (input == "exit")
+                break;
+
             if (isValue.IsMatch(input))
                 AddValue(input);
             else if (isExpression.IsMatch(input))

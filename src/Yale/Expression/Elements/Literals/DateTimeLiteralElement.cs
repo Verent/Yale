@@ -5,51 +5,50 @@ using Yale.Expression.Elements.Base.Literals;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
-namespace Yale.Expression.Elements.Literals
+namespace Yale.Expression.Elements.Literals;
+
+internal class DateTimeLiteralElement : LiteralElement
 {
-    internal class DateTimeLiteralElement : LiteralElement
+    private readonly DateTime _value;
+
+    public DateTimeLiteralElement(string image, ExpressionContext context)
     {
-        private readonly DateTime _value;
+        ExpressionBuilderOptions options = context.BuilderOptions;
 
-        public DateTimeLiteralElement(string image, ExpressionContext context)
+        if (
+            DateTime.TryParseExact(
+                image,
+                options.DateTimeFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out _value
+            ) == false
+        )
         {
-            ExpressionBuilderOptions options = context.BuilderOptions;
-
-            if (
-                DateTime.TryParseExact(
-                    image,
-                    options.DateTimeFormat,
-                    CultureInfo.InvariantCulture,
-                    DateTimeStyles.None,
-                    out _value
-                ) == false
-            )
-            {
-                throw CreateCompileException(
-                    CompileErrors.CannotParseType,
-                    CompileExceptionReason.InvalidFormat,
-                    typeof(DateTime).Name
-                );
-            }
-        }
-
-        public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
-        {
-            int index = ilGenerator.GetTempLocalIndex(typeof(DateTime));
-
-            Utility.EmitLoadLocalAddress(ilGenerator, index);
-
-            EmitLoad(_value.Ticks, ilGenerator);
-
-            System.Reflection.ConstructorInfo constructor = typeof(DateTime).GetConstructor(
-                new[] { typeof(Int64) }
+            throw CreateCompileException(
+                CompileErrors.CannotParseType,
+                CompileExceptionReason.InvalidFormat,
+                typeof(DateTime).Name
             );
-
-            ilGenerator.Emit(OpCodes.Call, constructor);
-
-            Utility.EmitLoadLocal(ilGenerator, index);
         }
-
-        public override Type ResultType => typeof(DateTime);
     }
+
+    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
+    {
+        int index = ilGenerator.GetTempLocalIndex(typeof(DateTime));
+
+        Utility.EmitLoadLocalAddress(ilGenerator, index);
+
+        EmitLoad(_value.Ticks, ilGenerator);
+
+        System.Reflection.ConstructorInfo constructor = typeof(DateTime).GetConstructor(
+            new[] { typeof(Int64) }
+        );
+
+        ilGenerator.Emit(OpCodes.Call, constructor);
+
+        Utility.EmitLoadLocal(ilGenerator, index);
+    }
+
+    public override Type ResultType => typeof(DateTime);
 }
