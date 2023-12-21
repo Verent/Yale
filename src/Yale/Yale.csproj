@@ -4,7 +4,6 @@
 		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
 		<RootNamespace>Yale</RootNamespace>
 		<AssemblyName>Yale</AssemblyName>
-		<VersionPrefix>1.0.1</VersionPrefix>
 		<Authors>Espen Skaufel</Authors>
 		<Description>Yet another expression parser and evaluator library for .Net</Description>
 		<PackageLicenseUrl>LGPL</PackageLicenseUrl>
