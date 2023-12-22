@@ -25,6 +25,10 @@ jobs:
         with:
           dotnet-version: '6.x'
 
+      - uses: dotnet/nbgv@master
+        with:
+          setAllVars: true
+
       - name: Build and pack
         run: dotnet restore
         run: dotnet build --configuration Release --no-restore
