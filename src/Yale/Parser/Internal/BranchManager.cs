@@ -167,7 +167,7 @@ internal class BranchManager
     {
         int pos = ilg.Length;
 
-        foreach (BranchInfo branchInfo in branchInfos)
+        foreach (var branchInfo in branchInfos)
         {
             branchInfo.Mark(target, pos);
         }
@@ -175,7 +175,7 @@ internal class BranchManager
 
     public override string ToString()
     {
-        string[] arr = new string[branchInfos.Count];
+        var arr = new string[branchInfos.Count];
 
         for (int i = 0; i <= branchInfos.Count - 1; i++)
         {

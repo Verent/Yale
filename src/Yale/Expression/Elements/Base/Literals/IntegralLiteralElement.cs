@@ -24,24 +24,23 @@ internal abstract class IntegralLiteralElement : LiteralElement
     {
         const StringComparison comparison = StringComparison.OrdinalIgnoreCase;
 
-        if (isHex == false)
+        if (isHex is false)
         {
             // Create a real element if required
-            LiteralElement? realElement = RealLiteralElement.CreateFromInteger(image, options);
-
-            if (realElement != null)
+            var realElement = RealLiteralElement.CreateFromInteger(image, options);
+            if (realElement is not null)
             {
                 return realElement;
             }
         }
 
-        bool hasUSuffix = image.EndsWith("u", comparison) & !image.EndsWith("lu", comparison);
-        bool hasLSuffix = image.EndsWith("l", comparison) & !image.EndsWith("ul", comparison);
-        bool hasUlSuffix = image.EndsWith("ul", comparison) | image.EndsWith("lu", comparison);
-        bool hasSuffix = hasUSuffix | hasLSuffix | hasUlSuffix;
+        var hasUSuffix = image.EndsWith("u", comparison) & !image.EndsWith("lu", comparison);
+        var hasLSuffix = image.EndsWith("l", comparison) & !image.EndsWith("ul", comparison);
+        var hasUlSuffix = image.EndsWith("ul", comparison) | image.EndsWith("lu", comparison);
+        var hasSuffix = hasUSuffix | hasLSuffix | hasUlSuffix;
 
-        LiteralElement constant;
-        NumberStyles numStyles = NumberStyles.Integer;
+        LiteralElement? constant;
+        var numStyles = NumberStyles.Integer;
 
         if (isHex)
         {
@@ -49,23 +48,23 @@ internal abstract class IntegralLiteralElement : LiteralElement
             image = image.Remove(0, 2);
         }
 
-        if (hasSuffix == false)
+        if (hasSuffix is false)
         {
             // If the literal has no suffix, it has the first of these types in which its value can be represented: int, uint, long, ulong.
             constant = Int32LiteralElement.TryCreate(image, isHex, negated);
-            if (constant != null)
+            if (constant is not null)
             {
                 return constant;
             }
 
             constant = UInt32LiteralElement.TryCreate(image, numStyles);
-            if (constant != null)
+            if (constant is not null)
             {
                 return constant;
             }
 
             constant = Int64LiteralElement.TryCreate(image, isHex, negated);
-            if (constant != null)
+            if (constant is not null)
             {
                 return constant;
             }
@@ -76,20 +75,18 @@ internal abstract class IntegralLiteralElement : LiteralElement
         if (hasUSuffix)
         {
             image = image.Remove(image.Length - 1);
+
             // If the literal is suffixed by U or u, it has the first of these types in which its value can be represented: uint, ulong.
-
             constant = UInt32LiteralElement.TryCreate(image, numStyles);
-
             return constant ?? new UInt64LiteralElement(image, numStyles);
         }
 
         if (hasLSuffix)
         {
-            // If the literal is suffixed by L or l, it has the first of these types in which its value can be represented: long, ulong.
             image = image.Remove(image.Length - 1);
 
+            // If the literal is suffixed by L or l, it has the first of these types in which its value can be represented: long, ulong.
             constant = Int64LiteralElement.TryCreate(image, isHex, negated);
-
             return constant ?? new UInt64LiteralElement(image, numStyles);
         }
 

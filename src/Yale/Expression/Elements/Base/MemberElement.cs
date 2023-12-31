@@ -204,36 +204,35 @@ internal abstract class MemberElement : BaseExpressionElement
     /// <returns></returns>
     private static bool IsMemberPublic(MemberInfo member)
     {
-        FieldInfo? fieldInfo = member as FieldInfo;
-
-        if (fieldInfo != null)
+        var fieldInfo = member as FieldInfo;
+        if (fieldInfo is not null)
         {
             return fieldInfo.IsPublic;
         }
 
-        PropertyInfo? propertyInfo = member as PropertyInfo;
-        if (propertyInfo != null)
+        var propertyInfo = member as PropertyInfo;
+        if (propertyInfo is not null)
         {
-            MethodInfo method = propertyInfo.GetGetMethod(true);
-            return method.IsPublic;
+            var method = propertyInfo.GetGetMethod(true);
+            return method?.IsPublic ?? false;
         }
 
-        MethodInfo? methodInfo = member as MethodInfo;
-        if (methodInfo != null)
+        var methodInfo = member as MethodInfo;
+        if (methodInfo is not null)
         {
             return methodInfo.IsPublic;
         }
 
+        //Todo: handle error case propperly
         Debug.Assert(false, "Unknown member type");
         return false;
     }
 
-    protected MemberInfo[] GetAccessibleMembers(MemberInfo[] members)
+    protected static MemberInfo[] GetAccessibleMembers(MemberInfo[] members)
     {
         List<MemberInfo> accessible = new();
 
-        // Keep all members that are accessible
-        foreach (MemberInfo memberInfo in members)
+        foreach (var memberInfo in members)
         {
             if (IsMemberAccessible(memberInfo))
             {

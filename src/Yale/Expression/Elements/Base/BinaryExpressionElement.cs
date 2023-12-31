@@ -9,7 +9,7 @@ using Yale.Resources;
 namespace Yale.Expression.Elements.Base;
 
 /// <summary>
-/// "Base class for expression elements that operate on two child elements"
+/// Base class for expression elements that operate on two child elements
 /// </summary>
 internal abstract class BinaryExpressionElement : BaseExpressionElement
 {
@@ -23,26 +23,27 @@ internal abstract class BinaryExpressionElement : BaseExpressionElement
     /// <param name="childValues"></param>
     /// <param name="elementType"></param>
     /// <returns></returns>
-    public static BinaryExpressionElement CreateElement(IList childValues, Type elementType)
+    public static BinaryExpressionElement CreateElement<T>(IList childValues)
+        where T : BinaryExpressionElement, new()
     {
-        BinaryExpressionElement firstElement = (BinaryExpressionElement)
-            Activator.CreateInstance(elementType);
+        //Todo: replace IList with strong typed object
+        var firstElement = (BinaryExpressionElement)Activator.CreateInstance(typeof(T))!;
+
         firstElement.Configure(
-            (BaseExpressionElement)childValues[0],
-            (BaseExpressionElement)childValues[2],
-            childValues[1]
+            leftChild: (BaseExpressionElement)childValues[0],
+            rightChild: (BaseExpressionElement)childValues[2],
+            op: childValues[1]
         );
 
-        BinaryExpressionElement lastElement = firstElement;
+        var lastElement = firstElement;
 
-        for (int i = 3; i <= childValues.Count - 1; i += 2)
+        for (var i = 3; i <= childValues.Count - 1; i += 2)
         {
-            BinaryExpressionElement element = (BinaryExpressionElement)
-                Activator.CreateInstance(elementType);
+            var element = (BinaryExpressionElement)Activator.CreateInstance(typeof(T))!;
             element.Configure(
-                lastElement,
-                (BaseExpressionElement)childValues[i + 1],
-                childValues[i]
+                leftChild: lastElement,
+                rightChild: (BaseExpressionElement)childValues[i + 1],
+                op: childValues[i]
             );
             lastElement = element;
         }
@@ -75,14 +76,8 @@ internal abstract class BinaryExpressionElement : BaseExpressionElement
         }
 
         // Get the operator for both types
-        MethodInfo? leftMethod = Utility.GetOverloadedOperator(
-            name,
-            leftType,
-            binder,
-            leftType,
-            rightType
-        );
-        MethodInfo? rightMethod = Utility.GetOverloadedOperator(
+        var leftMethod = Utility.GetOverloadedOperator(name, leftType, binder, leftType, rightType);
+        var rightMethod = Utility.GetOverloadedOperator(
             name,
             rightType,
             binder,
@@ -123,9 +118,9 @@ internal abstract class BinaryExpressionElement : BaseExpressionElement
         ExpressionContext context
     )
     {
-        ParameterInfo[] parameters = method.GetParameters();
-        ParameterInfo parameterInfoLeft = parameters[0];
-        ParameterInfo parameterInfoRight = parameters[1];
+        var parameters = method.GetParameters();
+        var parameterInfoLeft = parameters[0];
+        var parameterInfoRight = parameters[1];
 
         EmitChildWithConvert(LeftChild, parameterInfoLeft.ParameterType, ilg, context);
         EmitChildWithConvert(RightChild, parameterInfoRight.ParameterType, ilg, context);
@@ -151,8 +146,8 @@ internal abstract class BinaryExpressionElement : BaseExpressionElement
     )
     {
         child.Emit(ilg, context);
-        bool converted = ImplicitConverter.EmitImplicitConvert(child.ResultType, resultType, ilg);
-        Debug.Assert(converted, "convert failed");
+        var converted = ImplicitConverter.EmitImplicitConvert(child.ResultType, resultType, ilg);
+        Debug.Assert(converted, "convert failed"); //Todo: handle error case propperly
     }
 
     protected bool AreBothChildrenOfType(Type target) =>

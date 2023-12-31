@@ -8,31 +8,17 @@ internal sealed class VariableEnumerator : IEnumerator<KeyValuePair<string, obje
 {
     private readonly IEnumerator<KeyValuePair<string, IVariable>> enumerator;
 
-    public VariableEnumerator(IDictionary<string, IVariable> values)
-    {
+    public VariableEnumerator(IDictionary<string, IVariable> values) =>
         enumerator = values.GetEnumerator();
-    }
 
     public KeyValuePair<string, object> Current =>
-        new KeyValuePair<string, object>(
-            enumerator.Current.Key,
-            enumerator.Current.Value.ValueAsObject
-        );
+        new(enumerator.Current.Key, enumerator.Current.Value.ValueAsObject);
 
     object IEnumerator.Current => Current;
 
-    public bool MoveNext()
-    {
-        return enumerator.MoveNext();
-    }
+    public bool MoveNext() => enumerator.MoveNext();
 
-    public void Reset()
-    {
-        enumerator.Reset();
-    }
+    public void Reset() => enumerator.Reset();
 
-    public void Dispose()
-    {
-        enumerator.Dispose();
-    }
+    public void Dispose() => enumerator.Dispose();
 }

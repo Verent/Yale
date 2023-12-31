@@ -46,7 +46,7 @@ internal class CastElement : BaseExpressionElement
 
     private static string GetDestinationTypeString(string[] parts, bool isArray)
     {
-        string s = string.Join(".", parts);
+        var s = string.Join(".", parts);
         if (isArray)
         {
             s += "[]";
@@ -128,7 +128,7 @@ internal class CastElement : BaseExpressionElement
             // Reference type to value type
             // Can only succeed if the reference type is a base of the value type or
             // it is one of the interfaces the value type implements
-            Type[] interfaces = destType.GetInterfaces();
+            var interfaces = destType.GetInterfaces();
             return IsBaseType(destType, sourceType) || Array.IndexOf(interfaces, sourceType) != -1;
         }
 

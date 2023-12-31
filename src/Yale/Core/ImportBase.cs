@@ -13,7 +13,8 @@ internal abstract class ImportBase : IEnumerable<ImportBase>, IEquatable<ImportB
 {
     protected ImportBase(IExpressionOptions options)
     {
-        Options = options ?? throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(options);
+        Options = options;
     }
 
     protected abstract void AddMembers(
@@ -51,14 +52,14 @@ internal abstract class ImportBase : IEnumerable<ImportBase>, IEquatable<ImportB
         ICollection<MemberInfo> destination
     )
     {
-        foreach (MemberInfo memberInfo in members)
+        foreach (var memberInfo in members)
         {
             destination.Add(memberInfo);
         }
     }
 
     //Todo: Reimplement
-    protected bool AlwaysMemberFilter(MemberInfo member, object criteria) => true;
+    protected bool AlwaysMemberFilter(MemberInfo? member, object? criteria) => true;
 
     internal abstract bool IsMatch(string name);
 
@@ -72,21 +73,21 @@ internal abstract class ImportBase : IEnumerable<ImportBase>, IEquatable<ImportB
 
     internal MemberInfo[] FindMembers(string memberName, MemberTypes memberType)
     {
-        List<MemberInfo> found = new List<MemberInfo>();
+        List<MemberInfo> found = new();
         AddMembers(memberName, memberType, found);
         return found.ToArray();
     }
 
     public MemberInfo[] GetMembers(MemberTypes memberType)
     {
-        List<MemberInfo> found = new List<MemberInfo>();
+        List<MemberInfo> found = new();
         AddMembers(memberType, found);
         return found.ToArray();
     }
 
     public virtual IEnumerator<ImportBase> GetEnumerator()
     {
-        List<ImportBase> imports = new List<ImportBase>();
+        List<ImportBase> imports = new();
         return imports.GetEnumerator();
     }
 
@@ -95,12 +96,12 @@ internal abstract class ImportBase : IEnumerable<ImportBase>, IEquatable<ImportB
         return GetEnumerator();
     }
 
-    public bool Equals(ImportBase other)
+    public bool Equals(ImportBase? other)
     {
         return EqualsInternal(other);
     }
 
-    protected abstract bool EqualsInternal(ImportBase import);
+    protected abstract bool EqualsInternal(ImportBase? import);
 
     internal IExpressionOptions Options { get; }
 

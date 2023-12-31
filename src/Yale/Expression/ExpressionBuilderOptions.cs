@@ -52,7 +52,7 @@ public class ExpressionBuilderOptions : IExpressionOptions
 
         if (isPublic == false)
         {
-            string msg = string.Format(GeneralErrors.TypeNotAccessibleToExpression, t.Name);
+            var msg = string.Format(GeneralErrors.TypeNotAccessibleToExpression, t.Name);
             throw new ArgumentException(msg);
         }
     }

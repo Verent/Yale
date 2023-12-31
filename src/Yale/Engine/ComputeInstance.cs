@@ -111,7 +111,7 @@ public class ComputeInstance
         if (result.Equals(node.ResultAsObject))
             return;
 
-        foreach (string dependent in dependencies.GetDependents(key))
+        foreach (var dependent in dependencies.GetDependents(key))
         {
             RecalculateNodeAndDependents(dependent);
         }
@@ -121,7 +121,7 @@ public class ComputeInstance
     {
         if (nameNodeMap.TryGetValue(key, out IExpressionResult? node) && node.Dirty)
         {
-            foreach (string dependent in dependencies.GetDirectPrecedents(key))
+            foreach (var dependent in dependencies.GetDirectPrecedents(key))
             {
                 RecalculateIfNeeded(dependent);
             }

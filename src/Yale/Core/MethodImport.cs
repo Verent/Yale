@@ -13,7 +13,8 @@ internal sealed class MethodImport : ImportBase
     public MethodImport(MethodInfo importMethod, IExpressionOptions options)
         : base(options)
     {
-        Target = importMethod ?? throw new ArgumentNullException(nameof(importMethod));
+        ArgumentNullException.ThrowIfNull(importMethod);
+        Target = importMethod;
     }
 
     protected override void AddMembers(

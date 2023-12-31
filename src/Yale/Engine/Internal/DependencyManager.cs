@@ -11,13 +11,9 @@ internal class DependencyManager
     /// <summary>
     /// Map of a node with edges
     /// </summary>
-    private Dictionary<string, DependencyNode> Nodes { get; } =
-        new Dictionary<string, DependencyNode>();
+    private Dictionary<string, DependencyNode> Nodes { get; } = new();
 
-    public void Clear()
-    {
-        Nodes.Clear();
-    }
+    public void Clear() => Nodes.Clear();
 
     public void AddDependency(string expressionKey, string dependsOnKey)
     {
@@ -42,18 +38,15 @@ internal class DependencyManager
         expressionNode.AddPredecessor(dependsOnNode);
     }
 
-    public string[] GetDirectDependents(string nodeKey)
-    {
-        return Nodes[nodeKey].Dependents;
-    }
+    public string[] GetDirectDependents(string nodeKey) => Nodes[nodeKey].Dependents;
 
     public string[] GetDependents(string key)
     {
-        List<string> dependents = new List<string>();
+        List<string> dependents = new();
         if (Nodes.ContainsKey(key) == false)
             return dependents.ToArray();
 
-        foreach (string pair in Nodes[key].Dependents)
+        foreach (var pair in Nodes[key].Dependents)
         {
             GetDependentsRecursive(pair, dependents);
         }
@@ -64,33 +57,32 @@ internal class DependencyManager
     private void GetDependentsRecursive(string nodeKey, ICollection<string> dependents)
     {
         dependents.Add(nodeKey);
-        foreach (string pair in Nodes[nodeKey].Dependents)
+        foreach (var pair in Nodes[nodeKey].Dependents)
         {
             GetDependentsRecursive(pair, dependents);
         }
     }
 
-    public string[] GetDirectPrecedents(string nodeKey)
-    {
-        return Nodes[nodeKey].Precedents;
-    }
+    public string[] GetDirectPrecedents(string nodeKey) => Nodes[nodeKey].Precedents;
 
     public void RemovePrecedents(string nodeKey)
     {
         if (Nodes.ContainsKey(nodeKey))
+        {
             Nodes[nodeKey].ClearPredecessors();
+        }
     }
 
     public string DependencyGraph
     {
         get
         {
-            string[] lines = new string[Nodes.Count];
+            var lines = new string[Nodes.Count];
             int index = 0;
-            foreach (KeyValuePair<string, DependencyNode> node in Nodes)
+            foreach (var node in Nodes)
             {
-                string key = node.Key;
-                string dependencies = string.Join(",", node.Value.Dependents);
+                var key = node.Key;
+                var dependencies = string.Join(",", node.Value.Dependents);
                 lines[index] = $"{key} -> {dependencies}";
                 index += 1;
             }
