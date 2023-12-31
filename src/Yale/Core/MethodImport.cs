@@ -25,7 +25,7 @@ internal sealed class MethodImport : ImportBase
     {
         if (
             string.Equals(memberName, Target.Name, Options.MemberStringComparison)
-            && (memberType & MemberTypes.Method) != 0
+            && (memberType & MemberTypes.Method) is not 0
         )
         {
             targetCollection.Add(Target);
@@ -37,23 +37,23 @@ internal sealed class MethodImport : ImportBase
         ICollection<MemberInfo> targetCollection
     )
     {
-        if ((memberType & MemberTypes.Method) != 0)
+        if ((memberType & MemberTypes.Method) is not 0)
         {
             targetCollection.Add(Target);
         }
     }
 
-    internal override bool IsMatch(string name)
-    {
-        return string.Equals(Target.Name, name, Options.MemberStringComparison);
-    }
+    internal override bool IsMatch(string name) =>
+        string.Equals(Target.Name, name, Options.MemberStringComparison);
 
     internal override Type? FindType(string typeName)
     {
+        //Todo: Look at inheritance. If one of two implementaions FindType is not relevant, does it belong on the base class
+        //or should there be a different solution for handeling this?
         return null;
     }
 
-    protected override bool EqualsInternal(ImportBase import)
+    protected override bool EqualsInternal(ImportBase? import)
     {
         return import is MethodImport otherSameType
             && Target.MethodHandle.Equals(otherSameType.Target.MethodHandle);

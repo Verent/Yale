@@ -111,17 +111,17 @@ internal class ImplicitConverter
 
     private static void FillIdentities(Type[] typeArray, Type[,] table)
     {
-        for (int i = 0; i <= typeArray.Length - 1; i++)
+        for (var i = 0; i <= typeArray.Length - 1; i++)
         {
-            Type type = typeArray[i];
+            var type = typeArray[i];
             table[i, i] = type;
         }
     }
 
     private static void AddEntry(Type type1, Type type2, Type result)
     {
-        int index1 = GetTypeIndex(type1);
-        int index2 = GetTypeIndex(type2);
+        var index1 = GetTypeIndex(type1);
+        var index2 = GetTypeIndex(type2);
         OurBinaryResultTable[index1, index2] = result;
         OurBinaryResultTable[index2, index1] = result;
     }
@@ -131,7 +131,7 @@ internal class ImplicitConverter
     public static bool EmitImplicitConvert(
         Type sourceType,
         Type destinationType,
-        YaleIlGenerator ilGenerator
+        YaleIlGenerator? ilGenerator
     )
     {
         if (ReferenceEquals(sourceType, destinationType))
@@ -155,11 +155,11 @@ internal class ImplicitConverter
     private static bool EmitOverloadedImplicitConvert(
         Type sourceType,
         Type destinationType,
-        YaleIlGenerator ilGenerator
+        YaleIlGenerator? ilGenerator
     )
     {
         // Look for an implicit operator on the destination type
-        System.Reflection.MethodInfo methodInfo = Utility.GetSimpleOverloadedOperator(
+        var methodInfo = Utility.GetSimpleOverloadedOperator(
             "Implicit",
             sourceType,
             destinationType
@@ -178,7 +178,7 @@ internal class ImplicitConverter
     private static bool ImplicitConvertToReferenceType(
         Type sourceType,
         Type destinationType,
-        YaleIlGenerator ilGenerator
+        YaleIlGenerator? ilGenerator
     )
     {
         if (destinationType.IsValueType)
@@ -192,7 +192,7 @@ internal class ImplicitConverter
             return true;
         }
 
-        if (destinationType.IsAssignableFrom(sourceType) == false)
+        if (destinationType.IsAssignableFrom(sourceType) is false)
         {
             return false;
         }
@@ -208,11 +208,11 @@ internal class ImplicitConverter
     private static bool ImplicitConvertToValueType(
         Type sourceType,
         Type destinationType,
-        YaleIlGenerator ilGenerator
+        YaleIlGenerator? ilGenerator
     )
     {
         // We only handle value types
-        if (sourceType.IsValueType == false && destinationType.IsValueType == false)
+        if (sourceType.IsValueType is false && destinationType.IsValueType is false)
         {
             return false;
         }
@@ -238,11 +238,11 @@ internal class ImplicitConverter
     public static bool EmitImplicitNumericConvert(
         Type sourceType,
         Type destinationType,
-        YaleIlGenerator ilGenerator
+        YaleIlGenerator? ilGenerator
     )
     {
-        TypeCode sourceTypeCode = Type.GetTypeCode(sourceType);
-        TypeCode destTypeCode = Type.GetTypeCode(destinationType);
+        var sourceTypeCode = Type.GetTypeCode(sourceType);
+        var destTypeCode = Type.GetTypeCode(destinationType);
 
         return destTypeCode switch
         {
@@ -308,7 +308,7 @@ internal class ImplicitConverter
 
     private static bool ImplicitConvertToDouble(
         TypeCode sourceTypeCode,
-        YaleIlGenerator ilGenerator
+        YaleIlGenerator? ilGenerator
     )
     {
         switch (sourceTypeCode)
@@ -342,7 +342,7 @@ internal class ImplicitConverter
 
     private static bool ImplicitConvertToSingle(
         TypeCode sourceTypeCode,
-        YaleIlGenerator ilGenerator
+        YaleIlGenerator? ilGenerator
     )
     {
         switch (sourceTypeCode)
@@ -424,7 +424,7 @@ internal class ImplicitConverter
         return true;
     }
 
-    private static void EmitConvert(YaleIlGenerator ilg, OpCode convertOpcode) =>
+    private static void EmitConvert(YaleIlGenerator? ilg, OpCode convertOpcode) =>
         ilg?.Emit(convertOpcode);
 
     /// <summary>

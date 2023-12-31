@@ -126,19 +126,19 @@ public sealed class ImportCollection
             throw new ArgumentException(msg);
         }
 
-        AddMethod(methodInfo, @namespace);
+        AddMethod(type, methodInfo, @namespace);
     }
 
-    private void AddMethod(MethodInfo methodInfo, string @namespace)
+    private void AddMethod(Type type, MethodInfo methodInfo, string @namespace)
     {
-        options.AssertTypeIsAccessible(methodInfo.ReflectedType);
+        options.AssertTypeIsAccessible(type);
 
-        if (methodInfo.IsStatic == false | methodInfo.IsPublic == false)
+        if (methodInfo.IsStatic is false | methodInfo.IsPublic is false)
         {
             throw new ArgumentException(GeneralErrors.OnlyPublicStaticMethodsCanBeImported);
         }
 
-        NamespaceImport import = GetImport(@namespace);
+        var import = GetImport(@namespace);
         import.Add(new MethodImport(methodInfo, options));
     }
 }

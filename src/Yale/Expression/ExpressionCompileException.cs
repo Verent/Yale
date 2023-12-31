@@ -6,11 +6,6 @@ using Yale.Resources;
 
 namespace Yale.Expression;
 
-[SuppressMessage(
-    "Design",
-    "CA1032:Implement standard exception constructors",
-    Justification = "<Pending>"
-)]
 public sealed class ExpressionCompileException : Exception
 {
     internal ExpressionCompileException(string message, CompileExceptionReason reason)
@@ -44,7 +39,6 @@ public sealed class ExpressionCompileException : Exception
             if (Reason == CompileExceptionReason.SyntaxError)
             {
                 return $"{CompileErrors.SyntaxError}: {InnerException?.Message}";
-                ;
             }
 
             return base.Message;

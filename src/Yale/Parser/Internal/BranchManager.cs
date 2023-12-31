@@ -5,19 +5,13 @@ using System.Reflection.Emit;
 namespace Yale.Parser.Internal;
 
 /// <summary>
-/// "Manages branch information and allows us to determine if we should emit a short or long branch"
+/// Manages branch information and allows us to determine if we should emit a short or long branch
 /// </summary>
 internal class BranchManager
 {
-    private readonly IList<BranchInfo> branchInfos;
+    private readonly IList<BranchInfo> branchInfos = new List<BranchInfo>();
 
-    private readonly IDictionary<object, Label> keyLabelMap;
-
-    public BranchManager()
-    {
-        branchInfos = new List<BranchInfo>();
-        keyLabelMap = new Dictionary<object, Label>();
-    }
+    private readonly IDictionary<object, Label> keyLabelMap = new Dictionary<object, Label>();
 
     /// <summary>
     /// Determine whether to use short or long branches
@@ -25,9 +19,9 @@ internal class BranchManager
     /// <remarks></remarks>
     public void ComputeBranches()
     {
-        List<BranchInfo> betweenBranches = new List<BranchInfo>();
+        List<BranchInfo> betweenBranches = new();
 
-        foreach (BranchInfo branchInfo in branchInfos)
+        foreach (var branchInfo in branchInfos)
         {
             betweenBranches.Clear();
 
@@ -44,7 +38,7 @@ internal class BranchManager
         int longBranchCount = 0;
 
         // Adjust the start location of each branch
-        foreach (BranchInfo branchInfo in branchInfos)
+        foreach (var branchInfo in branchInfos)
         {
             // Save the short/long branch type
             branchInfo.BakeIsLongBranch();
@@ -65,7 +59,7 @@ internal class BranchManager
     /// <remarks></remarks>
     private int CountLongBranches(ICollection<BranchInfo> dest)
     {
-        int count = 0;
+        var count = 0;
 
         foreach (BranchInfo branchInfo in dest)
         {

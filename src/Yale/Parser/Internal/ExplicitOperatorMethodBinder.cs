@@ -18,11 +18,11 @@ internal class ExplicitOperatorMethodBinder : CustomBinder
     public override MethodBase BindToMethod(
         BindingFlags bindingAttr,
         MethodBase[] match,
-        ref object[] args,
-        ParameterModifier[] modifiers,
-        CultureInfo culture,
-        string[] names,
-        out object state
+        ref object?[] args,
+        ParameterModifier[]? modifiers,
+        CultureInfo? culture,
+        string[]? names,
+        out object? state
     ) => throw new NotImplementedException();
 
     public override object ChangeType(object value, Type type, CultureInfo? culture) =>
@@ -32,7 +32,7 @@ internal class ExplicitOperatorMethodBinder : CustomBinder
         BindingFlags bindingAttr,
         MethodBase[] match,
         Type[] types,
-        ParameterModifier[] modifiers
+        ParameterModifier[]? modifiers
     )
     {
         foreach (MethodInfo methodInfo in match)

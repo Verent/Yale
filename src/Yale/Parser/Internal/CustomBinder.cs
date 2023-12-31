@@ -11,7 +11,7 @@ internal abstract class CustomBinder : Binder
         FieldInfo[] match,
         object value,
         CultureInfo? culture
-    ) => null;
+    ) => throw new NotImplementedException();
 
     public override void ReorderArgumentArray(ref object?[] args, object state) { }
 

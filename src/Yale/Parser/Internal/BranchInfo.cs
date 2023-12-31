@@ -43,7 +43,7 @@ internal class BranchInfo : IEquatable<BranchInfo>
     public bool Equals1(BranchInfo other) =>
         start.Equals1(other.start) && myLabel.Equals(other.myLabel);
 
-    bool IEquatable<BranchInfo>.Equals(BranchInfo other) => Equals1(other);
+    bool IEquatable<BranchInfo>.Equals(BranchInfo? other) => other is not null && Equals1(other);
 
     public override string ToString() => $"{start} -> {end} (L={start.IsLongBranch(end)})";
 

@@ -65,12 +65,12 @@ internal class CastElement : BaseExpressionElement
         Type? type = null;
 
         // Try to find a builtin type with the name
-        if (destTypeParts.Length == 1)
+        if (destTypeParts.Length is 1)
         {
             type = ImportCollection.GetBuiltinType(destTypeParts[0]);
         }
 
-        if (type != null)
+        if (type is not null)
         {
             return type;
         }

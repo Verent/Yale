@@ -64,7 +64,7 @@ internal sealed class NamespaceImport : ImportBase, ICollection<ImportBase>
     {
         return NonContainerImports
             .Select(import => import.FindType(typeName))
-            .FirstOrDefault(type => type != null);
+            .FirstOrDefault(type => type is not null);
     }
 
     internal override ImportBase? FindImport(string name)
