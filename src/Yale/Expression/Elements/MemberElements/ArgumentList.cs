@@ -22,7 +22,7 @@ internal class ArgumentList
 
     private string[] GetArgumentTypeNames()
     {
-        List<string> list = new List<string>();
+        List<string> list = new();
 
         foreach (BaseExpressionElement expressionElement in _elements)
         {
@@ -34,7 +34,7 @@ internal class ArgumentList
 
     public Type[] GetArgumentTypes()
     {
-        List<Type> list = new List<Type>();
+        List<Type> list = new();
 
         foreach (BaseExpressionElement e in _elements)
         {

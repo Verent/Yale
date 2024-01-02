@@ -16,13 +16,13 @@ namespace Yale.Core;
 /// </remarks>
 internal sealed class NamespaceImport : ImportBase, ICollection<ImportBase>
 {
-    private readonly string _namespace;
-    private readonly List<ImportBase> _imports;
+    private readonly string @namespace;
+    private readonly List<ImportBase> imports;
 
-    public override string Name => _namespace;
+    public override string Name => @namespace;
     public override bool IsContainer => true;
     public bool IsReadOnly => false;
-    public int Count => _imports.Count;
+    public int Count => imports.Count;
 
     /// <summary>
     /// Creates a new namespace import with a given namespace name
@@ -32,16 +32,15 @@ internal sealed class NamespaceImport : ImportBase, ICollection<ImportBase>
     public NamespaceImport(string importNamespace, ExpressionBuilderOptions options)
         : base(options)
     {
-        if (importNamespace is null)
-            throw new ArgumentNullException(nameof(importNamespace));
+        ArgumentNullException.ThrowIfNull(importNamespace);
 
         if (importNamespace.Length == 0)
         {
             throw new ArgumentException(GeneralErrors.InvalidNamespaceName);
         }
 
-        _namespace = importNamespace;
-        _imports = new List<ImportBase>();
+        @namespace = importNamespace;
+        imports = new List<ImportBase>();
     }
 
     protected override void AddMembers(
@@ -50,7 +49,7 @@ internal sealed class NamespaceImport : ImportBase, ICollection<ImportBase>
         ICollection<MemberInfo> targetCollection
     )
     {
-        foreach (ImportBase import in NonContainerImports)
+        foreach (var import in NonContainerImports)
         {
             AddImportMembers(import, memberName, memberType, targetCollection);
         }
@@ -65,12 +64,12 @@ internal sealed class NamespaceImport : ImportBase, ICollection<ImportBase>
     {
         return NonContainerImports
             .Select(import => import.FindType(typeName))
-            .FirstOrDefault(type => type != null);
+            .FirstOrDefault(type => type is not null);
     }
 
     internal override ImportBase? FindImport(string name)
     {
-        foreach (ImportBase import in _imports)
+        foreach (var import in imports)
         {
             if (import.IsMatch(name))
             {
@@ -82,16 +81,16 @@ internal sealed class NamespaceImport : ImportBase, ICollection<ImportBase>
 
     internal override bool IsMatch(string name)
     {
-        return string.Equals(_namespace, name, Options.MemberStringComparison);
+        return string.Equals(@namespace, name, Options.MemberStringComparison);
     }
 
     private ICollection<ImportBase> NonContainerImports
     {
         get
         {
-            List<ImportBase> found = new List<ImportBase>();
+            List<ImportBase> found = new();
 
-            foreach (ImportBase import in _imports)
+            foreach (var import in imports)
             {
                 if (import.IsContainer == false)
                 {
@@ -102,41 +101,37 @@ internal sealed class NamespaceImport : ImportBase, ICollection<ImportBase>
         }
     }
 
-    protected override bool EqualsInternal(ImportBase import)
+    protected override bool EqualsInternal(ImportBase? import)
     {
         return import is NamespaceImport otherSameType
-            && _namespace.Equals(otherSameType._namespace, Options.MemberStringComparison);
+            && @namespace.Equals(otherSameType.@namespace, Options.MemberStringComparison);
     }
 
     public void Add(ImportBase item)
     {
-        if (item is null)
-            throw new ArgumentNullException(nameof(item));
-        _imports.Add(item);
+        ArgumentNullException.ThrowIfNull(item);
+        imports.Add(item);
     }
 
-    public void Clear()
-    {
-        _imports.Clear();
-    }
+    public void Clear() => imports.Clear();
 
     public bool Contains(ImportBase item)
     {
-        return _imports.Contains(item);
+        return imports.Contains(item);
     }
 
     public void CopyTo(ImportBase[] array, int arrayIndex)
     {
-        _imports.CopyTo(array, arrayIndex);
+        imports.CopyTo(array, arrayIndex);
     }
 
     public bool Remove(ImportBase item)
     {
-        return _imports.Remove(item);
+        return imports.Remove(item);
     }
 
     public override IEnumerator<ImportBase> GetEnumerator()
     {
-        return _imports.GetEnumerator();
+        return imports.GetEnumerator();
     }
 }

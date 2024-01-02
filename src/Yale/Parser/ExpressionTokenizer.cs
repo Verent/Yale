@@ -18,7 +18,7 @@ internal class ExpressionTokenizer : Tokenizer
 
     private void CreatePatterns()
     {
-        TokenPattern pattern = new TokenPattern((int)Token.ADD, "ADD", PatternType.STRING, "+");
+        TokenPattern pattern = new((int)Token.ADD, "ADD", PatternType.STRING, "+");
         AddPattern(pattern);
 
         pattern = new TokenPattern((int)Token.SUB, "SUB", PatternType.STRING, "-");

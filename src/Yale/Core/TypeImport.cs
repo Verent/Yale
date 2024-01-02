@@ -35,7 +35,8 @@ internal sealed class TypeImport : ImportBase
     )
         : base(options)
     {
-        Target = importType ?? throw new ArgumentNullException(nameof(importType));
+        ArgumentNullException.ThrowIfNull(importType);
+        Target = importType;
         bindFlags = flags;
         this.useTypeNameAsNamespace = useTypeNameAsNamespace;
     }
@@ -46,12 +47,7 @@ internal sealed class TypeImport : ImportBase
         ICollection<MemberInfo> targetCollection
     )
     {
-        MemberInfo[] members = Target.FindMembers(
-            memberType,
-            bindFlags,
-            Options.MemberFilter,
-            memberName
-        );
+        var members = Target.FindMembers(memberType, bindFlags, Options.MemberFilter, memberName);
         AddMemberRange(members, targetCollection);
     }
 
@@ -63,7 +59,7 @@ internal sealed class TypeImport : ImportBase
         if (useTypeNameAsNamespace)
             return;
 
-        MemberInfo[] members = Target.FindMembers(memberType, bindFlags, AlwaysMemberFilter, null);
+        var members = Target.FindMembers(memberType, bindFlags, AlwaysMemberFilter, null);
         AddMemberRange(members, targetCollection);
     }
 
@@ -78,17 +74,17 @@ internal sealed class TypeImport : ImportBase
         return string.Equals(typeName, Target.Name, Options.MemberStringComparison) ? Target : null;
     }
 
-    protected override bool EqualsInternal(ImportBase import)
+    protected override bool EqualsInternal(ImportBase? import)
     {
         return import is TypeImport otherSameType && ReferenceEquals(Target, otherSameType.Target);
     }
 
     public override IEnumerator<ImportBase> GetEnumerator()
     {
-        if (!useTypeNameAsNamespace)
+        if (useTypeNameAsNamespace == false)
             return base.GetEnumerator();
 
-        List<ImportBase> coll = new List<ImportBase> { new TypeImport(Target, false, Options) };
+        List<ImportBase> coll = new() { new TypeImport(Target, false, Options) };
         return coll.GetEnumerator();
     }
 

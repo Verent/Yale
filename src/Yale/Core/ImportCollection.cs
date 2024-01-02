@@ -24,7 +24,7 @@ public sealed class ImportCollection
     {
         this.options = options;
         RootImport = new NamespaceImport("true", this.options);
-        ImportOwner(typeof(object));
+        ownerImport = new TypeImport(typeof(object), OwnerFlags, false, options);
     }
 
     private static Dictionary<string, Type> CreateBuiltinTypeMap()
@@ -73,13 +73,13 @@ public sealed class ImportCollection
 
     internal Type? FindType(string[] typeNameParts)
     {
-        string[] namespaces = new string[typeNameParts.Length - 1];
-        string typeName = typeNameParts[^1];
+        var namespaces = new string[typeNameParts.Length - 1];
+        var typeName = typeNameParts[^1];
 
         Array.Copy(typeNameParts, namespaces, namespaces.Length);
         ImportBase? currentImport = RootImport;
 
-        foreach (string ns in namespaces)
+        foreach (var ns in namespaces)
         {
             currentImport = currentImport.FindImport(ns);
             if (currentImport is null)
@@ -96,15 +96,13 @@ public sealed class ImportCollection
 
     public void AddType(Type type, string @namespace)
     {
-        if (type is null)
-            throw new ArgumentNullException(nameof(type));
-        if (@namespace is null)
-            throw new ArgumentNullException(nameof(@namespace));
+        ArgumentNullException.ThrowIfNull(type);
+        ArgumentNullException.ThrowIfNull(@namespace);
 
         const BindingFlags publicStatic = BindingFlags.Public | BindingFlags.Static;
         options.AssertTypeIsAccessible(type);
 
-        NamespaceImport import = GetImport(@namespace);
+        var import = GetImport(@namespace);
         import.Add(new TypeImport(type, publicStatic, false, options));
     }
 
@@ -112,17 +110,14 @@ public sealed class ImportCollection
 
     public void AddMethod(string methodName, Type type, string @namespace)
     {
-        if (type is null)
-            throw new ArgumentNullException(nameof(type));
-        if (@namespace is null)
-            throw new ArgumentNullException(nameof(@namespace));
-        if (methodName is null)
-            throw new ArgumentNullException(nameof(methodName));
+        ArgumentNullException.ThrowIfNull(type);
+        ArgumentNullException.ThrowIfNull(@namespace);
+        ArgumentNullException.ThrowIfNull(methodName);
 
-        MethodInfo? methodInfo = type.GetMethod(methodName, PublicStaticIgnoreCase);
+        var methodInfo = type.GetMethod(methodName, PublicStaticIgnoreCase);
         if (methodInfo is null)
         {
-            string msg = string.Format(
+            var msg = string.Format(
                 CultureInfo.InvariantCulture,
                 GeneralErrors.CouldNotFindPublicStaticMethodOnType,
                 methodName,
@@ -131,19 +126,19 @@ public sealed class ImportCollection
             throw new ArgumentException(msg);
         }
 
-        AddMethod(methodInfo, @namespace);
+        AddMethod(type, methodInfo, @namespace);
     }
 
-    private void AddMethod(MethodInfo methodInfo, string @namespace)
+    private void AddMethod(Type type, MethodInfo methodInfo, string @namespace)
     {
-        options.AssertTypeIsAccessible(methodInfo.ReflectedType);
+        options.AssertTypeIsAccessible(type);
 
-        if (methodInfo.IsStatic == false | methodInfo.IsPublic == false)
+        if (methodInfo.IsStatic is false | methodInfo.IsPublic is false)
         {
             throw new ArgumentException(GeneralErrors.OnlyPublicStaticMethodsCanBeImported);
         }
 
-        NamespaceImport import = GetImport(@namespace);
+        var import = GetImport(@namespace);
         import.Add(new MethodImport(methodInfo, options));
     }
 }

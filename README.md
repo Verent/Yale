@@ -14,3 +14,4 @@ For more information read the [wiki](../../wiki)
 ## License
  
 The Yale library is licensed under the GNU Lesser General Public License v3.0, also included in our repository in the LICENSE.txt file.
+

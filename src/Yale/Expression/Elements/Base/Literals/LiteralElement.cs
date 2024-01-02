@@ -59,7 +59,7 @@ internal abstract class LiteralElement : BaseExpressionElement
 
     private static void EmitSuperShort(int value, YaleIlGenerator ilGenerator)
     {
-        OpCode ldcOpcode = default(OpCode);
+        OpCode ldcOpcode = default;
 
         switch (value)
         {

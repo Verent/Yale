@@ -46,7 +46,7 @@ internal class CastElement : BaseExpressionElement
 
     private static string GetDestinationTypeString(string[] parts, bool isArray)
     {
-        string s = string.Join(".", parts);
+        var s = string.Join(".", parts);
         if (isArray)
         {
             s += "[]";
@@ -65,12 +65,12 @@ internal class CastElement : BaseExpressionElement
         Type? type = null;
 
         // Try to find a builtin type with the name
-        if (destTypeParts.Length == 1)
+        if (destTypeParts.Length is 1)
         {
             type = ImportCollection.GetBuiltinType(destTypeParts[0]);
         }
 
-        if (type != null)
+        if (type is not null)
         {
             return type;
         }
@@ -128,7 +128,7 @@ internal class CastElement : BaseExpressionElement
             // Reference type to value type
             // Can only succeed if the reference type is a base of the value type or
             // it is one of the interfaces the value type implements
-            Type[] interfaces = destType.GetInterfaces();
+            var interfaces = destType.GetInterfaces();
             return IsBaseType(destType, sourceType) || Array.IndexOf(interfaces, sourceType) != -1;
         }
 
@@ -138,10 +138,7 @@ internal class CastElement : BaseExpressionElement
 
     private MethodInfo? GetExplictOverloadedOperator(Type sourceType, Type destType)
     {
-        ExplicitOperatorMethodBinder methodBinder = new ExplicitOperatorMethodBinder(
-            destType,
-            sourceType
-        );
+        ExplicitOperatorMethodBinder methodBinder = new(destType, sourceType);
 
         // Look for an operator on the source type and dest types
         MethodInfo? miSource = Utility.GetOverloadedOperator(
@@ -212,8 +209,8 @@ internal class CastElement : BaseExpressionElement
                 return false;
             }
 
-            Type sourceElementType = sourceType.GetElementType();
-            Type destElementType = destType.GetElementType();
+            var sourceElementType = sourceType.GetElementType();
+            var destElementType = destType.GetElementType();
 
             // Both SE and TE are reference-types
             if (sourceElementType.IsValueType | destElementType.IsValueType)
@@ -257,8 +254,8 @@ internal class CastElement : BaseExpressionElement
 
     private static bool IsBaseType(Type target, Type potentialBase)
     {
-        Type current = target;
-        while (current != null)
+        Type? current = target;
+        while (current is not null)
         {
             if (ReferenceEquals(current, potentialBase))
             {

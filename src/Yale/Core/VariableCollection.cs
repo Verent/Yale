@@ -13,11 +13,11 @@ public sealed class VariableCollection
     : INotifyPropertyChanged,
         IEnumerable<KeyValuePair<string, object>>
 {
-    private readonly IDictionary<string, IVariable> _values = new Dictionary<string, IVariable>();
+    private readonly IDictionary<string, IVariable> values = new Dictionary<string, IVariable>();
 
-    public void Clear() => _values.Clear();
+    public void Clear() => values.Clear();
 
-    public int Count => _values.Keys.Count;
+    public int Count => values.Keys.Count;
 
     /// <summary>
     /// Adds a value to this compute instance. This can be referenced in expressions.
@@ -27,7 +27,7 @@ public sealed class VariableCollection
     public void Add(string key, object value)
     {
         ArgumentNullException.ThrowIfNull(value);
-        _values.Add(key, new Variable(value));
+        values.Add(key, new Variable(value));
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ public sealed class VariableCollection
     /// </summary>
     /// <param name="key"></param>
     ///
-    public object Get(string key) => _values[key].ValueAsObject;
+    public object Get(string key) => values[key].ValueAsObject;
 
     /// <summary>
     /// Returns the current value registered to a variable in this instance.
@@ -43,36 +43,36 @@ public sealed class VariableCollection
     /// <param name="key"></param>
     public T Get<T>(string key) => (T)Get(key);
 
-    public bool ContainsKey(string key) => _values.ContainsKey(key);
+    public bool ContainsKey(string key) => values.ContainsKey(key);
 
-    public bool Remove(string key) => _values.Remove(key);
+    public bool Remove(string key) => values.Remove(key);
 
     public bool TryGetValue(string key, out object? value)
     {
-        bool success = _values.TryGetValue(key, out IVariable? result);
+        bool success = values.TryGetValue(key, out IVariable? result);
         value = result?.ValueAsObject;
-        return success;
+        return success && value is not null;
     }
 
     public bool TryGetValue<T>(string key, [NotNullWhen(true)] out T? value)
         where T : class
     {
-        bool success = _values.TryGetValue(key, out IVariable? result);
+        bool success = values.TryGetValue(key, out IVariable? result);
         value = result as T;
-        return success;
+        return success && value is not null;
     }
 
     public object this[string key]
     {
-        get => _values[key].ValueAsObject;
+        get => values[key].ValueAsObject;
         set
         {
             ArgumentNullException.ThrowIfNull(value);
 
-            if (_values.ContainsKey(key) && _values[key].Equals(value))
+            if (values.ContainsKey(key) && values[key].Equals(value))
                 return;
 
-            _values[key] = new Variable(value);
+            values[key] = new Variable(value);
             if (value is INotifyPropertyChanged nValue)
             {
                 nValue.PropertyChanged += (sender, args) =>
@@ -84,8 +84,8 @@ public sealed class VariableCollection
         }
     }
 
-    public ICollection<string> Keys => _values.Keys;
-    public ICollection<object> Values => _values.Values.Select(v => v.ValueAsObject).ToList();
+    public ICollection<string> Keys => values.Keys;
+    public ICollection<object> Values => values.Values.Select(v => v.ValueAsObject).ToList();
 
     /// <summary>
     /// This is used to crate a method call that can retrieve a value from the value collection
@@ -102,10 +102,10 @@ public sealed class VariableCollection
         return methodInfo!.MakeGenericMethod(variableType);
     }
 
-    public T GetVariableValueInternal<T>(string name) => (T)_values[name].ValueAsObject;
+    public T GetVariableValueInternal<T>(string name) => (T)values[name].ValueAsObject;
 
     public IEnumerator<KeyValuePair<string, object>> GetEnumerator() =>
-        new VariableEnumerator(_values);
+        new VariableEnumerator(values);
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

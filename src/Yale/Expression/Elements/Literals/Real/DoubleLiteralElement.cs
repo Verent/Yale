@@ -19,7 +19,7 @@ internal class DoubleLiteralElement : RealLiteralElement
 
     public static DoubleLiteralElement? Parse(string image)
     {
-        DoubleLiteralElement element = new DoubleLiteralElement();
+        DoubleLiteralElement element = new();
 
         try
         {

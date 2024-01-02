@@ -6,26 +6,22 @@ namespace Yale.Expression.Elements.Base.Literals;
 
 internal abstract class RealLiteralElement : LiteralElement
 {
-    private static ExpressionBuilderOptions? builderOptions;
-
     public static LiteralElement? CreateFromInteger(string image, ExpressionBuilderOptions options)
     {
-        builderOptions = options;
-        LiteralElement element = CreateSingle(image);
+        LiteralElement? element = CreateSingle(image);
 
-        if (element != null)
+        if (element is not null)
         {
             return element;
         }
 
         element = CreateDecimal(image);
-
-        if (element != null)
+        if (element is not null)
         {
             return element;
         }
 
-        if (builderOptions.IntegerAsDouble)
+        if (options.IntegerAsDouble)
         {
             return DoubleLiteralElement.Parse(image);
         }
@@ -35,34 +31,36 @@ internal abstract class RealLiteralElement : LiteralElement
 
     public static object? Create(string image, ExpressionBuilderOptions options)
     {
-        builderOptions = options;
         LiteralElement? element = CreateSingle(image);
 
-        if (element != null)
+        if (element is not null)
         {
             return element;
         }
 
         element = CreateDecimal(image);
-        if (element != null)
+        if (element is not null)
         {
             return element;
         }
 
         element = CreateDouble(image);
-        if (element != null)
+        if (element is not null)
         {
             return element;
         }
 
-        element = CreateImplicitReal(image);
+        element = CreateImplicitReal(image, options);
 
         return element;
     }
 
-    private static LiteralElement? CreateImplicitReal(string image)
+    private static LiteralElement? CreateImplicitReal(
+        string image,
+        ExpressionBuilderOptions options
+    )
     {
-        RealLiteralDataType realType = builderOptions.RealLiteralDataType;
+        RealLiteralDataType realType = options.RealLiteralDataType;
 
         switch (realType)
         {

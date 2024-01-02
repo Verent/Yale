@@ -33,7 +33,7 @@ internal class DecimalLiteralElement : RealLiteralElement
 
     public static DecimalLiteralElement Parse(string image)
     {
-        DecimalLiteralElement element = new DecimalLiteralElement();
+        DecimalLiteralElement element = new();
 
         try
         {

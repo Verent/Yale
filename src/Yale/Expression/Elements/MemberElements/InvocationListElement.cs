@@ -49,9 +49,9 @@ internal class InvocationListElement : BaseExpressionElement
 
         // If the first element is not a member element, then we assume it
         //is an expression and replace it with the correct member element
-        if (!(firstElement is MemberElement))
+        if (firstElement is not MemberElement)
         {
-            ExpressionMemberElement actualFirst = new ExpressionMemberElement(firstElement);
+            ExpressionMemberElement actualFirst = new(firstElement);
             elements[0] = actualFirst;
         }
         else
@@ -98,13 +98,13 @@ internal class InvocationListElement : BaseExpressionElement
         }
     }
 
-    private static string GetName(IList elements)
+    private static string? GetName(IList elements)
     {
         if (elements.Count == 0)
         {
             return null;
         }
-        IdentifierElement? fpe = elements[0] as IdentifierElement;
+        var fpe = elements[0] as IdentifierElement;
         return fpe?.MemberName;
     }
 

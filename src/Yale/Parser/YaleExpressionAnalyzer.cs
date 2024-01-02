@@ -49,19 +49,19 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     public override Node ExitXorExpression(Production node)
     {
-        AddBinaryOp(node, typeof(XorElement));
+        AddBinaryOp<XorElement>(node);
         return node;
     }
 
     public override Node ExitOrExpression(Production node)
     {
-        AddBinaryOp(node, typeof(AndOrElement));
+        AddBinaryOp<AndOrElement>(node);
         return node;
     }
 
     public override Node ExitAndExpression(Production node)
     {
-        AddBinaryOp(node, typeof(AndOrElement));
+        AddBinaryOp<AndOrElement>(node);
         return node;
     }
 
@@ -73,31 +73,31 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     public override Node ExitCompareExpression(Production node)
     {
-        AddBinaryOp(node, typeof(CompareElement));
+        AddBinaryOp<CompareElement>(node);
         return node;
     }
 
     public override Node ExitShiftExpression(Production node)
     {
-        AddBinaryOp(node, typeof(ShiftElement));
+        AddBinaryOp<ShiftElement>(node);
         return node;
     }
 
     public override Node ExitAdditiveExpression(Production node)
     {
-        AddBinaryOp(node, typeof(ArithmeticElement));
+        AddBinaryOp<ArithmeticElement>(node);
         return node;
     }
 
     public override Node ExitMultiplicativeExpression(Production node)
     {
-        AddBinaryOp(node, typeof(ArithmeticElement));
+        AddBinaryOp<ArithmeticElement>(node);
         return node;
     }
 
     public override Node ExitPowerExpression(Production node)
     {
-        AddBinaryOp(node, typeof(ArithmeticElement));
+        AddBinaryOp<ArithmeticElement>(node);
         return node;
     }
 
@@ -143,16 +143,13 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
         IList childValues = GetChildValues(node);
         object first = childValues[0];
 
-        if (childValues.Count == 1 && !(first is MemberElement))
+        if (childValues.Count == 1 && first is not MemberElement)
         {
             node.AddValue(first);
         }
         else
         {
-            InvocationListElement invocationListElement = new InvocationListElement(
-                childValues,
-                context
-            );
+            InvocationListElement invocationListElement = new(childValues, context);
             node.AddValue(invocationListElement);
         }
 
@@ -162,8 +159,8 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
     public override Node ExitIndexExpression(Production node)
     {
         IList childValues = GetChildValues(node);
-        ArgumentList args = new ArgumentList(childValues);
-        IndexerElement e = new IndexerElement(args);
+        ArgumentList args = new(childValues);
+        IndexerElement e = new(args);
         node.AddValue(e);
         return node;
     }
@@ -183,11 +180,12 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
     public override Node ExitIfExpression(Production node)
     {
         IList childValues = GetChildValues(node);
-        ConditionalElement op = new ConditionalElement(
-            (BaseExpressionElement)childValues[0],
-            (BaseExpressionElement)childValues[1],
-            (BaseExpressionElement)childValues[2]
-        );
+        ConditionalElement op =
+            new(
+                (BaseExpressionElement)childValues[0],
+                (BaseExpressionElement)childValues[1],
+                (BaseExpressionElement)childValues[2]
+            );
         node.AddValue(op);
         return node;
     }
@@ -214,10 +212,7 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
         }
         else
         {
-            InvocationListElement invocationListElement = new InvocationListElement(
-                childValues,
-                context
-            );
+            InvocationListElement invocationListElement = new(childValues, context);
             op = new InElement(operand, invocationListElement);
         }
 
@@ -243,12 +238,8 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
         IList childValues = GetChildValues(node);
         string[] destTypeParts = (string[])childValues[1];
         bool isArray = (bool)childValues[2];
-        CastElement op = new CastElement(
-            (BaseExpressionElement)childValues[0],
-            destTypeParts,
-            isArray,
-            context
-        );
+        CastElement op =
+            new((BaseExpressionElement)childValues[0], destTypeParts, isArray, context);
         node.AddValue(op);
         return node;
     }
@@ -285,7 +276,7 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
     public override Node ExitFieldPropertyExpression(Production node)
     {
         //string name = ((Token)node.GetChildAt(0))?.Image;
-        string name = node.GetChildAt(0).GetValue(0).ToString();
+        var name = node.GetChildAt(0).GetValue(0).ToString();
         IdentifierElement elem = new(name);
         node.AddValue(elem);
         return node;
@@ -293,8 +284,8 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     public override Node ExitFunctionCallExpression(Production node)
     {
-        ArrayList childValues = GetChildValues(node);
-        string name = (string)childValues[0];
+        var childValues = GetChildValues(node);
+        var name = (string)childValues[0];
         childValues.RemoveAt(0);
         ArgumentList args = new(childValues);
         FunctionCallElement funcCall = new(name, args);
@@ -304,7 +295,7 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     public override Node ExitArgumentList(Production node)
     {
-        ArrayList childValues = GetChildValues(node);
+        var childValues = GetChildValues(node);
         node.AddValues(childValues);
         return node;
     }
@@ -326,12 +317,11 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     private void AddUnaryOp(Production node, Type elementType)
     {
-        IList childValues = GetChildValues(node);
+        var childValues = GetChildValues(node);
 
         if (childValues.Count == 2)
         {
-            UnaryElement element = (UnaryElement)
-                Activator.CreateInstance(elementType, childValues[1]);
+            var element = (UnaryElement)Activator.CreateInstance(elementType, childValues[1]);
             node.AddValue(element);
         }
         else
@@ -340,16 +330,14 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
         }
     }
 
-    private void AddBinaryOp(Production node, Type elementType)
+    private void AddBinaryOp<T>(Production node)
+        where T : BinaryExpressionElement, new()
     {
-        IList childValues = GetChildValues(node);
+        var childValues = GetChildValues(node);
 
         if (childValues.Count > 1)
         {
-            BinaryExpressionElement expressionElement = BinaryExpressionElement.CreateElement(
-                childValues,
-                elementType
-            );
+            var expressionElement = BinaryExpressionElement.CreateElement<T>(childValues);
             node.AddValue(expressionElement);
         }
         else if (childValues.Count == 1)
@@ -358,13 +346,14 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
         }
         else
         {
-            Debug.Assert(false, "wrong number of children");
+            //Todo: Imrove error handling
+            Debug.Assert(false, "Wrong number of children");
         }
     }
 
     public override Node ExitReal(PerCederberg.Grammatica.Runtime.Token node)
     {
-        object? element = RealLiteralElement.Create(node.Image, context.BuilderOptions);
+        var element = RealLiteralElement.Create(node.Image, context.BuilderOptions);
 
         node.AddValue(element);
         return node;
@@ -372,7 +361,7 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     public override Node ExitInteger(PerCederberg.Grammatica.Runtime.Token node)
     {
-        LiteralElement element = IntegralLiteralElement.Create(
+        var element = IntegralLiteralElement.Create(
             node.Image,
             false,
             inUnaryNegate,
@@ -384,7 +373,7 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     public override Node ExitHexliteral(PerCederberg.Grammatica.Runtime.Token node)
     {
-        LiteralElement element = IntegralLiteralElement.Create(
+        var element = IntegralLiteralElement.Create(
             node.Image,
             true,
             inUnaryNegate,
@@ -414,7 +403,7 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     public override Node ExitStringLiteral(PerCederberg.Grammatica.Runtime.Token node)
     {
-        string s = DoEscapes(node.Image);
+        var s = DoEscapes(node.Image);
         StringLiteralElement element = new(s);
         node.AddValue(element);
         return node;
@@ -422,14 +411,14 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     public override Node ExitCharLiteral(PerCederberg.Grammatica.Runtime.Token node)
     {
-        string s = DoEscapes(node.Image);
+        var s = DoEscapes(node.Image);
         node.AddValue(new CharLiteralElement(s[0]));
         return node;
     }
 
     public override Node ExitDatetime(PerCederberg.Grammatica.Runtime.Token node)
     {
-        string image = node.Image[1..^1];
+        var image = node.Image[1..^1];
         DateTimeLiteralElement element = new(image, context);
         node.AddValue(element);
         return node;
@@ -437,7 +426,7 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     public override Node ExitTimeSpan(PerCederberg.Grammatica.Runtime.Token node)
     {
-        string image = node.Image[2..^1];
+        var image = node.Image[2..^1];
         TimeSpanLiteralElement element = new(image);
         node.AddValue(element);
         return node;
@@ -445,6 +434,8 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     private string DoEscapes(string image)
     {
+        //Todo: Add tests for this
+
         // Remove outer quotes
         image = image[1..^1];
         image = unicodeEscapeRegex.Replace(image, UnicodeEscapeMatcher);
@@ -452,7 +443,7 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
         return image;
     }
 
-    private static string? RegularEscapeMatcher(Match match)
+    private static string RegularEscapeMatcher(Match match)
     {
         string matchValue = match.Value;
         // Remove leading \
@@ -478,18 +469,18 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
                 return Convert.ToChar(13).ToString();
 
             default:
-                Debug.Assert(false, "Unrecognized escape sequence");
-                return null;
+                //Todo: Throw proper yale exception
+                throw new Exception("Unrecognized escape sequence");
         }
     }
 
     private string UnicodeEscapeMatcher(Match m)
     {
-        string value = m.Value;
+        var value = m.Value;
         // Remove \u
         value = value.Remove(0, 2);
-        int code = int.Parse(value, NumberStyles.AllowHexSpecifier);
-        char c = Convert.ToChar(code);
+        var code = int.Parse(value, NumberStyles.AllowHexSpecifier);
+        var c = Convert.ToChar(code);
         return c.ToString();
     }
 

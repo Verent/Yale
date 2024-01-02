@@ -9,10 +9,27 @@ public class ExpressionBuilderOptions : IExpressionOptions
 {
     private const string Format = "dd/MM/yyyy";
 
+    /// <summary>
+    /// Checks if the result of an operation is within the range of the result type
+    /// Default: true
+    /// </summary>
     public bool OverflowChecked { get; set; } = true;
+
+    /// <summary>
+    /// If true, integer literals will be treated as double
+    /// Default: false
+    /// </summary>
     public bool IntegerAsDouble { get; set; } = false;
 
+    /// <summary>
+    /// Support case sensitive expressions
+    /// Default: true
+    /// </summary>
     public bool CaseSensitive { get; set; } = true;
+
+    /// <summary>
+    /// Format of DateTime literals
+    /// </summary>
     public string DateTimeFormat { get; set; } = Format;
 
     public StringComparison StringComparison { get; set; } = StringComparison.Ordinal;
@@ -37,22 +54,23 @@ public class ExpressionBuilderOptions : IExpressionOptions
     }
 
     //Todo:Verify
-    private void AssertNestedTypeIsAccessible(Type type)
+    private static void AssertNestedTypeIsAccessible(Type type)
     {
-        while (type != null)
+        Type? typeInternal = type;
+        do
         {
-            AssertTypeIsAccessibleInternal(type);
-            type = type.DeclaringType;
-        }
+            AssertTypeIsAccessibleInternal(typeInternal);
+            typeInternal = typeInternal.DeclaringType;
+        } while (typeInternal is not null);
     }
 
-    private static void AssertTypeIsAccessibleInternal(Type t)
+    private static void AssertTypeIsAccessibleInternal(Type type)
     {
-        bool isPublic = t.IsNested ? t.IsNestedPublic : t.IsPublic;
+        bool isPublic = type.IsNested ? type.IsNestedPublic : type.IsPublic;
 
-        if (isPublic == false)
+        if (isPublic is false)
         {
-            string msg = string.Format(GeneralErrors.TypeNotAccessibleToExpression, t.Name);
+            var msg = string.Format(GeneralErrors.TypeNotAccessibleToExpression, type.Name);
             throw new ArgumentException(msg);
         }
     }

@@ -15,9 +15,9 @@ internal class DependencyNode
 
     private string Key { get; }
 
-    private readonly List<DependencyNode> predecessor = new List<DependencyNode>();
+    private readonly List<DependencyNode> predecessor = new();
 
-    private readonly List<DependencyNode> successors = new List<DependencyNode>();
+    private readonly List<DependencyNode> successors = new();
 
     public void AddPredecessor(DependencyNode node)
     {
@@ -31,14 +31,14 @@ internal class DependencyNode
 
     public string[] Dependents
     {
-        get { return dependents ?? (dependents = successors.Select(s => s.Key).ToArray()); }
+        get { return dependents ??= successors.Select(s => s.Key).ToArray(); }
     }
 
     private string[]? precedents;
 
     public string[] Precedents
     {
-        get { return precedents ?? (precedents = predecessor.Select(s => s.Key).ToArray()); }
+        get { return precedents ??= predecessor.Select(s => s.Key).ToArray(); }
     }
 
     /// <summary>

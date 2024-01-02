@@ -242,12 +242,13 @@ internal static class Utility
         Type destinationType
     )
     {
-        Hashtable data = new Hashtable
-        {
-            { "Name", string.Concat("op_", name) },
-            { "sourceType", sourceType },
-            { "destType", destinationType }
-        };
+        Hashtable data =
+            new()
+            {
+                { "Name", string.Concat("op_", name) },
+                { "sourceType", sourceType },
+                { "destType", destinationType }
+            };
 
         const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
 
@@ -288,7 +289,7 @@ internal static class Utility
     /// <param name="value"></param>
     /// <returns></returns>
     /// <remarks></remarks>
-    private static bool SimpleOverloadedOperatorFilter(MemberInfo member, object value)
+    private static bool SimpleOverloadedOperatorFilter(MemberInfo member, object? value)
     {
         IDictionary data = (IDictionary)value;
         MethodInfo methodInfo = (MethodInfo)member;
@@ -310,14 +311,14 @@ internal static class Utility
         }
 
         ParameterInfo[] parameters = methodInfo.GetParameters();
-        bool argumentMatch =
+        var argumentMatch =
             parameters.Length > 0
             && ReferenceEquals(parameters[0].ParameterType, (Type)data["sourceType"]);
 
         return argumentMatch;
     }
 
-    public static MethodInfo GetOverloadedOperator(
+    public static MethodInfo? GetOverloadedOperator(
         string name,
         Type sourceType,
         Binder binder,
@@ -325,7 +326,7 @@ internal static class Utility
     )
     {
         name = string.Concat("op_", name);
-        MethodInfo mi = sourceType.GetMethod(
+        var mi = sourceType.GetMethod(
             name,
             BindingFlags.Public | BindingFlags.Static,
             binder,
@@ -339,7 +340,7 @@ internal static class Utility
 
     public static int GetIlGeneratorLength(ILGenerator ilg)
     {
-        FieldInfo fi =
+        var fi =
             typeof(ILGenerator).GetField("m_length", BindingFlags.Instance | BindingFlags.NonPublic)
             ?? typeof(ILGenerator).GetField(
                 "code_len",
@@ -355,7 +356,7 @@ internal static class Utility
 
     public static string FormatList(string[] items)
     {
-        string separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ";
+        var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ";
         return string.Join(separator, items);
     }
 }

@@ -88,7 +88,7 @@ internal class IndexerElement : MemberElement
         // Get the default members
         MemberInfo[] members = targetType.GetDefaultMembers();
 
-        List<MethodInfo> methods = new List<MethodInfo>();
+        List<MethodInfo> methods = new();
 
         // Use the first one that's valid for our indexer type
         foreach (MemberInfo? memberInfo in members)
@@ -100,11 +100,8 @@ internal class IndexerElement : MemberElement
             }
         }
 
-        FunctionCallElement functionCallElement = new FunctionCallElement(
-            "Indexer",
-            methods.ToArray(),
-            _indexerElements
-        );
+        FunctionCallElement functionCallElement =
+            new("Indexer", methods.ToArray(), _indexerElements);
         functionCallElement.Resolve(Context);
         _indexerElement = functionCallElement;
 

@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using PerCederberg.Grammatica.Runtime;
 using Yale.Resources;
 
 namespace Yale.Expression;
 
-[SuppressMessage(
-    "Design",
-    "CA1032:Implement standard exception constructors",
-    Justification = "<Pending>"
-)]
 public sealed class ExpressionCompileException : Exception
 {
     internal ExpressionCompileException(string message, CompileExceptionReason reason)
@@ -41,10 +35,9 @@ public sealed class ExpressionCompileException : Exception
     {
         get
         {
-            if (Reason == CompileExceptionReason.SyntaxError)
+            if (Reason is CompileExceptionReason.SyntaxError)
             {
                 return $"{CompileErrors.SyntaxError}: {InnerException?.Message}";
-                ;
             }
 
             return base.Message;

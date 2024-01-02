@@ -19,7 +19,7 @@ internal class SingleLiteralElement : RealLiteralElement
 
     public static SingleLiteralElement Parse(string image)
     {
-        SingleLiteralElement element = new SingleLiteralElement();
+        SingleLiteralElement element = new();
 
         try
         {

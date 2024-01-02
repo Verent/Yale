@@ -5,19 +5,13 @@ using System.Reflection.Emit;
 namespace Yale.Parser.Internal;
 
 /// <summary>
-/// "Manages branch information and allows us to determine if we should emit a short or long branch"
+/// Manages branch information and allows us to determine if we should emit a short or long branch
 /// </summary>
 internal class BranchManager
 {
-    private readonly IList<BranchInfo> branchInfos;
+    private readonly IList<BranchInfo> branchInfos = new List<BranchInfo>();
 
-    private readonly IDictionary<object, Label> keyLabelMap;
-
-    public BranchManager()
-    {
-        branchInfos = new List<BranchInfo>();
-        keyLabelMap = new Dictionary<object, Label>();
-    }
+    private readonly IDictionary<object, Label> keyLabelMap = new Dictionary<object, Label>();
 
     /// <summary>
     /// Determine whether to use short or long branches
@@ -25,9 +19,9 @@ internal class BranchManager
     /// <remarks></remarks>
     public void ComputeBranches()
     {
-        List<BranchInfo> betweenBranches = new List<BranchInfo>();
+        List<BranchInfo> betweenBranches = new();
 
-        foreach (BranchInfo branchInfo in branchInfos)
+        foreach (var branchInfo in branchInfos)
         {
             betweenBranches.Clear();
 
@@ -44,7 +38,7 @@ internal class BranchManager
         int longBranchCount = 0;
 
         // Adjust the start location of each branch
-        foreach (BranchInfo branchInfo in branchInfos)
+        foreach (var branchInfo in branchInfos)
         {
             // Save the short/long branch type
             branchInfo.BakeIsLongBranch();
@@ -65,7 +59,7 @@ internal class BranchManager
     /// <remarks></remarks>
     private int CountLongBranches(ICollection<BranchInfo> dest)
     {
-        int count = 0;
+        var count = 0;
 
         foreach (BranchInfo branchInfo in dest)
         {
@@ -101,8 +95,8 @@ internal class BranchManager
     /// <remarks></remarks>
     public bool IsLongBranch(YaleIlGenerator ilg, Label target)
     {
-        ILLocation startLoc = new ILLocation(ilg.Length);
-        BranchInfo branchInfo = new BranchInfo(startLoc, target);
+        ILLocation startLoc = new(ilg.Length);
+        BranchInfo branchInfo = new(startLoc, target);
 
         int index = branchInfos.IndexOf(branchInfo);
         branchInfo = branchInfos[index];
@@ -118,8 +112,8 @@ internal class BranchManager
     /// <remarks></remarks>
     public void AddBranch(YaleIlGenerator ilg, Label target)
     {
-        ILLocation startLoc = new ILLocation(ilg.Length);
-        BranchInfo branchInfo = new BranchInfo(startLoc, target);
+        ILLocation startLoc = new(ilg.Length);
+        BranchInfo branchInfo = new(startLoc, target);
 
         branchInfos.Add(branchInfo);
     }
@@ -167,7 +161,7 @@ internal class BranchManager
     {
         int pos = ilg.Length;
 
-        foreach (BranchInfo branchInfo in branchInfos)
+        foreach (var branchInfo in branchInfos)
         {
             branchInfo.Mark(target, pos);
         }
@@ -175,7 +169,7 @@ internal class BranchManager
 
     public override string ToString()
     {
-        string[] arr = new string[branchInfos.Count];
+        var arr = new string[branchInfos.Count];
 
         for (int i = 0; i <= branchInfos.Count - 1; i++)
         {

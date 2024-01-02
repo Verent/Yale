@@ -51,14 +51,16 @@ public class ExpressionBuilder
         Imports.ImportOwner(ownerType);
 
         ExpressionContext context =
-            new(Options, expressionName, owner)
-            {
-                Variables = Variables,
-                Imports = Imports,
-                ComputeInstance = ComputeInstance,
-            };
+            new(
+                builderOptions: Options,
+                expressionName: expressionName,
+                owner: owner,
+                imports: Imports,
+                variables: Variables,
+                computeInstance: ComputeInstance
+            );
 
-        BaseExpressionElement topElement = Parse(expression, context);
+        var topElement = Parse(expression, context);
 
         RootExpressionElement rootElement = new(topElement, typeof(T));
         DynamicMethod dynamicMethod = CreateDynamicMethod<T>(ownerType);
@@ -70,9 +72,8 @@ public class ExpressionBuilder
         ilGenerator.ValidateLength();
 #endif
 
-        Type delegateType = typeof(ExpressionEvaluator<>).MakeGenericType(typeof(T));
-        ExpressionEvaluator<T> evaluator =
-            (ExpressionEvaluator<T>)dynamicMethod.CreateDelegate(delegateType);
+        var delegateType = typeof(ExpressionEvaluator<>).MakeGenericType(typeof(T));
+        var evaluator = (ExpressionEvaluator<T>)dynamicMethod.CreateDelegate(delegateType);
 
         return new Expression<T>(expression, evaluator, context);
     }
