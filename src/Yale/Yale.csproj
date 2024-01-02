@@ -6,18 +6,19 @@
 		<VersionPrefix>2.0.0</VersionPrefix>
 		<Authors>Espen Skaufel</Authors>
 		<Description>Yet another expression parser and evaluator library for .Net</Description>
-		<PackageLicenseUrl>LGPL</PackageLicenseUrl>
-		<PackageLicenseExpression>LGPL</PackageLicenseExpression>
+		<PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<RepositoryUrl>https://github.com/Verent/Yale</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<!-- <TreatWarningsAsErrors>true</TreatWarningsAsErrors> -->
 		
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
-		<AnalysisLevel>latest</AnalysisLevel>
+		<AnalysisLevel>latest-recommended</AnalysisLevel>
 		
 		<Features>strict</Features>
 		<Nullable>enable</Nullable>
+		<PackageReadmeFile></PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -53,15 +54,9 @@
 		</EmbeddedResource>
 	</ItemGroup>
 
-
-	<ItemGroup>
-		<None Include="LICENSE.txt" Pack="true" PackagePath=""/>
-		<None Include="README.md" Pack="true" PackagePath=""/>
-	</ItemGroup>
-
 	<!-- set CICD to 0 in CI/CD disable this -->
 	<Target Name="husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(CICD)' != 0">
-		<Exec Command="dotnet tool restore"  StandardOutputImportance="Low" StandardErrorImportance="High"/>
+		<Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />
 		<Exec Command="dotnet husky install" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory="../../" />
 	</Target>
 
