@@ -32,8 +32,8 @@ jobs:
 
       - name: Pack
         run: |
-          current_date=$(echo "$(date +'%Y-%m-%d')")
-          version_suffix="$current_date-${{ github.run_number }}"
+          current_date=$(echo "$(date +'%Y%m%d')")
+          version_suffix="$current_date.${{ github.run_number }}"
           dotnet pack ./src/Yale/Yale.csproj --configuration Release --no-build --no-restore --include-symbols --include-source --version-suffix $version_suffix
 
       - name: Push

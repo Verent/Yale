@@ -6,7 +6,7 @@
 		<VersionPrefix>2.0.0</VersionPrefix>
 		<Authors>Espen Skaufel</Authors>
 		<Description>Yet another expression parser and evaluator library for .Net</Description>
-		<PackageLicenseExpression>LGPL</PackageLicenseExpression>
+		<PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<RepositoryUrl>https://github.com/Verent/Yale</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
