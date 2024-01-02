@@ -37,4 +37,4 @@ jobs:
           dotnet pack .\src\Yale\ --configuration Release --no-build --no-restore --include-symbols --include-source --version-suffix $version_suffix
 
       - name: Push
-        run: dotnet nuget push ./bin/Release/*.nupkg --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push ./src/**/*.nupkg --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
