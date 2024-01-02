@@ -65,7 +65,7 @@ internal class ConditionalElement : BaseExpressionElement
 
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
     {
-        BranchManager branchManager = new BranchManager();
+        BranchManager branchManager = new();
         branchManager.GetLabel("falseLabel", ilGenerator);
         branchManager.GetLabel("endLabel", ilGenerator);
 

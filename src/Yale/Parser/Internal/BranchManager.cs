@@ -95,8 +95,8 @@ internal class BranchManager
     /// <remarks></remarks>
     public bool IsLongBranch(YaleIlGenerator ilg, Label target)
     {
-        ILLocation startLoc = new ILLocation(ilg.Length);
-        BranchInfo branchInfo = new BranchInfo(startLoc, target);
+        ILLocation startLoc = new(ilg.Length);
+        BranchInfo branchInfo = new(startLoc, target);
 
         int index = branchInfos.IndexOf(branchInfo);
         branchInfo = branchInfos[index];
@@ -112,8 +112,8 @@ internal class BranchManager
     /// <remarks></remarks>
     public void AddBranch(YaleIlGenerator ilg, Label target)
     {
-        ILLocation startLoc = new ILLocation(ilg.Length);
-        BranchInfo branchInfo = new BranchInfo(startLoc, target);
+        ILLocation startLoc = new(ilg.Length);
+        BranchInfo branchInfo = new(startLoc, target);
 
         branchInfos.Add(branchInfo);
     }

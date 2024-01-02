@@ -138,10 +138,7 @@ internal class CastElement : BaseExpressionElement
 
     private MethodInfo? GetExplictOverloadedOperator(Type sourceType, Type destType)
     {
-        ExplicitOperatorMethodBinder methodBinder = new ExplicitOperatorMethodBinder(
-            destType,
-            sourceType
-        );
+        ExplicitOperatorMethodBinder methodBinder = new(destType, sourceType);
 
         // Look for an operator on the source type and dest types
         MethodInfo? miSource = Utility.GetOverloadedOperator(
@@ -212,8 +209,8 @@ internal class CastElement : BaseExpressionElement
                 return false;
             }
 
-            Type sourceElementType = sourceType.GetElementType();
-            Type destElementType = destType.GetElementType();
+            var sourceElementType = sourceType.GetElementType();
+            var destElementType = destType.GetElementType();
 
             // Both SE and TE are reference-types
             if (sourceElementType.IsValueType | destElementType.IsValueType)
@@ -257,8 +254,8 @@ internal class CastElement : BaseExpressionElement
 
     private static bool IsBaseType(Type target, Type potentialBase)
     {
-        Type current = target;
-        while (current != null)
+        Type? current = target;
+        while (current is not null)
         {
             if (ReferenceEquals(current, potentialBase))
             {

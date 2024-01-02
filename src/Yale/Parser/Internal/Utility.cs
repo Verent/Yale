@@ -242,12 +242,13 @@ internal static class Utility
         Type destinationType
     )
     {
-        Hashtable data = new Hashtable
-        {
-            { "Name", string.Concat("op_", name) },
-            { "sourceType", sourceType },
-            { "destType", destinationType }
-        };
+        Hashtable data =
+            new()
+            {
+                { "Name", string.Concat("op_", name) },
+                { "sourceType", sourceType },
+                { "destType", destinationType }
+            };
 
         const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
 
@@ -288,7 +289,7 @@ internal static class Utility
     /// <param name="value"></param>
     /// <returns></returns>
     /// <remarks></remarks>
-    private static bool SimpleOverloadedOperatorFilter(MemberInfo member, object value)
+    private static bool SimpleOverloadedOperatorFilter(MemberInfo member, object? value)
     {
         IDictionary data = (IDictionary)value;
         MethodInfo methodInfo = (MethodInfo)member;

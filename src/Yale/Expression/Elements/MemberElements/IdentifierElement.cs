@@ -76,8 +76,8 @@ internal class IdentifierElement : MemberElement
 
     private bool ResolveFieldProperty(MemberElement previous)
     {
-        MemberInfo[] allMembers = GetMembers(MemberTypes.Field | MemberTypes.Property);
-        MemberInfo[] members = GetAccessibleMembers(allMembers);
+        var allMembers = GetMembers(MemberTypes.Field | MemberTypes.Property);
+        var members = GetAccessibleMembers(allMembers);
 
         if (members.Length == 0)
         {
@@ -131,7 +131,7 @@ internal class IdentifierElement : MemberElement
 
         PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(previous.ResultType);
         propertyDescriptor = properties.Find(MemberName, true);
-        return propertyDescriptor != null;
+        return propertyDescriptor is not null;
     }
 
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
@@ -140,19 +140,19 @@ internal class IdentifierElement : MemberElement
 
         EmitFirst(ilGenerator);
 
-        if (calcEngineReferenceType != null)
+        if (calcEngineReferenceType is not null)
         {
             EmitReferenceLoad(ilGenerator);
         }
-        else if (valueType != null)
+        else if (valueType is not null)
         {
             EmitVariableLoad(ilGenerator);
         }
-        else if (field != null)
+        else if (field is not null)
         {
             EmitFieldLoad(field, ilGenerator, context);
         }
-        else if (propertyDescriptor != null)
+        else if (propertyDescriptor is not null)
         {
             EmitVirtualPropertyLoad(ilGenerator);
         }
@@ -170,12 +170,12 @@ internal class IdentifierElement : MemberElement
 
     private void EmitFirst(YaleIlGenerator ilg)
     {
-        if (Previous != null)
+        if (Previous is not null)
         {
             return;
         }
 
-        bool isVariable = valueType != null;
+        bool isVariable = valueType is not null;
         if (isVariable)
         {
             EmitLoadVariables(ilg);
@@ -242,9 +242,9 @@ internal class IdentifierElement : MemberElement
     /// <param name="context"></param>
     private static void EmitLiteral(FieldInfo fi, YaleIlGenerator ilg, ExpressionContext context)
     {
-        object value = fi.GetValue(null);
-        Type type = value.GetType();
-        TypeCode typeCode = Type.GetTypeCode(type);
+        var value = fi.GetValue(null);
+        var type = value.GetType();
+        var typeCode = Type.GetTypeCode(type);
         LiteralElement? elem;
 
         switch (typeCode)
@@ -297,7 +297,7 @@ internal class IdentifierElement : MemberElement
 
     private void EmitPropertyLoad(PropertyInfo pi, YaleIlGenerator ilg)
     {
-        MethodInfo getter = pi.GetGetMethod(true);
+        var getter = pi.GetGetMethod(true);
         EmitMethodCall(getter, ilg);
     }
 
@@ -313,12 +313,12 @@ internal class IdentifierElement : MemberElement
     {
         get
         {
-            if (field != null)
+            if (field is not null)
             {
                 return field.ReflectedType;
             }
 
-            if (propertyDescriptor != null)
+            if (propertyDescriptor is not null)
             {
                 return propertyDescriptor.ComponentType;
             }
@@ -331,22 +331,22 @@ internal class IdentifierElement : MemberElement
     {
         get
         {
-            if (calcEngineReferenceType != null)
+            if (calcEngineReferenceType is not null)
             {
                 return calcEngineReferenceType;
             }
 
-            if (valueType != null)
+            if (valueType is not null)
             {
                 return valueType;
             }
 
-            if (propertyDescriptor != null)
+            if (propertyDescriptor is not null)
             {
                 return propertyDescriptor.PropertyType;
             }
 
-            if (field != null)
+            if (field is not null)
             {
                 return field.FieldType;
             }
@@ -362,27 +362,27 @@ internal class IdentifierElement : MemberElement
     {
         get
         {
-            if (valueType != null | (calcEngineReferenceType != null))
+            if (valueType is not null | (calcEngineReferenceType is not null))
             {
                 return true;
             }
 
-            if (valueType != null)
+            if (valueType is not null)
             {
                 return true;
             }
 
-            if (propertyDescriptor != null)
+            if (propertyDescriptor is not null)
             {
                 return true;
             }
 
-            if (field != null)
+            if (field is not null)
             {
                 return field.IsPublic;
             }
 
-            MethodInfo methodInfo = property.GetGetMethod(true);
+            var methodInfo = property.GetGetMethod(true);
             return methodInfo.IsPublic;
         }
     }
@@ -391,13 +391,13 @@ internal class IdentifierElement : MemberElement
     {
         get
         {
-            if (valueType != null)
+            if (valueType is not null)
             {
                 // Variables never support static
                 return false;
             }
 
-            if (propertyDescriptor != null)
+            if (propertyDescriptor is not null)
             {
                 // Neither do virtual properties
                 return false;
@@ -418,13 +418,13 @@ internal class IdentifierElement : MemberElement
     {
         get
         {
-            if (valueType != null)
+            if (valueType is not null)
             {
                 // Variables always support instance
                 return true;
             }
 
-            if (propertyDescriptor != null)
+            if (propertyDescriptor is not null)
             {
                 // So do virtual properties
                 return true;
@@ -437,7 +437,7 @@ internal class IdentifierElement : MemberElement
             }
 
             // We always support instance if we are not the first element
-            return (Previous != null);
+            return Previous is not null;
         }
     }
 
@@ -445,22 +445,22 @@ internal class IdentifierElement : MemberElement
     {
         get
         {
-            if ((valueType != null) | (calcEngineReferenceType != null))
+            if ((valueType is not null) | (calcEngineReferenceType is not null))
             {
                 return false;
             }
 
-            if (valueType != null)
+            if (valueType is not null)
             {
                 return false;
             }
 
-            if (field != null)
+            if (field is not null)
             {
                 return field.IsStatic;
             }
 
-            if (propertyDescriptor != null)
+            if (propertyDescriptor is not null)
             {
                 return false;
             }

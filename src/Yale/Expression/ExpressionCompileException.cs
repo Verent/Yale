@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using PerCederberg.Grammatica.Runtime;
 using Yale.Resources;
@@ -36,7 +35,7 @@ public sealed class ExpressionCompileException : Exception
     {
         get
         {
-            if (Reason == CompileExceptionReason.SyntaxError)
+            if (Reason is CompileExceptionReason.SyntaxError)
             {
                 return $"{CompileErrors.SyntaxError}: {InnerException?.Message}";
             }
