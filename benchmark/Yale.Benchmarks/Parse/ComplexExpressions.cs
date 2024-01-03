@@ -1,7 +1,5 @@
-﻿using System.Reflection.Metadata;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
-using Microsoft.Extensions.DependencyInjection;
 using Yale.Engine;
 
 namespace Yale.Benchmarks.Parse;
@@ -9,8 +7,11 @@ namespace Yale.Benchmarks.Parse;
 [MemoryDiagnoser]
 [Orderer(SummaryOrderPolicy.FastestToSlowest, MethodOrderPolicy.Declared)]
 [RankColumn]
-public class ParseExpression
+public class ComplexExpressions
 {
+    private const string expressionOne = "true <> false AND (1 + 2 > 3) AND a < 10";
+    private const string expressionTwo = "true <> false AND (1 + 2 > 3) OR If(expr_a; NOT expr_a; false) AND NOT false AND true OR false AND expr_a OR true <> false AND (1 + 2 > 3) OR If(expr_a; NOT expr_a; false) AND NOT false AND true OR false AND expr_a AND true <> false AND (1 + 2 > 3) OR If(expr_a; NOT expr_a; false) AND NOT false AND true OR false AND expr_a OR true <> false AND (1 + 2 > 3) OR If(expr_a; NOT expr_a; false) AND NOT false AND true OR false AND expr_a";
+
     [GlobalSetup]
     public void Setup() { }
 
@@ -18,7 +19,7 @@ public class ParseExpression
     public void AddExpression_No_Recalculate()
     {
         ComputeInstance instance =
-            new(options: new ComputeInstanceOptions { AutoRecalculate = false, });
+            new(options: new ComputeInstanceOptions { Recalculate = false, });
         Parse(instance);
     }
 
@@ -29,7 +30,7 @@ public class ParseExpression
             new(
                 options: new ComputeInstanceOptions
                 {
-                    AutoRecalculate = true,
+                    Recalculate = true,
                     LazyRecalculate = false,
                 }
             );
@@ -43,7 +44,7 @@ public class ParseExpression
             new(
                 options: new ComputeInstanceOptions
                 {
-                    AutoRecalculate = true,
+                    Recalculate = true,
                     LazyRecalculate = true,
                 }
             );
@@ -53,12 +54,8 @@ public class ParseExpression
     private static void Parse(ComputeInstance instance)
     {
         instance.Variables["a"] = 0;
-        instance.AddExpression("exp_a", "a + 2");
-        instance.AddExpression("exp_b", "exp_a + exp_a + a");
-        for (var i = 1; i < 1000; i++)
-        {
-            instance.Variables["a"] = i;
-        }
-        var result = instance.GetResult<int>("exp_b");
+        instance.AddExpression("expr_a", expressionOne);
+        instance.AddExpression("expr_b", expressionTwo);
+        var result = instance.GetResult<bool>("expr_b");
     }
 }
