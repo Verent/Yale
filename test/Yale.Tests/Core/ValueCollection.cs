@@ -8,16 +8,16 @@ namespace Yale.Tests.Core;
 [TestClass]
 public class ValueCollection
 {
-    private readonly ComputeInstance _instance = new();
-    private VariableCollection variables => _instance.Variables;
+    private readonly ComputeInstance instance = new();
+    private VariableCollection Variables => instance.Variables;
 
     [TestMethod]
     public void AddValue_CanBe_Retrieved()
     {
-        string value = "a string";
-        _instance.Variables.Add("a", value);
+        var value = "a string";
+        Variables.Add("a", value);
 
-        Assert.AreEqual(value, _instance.Variables["a"]);
+        Assert.AreEqual(value, Variables["a"]);
     }
 
     [TestMethod]
@@ -25,7 +25,7 @@ public class ValueCollection
     {
         Assert.ThrowsException<ArgumentNullException>(() =>
         {
-            _instance.Variables.Add(null, 2);
+            Variables.Add(null, 2);
         });
     }
 
@@ -34,12 +34,12 @@ public class ValueCollection
     {
         Assert.ThrowsException<ArgumentNullException>(() =>
         {
-            variables.Get(null);
+            Variables.Get(null);
         });
 
         Assert.ThrowsException<ArgumentNullException>(() =>
         {
-            variables.Get<object>(null);
+            Variables.Get<object>(null);
         });
     }
 
@@ -47,23 +47,23 @@ public class ValueCollection
     public void AddValue_ThatAreValid_ReturnsExpectedResult()
     {
         const int a = 1;
-        _instance.Variables.Add("a", a);
-        int aResult = variables.Get<int>("a");
+        Variables.Add("a", a);
+        int aResult = Variables.Get<int>("a");
         Assert.AreEqual(a, aResult);
 
         const double b = 1.0;
-        _instance.Variables.Add("b", b);
-        double bResult = variables.Get<double>("b");
+        Variables.Add("b", b);
+        double bResult = Variables.Get<double>("b");
         Assert.AreEqual(b, bResult);
 
         const string c = "stringValue";
-        _instance.Variables.Add("c", c);
-        string cResult = variables.Get<string>("c");
+        Variables.Add("c", c);
+        string cResult = Variables.Get<string>("c");
         Assert.AreEqual(c, cResult);
 
         const string d = "a > b";
-        _instance.Variables.Add("d", d);
-        string dResult = variables.Get<string>("d");
+        Variables.Add("d", d);
+        string dResult = Variables.Get<string>("d");
         Assert.AreEqual(d, dResult);
         //Todo
         //Assert.AreNotEqual(false, dResult);
@@ -72,13 +72,13 @@ public class ValueCollection
     [TestMethod]
     public void Enumerator_Works()
     {
-        foreach (System.Collections.Generic.KeyValuePair<string, object> variable in variables)
+        foreach (System.Collections.Generic.KeyValuePair<string, object> variable in Variables)
         {
-            Assert.Fail("No variables addded");
+            Assert.Fail("No variables added");
         }
 
-        variables.Add("a", 1);
-        foreach (System.Collections.Generic.KeyValuePair<string, object> variable in variables)
+        Variables.Add("a", 1);
+        foreach (System.Collections.Generic.KeyValuePair<string, object> variable in Variables)
         {
             Assert.AreEqual("a", variable.Key);
             Assert.AreEqual(1, variable.Value);
