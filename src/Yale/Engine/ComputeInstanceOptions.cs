@@ -7,7 +7,7 @@ public class ComputeInstanceOptions
     /// <summary>
     /// Results are recalculated when a preceding value is updated. Default is true.
     /// </summary>
-    public bool AutoRecalculate { get; set; } = true;
+    public bool Recalculate { get; set; } = true;
 
     /// <summary>
     /// Results are only calculated when retrieving the result or
