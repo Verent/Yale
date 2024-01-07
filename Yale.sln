@@ -18,6 +18,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmark", "benchmark", "{4F8BADF5-59AE-4BBD-815B-94136F96FA20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yale.Benchmarks", "benchmark\Yale.Benchmarks\Yale.Benchmarks.csproj", "{95C776ED-5D12-4111-A305-B6AF1E873E80}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +40,10 @@ Global
 		{70564EC6-4B59-49CF-B569-6817428CBFE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70564EC6-4B59-49CF-B569-6817428CBFE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70564EC6-4B59-49CF-B569-6817428CBFE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95C776ED-5D12-4111-A305-B6AF1E873E80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95C776ED-5D12-4111-A305-B6AF1E873E80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95C776ED-5D12-4111-A305-B6AF1E873E80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95C776ED-5D12-4111-A305-B6AF1E873E80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +52,7 @@ Global
 		{E813C04F-7C8F-4033-9502-AC3D80158117} = {FE73F713-B16C-4252-8D4F-291961822887}
 		{0C11762F-C331-4AD7-BF2C-53236648A92A} = {B3847C6A-A387-45AE-B697-7020F93A7120}
 		{70564EC6-4B59-49CF-B569-6817428CBFE1} = {FE73F713-B16C-4252-8D4F-291961822887}
+		{95C776ED-5D12-4111-A305-B6AF1E873E80} = {4F8BADF5-59AE-4BBD-815B-94136F96FA20}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A5F82BEF-A6B7-420C-9E8B-178962E2831D}

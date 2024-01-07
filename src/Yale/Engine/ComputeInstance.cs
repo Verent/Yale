@@ -60,7 +60,7 @@ public class ComputeInstance
 
     #region Recalculate
 
-    private bool ShouldRecalculate => options.AutoRecalculate && options.LazyRecalculate == false;
+    private bool ShouldRecalculate => options.Recalculate && options.LazyRecalculate == false;
 
     private void BindToValuesEvents()
     {
@@ -208,7 +208,7 @@ public class ComputeInstance
         if (key is null)
             throw new ArgumentNullException(nameof(key));
 
-        if (options.AutoRecalculate)
+        if (options.Recalculate)
         {
             RecalculateIfNeeded(key);
         }
