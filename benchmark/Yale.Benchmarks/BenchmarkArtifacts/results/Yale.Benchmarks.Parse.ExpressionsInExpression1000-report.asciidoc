@@ -1,0 +1,17 @@
+....
+BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.2861/23H2/2023Update/SunValley3)
+12th Gen Intel Core i9-12900KF, 1 CPU, 24 logical and 16 physical cores
+.NET SDK 8.0.100
+  [Host]     : .NET 6.0.25 (6.0.2523.51912), X64 RyuJIT AVX2
+  DefaultJob : .NET 6.0.25 (6.0.2523.51912), X64 RyuJIT AVX2
+
+....
+[options="header"]
+|===
+|Method                          |Mean       |StdErr    |StdDev    |Min        |Q1         |Median     |Q3         |Max        |Op/s    |Rank  
+|Flee_Recalculate_Manual         |   97.06 ms|  0.111 ms|  0.399 ms|   96.55 ms|   96.86 ms|   96.99 ms|   97.17 ms|   97.96 ms|  10.302|     1
+|Flee_Recalculate_Off            |   98.16 ms|  0.307 ms|  1.189 ms|   95.86 ms|   97.47 ms|   98.41 ms|   98.82 ms|  100.43 ms|  10.187|     1
+|AddExpression_Recalculate_Lazy  |  144.97 ms|  0.144 ms|  0.560 ms|  144.09 ms|  144.59 ms|  144.92 ms|  145.43 ms|  146.07 ms|   6.898|     2
+|AddExpression_Recalculate_Off   |  146.62 ms|  0.165 ms|  0.616 ms|  145.81 ms|  146.19 ms|  146.47 ms|  146.96 ms|  148.04 ms|   6.820|     2
+|AddExpression_Recalculate_Auto  |  147.16 ms|  0.462 ms|  1.789 ms|  144.25 ms|  145.97 ms|  146.71 ms|  148.23 ms|  150.38 ms|   6.796|     2
+|===
