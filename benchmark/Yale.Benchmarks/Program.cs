@@ -9,7 +9,7 @@ ConsoleLogger.Default.WriteLine($"Started");
 
 var config = new ManualConfig
 {
-    ArtifactsPath = "Artifacts",
+    ArtifactsPath = "BenchmarkArtifacts",
     UnionRule = ConfigUnionRule.AlwaysUseLocal,
     Options =
         ConfigOptions.Default | ConfigOptions.KeepBenchmarkFiles | ConfigOptions.DisableLogFile
@@ -22,4 +22,4 @@ config.AddColumn(TargetMethodColumn.Method);
 config.AddColumn(JobCharacteristicColumn.AllColumns);
 config.AddColumn(StatisticColumn.AllStatistics);
 
-BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args: args, config: config);
+BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).RunAll(args: args, config: config);
