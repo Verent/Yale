@@ -2,7 +2,6 @@
 using BenchmarkDotNet.Order;
 using Flee.CalcEngine.PublicTypes;
 using Flee.PublicTypes;
-using Microsoft.Diagnostics.Runtime.Utilities;
 using Yale.Engine;
 
 namespace Yale.Benchmarks.Engine;
@@ -10,7 +9,7 @@ namespace Yale.Benchmarks.Engine;
 [MemoryDiagnoser]
 [Orderer(SummaryOrderPolicy.FastestToSlowest, MethodOrderPolicy.Declared)]
 [RankColumn]
-public class RecalculateExpression
+public class Recalculate
 {
     private const string expr_a = "if(true <> false AND ((1 + 2 > 3) OR a < 10.0); 1; 0)";
     private const string expr_a_flee = "if(true <> false AND ((1 + 2 > 3) OR a < 10.0), 1, 0)";
@@ -55,15 +54,12 @@ public class RecalculateExpression
         CalculationEngine engine = new();
         ExpressionContext context = new();
 
-        context.Variables["a"] = 0;
-        engine.Add("expr_a", expr_a_flee, context);
-        engine.Add("expr_b", expr_b, context);
-        context.Variables["a"] = 2;
-        context.Variables["a"] = 5;
-        context.Variables["a"] = 10;
+        ParseFlee(engine, context);
 
         var result = engine.GetResult<int>("expr_b");
     }
+
+
 
     [Benchmark]
     public void Flee_Recalculate_Manual()
@@ -71,15 +67,21 @@ public class RecalculateExpression
         CalculationEngine engine = new();
         ExpressionContext context = new();
 
+        ParseFlee(engine, context);
+
+        engine.Recalculate("expr_b");
+
+        var result = engine.GetResult<int>("expr_b");
+    }
+
+    private static void ParseFlee(CalculationEngine engine, ExpressionContext context)
+    {
         context.Variables["a"] = 0;
         engine.Add("expr_a", expr_a_flee, context);
         engine.Add("expr_b", expr_b, context);
         context.Variables["a"] = 2;
         context.Variables["a"] = 5;
         context.Variables["a"] = 10;
-        engine.Recalculate("expr_b");
-
-        var result = engine.GetResult<int>("expr_b");
     }
 
     private static void Parse(ComputeInstance instance)

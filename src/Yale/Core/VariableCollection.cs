@@ -13,7 +13,7 @@ public sealed class VariableCollection
     : INotifyPropertyChanged,
         IEnumerable<KeyValuePair<string, object>>
 {
-    private readonly IDictionary<string, IVariable> values = new Dictionary<string, IVariable>();
+    private readonly Dictionary<string, IVariable> values = new();
 
     public void Clear() => values.Clear();
 
