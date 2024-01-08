@@ -34,7 +34,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    public class Analyzer
+    internal class Analyzer
     {
         /**
          * Creates a new parse tree analyzer.
