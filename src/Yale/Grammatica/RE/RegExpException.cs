@@ -37,13 +37,13 @@ namespace PerCederberg.Grammatica.Runtime.RE
              * used when a character was read that didn't match the
              * allowed set of characters at the given position.
              */
-            UNEXPECTED_CHARACTER,
+            UnexpectedCharacter,
 
             /**
              * The unterminated pattern error constant. This error is
              * used when more characters were expected in the pattern.
              */
-            UNTERMINATED_PATTERN,
+            UnterminatedPattern,
 
             /**
              * The unsupported special character error constant. This
@@ -51,7 +51,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
              * characters are used in the pattern, but not supported
              * in this implementation.
              */
-            UNSUPPORTED_SPECIAL_CHARACTER,
+            UnsupportedSpecialCharacter,
 
             /**
              * The unsupported escape character error constant. This
@@ -59,14 +59,14 @@ namespace PerCederberg.Grammatica.Runtime.RE
              * used in the pattern, but not supported in this
              * implementation.
              */
-            UNSUPPORTED_ESCAPE_CHARACTER,
+            UnsupportedEscapeCharacter,
 
             /**
              * The invalid repeat count error constant. This error is
              * used when a repetition count of zero is specified, or
              * when the minimum exceeds the maximum.
              */
-            INVALID_REPEAT_COUNT
+            InvalidRepeatCount
         }
 
         /**
@@ -119,19 +119,19 @@ namespace PerCederberg.Grammatica.Runtime.RE
             // Append error type name
             switch (type)
             {
-                case ErrorType.UNEXPECTED_CHARACTER:
+                case ErrorType.UnexpectedCharacter:
                     buffer.Append("unexpected character");
                     break;
-                case ErrorType.UNTERMINATED_PATTERN:
+                case ErrorType.UnterminatedPattern:
                     buffer.Append("unterminated pattern");
                     break;
-                case ErrorType.UNSUPPORTED_SPECIAL_CHARACTER:
+                case ErrorType.UnsupportedSpecialCharacter:
                     buffer.Append("unsupported character");
                     break;
-                case ErrorType.UNSUPPORTED_ESCAPE_CHARACTER:
+                case ErrorType.UnsupportedEscapeCharacter:
                     buffer.Append("unsupported escape character");
                     break;
-                case ErrorType.INVALID_REPEAT_COUNT:
+                case ErrorType.InvalidRepeatCount:
                     buffer.Append("invalid repeat count");
                     break;
                 default:

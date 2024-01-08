@@ -104,7 +104,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (pos < pattern.Length)
             {
                 throw new RegExpException(
-                    RegExpException.ErrorType.UNEXPECTED_CHARACTER,
+                    RegExpException.ErrorType.UnexpectedCharacter,
                     pos,
                     pattern
                 );
@@ -313,7 +313,7 @@ namespace PerCederberg.Grammatica.Runtime
                 case '+':
                 case '|':
                     throw new RegExpException(
-                        RegExpException.ErrorType.UNEXPECTED_CHARACTER,
+                        RegExpException.ErrorType.UnexpectedCharacter,
                         pos,
                         pattern
                     );
@@ -371,7 +371,7 @@ namespace PerCederberg.Grammatica.Runtime
                     if (max == 0 || (max > 0 && min > max))
                     {
                         throw new RegExpException(
-                            RegExpException.ErrorType.INVALID_REPEAT_COUNT,
+                            RegExpException.ErrorType.InvalidRepeatCount,
                             firstPos,
                             pattern
                         );
@@ -379,7 +379,7 @@ namespace PerCederberg.Grammatica.Runtime
                     break;
                 default:
                     throw new RegExpException(
-                        RegExpException.ErrorType.UNEXPECTED_CHARACTER,
+                        RegExpException.ErrorType.UnexpectedCharacter,
                         pos - 1,
                         pattern
                     );
@@ -389,7 +389,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (PeekChar(0) == '?')
             {
                 throw new RegExpException(
-                    RegExpException.ErrorType.UNSUPPORTED_SPECIAL_CHARACTER,
+                    RegExpException.ErrorType.UnsupportedSpecialCharacter,
                     pos,
                     pattern
                 );
@@ -397,7 +397,7 @@ namespace PerCederberg.Grammatica.Runtime
             else if (PeekChar(0) == '+')
             {
                 throw new RegExpException(
-                    RegExpException.ErrorType.UNSUPPORTED_SPECIAL_CHARACTER,
+                    RegExpException.ErrorType.UnsupportedSpecialCharacter,
                     pos,
                     pattern
                 );
@@ -440,7 +440,7 @@ namespace PerCederberg.Grammatica.Runtime
             else
             {
                 throw new RegExpException(
-                    RegExpException.ErrorType.INVALID_REPEAT_COUNT,
+                    RegExpException.ErrorType.InvalidRepeatCount,
                     firstPos,
                     pattern
                 );
@@ -523,7 +523,7 @@ namespace PerCederberg.Grammatica.Runtime
                 case '^':
                 case '$':
                     throw new RegExpException(
-                        RegExpException.ErrorType.UNSUPPORTED_SPECIAL_CHARACTER,
+                        RegExpException.ErrorType.UnsupportedSpecialCharacter,
                         pos,
                         pattern
                     );
@@ -604,7 +604,7 @@ namespace PerCederberg.Grammatica.Runtime
                     if (c < '0' || c > '3')
                     {
                         throw new RegExpException(
-                            RegExpException.ErrorType.UNSUPPORTED_ESCAPE_CHARACTER,
+                            RegExpException.ErrorType.UnsupportedEscapeCharacter,
                             pos - 3,
                             pattern
                         );
@@ -633,7 +633,7 @@ namespace PerCederberg.Grammatica.Runtime
                     catch (FormatException)
                     {
                         throw new RegExpException(
-                            RegExpException.ErrorType.UNSUPPORTED_ESCAPE_CHARACTER,
+                            RegExpException.ErrorType.UnsupportedEscapeCharacter,
                             pos - str.Length - 2,
                             pattern
                         );
@@ -652,7 +652,7 @@ namespace PerCederberg.Grammatica.Runtime
                     catch (FormatException)
                     {
                         throw new RegExpException(
-                            RegExpException.ErrorType.UNSUPPORTED_ESCAPE_CHARACTER,
+                            RegExpException.ErrorType.UnsupportedEscapeCharacter,
                             pos - str.Length - 2,
                             pattern
                         );
@@ -673,7 +673,7 @@ namespace PerCederberg.Grammatica.Runtime
                     if (('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z'))
                     {
                         throw new RegExpException(
-                            RegExpException.ErrorType.UNSUPPORTED_ESCAPE_CHARACTER,
+                            RegExpException.ErrorType.UnsupportedEscapeCharacter,
                             pos - 2,
                             pattern
                         );
@@ -706,7 +706,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (buf.Length <= 0)
             {
                 throw new RegExpException(
-                    RegExpException.ErrorType.UNEXPECTED_CHARACTER,
+                    RegExpException.ErrorType.UnexpectedCharacter,
                     pos,
                     pattern
                 );
@@ -730,7 +730,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (c < 0)
             {
                 throw new RegExpException(
-                    RegExpException.ErrorType.UNTERMINATED_PATTERN,
+                    RegExpException.ErrorType.UnterminatedPattern,
                     pos,
                     pattern
                 );
@@ -759,7 +759,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (c != ReadChar())
             {
                 throw new RegExpException(
-                    RegExpException.ErrorType.UNEXPECTED_CHARACTER,
+                    RegExpException.ErrorType.UnexpectedCharacter,
                     pos - 1,
                     pattern
                 );

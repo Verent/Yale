@@ -27,7 +27,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    public class RecursiveDescentParser : Parser
+    internal class RecursiveDescentParser : Parser
     {
         /**
          * Creates a new parser.
@@ -91,7 +91,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (pattern.IsMatchingEmpty())
             {
                 throw new ParserCreationException(
-                    ParserCreationException.ErrorType.INVALID_PRODUCTION,
+                    ParserCreationException.ErrorType.InvalidProduction,
                     pattern.Name,
                     "zero elements can be matched (minimum is one)"
                 );
@@ -101,7 +101,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (pattern.IsLeftRecursive())
             {
                 throw new ParserCreationException(
-                    ParserCreationException.ErrorType.INVALID_PRODUCTION,
+                    ParserCreationException.ErrorType.InvalidProduction,
                     pattern.Name,
                     "left recursive patterns are not allowed"
                 );
@@ -160,7 +160,7 @@ namespace PerCederberg.Grammatica.Runtime
                 list = new ArrayList(1);
                 list.Add("<EOF>");
                 throw new ParseException(
-                    ParseException.ErrorType.UNEXPECTED_TOKEN,
+                    ParseException.ErrorType.UnexpectedToken,
                     token.ToShortString(),
                     list,
                     token.StartLine,
@@ -521,7 +521,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (stack.Contains(pattern.Name, length))
             {
                 throw new ParserCreationException(
-                    ParserCreationException.ErrorType.INFINITE_LOOP,
+                    ParserCreationException.ErrorType.InfiniteLoop,
                     pattern.Name,
                     (String)null
                 );
@@ -846,7 +846,7 @@ namespace PerCederberg.Grammatica.Runtime
             // Create exception
             token = NextToken();
             throw new ParseException(
-                ParseException.ErrorType.UNEXPECTED_TOKEN,
+                ParseException.ErrorType.UnexpectedToken,
                 token.ToShortString(),
                 list,
                 token.StartLine,
@@ -879,7 +879,7 @@ namespace PerCederberg.Grammatica.Runtime
 
             // Create exception
             throw new ParserCreationException(
-                ParserCreationException.ErrorType.INHERENT_AMBIGUITY,
+                ParserCreationException.ErrorType.InherentAmbiguity,
                 pattern,
                 location,
                 list

@@ -26,7 +26,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.6
      */
-    public abstract class Parser
+    internal abstract class Parser
     {
         /**
          * The parser initialization flag.
@@ -211,7 +211,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (pattern.Count <= 0)
             {
                 throw new ParserCreationException(
-                    ParserCreationException.ErrorType.INVALID_PRODUCTION,
+                    ParserCreationException.ErrorType.InvalidProduction,
                     pattern.Name,
                     "no production alternatives are present (must have at " + "least one)"
                 );
@@ -219,7 +219,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (patternIds.ContainsKey(pattern.Id))
             {
                 throw new ParserCreationException(
-                    ParserCreationException.ErrorType.INVALID_PRODUCTION,
+                    ParserCreationException.ErrorType.InvalidProduction,
                     pattern.Name,
                     "another pattern with the same id (" + pattern.Id + ") has already been added"
                 );
@@ -242,7 +242,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (patterns.Count <= 0)
             {
                 throw new ParserCreationException(
-                    ParserCreationException.ErrorType.INVALID_PARSER,
+                    ParserCreationException.ErrorType.InvalidParser,
                     "no production patterns have been added"
                 );
             }
@@ -307,7 +307,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (elem.IsProduction() && GetPattern(elem.Id) == null)
             {
                 throw new ParserCreationException(
-                    ParserCreationException.ErrorType.INVALID_PRODUCTION,
+                    ParserCreationException.ErrorType.InvalidProduction,
                     name,
                     "an undefined production pattern id (" + elem.Id + ") is referenced"
                 );
@@ -611,7 +611,7 @@ namespace PerCederberg.Grammatica.Runtime
             else
             {
                 throw new ParseException(
-                    ParseException.ErrorType.UNEXPECTED_EOF,
+                    ParseException.ErrorType.UnexpectedEof,
                     null,
                     tokenizer.GetCurrentLine(),
                     tokenizer.GetCurrentColumn()
@@ -650,7 +650,7 @@ namespace PerCederberg.Grammatica.Runtime
                 list = new ArrayList(1);
                 list.Add(tokenizer.GetPatternDescription(id));
                 throw new ParseException(
-                    ParseException.ErrorType.UNEXPECTED_TOKEN,
+                    ParseException.ErrorType.UnexpectedToken,
                     token.ToShortString(),
                     list,
                     token.StartLine,

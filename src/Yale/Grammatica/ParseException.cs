@@ -36,7 +36,7 @@ namespace PerCederberg.Grammatica.Runtime
              * that is a result of a bug in the parser or tokenizer
              * code.
              */
-            INTERNAL,
+            Internal,
 
             /**
              * The I/O error type is used for stream I/O errors.
@@ -47,20 +47,20 @@ namespace PerCederberg.Grammatica.Runtime
              * The unexpected end of file error type is used when end
              * of file is encountered instead of a valid token.
              */
-            UNEXPECTED_EOF,
+            UnexpectedEof,
 
             /**
              * The unexpected character error type is used when a
              * character is read that isn't handled by one of the
              * token patterns.
              */
-            UNEXPECTED_CHAR,
+            UnexpectedChar,
 
             /**
              * The unexpected token error type is used when another
              * token than the expected one is encountered.
              */
-            UNEXPECTED_TOKEN,
+            UnexpectedToken,
 
             /**
              * The invalid token error type is used when a token
@@ -68,14 +68,14 @@ namespace PerCederberg.Grammatica.Runtime
              * additional information provided should contain the
              * error message.
              */
-            INVALID_TOKEN,
+            InvalidToken,
 
             /**
              * The analysis error type is used when an error is
              * encountered in the analysis. The additional information
              * provided should contain the error message.
              */
-            ANALYSIS
+            Analysis
         }
 
         /**
@@ -86,23 +86,23 @@ namespace PerCederberg.Grammatica.Runtime
         /**
          * The additional information string.
          */
-        private string info;
+        private readonly string info;
 
         /**
          * The additional details information. This variable is only
          * used for unexpected token errors.
          */
-        private ArrayList details;
+        private readonly ArrayList details;
 
         /**
          * The line number.
          */
-        private int line;
+        private readonly int line;
 
         /**
          * The column number.
          */
-        private int column;
+        private readonly int column;
 
         /**
          * Creates a new parse exception.
@@ -240,15 +240,15 @@ namespace PerCederberg.Grammatica.Runtime
                         buffer.Append("I/O error: ");
                         buffer.Append(info);
                         break;
-                    case ErrorType.UNEXPECTED_EOF:
+                    case ErrorType.UnexpectedEof:
                         buffer.Append("unexpected end of file");
                         break;
-                    case ErrorType.UNEXPECTED_CHAR:
+                    case ErrorType.UnexpectedChar:
                         buffer.Append("unexpected character '");
                         buffer.Append(info);
                         buffer.Append('\'');
                         break;
-                    case ErrorType.UNEXPECTED_TOKEN:
+                    case ErrorType.UnexpectedToken:
                         buffer.Append("unexpected token ");
                         buffer.Append(info);
                         if (details != null)
@@ -261,10 +261,10 @@ namespace PerCederberg.Grammatica.Runtime
                             buffer.Append(GetMessageDetails());
                         }
                         break;
-                    case ErrorType.INVALID_TOKEN:
+                    case ErrorType.InvalidToken:
                         buffer.Append(info);
                         break;
-                    case ErrorType.ANALYSIS:
+                    case ErrorType.Analysis:
                         buffer.Append(info);
                         break;
                     default:

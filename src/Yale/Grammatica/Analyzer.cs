@@ -244,7 +244,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (node == null)
             {
                 throw new ParseException(
-                    ParseException.ErrorType.INTERNAL,
+                    ParseException.ErrorType.Internal,
                     "attempt to read 'null' parse tree node",
                     -1,
                     -1
@@ -254,7 +254,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (child == null)
             {
                 throw new ParseException(
-                    ParseException.ErrorType.INTERNAL,
+                    ParseException.ErrorType.Internal,
                     "node '" + node.Name + "' has no child at " + "position " + pos,
                     node.StartLine,
                     node.StartColumn
@@ -284,7 +284,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (node == null)
             {
                 throw new ParseException(
-                    ParseException.ErrorType.INTERNAL,
+                    ParseException.ErrorType.Internal,
                     "attempt to read 'null' parse tree node",
                     -1,
                     -1
@@ -299,7 +299,7 @@ namespace PerCederberg.Grammatica.Runtime
                 }
             }
             throw new ParseException(
-                ParseException.ErrorType.INTERNAL,
+                ParseException.ErrorType.Internal,
                 "node '" + node.Name + "' has no child with id " + id,
                 node.StartLine,
                 node.StartColumn
@@ -325,7 +325,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (node == null)
             {
                 throw new ParseException(
-                    ParseException.ErrorType.INTERNAL,
+                    ParseException.ErrorType.Internal,
                     "attempt to read 'null' parse tree node",
                     -1,
                     -1
@@ -335,7 +335,7 @@ namespace PerCederberg.Grammatica.Runtime
             if (value == null)
             {
                 throw new ParseException(
-                    ParseException.ErrorType.INTERNAL,
+                    ParseException.ErrorType.Internal,
                     "node '" + node.Name + "' has no value at " + "position " + pos,
                     node.StartLine,
                     node.StartColumn
@@ -370,7 +370,7 @@ namespace PerCederberg.Grammatica.Runtime
             else
             {
                 throw new ParseException(
-                    ParseException.ErrorType.INTERNAL,
+                    ParseException.ErrorType.Internal,
                     "node '" + node.Name + "' has no integer value " + "at position " + pos,
                     node.StartLine,
                     node.StartColumn
@@ -404,7 +404,7 @@ namespace PerCederberg.Grammatica.Runtime
             else
             {
                 throw new ParseException(
-                    ParseException.ErrorType.INTERNAL,
+                    ParseException.ErrorType.Internal,
                     "node '" + node.Name + "' has no string value " + "at position " + pos,
                     node.StartLine,
                     node.StartColumn

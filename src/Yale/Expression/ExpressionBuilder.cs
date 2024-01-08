@@ -11,7 +11,7 @@ using Yale.Parser.Internal;
 
 namespace Yale.Expression;
 
-public class ExpressionBuilder
+internal class ExpressionBuilder
 {
     public ExpressionBuilderOptions Options { get; private set; }
     internal ComputeInstance ComputeInstance { get; set; }

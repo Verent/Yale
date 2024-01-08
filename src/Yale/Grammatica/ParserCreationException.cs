@@ -38,14 +38,14 @@ namespace PerCederberg.Grammatica.Runtime
              * error that is a result of a bug in the parser or
              * tokenizer code.
              */
-            INTERNAL,
+            Internal,
 
             /**
              * The invalid parser error type is used when the parser
              * as such is invalid. This error is typically caused by
              * using a parser without any patterns.
              */
-            INVALID_PARSER,
+            InvalidParser,
 
             /**
              * The invalid token error type is used when a token
@@ -53,7 +53,7 @@ namespace PerCederberg.Grammatica.Runtime
              * by an invalid pattern type or an erroneous regular
              * expression.
              */
-            INVALID_TOKEN,
+            InvalidToken,
 
             /**
              * The invalid production error type is used when a
@@ -61,21 +61,21 @@ namespace PerCederberg.Grammatica.Runtime
              * typically caused by referencing undeclared productions,
              * or violating some other production pattern constraint.
              */
-            INVALID_PRODUCTION,
+            InvalidProduction,
 
             /**
              * The infinite loop error type is used when an infinite
              * loop has been detected in the grammar. One of the
              * productions in the loop will be reported.
              */
-            INFINITE_LOOP,
+            InfiniteLoop,
 
             /**
              * The inherent ambiguity error type is used when the set
              * of production patterns (i.e. the grammar) contains
              * ambiguities that cannot be resolved.
              */
-            INHERENT_AMBIGUITY
+            InherentAmbiguity
         }
 
         /**
@@ -210,28 +210,28 @@ namespace PerCederberg.Grammatica.Runtime
 
                 switch (type)
                 {
-                    case ErrorType.INVALID_PARSER:
+                    case ErrorType.InvalidParser:
                         buffer.Append("parser is invalid, as ");
                         buffer.Append(info);
                         break;
-                    case ErrorType.INVALID_TOKEN:
+                    case ErrorType.InvalidToken:
                         buffer.Append("token '");
                         buffer.Append(name);
                         buffer.Append("' is invalid, as ");
                         buffer.Append(info);
                         break;
-                    case ErrorType.INVALID_PRODUCTION:
+                    case ErrorType.InvalidProduction:
                         buffer.Append("production '");
                         buffer.Append(name);
                         buffer.Append("' is invalid, as ");
                         buffer.Append(info);
                         break;
-                    case ErrorType.INFINITE_LOOP:
+                    case ErrorType.InfiniteLoop:
                         buffer.Append("infinite loop found in production pattern '");
                         buffer.Append(name);
                         buffer.Append('\'');
                         break;
-                    case ErrorType.INHERENT_AMBIGUITY:
+                    case ErrorType.InherentAmbiguity:
                         buffer.Append("inherent ambiguity in production '");
                         buffer.Append(name);
                         buffer.Append('\'');

@@ -40,12 +40,12 @@ namespace PerCederberg.Grammatica.Runtime
          * Also the character buffer size will always be a multiple of
          * this factor.
          */
-        public const int BLOCK_SIZE = 1024;
+        public const int BlockSize = 1024;
 
         /**
         * The character buffer.
         */
-        private char[] buffer = new char[BLOCK_SIZE * 4];
+        private char[] buffer = new char[BlockSize * 4];
 
         /**
         * The current character buffer position.
@@ -303,7 +303,7 @@ namespace PerCederberg.Grammatica.Runtime
             }
 
             // Remove (almost all) old characters from buffer
-            if (pos > BLOCK_SIZE)
+            if (pos > BlockSize)
             {
                 length -= (pos - 16);
                 Array.Copy(buffer, pos - 16, buffer, 0, length);
@@ -312,9 +312,9 @@ namespace PerCederberg.Grammatica.Runtime
 
             // Calculate number of characters to read
             size = pos + offset - length + 1;
-            if (size % BLOCK_SIZE != 0)
+            if (size % BlockSize != 0)
             {
-                size = (1 + size / BLOCK_SIZE) * BLOCK_SIZE;
+                size = (1 + size / BlockSize) * BlockSize;
             }
             EnsureCapacity(length + size);
 
@@ -354,9 +354,9 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 return;
             }
-            if (size % BLOCK_SIZE != 0)
+            if (size % BlockSize != 0)
             {
-                size = (1 + size / BLOCK_SIZE) * BLOCK_SIZE;
+                size = (1 + size / BlockSize) * BlockSize;
             }
             Array.Resize(ref buffer, size);
         }
