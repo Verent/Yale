@@ -38,7 +38,7 @@ internal abstract class MemberElement : BaseExpressionElement
     public void Link(MemberElement nextElement)
     {
         Next = nextElement;
-        if (nextElement != null)
+        if (nextElement is not null)
         {
             nextElement.Previous = this;
         }

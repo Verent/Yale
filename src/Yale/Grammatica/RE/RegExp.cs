@@ -287,15 +287,15 @@ namespace PerCederberg.Grammatica.Runtime.RE
          * @throws RegExpException if an error was encountered in the
          *             pattern string
          */
-        private Element ParseAtomModifier(Element elem)
+        private RepeatElement ParseAtomModifier(Element elem)
         {
-            int min = 0;
-            int max = -1;
             RepeatElement.RepeatType type;
             int firstPos;
 
             // Read min and max
             type = RepeatElement.RepeatType.GREEDY;
+            int min;
+            int max;
             switch (ReadChar())
             {
                 case '?':
@@ -365,7 +365,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
          * @throws RegExpException if an error was encountered in the
          *             pattern string
          */
-        private Element ParseCharSet()
+        private CharacterSetElement ParseCharSet()
         {
             CharacterSetElement charset;
             Element elem;

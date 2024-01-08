@@ -65,8 +65,8 @@ internal abstract class BinaryExpressionElement : BaseExpressionElement
 
     protected MethodInfo? GetOverloadedBinaryOperator(string name, object operation)
     {
-        Type leftType = LeftChild.ResultType;
-        Type rightType = RightChild.ResultType;
+        var leftType = LeftChild.ResultType;
+        var rightType = RightChild.ResultType;
         BinaryOperatorBinder binder = new(leftType, rightType);
 
         // If both arguments are of the same type, pick either as the owner type

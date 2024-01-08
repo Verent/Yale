@@ -14,17 +14,19 @@ internal sealed class ArithmeticElement : BinaryExpressionElement
     private static readonly MethodInfo powerMethodInfo = typeof(Math).GetMethod(
         nameof(Math.Pow),
         BindingFlags.Public | BindingFlags.Static
-    );
+    )!;
+
     private static readonly MethodInfo stringConcatMethodInfo = typeof(string).GetMethod(
         nameof(string.Concat),
         new[] { typeof(string), typeof(string) },
         null
-    );
+    )!;
+
     private static readonly MethodInfo objectConcatMethodInfo = typeof(string).GetMethod(
         nameof(string.Concat),
         new[] { typeof(object), typeof(object) },
         null
-    );
+    )!;
 
     private BinaryArithmeticOperation operation;
 
@@ -33,17 +35,17 @@ internal sealed class ArithmeticElement : BinaryExpressionElement
 
     protected override Type? GetResultType(Type leftType, Type rightType)
     {
-        Type binaryResultType = ImplicitConverter.GetBinaryResultType(leftType, rightType);
-        MethodInfo? overloadedMethod = GetOverloadedArithmeticOperator();
+        var binaryResultType = ImplicitConverter.GetBinaryResultType(leftType, rightType);
+        var overloadedMethod = GetOverloadedArithmeticOperator();
 
         // Is an overloaded operator defined for our left and right children?
-        if (overloadedMethod != null)
+        if (overloadedMethod is not null)
         {
             // Yes, so use its return type
             return overloadedMethod.ReturnType;
         }
 
-        if (binaryResultType != null)
+        if (binaryResultType is not null)
         {
             // Operands are primitive types.  Return computed result type unless we are doing a power operation
             if (operation == BinaryArithmeticOperation.Power)
@@ -102,9 +104,9 @@ internal sealed class ArithmeticElement : BinaryExpressionElement
 
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
     {
-        MethodInfo? overloadedMethod = GetOverloadedArithmeticOperator();
+        var overloadedMethod = GetOverloadedArithmeticOperator();
 
-        if (overloadedMethod != null)
+        if (overloadedMethod is not null)
         {
             // Emit a call to an overloaded operator
             EmitOverloadedOperatorCall(overloadedMethod, ilGenerator, context);
@@ -122,7 +124,7 @@ internal sealed class ArithmeticElement : BinaryExpressionElement
     }
 
     private static bool IsUnsignedForArithmetic(Type type) =>
-        ReferenceEquals(type, typeof(UInt32)) | ReferenceEquals(type, typeof(UInt64));
+        ReferenceEquals(type, typeof(uint)) | ReferenceEquals(type, typeof(ulong));
 
     /// <summary>
     /// Emit an arithmetic operation with handling for unsigned and checked contexts
@@ -133,18 +135,18 @@ internal sealed class ArithmeticElement : BinaryExpressionElement
         ExpressionContext context
     )
     {
-        ExpressionBuilderOptions options = context.BuilderOptions;
-        bool unsigned =
+        var options = context.BuilderOptions;
+        var unsigned =
             IsUnsignedForArithmetic(LeftChild.ResultType)
             & IsUnsignedForArithmetic(RightChild.ResultType);
-        bool integral =
+        var integral =
             Utility.IsIntegralType(LeftChild.ResultType)
             & Utility.IsIntegralType(RightChild.ResultType);
-        bool emitOverflow = integral & options.OverflowChecked;
+        var emitOverflow = integral & options.OverflowChecked;
 
         EmitChildWithConvert(LeftChild, ResultType, ilGenerator, context);
 
-        if (IsOptimizablePower == false)
+        if (IsOptimizablePower is false)
         {
             EmitChildWithConvert(RightChild, ResultType, ilGenerator, context);
         }
@@ -214,9 +216,9 @@ internal sealed class ArithmeticElement : BinaryExpressionElement
         if (right.Value == 0)
         {
             ilGenerator.Emit(OpCodes.Pop);
-            IntegralLiteralElement.EmitLoad(1, ilGenerator);
+            LiteralElement.EmitLoad(1, ilGenerator);
             ImplicitConverter.EmitImplicitNumericConvert(
-                typeof(Int32),
+                typeof(int),
                 LeftChild.ResultType,
                 ilGenerator
             );
@@ -229,12 +231,12 @@ internal sealed class ArithmeticElement : BinaryExpressionElement
         }
 
         // Start at 1 since left operand has already been emited once
-        for (int i = 1; i <= right.Value - 1; i++)
+        for (var i = 1; i <= right.Value - 1; i++)
         {
             ilGenerator.Emit(OpCodes.Dup);
         }
 
-        for (int i = 1; i <= right.Value - 1; i++)
+        for (var i = 1; i <= right.Value - 1; i++)
         {
             EmitMultiply(ilGenerator, emitOverflow, unsigned);
         }

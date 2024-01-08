@@ -486,7 +486,7 @@ namespace PerCederberg.Grammatica.Runtime
             Sequence second;
 
             // Handle special cases
-            if (this.Size() <= 0)
+            if (Size() <= 0)
             {
                 return set;
             }
@@ -624,7 +624,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @return a string representation of this object
          */
-        public string ToString(Tokenizer tokenizer)
+        public string ToString(Tokenizer? tokenizer)
         {
             StringBuilder buffer = new();
             Sequence seq;

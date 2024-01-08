@@ -31,23 +31,6 @@ namespace PerCederberg.Grammatica.Runtime
     internal sealed class ProductionPattern
     {
         /**
-         * The production pattern identity.
-         */
-        private readonly int id;
-
-        /**
-         * The production pattern name.
-         */
-        private readonly string name;
-
-        /**
-         * The synthectic production flag. If this flag is set, the
-         * production identified by this pattern has been artificially
-         * inserted into the grammar.
-         */
-        private bool synthetic;
-
-        /**
          * The list of production pattern alternatives.
          */
         private readonly ArrayList alternatives;
@@ -60,11 +43,6 @@ namespace PerCederberg.Grammatica.Runtime
         private int defaultAlt;
 
         /**
-         * The look-ahead set associated with this pattern.
-         */
-        private LookAheadSet lookAhead;
-
-        /**
          * Creates a new production pattern.
          *
          * @param id             the production pattern id
@@ -72,12 +50,12 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public ProductionPattern(int id, string name)
         {
-            this.id = id;
-            this.name = name;
-            this.synthetic = false;
+            Id = id;
+            Name = name;
+            Synthetic = false;
             this.alternatives = new ArrayList();
             this.defaultAlt = -1;
-            this.lookAhead = null;
+            LookAhead = null;
         }
 
         /**
@@ -86,20 +64,14 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public int Id
-        {
-            get { return id; }
-        }
+        public int Id { get; }
 
         /**
          * The production pattern name property (read-only).
          *
          * @since 1.5
          */
-        public string Name
-        {
-            get { return name; }
-        }
+        public string Name { get; }
 
         /**
          * The synthetic production pattern property. If this property
@@ -111,57 +83,13 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public bool Synthetic
-        {
-            get { return synthetic; }
-            set { synthetic = value; }
-        }
-
-        /**
-         * Checks if the synthetic production flag is set. If this
-         * flag is set, the production identified by this pattern has
-         * been artificially inserted into the grammar. No parse tree
-         * nodes will be created for such nodes, instead the child
-         * nodes will be added directly to the parent node.
-         *
-         * @return true if this production pattern is synthetic, or
-         *         false otherwise
-         *
-         * @see #Synthetic
-         *
-         * @deprecated Use the Synthetic property instead.
-         */
-        public bool IsSyntetic()
-        {
-            return Synthetic;
-        }
-
-        /**
-         * Sets the synthetic production pattern flag. If this flag is set,
-         * the production identified by this pattern has been artificially
-         * inserted into the grammar. By default this flag is set to
-         * false.
-         *
-         * @param syntetic       the new value of the synthetic flag
-         *
-         * @see #Synthetic
-         *
-         * @deprecated Use the Synthetic property instead.
-         */
-        public void SetSyntetic(bool synthetic)
-        {
-            Synthetic = synthetic;
-        }
+        public bool Synthetic { get; set; }
 
         /**
          * The look-ahead set property. This property contains the
          * look-ahead set associated with this alternative.
          */
-        internal LookAheadSet LookAhead
-        {
-            get { return lookAhead; }
-            set { lookAhead = value; }
-        }
+        internal LookAheadSet? LookAhead { get; set; }
 
         /**
          * The default pattern alternative property. The default
@@ -319,7 +247,7 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 throw new ParserCreationException(
                     ParserCreationException.ErrorType.InvalidProduction,
-                    name,
+                    Name,
                     "two identical alternatives exist"
                 );
             }
@@ -338,9 +266,9 @@ namespace PerCederberg.Grammatica.Runtime
             StringBuilder indent = new();
             int i;
 
-            buffer.Append(name);
+            buffer.Append(Name);
             buffer.Append('(');
-            buffer.Append(id);
+            buffer.Append(Id);
             buffer.Append(") ");
             for (i = 0; i < buffer.Length; i++)
             {

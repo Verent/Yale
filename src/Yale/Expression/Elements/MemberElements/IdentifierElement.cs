@@ -129,7 +129,7 @@ internal sealed class IdentifierElement : MemberElement
             return false;
         }
 
-        PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(previous.ResultType);
+        var properties = TypeDescriptor.GetProperties(previous.ResultType);
         propertyDescriptor = properties.Find(MemberName, true);
         return propertyDescriptor is not null;
     }
@@ -192,7 +192,7 @@ internal sealed class IdentifierElement : MemberElement
     /// <param name="ilg"></param>
     private void EmitVariableLoad(YaleIlGenerator ilg)
     {
-        MethodInfo methodInfo = VariableCollection.GetVariableLoadMethod(valueType);
+        var methodInfo = VariableCollection.GetVariableLoadMethod(valueType);
         ilg.Emit(OpCodes.Ldstr, MemberName);
         EmitMethodCall(methodInfo, ilg);
     }

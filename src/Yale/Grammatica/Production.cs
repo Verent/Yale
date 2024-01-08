@@ -13,6 +13,7 @@
  */
 
 using System.Collections;
+using System.Collections.Generic;
 
 namespace PerCederberg.Grammatica.Runtime
 {
@@ -28,14 +29,9 @@ namespace PerCederberg.Grammatica.Runtime
     internal sealed class Production : Node
     {
         /**
-         * The production pattern used for this production.
-         */
-        private readonly ProductionPattern pattern;
-
-        /**
          * The child nodes.
          */
-        private readonly ArrayList children;
+        private readonly List<Node> children = new();
 
         /**
          * Creates a new production node.
@@ -44,8 +40,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public Production(ProductionPattern pattern)
         {
-            this.pattern = pattern;
-            this.children = new ArrayList();
+            Pattern = pattern;
         }
 
         /**
@@ -57,7 +52,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public override int Id
         {
-            get { return pattern.Id; }
+            get { return Pattern.Id; }
         }
 
         /**
@@ -67,7 +62,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public override string Name
         {
-            get { return pattern.Name; }
+            get { return Pattern.Name; }
         }
 
         /**
@@ -90,7 +85,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public override Node this[int index]
+        public override Node? this[int index]
         {
             get
             {
@@ -100,7 +95,7 @@ namespace PerCederberg.Grammatica.Runtime
                 }
                 else
                 {
-                    return (Node)children[index];
+                    return children[index];
                 }
             }
         }
@@ -126,10 +121,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public ProductionPattern Pattern
-        {
-            get { return pattern; }
-        }
+        public ProductionPattern Pattern { get; }
 
         /**
          * Checks if this node is hidden, i.e. if it should not be visible
@@ -140,7 +132,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         internal override bool IsHidden()
         {
-            return pattern.Synthetic;
+            return Pattern.Synthetic;
         }
 
         /**
@@ -150,7 +142,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public override string ToString()
         {
-            return pattern.Name + '(' + pattern.Id + ')';
+            return Pattern.Name + '(' + Pattern.Id + ')';
         }
     }
 }
