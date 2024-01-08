@@ -218,7 +218,7 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 if (i < elem.MinCount || IsNext(elem))
                 {
-                    if (elem.IsToken())
+                    if (elem.IsToken)
                     {
                         child = NextToken(elem.Id);
                         EnterNode(child);
@@ -304,7 +304,7 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 return set.IsNext(this);
             }
-            else if (elem.IsToken())
+            else if (elem.IsToken)
             {
                 return elem.IsMatch(PeekToken(0));
             }
@@ -664,7 +664,7 @@ namespace PerCederberg.Grammatica.Runtime
             LookAheadSet result;
             ProductionPattern pattern;
 
-            if (elem.IsToken())
+            if (elem.IsToken)
             {
                 result = new LookAheadSet(length);
                 result.Add(elem.Id);

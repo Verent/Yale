@@ -20,41 +20,15 @@ namespace PerCederberg.Grammatica.Runtime
     /**
      * A production pattern element. This class represents a reference to
      * either a token or a production. Each element also contains minimum
-     * and maximum occurence counters, controlling the number of
+     * and maximum occurrence counters, controlling the number of
      * repetitions allowed. A production pattern element is always
      * contained within a production pattern rule.
      *
      * @author   Per Cederberg
      * @version  1.5
      */
-    internal sealed class ProductionPatternElement
+    internal class ProductionPatternElement
     {
-        /**
-         * The token flag. This flag is true for token elements, and
-         * false for production elements.
-         */
-        private readonly bool token;
-
-        /**
-         * The node identity.
-         */
-        private readonly int id;
-
-        /**
-         * The minimum occurance count.
-         */
-        private readonly int min;
-
-        /**
-         * The maximum occurance count.
-         */
-        private readonly int max;
-
-        /**
-         * The look-ahead set associated with this element.
-         */
-        private LookAheadSet lookAhead;
-
         /**
          * Creates a new element. If the maximum value if zero (0) or
          * negative, it will be set to Int32.MaxValue.
@@ -67,23 +41,23 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public ProductionPatternElement(bool isToken, int id, int min, int max)
         {
-            this.token = isToken;
-            this.id = id;
+            IsToken = isToken;
+            Id = id;
             if (min < 0)
             {
                 min = 0;
             }
-            this.min = min;
+            MinCount = min;
             if (max <= 0)
             {
-                max = Int32.MaxValue;
+                max = int.MaxValue;
             }
             else if (max < min)
             {
                 max = min;
             }
-            this.max = max;
-            this.lookAhead = null;
+            MaxCount = max;
+            LookAhead = null;
         }
 
         /**
@@ -91,40 +65,27 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public int Id
-        {
-            get { return id; }
-        }
+        public int Id { get; }
 
         /**
-         * The minimum occurence count property (read-only).
+         * The minimum occurrence count property (read-only).
          *
          * @since 1.5
          */
-        public int MinCount
-        {
-            get { return min; }
-        }
+        public int MinCount { get; }
 
         /**
-         * The maximum occurence count property (read-only).
+         * The maximum occurrence count property (read-only).
          *
          * @since 1.5
          */
-        public int MaxCount
-        {
-            get { return max; }
-        }
+        public int MaxCount { get; }
 
         /**
          * The look-ahead set property. This is the look-ahead set
          * associated with this alternative.
          */
-        internal LookAheadSet LookAhead
-        {
-            get { return lookAhead; }
-            set { lookAhead = value; }
-        }
+        internal LookAheadSet? LookAhead { get; set; }
 
         /**
          * Returns true if this element represents a token.
@@ -132,10 +93,7 @@ namespace PerCederberg.Grammatica.Runtime
          * @return true if the element is a token, or
          *         false otherwise
          */
-        public bool IsToken()
-        {
-            return token;
-        }
+        public bool IsToken { get; }
 
         /**
          * Returns true if this element represents a production.
@@ -145,7 +103,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public bool IsProduction()
         {
-            return !token;
+            return IsToken == false;
         }
 
         /**
@@ -160,7 +118,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public bool IsMatch(Token token)
         {
-            return IsToken() && token != null && token.Id == id;
+            return IsToken && token is not null && token.Id == Id;
         }
 
         /**
@@ -173,17 +131,14 @@ namespace PerCederberg.Grammatica.Runtime
          * @return true if the object is identical to this one, or
          *         false otherwise
          */
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            ProductionPatternElement elem;
-
-            if (obj is ProductionPatternElement)
+            if (obj is ProductionPatternElement element)
             {
-                elem = (ProductionPatternElement)obj;
-                return this.token == elem.token
-                    && this.id == elem.id
-                    && this.min == elem.min
-                    && this.max == elem.max;
+                return IsToken == element.IsToken
+                    && Id == element.Id
+                    && MinCount == element.MinCount
+                    && MaxCount == element.MaxCount;
             }
             else
             {
@@ -198,7 +153,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public override int GetHashCode()
         {
-            return this.id * 37;
+            return Id * 37;
         }
 
         /**
@@ -210,8 +165,8 @@ namespace PerCederberg.Grammatica.Runtime
         {
             StringBuilder buffer = new();
 
-            buffer.Append(id);
-            if (token)
+            buffer.Append(Id);
+            if (IsToken)
             {
                 buffer.Append("(Token)");
             }
@@ -219,12 +174,12 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 buffer.Append("(Production)");
             }
-            if (min != 1 || max != 1)
+            if (MinCount != 1 || MaxCount != 1)
             {
                 buffer.Append('{');
-                buffer.Append(min);
+                buffer.Append(MinCount);
                 buffer.Append(',');
-                buffer.Append(max);
+                buffer.Append(MaxCount);
                 buffer.Append('}');
             }
             return buffer.ToString();

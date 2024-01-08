@@ -285,7 +285,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public void AddElement(ProductionPatternElement elem, int min, int max)
         {
-            if (elem.IsToken())
+            if (elem.IsToken)
             {
                 AddToken(elem.Id, min, max);
             }
@@ -305,11 +305,11 @@ namespace PerCederberg.Grammatica.Runtime
          * @return true if the object is identical to this one, or
          *         false otherwise
          */
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (obj is ProductionPatternAlternative)
+            if (obj is ProductionPatternAlternative alternative)
             {
-                return Equals((ProductionPatternAlternative)obj);
+                return Equals(alternative);
             }
             else
             {

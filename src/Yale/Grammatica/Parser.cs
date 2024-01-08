@@ -693,7 +693,7 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 buffer.Append('[');
             }
-            if (elem.IsToken())
+            if (elem.IsToken)
             {
                 buffer.Append(GetTokenDescription(elem.Id));
             }
@@ -705,11 +705,11 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 buffer.Append(']');
             }
-            else if (min == 0 && max == Int32.MaxValue)
+            else if (min == 0 && max == int.MaxValue)
             {
                 buffer.Append('*');
             }
-            else if (min == 1 && max == Int32.MaxValue)
+            else if (min == 1 && max == int.MaxValue)
             {
                 buffer.Append('+');
             }

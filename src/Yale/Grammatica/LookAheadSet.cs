@@ -760,7 +760,7 @@ namespace PerCederberg.Grammatica.Runtime
              * @return true if the objects are equal, or
              *         false otherwise
              */
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (obj is Sequence sequence)
                 {
@@ -789,7 +789,7 @@ namespace PerCederberg.Grammatica.Runtime
                 {
                     return false;
                 }
-                for (int i = 0; i < tokens.Count; i++)
+                for (var i = 0; i < tokens.Count; i++)
                 {
                     if (!tokens[i].Equals(seq.tokens[i]))
                     {
