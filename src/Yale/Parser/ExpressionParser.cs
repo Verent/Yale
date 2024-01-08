@@ -29,9 +29,6 @@ internal class ExpressionParser : RecursiveDescentParser
         SUBPRODUCTION_16 = 3016
     }
 
-    public ExpressionParser(TextReader input)
-        : base(new ExpressionTokenizer(input)) => CreatePatterns();
-
     public ExpressionParser(TextReader input, Analyzer analyzer)
         : base(new ExpressionTokenizer(input), analyzer) => CreatePatterns();
 

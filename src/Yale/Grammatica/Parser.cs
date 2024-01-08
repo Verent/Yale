@@ -34,16 +34,6 @@ namespace PerCederberg.Grammatica.Runtime
         private bool initialized;
 
         /**
-         * The tokenizer to use.
-         */
-        private readonly Tokenizer tokenizer;
-
-        /**
-         * The analyzer to use for callbacks.
-         */
-        private Analyzer analyzer;
-
-        /**
          * The list of production patterns.
          */
         private readonly ArrayList patterns = new();
@@ -80,86 +70,13 @@ namespace PerCederberg.Grammatica.Runtime
         /**
          * Creates a new parser.
          *
-         * @param input          the input stream to read from
-         *
-         * @throws ParserCreationException if the tokenizer couldn't be
-         *             initialized correctly
-         *
-         * @since 1.5
-         */
-        internal Parser(TextReader input)
-            : this(input, null) { }
-
-        /**
-         * Creates a new parser.
-         *
-         * @param input          the input stream to read from
-         * @param analyzer       the analyzer callback to use
-         *
-         * @throws ParserCreationException if the tokenizer couldn't be
-         *             initialized correctly
-         *
-         * @since 1.5
-         */
-        internal Parser(TextReader input, Analyzer? analyzer)
-        {
-            this.tokenizer = NewTokenizer(input);
-            this.analyzer = analyzer ?? NewAnalyzer();
-        }
-
-        /**
-         * Creates a new parser.
-         *
-         * @param tokenizer       the tokenizer to use
-         */
-        internal Parser(Tokenizer tokenizer)
-            : this(tokenizer, null) { }
-
-        /**
-         * Creates a new parser.
-         *
          * @param tokenizer       the tokenizer to use
          * @param analyzer        the analyzer callback to use
          */
         internal Parser(Tokenizer tokenizer, Analyzer analyzer)
         {
-            this.tokenizer = tokenizer;
-            this.analyzer = (analyzer == null) ? NewAnalyzer() : analyzer;
-        }
-
-        /**
-         * Creates a new tokenizer for this parser. Can be overridden by
-         * a subclass to provide a custom implementation.
-         *
-         * @param in             the input stream to read from
-         *
-         * @return the tokenizer created
-         *
-         * @throws ParserCreationException if the tokenizer couldn't be
-         *             initialized correctly
-         *
-         * @since 1.5
-         */
-        protected virtual Tokenizer NewTokenizer(TextReader input)
-        {
-            // TODO: This method should really be abstract, but it isn't in this
-            //       version due to backwards compatibility requirements.
-            return new Tokenizer(input);
-        }
-
-        /**
-         * Creates a new analyzer for this parser. Can be overridden by a
-         * subclass to provide a custom implementation.
-         *
-         * @return the analyzer created
-         *
-         * @since 1.5
-         */
-        protected virtual Analyzer NewAnalyzer()
-        {
-            // TODO: This method should really be abstract, but it isn't in this
-            //       version due to backwards compatibility requirements.
-            return new Analyzer();
+            Tokenizer = tokenizer;
+            Analyzer = analyzer;
         }
 
         /**
@@ -168,10 +85,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public Tokenizer Tokenizer
-        {
-            get { return tokenizer; }
-        }
+        public Tokenizer Tokenizer { get; }
 
         /**
          * The analyzer property (read-only). This property contains
@@ -179,10 +93,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public Analyzer Analyzer
-        {
-            get { return analyzer; }
-        }
+        public Analyzer Analyzer { get; }
 
         /**
          * Sets the parser initialized flag. Normally this flag is set by
@@ -331,30 +242,8 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public void Reset(TextReader input)
         {
-            this.tokenizer.Reset(input);
-            this.analyzer.Reset();
-        }
-
-        /**
-         * Resets this parser for usage with another input stream. The
-         * associated tokenizer will also be reset and the analyzer
-         * replaced. This method will clear all the internal state and
-         * the error log in the parser. It is normally called in order
-         * to reuse a parser and tokenizer pair with multiple input
-         * streams, thereby avoiding the cost of re-analyzing the
-         * grammar structures.
-         *
-         * @param input          the new input stream to read
-         * @param analyzer       the new analyzer callback to use
-         *
-         * @see Tokenizer#Reset
-         *
-         * @since 1.6
-         */
-        public void Reset(TextReader input, Analyzer analyzer)
-        {
-            this.tokenizer.Reset(input);
-            this.analyzer = analyzer;
+            Tokenizer.Reset(input);
+            Analyzer.Reset();
         }
 
         /**
@@ -378,18 +267,18 @@ namespace PerCederberg.Grammatica.Runtime
          * @see #Reset
          * @see Tokenizer#Reset
          */
-        public Node Parse()
+        public Node? Parse()
         {
-            Node root = null;
+            Node? root = null;
 
             // Initialize parser
-            if (!initialized)
+            if (initialized == false)
             {
                 Prepare();
             }
-            this.tokens.Clear();
-            this.errorLog = new ParserLogException();
-            this.errorRecovery = -1;
+            tokens.Clear();
+            errorLog = new ParserLogException();
+            errorRecovery = -1;
 
             // Parse input
             try
@@ -433,7 +322,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         protected virtual Production NewProduction(ProductionPattern pattern)
         {
-            return analyzer.NewProduction(pattern);
+            return Analyzer.NewProduction(pattern);
         }
 
         /**
@@ -514,7 +403,7 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 try
                 {
-                    analyzer.Enter(node);
+                    Analyzer.Enter(node);
                 }
                 catch (ParseException e)
                 {
@@ -540,7 +429,7 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 try
                 {
-                    return analyzer.Exit(node);
+                    return Analyzer.Exit(node);
                 }
                 catch (ParseException e)
                 {
@@ -580,7 +469,7 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 try
                 {
-                    analyzer.Child(node, child);
+                    Analyzer.Child(node, child);
                 }
                 catch (ParseException e)
                 {
@@ -613,8 +502,8 @@ namespace PerCederberg.Grammatica.Runtime
                 throw new ParseException(
                     ParseException.ErrorType.UnexpectedEof,
                     null,
-                    tokenizer.GetCurrentLine(),
-                    tokenizer.GetCurrentColumn()
+                    Tokenizer.GetCurrentLine(),
+                    Tokenizer.GetCurrentColumn()
                 );
             }
         }
@@ -647,8 +536,7 @@ namespace PerCederberg.Grammatica.Runtime
             }
             else
             {
-                list = new ArrayList(1);
-                list.Add(tokenizer.GetPatternDescription(id));
+                list = new ArrayList(1) { Tokenizer.GetPatternDescription(id) };
                 throw new ParseException(
                     ParseException.ErrorType.UnexpectedToken,
                     token.ToShortString(),
@@ -677,7 +565,7 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 try
                 {
-                    token = tokenizer.Next();
+                    token = Tokenizer.Next();
                     if (token == null)
                     {
                         return null;
@@ -757,7 +645,7 @@ namespace PerCederberg.Grammatica.Runtime
                     buffer.Append(" token look-ahead for alternative ");
                     buffer.Append(i + 1);
                     buffer.Append(": ");
-                    buffer.Append(set.ToString(tokenizer));
+                    buffer.Append(set.ToString(Tokenizer));
                     buffer.Append('\n');
                 }
             }
@@ -845,13 +733,13 @@ namespace PerCederberg.Grammatica.Runtime
          */
         internal string GetTokenDescription(int token)
         {
-            if (tokenizer == null)
+            if (Tokenizer is null)
             {
                 return "";
             }
             else
             {
-                return tokenizer.GetPatternDescription(token);
+                return Tokenizer.GetPatternDescription(token);
             }
         }
     }

@@ -79,32 +79,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * The error type.
-         */
-        private ErrorType type;
-
-        /**
-         * The additional information string.
-         */
-        private readonly string info;
-
-        /**
-         * The additional details information. This variable is only
-         * used for unexpected token errors.
-         */
-        private readonly ArrayList details;
-
-        /**
-         * The line number.
-         */
-        private readonly int line;
-
-        /**
-         * The column number.
-         */
-        private readonly int column;
-
-        /**
          * Creates a new parse exception.
          *
          * @param type           the parse error type
@@ -113,7 +87,7 @@ namespace PerCederberg.Grammatica.Runtime
          * @param column         the column number, or -1 for unknown
          */
         public ParseException(ErrorType type, string info, int line, int column)
-            : this(type, info, null, line, column) { }
+            : this(type, info, details: null, line, column) { }
 
         /**
          * Creates a new parse exception. This constructor is only
@@ -127,13 +101,13 @@ namespace PerCederberg.Grammatica.Runtime
          * @param line           the line number, or -1 for unknown
          * @param column         the column number, or -1 for unknown
          */
-        public ParseException(ErrorType type, string info, ArrayList details, int line, int column)
+        public ParseException(ErrorType type, string info, ArrayList? details, int line, int column)
         {
-            this.type = type;
-            this.info = info;
-            this.details = details;
-            this.line = line;
-            this.column = column;
+            Type = type;
+            Info = info;
+            Details = details;
+            Line = line;
+            Column = column;
         }
 
         /**
@@ -141,20 +115,14 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public ErrorType Type
-        {
-            get { return type; }
-        }
+        public ErrorType Type { get; }
 
         /**
          * The additional error information property (read-only).
          *
          * @since 1.5
          */
-        public string Info
-        {
-            get { return info; }
-        }
+        public string Info { get; }
 
         /**
          * The additional detailed error information property
@@ -162,32 +130,23 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public ArrayList Details
-        {
-            get { return new ArrayList(details); }
-        }
+        public ArrayList? Details { get; }
 
         /**
          * The line number property (read-only). This is the line
-         * number where the error occured, or -1 if unknown.
+         * number where the error occurred, or -1 if unknown.
          *
          * @since 1.5
          */
-        public int Line
-        {
-            get { return line; }
-        }
+        public int Line { get; }
 
         /**
          * The column number property (read-only). This is the column
-         * number where the error occured, or -1 if unknown.
+         * number where the error occurred, or -1 if unknown.
          *
          * @since 1.5
          */
-        public int Column
-        {
-            get { return column; }
-        }
+        public int Column { get; }
 
         /**
          * The message property (read-only). This property contains
@@ -206,12 +165,12 @@ namespace PerCederberg.Grammatica.Runtime
                 buffer.Append(ErrorMessage);
 
                 // Add line and column
-                if (line > 0 && column > 0)
+                if (Line > 0 && Column > 0)
                 {
                     buffer.Append(", on line: ");
-                    buffer.Append(line);
+                    buffer.Append(Line);
                     buffer.Append(" column: ");
-                    buffer.Append(column);
+                    buffer.Append(Column);
                 }
 
                 return buffer.ToString();
@@ -234,45 +193,45 @@ namespace PerCederberg.Grammatica.Runtime
                 StringBuilder buffer = new();
 
                 // Add type and info
-                switch (type)
+                switch (Type)
                 {
                     case ErrorType.IO:
                         buffer.Append("I/O error: ");
-                        buffer.Append(info);
+                        buffer.Append(Info);
                         break;
                     case ErrorType.UnexpectedEof:
                         buffer.Append("unexpected end of file");
                         break;
                     case ErrorType.UnexpectedChar:
                         buffer.Append("unexpected character '");
-                        buffer.Append(info);
+                        buffer.Append(Info);
                         buffer.Append('\'');
                         break;
                     case ErrorType.UnexpectedToken:
                         buffer.Append("unexpected token ");
-                        buffer.Append(info);
-                        if (details != null)
+                        buffer.Append(Info);
+                        if (Details is not null)
                         {
                             buffer.Append(", expected ");
-                            if (details.Count > 1)
+                            if (Details.Count > 1)
                             {
                                 buffer.Append("one of ");
                             }
-                            buffer.Append(GetMessageDetails());
+                            buffer.Append(GetMessageDetails(Details));
                         }
                         break;
                     case ErrorType.InvalidToken:
-                        buffer.Append(info);
+                        buffer.Append(Info);
                         break;
                     case ErrorType.Analysis:
-                        buffer.Append(info);
+                        buffer.Append(Info);
                         break;
                     default:
                         buffer.Append("internal error");
-                        if (info != null)
+                        if (Info is not null)
                         {
                             buffer.Append(": ");
-                            buffer.Append(info);
+                            buffer.Append(Info);
                         }
                         break;
                 }
@@ -287,11 +246,11 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @return the detailed information string
          */
-        private string GetMessageDetails()
+        private static string GetMessageDetails(ArrayList details)
         {
             StringBuilder buffer = new();
 
-            for (int i = 0; i < details.Count; i++)
+            for (var i = 0; i < details.Count; i++)
             {
                 if (i > 0)
                 {

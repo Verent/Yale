@@ -45,22 +45,22 @@ namespace PerCederberg.Grammatica.Runtime
         /**
         * The character buffer.
         */
-        private char[] buffer = new char[BlockSize * 4];
+        private char[]? buffer = new char[BlockSize * 4];
 
         /**
         * The current character buffer position.
         */
-        private int pos = 0;
+        private int pos;
 
         /**
         * The number of characters in the buffer.
         */
-        private int length = 0;
+        private int length;
 
         /**
         * The input source character reader.
         */
-        private TextReader input = null;
+        private TextReader? input;
 
         /**
         * The line number of the next character to read. This value will
@@ -94,7 +94,7 @@ namespace PerCederberg.Grammatica.Runtime
             buffer = null;
             pos = 0;
             length = 0;
-            if (input != null)
+            if (input is not null)
             {
                 try
                 {

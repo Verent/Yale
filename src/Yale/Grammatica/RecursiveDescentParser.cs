@@ -32,41 +32,6 @@ namespace PerCederberg.Grammatica.Runtime
         /**
          * Creates a new parser.
          *
-         * @param input          the input stream to read from
-         *
-         * @throws ParserCreationException if the tokenizer couldn't be
-         *             initialized correctly
-         *
-         * @since 1.5
-         */
-        public RecursiveDescentParser(TextReader input)
-            : base(input) { }
-
-        /**
-         * Creates a new parser.
-         *
-         * @param input          the input stream to read from
-         * @param analyzer       the analyzer callback to use
-         *
-         * @throws ParserCreationException if the tokenizer couldn't be
-         *             initialized correctly
-         *
-         * @since 1.5
-         */
-        public RecursiveDescentParser(TextReader input, Analyzer analyzer)
-            : base(input, analyzer) { }
-
-        /**
-         * Creates a new parser.
-         *
-         * @param tokenizer      the tokenizer to use
-         */
-        public RecursiveDescentParser(Tokenizer tokenizer)
-            : base(tokenizer) { }
-
-        /**
-         * Creates a new parser.
-         *
          * @param tokenizer      the tokenizer to use
          * @param analyzer       the analyzer callback to use
          */
@@ -97,7 +62,7 @@ namespace PerCederberg.Grammatica.Runtime
                 );
             }
 
-            // Check for left-recusive patterns
+            // Check for left-recursive patterns
             if (pattern.IsLeftRecursive())
             {
                 throw new ParserCreationException(
@@ -113,7 +78,7 @@ namespace PerCederberg.Grammatica.Runtime
 
         /**
          * Initializes the parser. All the added production patterns
-         * will be analyzed for ambiguities and errors. This method
+         * will be analysed for ambiguities and errors. This method
          * also initializes the internal data structures used during
          * the parsing.
          *
@@ -157,8 +122,7 @@ namespace PerCederberg.Grammatica.Runtime
             token = PeekToken(0);
             if (token != null)
             {
-                list = new ArrayList(1);
-                list.Add("<EOF>");
+                list = new ArrayList(1) { "<EOF>" };
                 throw new ParseException(
                     ParseException.ErrorType.UnexpectedToken,
                     token.ToShortString(),
