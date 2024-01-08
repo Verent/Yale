@@ -12,6 +12,7 @@
  * Copyright (c) 2003-2015 Per Cederberg. All rights reserved.
  */
 
+using System;
 using System.Text;
 
 namespace PerCederberg.Grammatica.Runtime
@@ -25,7 +26,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    public class Token : Node
+    internal class Token : Node
     {
         /**
          * The token pattern used for this token.
@@ -264,7 +265,7 @@ namespace PerCederberg.Grammatica.Runtime
                 {
                     newline--;
                 }
-                buffer.Append(image.Substring(0, newline));
+                buffer.Append(image.AsSpan(0, newline));
                 buffer.Append("(...)");
             }
             else
@@ -298,7 +299,7 @@ namespace PerCederberg.Grammatica.Runtime
                 {
                     newline--;
                 }
-                buffer.Append(image.Substring(0, newline));
+                buffer.Append(image.AsSpan(0, newline));
                 buffer.Append("(...)");
             }
             else

@@ -79,27 +79,10 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * The error type.
-         */
-        private ErrorType type;
-
-        /**
-         * The token or production pattern name. This variable is only
-         * set for some error types.
-         */
-        private string name;
-
-        /**
-         * The additional error information string. This variable is only
-         * set for some error types.
-         */
-        private string info;
-
-        /**
          * The error details list. This variable is only set for some
          * error types.
          */
-        private ArrayList details;
+        private readonly ArrayList? details;
 
         /**
          * Creates a new parser creation exception.
@@ -107,8 +90,8 @@ namespace PerCederberg.Grammatica.Runtime
          * @param type           the parse error type
          * @param info           the additional error information
          */
-        public ParserCreationException(ErrorType type, String info)
-            : this(type, null, info) { }
+        public ParserCreationException(ErrorType type, string info)
+            : this(type: type, name: null, info: info) { }
 
         /**
          * Creates a new parser creation exception.
@@ -117,8 +100,8 @@ namespace PerCederberg.Grammatica.Runtime
          * @param name           the token or production pattern name
          * @param info           the additional error information
          */
-        public ParserCreationException(ErrorType type, String name, String info)
-            : this(type, name, info, null) { }
+        public ParserCreationException(ErrorType type, string? name, string info)
+            : this(type: type, name: name, info: info, details: null) { }
 
         /**
          * Creates a new parser creation exception.
@@ -128,11 +111,16 @@ namespace PerCederberg.Grammatica.Runtime
          * @param info           the additional error information
          * @param details        the error details list
          */
-        public ParserCreationException(ErrorType type, String name, String info, ArrayList details)
+        public ParserCreationException(
+            ErrorType type,
+            string? name,
+            string info,
+            ArrayList? details
+        )
         {
-            this.type = type;
-            this.name = name;
-            this.info = info;
+            Type = type;
+            Name = name;
+            Info = info;
             this.details = details;
         }
 
@@ -141,47 +129,38 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public ErrorType Type
-        {
-            get { return type; }
-        }
+        public ErrorType Type { get; }
 
         /**
          * The token or production name property (read-only).
          *
          * @since 1.5
          */
-        public string Name
-        {
-            get { return name; }
-        }
+        public string? Name { get; }
 
         /**
          * The additional error information property (read-only).
          *
          * @since 1.5
          */
-        public string Info
-        {
-            get { return info; }
-        }
+        public string Info { get; }
 
         /**
          * The detailed error information property (read-only).
          *
          * @since 1.5
          */
-        public string Details
+        public string? Details
         {
             get
             {
                 StringBuilder buffer = new();
 
-                if (details == null)
+                if (details is null)
                 {
                     return null;
                 }
-                for (int i = 0; i < details.Count; i++)
+                for (var i = 0; i < details.Count; i++)
                 {
                     if (i > 0)
                     {
@@ -208,39 +187,39 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 StringBuilder buffer = new();
 
-                switch (type)
+                switch (Type)
                 {
                     case ErrorType.InvalidParser:
                         buffer.Append("parser is invalid, as ");
-                        buffer.Append(info);
+                        buffer.Append(Info);
                         break;
                     case ErrorType.InvalidToken:
                         buffer.Append("token '");
-                        buffer.Append(name);
+                        buffer.Append(Name);
                         buffer.Append("' is invalid, as ");
-                        buffer.Append(info);
+                        buffer.Append(Info);
                         break;
                     case ErrorType.InvalidProduction:
                         buffer.Append("production '");
-                        buffer.Append(name);
+                        buffer.Append(Name);
                         buffer.Append("' is invalid, as ");
-                        buffer.Append(info);
+                        buffer.Append(Info);
                         break;
                     case ErrorType.InfiniteLoop:
                         buffer.Append("infinite loop found in production pattern '");
-                        buffer.Append(name);
+                        buffer.Append(Name);
                         buffer.Append('\'');
                         break;
                     case ErrorType.InherentAmbiguity:
                         buffer.Append("inherent ambiguity in production '");
-                        buffer.Append(name);
+                        buffer.Append(Name);
                         buffer.Append('\'');
-                        if (info != null)
+                        if (Info is not null)
                         {
                             buffer.Append(' ');
-                            buffer.Append(info);
+                            buffer.Append(Info);
                         }
-                        if (details != null)
+                        if (details is not null)
                         {
                             buffer.Append(" starting with ");
                             if (details.Count > 1)

@@ -28,7 +28,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @version  1.5
      * @since    1.5
      */
-    internal class TokenStringDFA
+    internal sealed class TokenStringDFA
     {
         /**
          * The lookup table for root states, indexed by the first ASCII

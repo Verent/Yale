@@ -26,12 +26,12 @@ namespace PerCederberg.Grammatica.Runtime
      * @version  1.5
      * @since    1.1
      */
-    public class ParserLogException : Exception
+    internal class ParserLogException : Exception
     {
         /**
          * The list of errors found.
          */
-        private ArrayList errors = new();
+        private readonly ArrayList errors = new();
 
         /**
          * Creates a new empty parser log exception.

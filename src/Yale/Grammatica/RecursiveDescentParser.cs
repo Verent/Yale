@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections;
-using System.IO;
 
 namespace PerCederberg.Grammatica.Runtime
 {
@@ -859,12 +858,12 @@ namespace PerCederberg.Grammatica.Runtime
             /**
              * A stack with names.
              */
-            private ArrayList nameStack = new();
+            private readonly ArrayList nameStack = new();
 
             /**
              * A stack with values.
              */
-            private ArrayList valueStack = new();
+            private readonly ArrayList valueStack = new();
 
             /**
              * Checks if the specified name is on the stack.

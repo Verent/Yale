@@ -32,7 +32,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @version  1.5
      * @since    1.5
      */
-    public class ReaderBuffer
+    internal class ReaderBuffer
     {
         /**
          * The stream reading block size. All reads from the underlying
@@ -336,10 +336,10 @@ namespace PerCederberg.Grammatica.Runtime
                     }
                 }
             }
-            catch (IOException e)
+            catch (IOException)
             {
                 input = null;
-                throw e;
+                throw;
             }
         }
 

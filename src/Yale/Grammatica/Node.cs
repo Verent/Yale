@@ -25,17 +25,17 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    public abstract class Node
+    internal abstract class Node
     {
         /**
          * The parent node.
          */
-        private Node parent = null;
+        private Node? parent;
 
         /**
          * The computed node values.
          */
-        private ArrayList values = null;
+        private ArrayList? values;
 
         /**
          * Checks if this node is hidden, i.e. if it should not be

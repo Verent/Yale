@@ -17,7 +17,6 @@ using System.Collections;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using PerCederberg.Grammatica.Runtime;
 
 namespace PerCederberg.Grammatica.Runtime.RE
 {
@@ -31,7 +30,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
      * @author   Per Cederberg
      * @version  1.5
      */
-    public class RegExp
+    internal class RegExp
     {
         /**
          * The base regular expression element.

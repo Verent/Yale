@@ -21,7 +21,7 @@ namespace PerCederberg.Grammatica.Runtime
     /**
      * A production pattern alternative. This class represents a list of
      * production pattern elements. In order to provide productions that
-     * cannot be represented with the element occurance counters, multiple
+     * cannot be represented with the element occurrence counters, multiple
      * alternatives must be created and added to the same production
      * pattern. A production pattern alternative is always contained
      * within a production pattern.
@@ -29,22 +29,17 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    public class ProductionPatternAlternative
+    internal class ProductionPatternAlternative
     {
-        /**
-         * The production pattern.
-         */
-        private ProductionPattern pattern;
-
         /**
          * The element list.
          */
-        private ArrayList elements = new();
+        private readonly ArrayList elements = new();
 
         /**
          * The look-ahead set associated with this alternative.
          */
-        private LookAheadSet lookAhead = null;
+        private LookAheadSet? lookAhead;
 
         /**
          * Creates a new production pattern alternative.
@@ -57,16 +52,13 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public ProductionPattern Pattern
-        {
-            get { return pattern; }
-        }
+        public ProductionPattern Pattern { get; private set; }
 
         /**
          * The look-ahead set property. This property contains the
          * look-ahead set associated with this alternative.
          */
-        internal LookAheadSet LookAhead
+        internal LookAheadSet? LookAhead
         {
             get { return lookAhead; }
             set { lookAhead = value; }
@@ -126,7 +118,7 @@ namespace PerCederberg.Grammatica.Runtime
             for (int i = 0; i < elements.Count; i++)
             {
                 elem = (ProductionPatternElement)elements[i];
-                if (elem.Id == pattern.Id)
+                if (elem.Id == Pattern.Id)
                 {
                     return true;
                 }
@@ -153,7 +145,7 @@ namespace PerCederberg.Grammatica.Runtime
             for (int i = elements.Count - 1; i >= 0; i--)
             {
                 elem = (ProductionPatternElement)elements[i];
-                if (elem.Id == pattern.Id)
+                if (elem.Id == Pattern.Id)
                 {
                     return true;
                 }
@@ -187,7 +179,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         internal void SetPattern(ProductionPattern pattern)
         {
-            this.pattern = pattern;
+            this.Pattern = pattern;
         }
 
         /**

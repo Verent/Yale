@@ -25,17 +25,17 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    public class Production : Node
+    internal class Production : Node
     {
         /**
          * The production pattern used for this production.
          */
-        private ProductionPattern pattern;
+        private readonly ProductionPattern pattern;
 
         /**
          * The child nodes.
          */
-        private ArrayList children;
+        private readonly ArrayList children;
 
         /**
          * Creates a new production node.

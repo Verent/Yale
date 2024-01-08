@@ -27,28 +27,28 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    public class ProductionPatternElement
+    internal class ProductionPatternElement
     {
         /**
          * The token flag. This flag is true for token elements, and
          * false for production elements.
          */
-        private bool token;
+        private readonly bool token;
 
         /**
          * The node identity.
          */
-        private int id;
+        private readonly int id;
 
         /**
          * The minimum occurance count.
          */
-        private int min;
+        private readonly int min;
 
         /**
          * The maximum occurance count.
          */
-        private int max;
+        private readonly int max;
 
         /**
          * The look-ahead set associated with this element.

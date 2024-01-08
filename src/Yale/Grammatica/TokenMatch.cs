@@ -28,12 +28,12 @@ namespace PerCederberg.Grammatica.Runtime
         /**
          * The length of the longest match.
          */
-        private int length = 0;
+        private int length;
 
         /**
          * The pattern in the longest match.
          */
-        private TokenPattern pattern = null;
+        private TokenPattern? pattern;
 
         /**
          * Clears the current match information.

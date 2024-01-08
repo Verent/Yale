@@ -37,19 +37,19 @@ namespace PerCederberg.Grammatica.Runtime
          * first step in the match, since the initial state would
          * otherwise have a long list of transitions to consider.
          */
-        private NFAState[] initialChar = new NFAState[128];
+        private readonly NFAState[] initialChar = new NFAState[128];
 
         /**
          * The initial state. This state contains any transitions not
          * already stored in the initial text state array, i.e. non-ASCII
          * or complex transitions (such as regular expressions).
          */
-        private NFAState initial = new();
+        private readonly NFAState initial = new();
 
         /**
          * The NFA state queue to use.
          */
-        private NFAStateQueue queue = new();
+        private readonly NFAStateQueue queue = new();
 
         /**
          * Adds a string match to this automaton. New states and
@@ -223,22 +223,22 @@ namespace PerCederberg.Grammatica.Runtime
         /**
         * The optional state value (if it is a final state).
          */
-        internal TokenPattern value = null;
+        internal TokenPattern? value;
 
         /**
         * The incoming transitions to this state.
         */
-        internal NFATransition[] incoming = new NFATransition[0];
+        internal NFATransition[]? incoming = Array.Empty<NFATransition>();
 
         /**
         * The outgoing transitions from this state.
         */
-        internal NFATransition[] outgoing = new NFATransition[0];
+        internal NFATransition[]? outgoing = Array.Empty<NFATransition>();
 
         /**
         * The outgoing epsilon transitions flag.
         */
-        internal bool epsilonOut = false;
+        internal bool epsilonOut;
 
         /**
          * Checks if this state has any incoming or outgoing
@@ -279,7 +279,7 @@ namespace PerCederberg.Grammatica.Runtime
         public void AddIn(NFATransition trans)
         {
             Array.Resize(ref incoming, incoming.Length + 1);
-            incoming[incoming.Length - 1] = trans;
+            incoming[^1] = trans;
         }
 
         /**
@@ -327,7 +327,7 @@ namespace PerCederberg.Grammatica.Runtime
         public NFAState AddOut(NFATransition trans)
         {
             Array.Resize(ref outgoing, outgoing.Length + 1);
-            outgoing[outgoing.Length - 1] = trans;
+            outgoing[^1] = trans;
             if (trans is NFAEpsilonTransition)
             {
                 epsilonOut = true;

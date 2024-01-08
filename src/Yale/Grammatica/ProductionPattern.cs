@@ -28,17 +28,17 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    public class ProductionPattern
+    internal class ProductionPattern
     {
         /**
          * The production pattern identity.
          */
-        private int id;
+        private readonly int id;
 
         /**
          * The production pattern name.
          */
-        private string name;
+        private readonly string name;
 
         /**
          * The synthectic production flag. If this flag is set, the
@@ -50,7 +50,7 @@ namespace PerCederberg.Grammatica.Runtime
         /**
          * The list of production pattern alternatives.
          */
-        private ArrayList alternatives;
+        private readonly ArrayList alternatives;
 
         /**
          * The default production pattern alternative. This alternative

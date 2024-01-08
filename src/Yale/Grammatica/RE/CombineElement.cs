@@ -13,7 +13,6 @@
  */
 
 using System.IO;
-using PerCederberg.Grammatica.Runtime;
 
 namespace PerCederberg.Grammatica.Runtime.RE
 {

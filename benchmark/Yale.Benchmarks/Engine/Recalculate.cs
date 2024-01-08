@@ -59,8 +59,6 @@ public class Recalculate
         var result = engine.GetResult<int>("expr_b");
     }
 
-
-
     [Benchmark]
     public void Flee_Recalculate_Manual()
     {

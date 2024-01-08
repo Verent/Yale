@@ -25,7 +25,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
      * @author   Per Cederberg
      * @version  1.0
      */
-    public class RegExpException : Exception
+    internal class RegExpException : Exception
     {
         /**
          * The error type enumeration.
@@ -144,7 +144,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
             if (position < pattern.Length)
             {
                 buffer.Append('\'');
-                buffer.Append(pattern.Substring(position));
+                buffer.Append(pattern.AsSpan(position));
                 buffer.Append('\'');
             }
             else

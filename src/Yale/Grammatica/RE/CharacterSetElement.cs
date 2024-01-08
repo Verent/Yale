@@ -16,7 +16,6 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Text;
-using PerCederberg.Grammatica.Runtime;
 
 namespace PerCederberg.Grammatica.Runtime.RE
 {
@@ -77,13 +76,13 @@ namespace PerCederberg.Grammatica.Runtime.RE
         /**
          * The inverted character set flag.
          */
-        private bool inverted;
+        private readonly bool inverted;
 
         /**
          * The character set content. This array may contain either
          * range objects or Character objects.
          */
-        private ArrayList contents = new();
+        private readonly ArrayList contents = new();
 
         /**
          * Creates a new character set element. If the inverted character
@@ -439,12 +438,12 @@ namespace PerCederberg.Grammatica.Runtime.RE
             /**
              * The minimum character value.
              */
-            private char min;
+            private readonly char min;
 
             /**
              * The maximum character value.
              */
-            private char max;
+            private readonly char max;
 
             /**
              * Creates a new character range.

@@ -28,12 +28,12 @@ namespace PerCederberg.Grammatica.Runtime.RE
         /**
          * The first alternative element.
          */
-        private Element elem1;
+        private readonly Element elem1;
 
         /**
          * The second alternative element.
          */
-        private Element elem2;
+        private readonly Element elem2;
 
         /**
          * Creates a new alternative element.

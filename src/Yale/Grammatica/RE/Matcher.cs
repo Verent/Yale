@@ -13,7 +13,6 @@
  */
 
 using System.IO;
-using PerCederberg.Grammatica.Runtime;
 
 namespace PerCederberg.Grammatica.Runtime.RE
 {
@@ -27,7 +26,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
      * @author   Per Cederberg
      * @version  1.5
      */
-    public class Matcher
+    internal class Matcher
     {
         /**
          * The base regular expression element.

@@ -26,7 +26,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    public class TokenPattern
+    internal class TokenPattern
     {
         /**
          * The pattern type enumeration.
@@ -408,7 +408,7 @@ namespace PerCederberg.Grammatica.Runtime
                     {
                         newline--;
                     }
-                    buffer.Append(pattern.Substring(0, newline));
+                    buffer.Append(pattern.AsSpan(0, newline));
                     buffer.Append("(...)");
                 }
                 else

@@ -39,12 +39,12 @@ namespace PerCederberg.Grammatica.Runtime
          * turn is represented by an ArrayList with Integers for the
          * token id:s.
          */
-        private ArrayList elements = new();
+        private readonly ArrayList elements = new();
 
         /**
          * The maximum length of any look-ahead sequence.
          */
-        private int maxLength;
+        private readonly int maxLength;
 
         /**
          * Creates a new look-ahead set with the specified maximum
@@ -654,12 +654,12 @@ namespace PerCederberg.Grammatica.Runtime
              * The repeat flag. If this flag is set, the token
              * sequence or some part of it may be repeated infinitely.
              */
-            private bool repeat = false;
+            private bool repeat;
 
             /**
              * The list of token ids in this sequence.
              */
-            private ArrayList tokens = null;
+            private readonly ArrayList tokens;
 
             /**
              * Creates a new empty token sequence. The repeat flag
@@ -667,8 +667,8 @@ namespace PerCederberg.Grammatica.Runtime
              */
             public Sequence()
             {
-                this.repeat = false;
-                this.tokens = new ArrayList(0);
+                repeat = false;
+                tokens = new ArrayList(0);
             }
 
             /**
@@ -679,9 +679,8 @@ namespace PerCederberg.Grammatica.Runtime
              */
             public Sequence(bool repeat, int token)
             {
-                this.repeat = false;
-                this.tokens = new ArrayList(1);
-                this.tokens.Add(token);
+                this.repeat = repeat;
+                tokens = new ArrayList(1) { token };
             }
 
             /**
@@ -695,8 +694,8 @@ namespace PerCederberg.Grammatica.Runtime
              */
             public Sequence(int length, Sequence seq)
             {
-                this.repeat = seq.repeat;
-                this.tokens = new ArrayList(length);
+                repeat = seq.repeat;
+                tokens = new ArrayList(length);
                 if (seq.Length() < length)
                 {
                     length = seq.Length();
@@ -718,7 +717,7 @@ namespace PerCederberg.Grammatica.Runtime
             public Sequence(bool repeat, Sequence seq)
             {
                 this.repeat = repeat;
-                this.tokens = seq.tokens;
+                tokens = seq.tokens;
             }
 
             /**
@@ -738,7 +737,7 @@ namespace PerCederberg.Grammatica.Runtime
              *
              * @return the token id found, or null
              */
-            public object GetToken(int pos)
+            public object? GetToken(int pos)
             {
                 if (pos >= 0 && pos < tokens.Count)
                 {
@@ -763,9 +762,9 @@ namespace PerCederberg.Grammatica.Runtime
              */
             public override bool Equals(object obj)
             {
-                if (obj is Sequence)
+                if (obj is Sequence sequence)
                 {
-                    return Equals((Sequence)obj);
+                    return Equals(sequence);
                 }
                 else
                 {

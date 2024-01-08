@@ -13,7 +13,6 @@
  */
 
 using System;
-using System.Collections;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -31,13 +30,8 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    public class Tokenizer
+    internal class Tokenizer
     {
-        /**
-         * The token list feature flag.
-         */
-        private bool useTokenList = false;
-
         /**
          * The string DFA token matcher. This token matcher uses a
          * deterministic finite automaton (DFA) implementation and is
@@ -45,7 +39,7 @@ namespace PerCederberg.Grammatica.Runtime
          * advantage to the NFA implementation, but should be equivalent
          * on memory usage.
          */
-        private StringDFAMatcher stringDfaMatcher;
+        private readonly StringDFAMatcher stringDfaMatcher;
 
         /**
          * The regular expression NFA token matcher. This token matcher
@@ -56,7 +50,7 @@ namespace PerCederberg.Grammatica.Runtime
          * syntax. It conserves memory by using a fast queue instead of
          * the stack during processing (no stack overflow).
          */
-        private NFAMatcher nfaMatcher;
+        private readonly NFAMatcher nfaMatcher;
 
         /**
          * The regular expression token matcher. This token matcher is
@@ -64,22 +58,22 @@ namespace PerCederberg.Grammatica.Runtime
          * due to possibly degraded speed and memory usage compared to
          * the automaton implementations.
          */
-        private RegExpMatcher regExpMatcher;
+        private readonly RegExpMatcher regExpMatcher;
 
         /**
         * The character stream reader buffer.
         */
-        private ReaderBuffer buffer = null;
+        private ReaderBuffer? buffer;
 
         /**
         * The last token match found.
         */
-        private TokenMatch lastMatch = new();
+        private readonly TokenMatch lastMatch = new();
 
         /**
          * The previous token in the token list.
          */
-        private Token previousToken = null;
+        private Token? previousToken;
 
         /**
          * Creates a new case-sensitive tokenizer for the specified
@@ -102,10 +96,10 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public Tokenizer(TextReader input, bool ignoreCase)
         {
-            this.stringDfaMatcher = new StringDFAMatcher(ignoreCase);
-            this.nfaMatcher = new NFAMatcher(ignoreCase);
-            this.regExpMatcher = new RegExpMatcher(ignoreCase);
-            this.buffer = new ReaderBuffer(input);
+            stringDfaMatcher = new StringDFAMatcher(ignoreCase);
+            nfaMatcher = new NFAMatcher(ignoreCase);
+            regExpMatcher = new RegExpMatcher(ignoreCase);
+            buffer = new ReaderBuffer(input);
         }
 
         /**
@@ -119,33 +113,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public bool UseTokenList
-        {
-            get { return useTokenList; }
-            set { useTokenList = value; }
-        }
-
-        /**
-         * Sets the token list feature flag. The token list feature makes
-         * all tokens (including ignored tokens) link to each other in a
-         * linked list when active. By default the token list feature is
-         * not used.
-         *
-         * @param useTokenList   the token list feature flag
-         *
-         * @see #UseTokenList
-         * @see #GetUseTokenList
-         * @see Token#GetPreviousToken
-         * @see Token#GetNextToken
-         *
-         * @since 1.4
-         *
-         * @deprecated Use the UseTokenList property instead.
-         */
-        public void SetUseTokenList(bool useTokenList)
-        {
-            this.useTokenList = useTokenList;
-        }
+        public bool UseTokenList { get; set; }
 
         /**
          * Returns a description of the token pattern with the
@@ -262,10 +230,10 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public void Reset(TextReader input)
         {
-            this.buffer.Dispose();
-            this.buffer = new ReaderBuffer(input);
-            this.previousToken = null;
-            this.lastMatch.Clear();
+            buffer.Dispose();
+            buffer = new ReaderBuffer(input);
+            previousToken = null;
+            lastMatch.Clear();
         }
 
         /**
@@ -282,19 +250,19 @@ namespace PerCederberg.Grammatica.Runtime
          * @throws ParseException if the input stream couldn't be read or
          *             parsed correctly
          */
-        public Token Next()
+        public Token? Next()
         {
-            Token token = null;
+            Token? token;
 
             do
             {
                 token = NextToken();
-                if (token == null)
+                if (token is null)
                 {
                     previousToken = null;
                     return null;
                 }
-                if (useTokenList)
+                if (UseTokenList)
                 {
                     token.Previous = previousToken;
                     previousToken = token;
@@ -312,7 +280,7 @@ namespace PerCederberg.Grammatica.Runtime
                         token.StartColumn
                     );
                 }
-            } while (token == null);
+            } while (token is null);
             return token;
         }
 
@@ -416,12 +384,12 @@ namespace PerCederberg.Grammatica.Runtime
         /**
          * The array of token patterns.
          */
-        protected TokenPattern[] patterns = new TokenPattern[0];
+        protected TokenPattern[] patterns = Array.Empty<TokenPattern>();
 
         /**
          * The ignore character case flag.
          */
-        protected bool ignoreCase = false;
+        protected bool ignoreCase;
 
         /**
          * Creates a new token matcher.
@@ -454,7 +422,7 @@ namespace PerCederberg.Grammatica.Runtime
          * @return the token pattern found, or
          *         null if not found
          */
-        public TokenPattern GetPattern(int id)
+        public TokenPattern? GetPattern(int id)
         {
             for (int i = 0; i < patterns.Length; i++)
             {
@@ -545,7 +513,7 @@ namespace PerCederberg.Grammatica.Runtime
         {
             TokenPattern res = automaton.Match(buffer, ignoreCase);
 
-            if (res != null)
+            if (res is not null)
             {
                 match.Update(res.Pattern.Length, res);
             }
@@ -566,7 +534,7 @@ namespace PerCederberg.Grammatica.Runtime
          * The non-deterministic finite state automaton used for
          * matching.
          */
-        private TokenNFA automaton = new();
+        private readonly TokenNFA automaton = new();
 
         /**
          * Creates a new NFA token matcher.
@@ -625,7 +593,7 @@ namespace PerCederberg.Grammatica.Runtime
         /**
          * The regular expression handlers.
          */
-        private REHandler[] regExps = new REHandler[0];
+        private REHandler[] regExps = Array.Empty<REHandler>();
 
         /**
          * Creates a new regular expression token matcher.
@@ -657,7 +625,7 @@ namespace PerCederberg.Grammatica.Runtime
                 pattern.DebugInfo = "native .NET regexp";
             }
             Array.Resize(ref regExps, regExps.Length + 1);
-            regExps[regExps.Length - 1] = re;
+            regExps[^1] = re;
             base.AddPattern(pattern);
         }
 
@@ -711,12 +679,12 @@ namespace PerCederberg.Grammatica.Runtime
         /**
          * The compiled regular expression.
          */
-        private RegExp regExp;
+        private readonly RegExp regExp;
 
         /**
          * The regular expression matcher to use.
          */
-        private Matcher matcher = null;
+        private Matcher? matcher;
 
         /**
          * Creates a new Grammatica regular expression handler.
@@ -745,7 +713,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public override int Match(ReaderBuffer buffer)
         {
-            if (matcher == null)
+            if (matcher is null)
             {
                 matcher = regExp.Matcher(buffer);
             }
@@ -765,7 +733,7 @@ namespace PerCederberg.Grammatica.Runtime
         /**
          * The parsed regular expression.
          */
-        private Regex reg;
+        private readonly Regex reg;
 
         /**
          * Creates a new .NET system regular expression handler.
