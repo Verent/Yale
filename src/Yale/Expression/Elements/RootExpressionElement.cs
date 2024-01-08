@@ -26,7 +26,7 @@ internal class RootExpressionElement : BaseExpressionElement
         ImplicitConverter.EmitImplicitConvert(_child.ResultType, _resultType, ilGenerator);
 
         //Todo: Verify if this convert stuff works
-        if ("isGeneric".Equals("false"))
+        if ("isGeneric".Equals("false", StringComparison.Ordinal))
         {
             ImplicitConverter.EmitImplicitConvert(_resultType, typeof(object), ilGenerator);
         }

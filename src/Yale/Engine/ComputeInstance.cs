@@ -46,8 +46,7 @@ public class ComputeInstance
 
     public ComputeInstance(ComputeInstanceOptions options)
     {
-        if (options is null)
-            throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(options);
 
         Builder = new ExpressionBuilder(options: options.ExpressionOptions, instance: this);
         this.options = options;
@@ -133,20 +132,16 @@ public class ComputeInstance
 
     public void SetExpression(string key, string expression)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
-        if (expression is null)
-            throw new ArgumentNullException(nameof(expression));
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(expression);
 
         SetExpression<object>(key, expression);
     }
 
     public void SetExpression<T>(string key, string expression)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
-        if (expression is null)
-            throw new ArgumentNullException(nameof(expression));
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(expression);
 
         dependencies.RemovePrecedents(key);
         nameNodeMap.Remove(key);
@@ -173,10 +168,8 @@ public class ComputeInstance
     /// <param name="expression"></param>
     public void AddExpression(string key, string expression)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
-        if (expression is null)
-            throw new ArgumentNullException(nameof(expression));
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(expression);
 
         Expression<object> result = Builder.BuildExpression<object>(key, expression);
         nameNodeMap.Add(key, new ExpressionResult<object>(key, result));
@@ -189,10 +182,8 @@ public class ComputeInstance
     /// <param name="expression"></param>
     public void AddExpression<T>(string key, string expression)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
-        if (expression is null)
-            throw new ArgumentNullException(nameof(expression));
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(expression);
 
         Expression<T> result = Builder.BuildExpression<T>(key, expression);
         nameNodeMap.Add(key, new ExpressionResult<T>(key, result));
@@ -205,8 +196,7 @@ public class ComputeInstance
     /// <returns></returns>
     public object GetResult(string key)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
         if (options.Recalculate)
         {
@@ -222,16 +212,14 @@ public class ComputeInstance
     /// <returns></returns>
     public T GetResult<T>(string key)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
         return (T)GetResult(key);
     }
 
     public bool TryGetResult(string key, [NotNullWhen(true)] out object? result)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
         result = nameNodeMap.ContainsKey(key) ? GetResult(key) : default;
         return result != null;
@@ -240,8 +228,7 @@ public class ComputeInstance
     public bool TryGetResult<T>(string key, [NotNullWhen(true)] out T? result)
         where T : class
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
         result = nameNodeMap.ContainsKey(key) ? (T)GetResult(key) : default;
         return result != null;
@@ -254,16 +241,14 @@ public class ComputeInstance
     /// <returns></returns>
     public Type? ResultType(string key)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
         return nameNodeMap[key].ResultType;
     }
 
     public string GetExpression(string key)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
         ExpressionResult<object> result = (ExpressionResult<object>)nameNodeMap[key];
         return result.Expression.ExpressionText;
@@ -271,8 +256,7 @@ public class ComputeInstance
 
     public string GetExpression<T>(string key)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
         ExpressionResult<T> result = (ExpressionResult<T>)nameNodeMap[key];
         return result.Expression.ExpressionText;
