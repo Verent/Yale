@@ -132,20 +132,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the production pattern for this production.
-         *
-         * @return the production pattern
-         *
-         * @see #Pattern
-         *
-         * @deprecated Use the Pattern property instead.
-         */
-        public ProductionPattern GetPattern()
-        {
-            return Pattern;
-        }
-
-        /**
          * Checks if this node is hidden, i.e. if it should not be visible
          * outside the parser.
          *

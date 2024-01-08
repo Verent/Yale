@@ -20,6 +20,9 @@
 		<Nullable>enable</Nullable>
 		<PackageReadmeFile></PackageReadmeFile>
 	</PropertyGroup>
+	<ItemGroup>
+	  <None Include="..\..\.editorconfig" Link=".editorconfig" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Compile Update="Resources\CompileErrors.Designer.cs">

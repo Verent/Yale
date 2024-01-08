@@ -175,21 +175,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the token image. The token image consists of the
-         * input characters matched to form this token.
-         *
-         * @return the token image
-         *
-         * @see #Image
-         *
-         * @deprecated Use the Image property instead.
-         */
-        public string GetImage()
-        {
-            return Image;
-        }
-
-        /**
          * The token pattern property (read-only).
          */
         internal TokenPattern Pattern
@@ -229,29 +214,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the previous token. The previous token may be a token
-         * that has been ignored in the parsing. Note that if the token
-         * list feature hasn't been used in the tokenizer, this method
-         * will always return null. By default the token list feature is
-         * not used.
-         *
-         * @return the previous token, or
-         *         null if no such token is available
-         *
-         * @see #Previous
-         * @see #GetNextToken
-         * @see Tokenizer#UseTokenList
-         *
-         * @since 1.4
-         *
-         * @deprecated Use the Previous property instead.
-         */
-        public Token GetPreviousToken()
-        {
-            return Previous;
-        }
-
-        /**
          * The next token property. If the token list feature is used
          * in the tokenizer, all tokens found will be chained together
          * in a double-linked list. The next token may be a token that
@@ -280,29 +242,6 @@ namespace PerCederberg.Grammatica.Runtime
                     next.previous = this;
                 }
             }
-        }
-
-        /**
-         * Returns the next token. The next token may be a token that has
-         * been ignored in the parsing. Note that if the token list
-         * feature hasn't been used in the tokenizer, this method will
-         * always return null. By default the token list feature is not
-         * used.
-         *
-         * @return the next token, or
-         *         null if no such token is available
-         *
-         * @see #Next
-         * @see #GetPreviousToken
-         * @see Tokenizer#UseTokenList
-         *
-         * @since 1.4
-         *
-         * @deprecated Use the Next property instead.
-         */
-        public Token GetNextToken()
-        {
-            return Next;
         }
 
         /**

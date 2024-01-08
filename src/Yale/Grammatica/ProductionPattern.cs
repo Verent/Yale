@@ -92,20 +92,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the unique production pattern identity value.
-         *
-         * @return the production pattern id
-         *
-         * @see #Id
-         *
-         * @deprecated Use the Id property instead.
-         */
-        public int GetId()
-        {
-            return Id;
-        }
-
-        /**
          * The production pattern name property (read-only).
          *
          * @since 1.5
@@ -113,20 +99,6 @@ namespace PerCederberg.Grammatica.Runtime
         public string Name
         {
             get { return name; }
-        }
-
-        /**
-         * Returns the production pattern name.
-         *
-         * @return the production pattern name
-         *
-         * @see #Name
-         *
-         * @deprecated Use the Name property instead.
-         */
-        public string GetName()
-        {
-            return Name;
         }
 
         /**
@@ -234,20 +206,6 @@ namespace PerCederberg.Grammatica.Runtime
         public int Count
         {
             get { return alternatives.Count; }
-        }
-
-        /**
-         * Returns the number of alternatives in this pattern.
-         *
-         * @return the number of alternatives in this pattern
-         *
-         * @see #Count
-         *
-         * @deprecated Use the Count property instead.
-         */
-        public int GetAlternativeCount()
-        {
-            return Count;
         }
 
         /**

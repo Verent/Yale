@@ -147,20 +147,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the error type.
-         *
-         * @return the error type
-         *
-         * @see #Type
-         *
-         * @deprecated Use the Type property instead.
-         */
-        public ErrorType GetErrorType()
-        {
-            return Type;
-        }
-
-        /**
          * The additional error information property (read-only).
          *
          * @since 1.5
@@ -168,20 +154,6 @@ namespace PerCederberg.Grammatica.Runtime
         public string Info
         {
             get { return info; }
-        }
-
-        /**
-         * Returns the additional error information.
-         *
-         * @return the additional error information
-         *
-         * @see #Info
-         *
-         * @deprecated Use the Info property instead.
-         */
-        public string GetInfo()
-        {
-            return Info;
         }
 
         /**
@@ -196,20 +168,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the additional detailed error information.
-         *
-         * @return the additional detailed error information
-         *
-         * @see #Details
-         *
-         * @deprecated Use the Details property instead.
-         */
-        public ArrayList GetDetails()
-        {
-            return Details;
-        }
-
-        /**
          * The line number property (read-only). This is the line
          * number where the error occured, or -1 if unknown.
          *
@@ -221,21 +179,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the line number where the error occured.
-         *
-         * @return the line number of the error, or
-         *         -1 if unknown
-         *
-         * @see #Line
-         *
-         * @deprecated Use the Line property instead.
-         */
-        public int GetLine()
-        {
-            return Line;
-        }
-
-        /**
          * The column number property (read-only). This is the column
          * number where the error occured, or -1 if unknown.
          *
@@ -244,21 +187,6 @@ namespace PerCederberg.Grammatica.Runtime
         public int Column
         {
             get { return column; }
-        }
-
-        /**
-         * Returns the column number where the error occured.
-         *
-         * @return the column number of the error, or
-         *         -1 if unknown
-         *
-         * @see #Column
-         *
-         * @deprecated Use the Column property instead.
-         */
-        public int GetColumn()
-        {
-            return column;
         }
 
         /**
@@ -288,20 +216,6 @@ namespace PerCederberg.Grammatica.Runtime
 
                 return buffer.ToString();
             }
-        }
-
-        /**
-         * Returns a default error message.
-         *
-         * @return a default error message
-         *
-         * @see #Message
-         *
-         * @deprecated Use the Message property instead.
-         */
-        public string GetMessage()
-        {
-            return Message;
         }
 
         /**
@@ -365,22 +279,6 @@ namespace PerCederberg.Grammatica.Runtime
 
                 return buffer.ToString();
             }
-        }
-
-        /**
-         * Returns the error message. This message will contain all the
-         * information available, except for the line and column number
-         * information.
-         *
-         * @return the error message
-         *
-         * @see #ErrorMessage
-         *
-         * @deprecated Use the ErrorMessage property instead.
-         */
-        public string GetErrorMessage()
-        {
-            return ErrorMessage;
         }
 
         /**

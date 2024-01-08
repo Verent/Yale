@@ -126,29 +126,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Checks if the token list feature is used. The token list
-         * feature makes all tokens (including ignored tokens) link to
-         * each other in a linked list. By default the token list feature
-         * is not used.
-         *
-         * @return true if the token list feature is used, or
-         *         false otherwise
-         *
-         * @see #UseTokenList
-         * @see #SetUseTokenList
-         * @see Token#GetPreviousToken
-         * @see Token#GetNextToken
-         *
-         * @since 1.4
-         *
-         * @deprecated Use the UseTokenList property instead.
-         */
-        public bool GetUseTokenList()
-        {
-            return useTokenList;
-        }
-
-        /**
          * Sets the token list feature flag. The token list feature makes
          * all tokens (including ignored tokens) link to each other in a
          * linked list when active. By default the token list feature is

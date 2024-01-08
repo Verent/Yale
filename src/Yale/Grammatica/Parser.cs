@@ -31,12 +31,12 @@ namespace PerCederberg.Grammatica.Runtime
         /**
          * The parser initialization flag.
          */
-        private bool initialized = false;
+        private bool initialized;
 
         /**
          * The tokenizer to use.
          */
-        private Tokenizer tokenizer;
+        private readonly Tokenizer tokenizer;
 
         /**
          * The analyzer to use for callbacks.
@@ -46,19 +46,19 @@ namespace PerCederberg.Grammatica.Runtime
         /**
          * The list of production patterns.
          */
-        private ArrayList patterns = new();
+        private readonly ArrayList patterns = new();
 
         /**
          * The map with production patterns and their id:s. This map
          * contains the production patterns indexed by their id:s.
          */
-        private Hashtable patternIds = new();
+        private readonly Hashtable patternIds = new();
 
         /**
          * The list of buffered tokens. This list will contain tokens that
          * have been read from the tokenizer, but not yet consumed.
          */
-        private ArrayList tokens = new();
+        private readonly ArrayList tokens = new();
 
         /**
          * The error log. All parse errors will be added to this log as
@@ -101,10 +101,10 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        internal Parser(TextReader input, Analyzer analyzer)
+        internal Parser(TextReader input, Analyzer? analyzer)
         {
             this.tokenizer = NewTokenizer(input);
-            this.analyzer = (analyzer == null) ? NewAnalyzer() : analyzer;
+            this.analyzer = analyzer ?? NewAnalyzer();
         }
 
         /**
@@ -185,38 +185,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the tokenizer in use by this parser.
-         *
-         * @return the tokenizer in use by this parser
-         *
-         * @since 1.4
-         *
-         * @see #Tokenizer
-         *
-         * @deprecated Use the Tokenizer property instead.
-         */
-        public Tokenizer GetTokenizer()
-        {
-            return Tokenizer;
-        }
-
-        /**
-         * Returns the analyzer in use by this parser.
-         *
-         * @return the analyzer in use by this parser
-         *
-         * @since 1.4
-         *
-         * @see #Analyzer
-         *
-         * @deprecated Use the Analyzer property instead.
-         */
-        public Analyzer GetAnalyzer()
-        {
-            return Analyzer;
-        }
-
-        /**
          * Sets the parser initialized flag. Normally this flag is set by
          * the prepare() method, but this method allows further
          * modifications to it.
@@ -278,7 +246,7 @@ namespace PerCederberg.Grammatica.Runtime
                     "no production patterns have been added"
                 );
             }
-            for (int i = 0; i < patterns.Count; i++)
+            for (var i = 0; i < patterns.Count; i++)
             {
                 CheckPattern((ProductionPattern)patterns[i]);
             }
@@ -297,7 +265,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         private void CheckPattern(ProductionPattern pattern)
         {
-            for (int i = 0; i < pattern.Count; i++)
+            for (var i = 0; i < pattern.Count; i++)
             {
                 CheckAlternative(pattern.Name, pattern[i]);
             }

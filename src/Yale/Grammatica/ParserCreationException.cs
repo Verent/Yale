@@ -147,20 +147,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the error type.
-         *
-         * @return the error type
-         *
-         * @see #Type
-         *
-         * @deprecated Use the Type property instead.
-         */
-        public ErrorType GetErrorType()
-        {
-            return Type;
-        }
-
-        /**
          * The token or production name property (read-only).
          *
          * @since 1.5
@@ -171,20 +157,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the token or production name.
-         *
-         * @return the token or production name
-         *
-         * @see #Name
-         *
-         * @deprecated Use the Name property instead.
-         */
-        public string GetName()
-        {
-            return Name;
-        }
-
-        /**
          * The additional error information property (read-only).
          *
          * @since 1.5
@@ -192,20 +164,6 @@ namespace PerCederberg.Grammatica.Runtime
         public string Info
         {
             get { return info; }
-        }
-
-        /**
-         * Returns the additional error information.
-         *
-         * @return the additional error information
-         *
-         * @see #Info
-         *
-         * @deprecated Use the Info property instead.
-         */
-        public string GetInfo()
-        {
-            return Info;
         }
 
         /**
@@ -238,20 +196,6 @@ namespace PerCederberg.Grammatica.Runtime
 
                 return buffer.ToString();
             }
-        }
-
-        /**
-         * Returns the detailed error information as a string
-         *
-         * @return the detailed error information
-         *
-         * @see #Details
-         *
-         * @deprecated Use the Details property instead.
-         */
-        public string GetDetails()
-        {
-            return Details;
         }
 
         /**
@@ -316,21 +260,6 @@ namespace PerCederberg.Grammatica.Runtime
                 }
                 return buffer.ToString();
             }
-        }
-
-        /**
-         * Returns the error message. This message will contain all the
-         * information available.
-         *
-         * @return the error message
-         *
-         * @see #Message
-         *
-         * @deprecated Use the Message property instead.
-         */
-        public string GetMessage()
-        {
-            return Message;
         }
     }
 }

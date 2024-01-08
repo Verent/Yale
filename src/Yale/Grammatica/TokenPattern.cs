@@ -136,20 +136,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the unique token pattern identity value.
-         *
-         * @return the token pattern id
-         *
-         * @see #Id
-         *
-         * @deprecated Use the Id property instead.
-         */
-        public int GetId()
-        {
-            return id;
-        }
-
-        /**
          * The token pattern name property (read-only).
          *
          * @since 1.5
@@ -157,20 +143,6 @@ namespace PerCederberg.Grammatica.Runtime
         public string Name
         {
             get { return name; }
-        }
-
-        /**
-         * Returns the token pattern name.
-         *
-         * @return the token pattern name
-         *
-         * @see #Name
-         *
-         * @deprecated Use the Name property instead.
-         */
-        public string GetName()
-        {
-            return name;
         }
 
         /**
@@ -184,20 +156,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the token pattern type.
-         *
-         * @return the token pattern type
-         *
-         * @see #Type
-         *
-         * @deprecated Use the Type property instead.
-         */
-        public PatternType GetPatternType()
-        {
-            return type;
-        }
-
-        /**
          * The token pattern property (read-only). This property
          * contains the actual pattern (string or regexp) which have
          * to be matched.
@@ -207,20 +165,6 @@ namespace PerCederberg.Grammatica.Runtime
         public string Pattern
         {
             get { return pattern; }
-        }
-
-        /**
-         * Returns te token pattern.
-         *
-         * @return the token pattern
-         *
-         * @see #Pattern
-         *
-         * @deprecated Use the Pattern property instead.
-         */
-        public string GetPattern()
-        {
-            return pattern;
         }
 
         /**
@@ -279,21 +223,6 @@ namespace PerCederberg.Grammatica.Runtime
         public bool IsError()
         {
             return Error;
-        }
-
-        /**
-         * Returns the token error message if the pattern corresponds to
-         * an error token.
-         *
-         * @return the token error message
-         *
-         * @see #ErrorMessage
-         *
-         * @deprecated Use the ErrorMessage property instead.
-         */
-        public string GetErrorMessage()
-        {
-            return ErrorMessage;
         }
 
         /**
@@ -369,21 +298,6 @@ namespace PerCederberg.Grammatica.Runtime
         public bool IsIgnore()
         {
             return Ignore;
-        }
-
-        /**
-         * Returns the token ignore message if the pattern corresponds to
-         * an ignored token.
-         *
-         * @return the token ignore message
-         *
-         * @see #IgnoreMessage
-         *
-         * @deprecated Use the IgnoreMessage property instead.
-         */
-        public string GetIgnoreMessage()
-        {
-            return IgnoreMessage;
         }
 
         /**

@@ -71,20 +71,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the number of errors in this log.
-         *
-         * @return the number of errors in this log
-         *
-         * @see #Count
-         *
-         * @deprecated Use the Count property instead.
-         */
-        public int GetErrorCount()
-        {
-            return Count;
-        }
-
-        /**
          * The error index (read-only). This index contains all the
          * errors in this error log.
          *
@@ -121,22 +107,6 @@ namespace PerCederberg.Grammatica.Runtime
         public void AddError(ParseException e)
         {
             errors.Add(e);
-        }
-
-        /**
-         * Returns the detailed error message. This message will contain
-         * the error messages from all errors in this log, separated by
-         * a newline.
-         *
-         * @return the detailed error message
-         *
-         * @see #Message
-         *
-         * @deprecated Use the Message property instead.
-         */
-        public string GetMessage()
-        {
-            return Message;
         }
     }
 }

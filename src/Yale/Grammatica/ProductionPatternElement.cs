@@ -97,20 +97,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the node identity.
-         *
-         * @return the node identity
-         *
-         * @see #Id
-         *
-         * @deprecated Use the Id property instead.
-         */
-        public int GetId()
-        {
-            return Id;
-        }
-
-        /**
          * The minimum occurence count property (read-only).
          *
          * @since 1.5
@@ -121,20 +107,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the minimum occurence count.
-         *
-         * @return the minimum occurence count
-         *
-         * @see #MinCount
-         *
-         * @deprecated Use the MinCount property instead.
-         */
-        public int GetMinCount()
-        {
-            return MinCount;
-        }
-
-        /**
          * The maximum occurence count property (read-only).
          *
          * @since 1.5
@@ -142,20 +114,6 @@ namespace PerCederberg.Grammatica.Runtime
         public int MaxCount
         {
             get { return max; }
-        }
-
-        /**
-         * Returns the maximum occurence count.
-         *
-         * @return the maximum occurence count
-         *
-         * @see #MaxCount
-         *
-         * @deprecated Use the MaxCount property instead.
-         */
-        public int GetMaxCount()
-        {
-            return MaxCount;
         }
 
         /**

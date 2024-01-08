@@ -274,20 +274,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the parent node.
-         *
-         * @return the parent parse tree node
-         *
-         * @see #Parent
-         *
-         * @deprecated Use the Parent property instead.
-         */
-        public Node GetParent()
-        {
-            return Parent;
-        }
-
-        /**
          * Sets the parent node.
          *
          * @param parent         the new parent node
@@ -388,30 +374,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the number of computed values associated with this
-         * node. Any number of values can be associated with a node
-         * through calls to AddValue().
-         *
-         * @return the number of values associated with this node
-         *
-         * @see #Values
-         *
-         * @deprecated Use the Values and Values.Count properties
-         *     instead.
-         */
-        public int GetValueCount()
-        {
-            if (values == null)
-            {
-                return 0;
-            }
-            else
-            {
-                return values.Count;
-            }
-        }
-
-        /**
          * Returns a computed value of this node, if previously set. A
          * value may be used for storing intermediate results in the
          * parse tree during analysis.
@@ -429,24 +391,6 @@ namespace PerCederberg.Grammatica.Runtime
         public object GetValue(int pos)
         {
             return Values[pos];
-        }
-
-        /**
-         * Returns the list with all the computed values for this
-         * node. Note that the list is not a copy, so changes will
-         * affect the values in this node (as it is the same object).
-         *
-         * @return a list with all values, or
-         *         null if no values have been set
-         *
-         * @see #Values
-         *
-         * @deprecated Use the Values property instead. Note that the
-         *     Values property will never be null, but possibly empty.
-         */
-        public ArrayList GetAllValues()
-        {
-            return values;
         }
 
         /**

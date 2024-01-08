@@ -128,7 +128,7 @@ namespace PerCederberg.Grammatica.Runtime
          * Returns a list of the initial token id:s in this look-ahead
          * set. The list returned will not contain any duplicates.
          *
-         * @return a list of the inital token id:s in this look-ahead set
+         * @return a list of the initial token id:s in this look-ahead set
          */
         public int[] GetInitialTokens()
         {

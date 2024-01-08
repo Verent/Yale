@@ -63,20 +63,6 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Returns the production pattern containing this alternative.
-         *
-         * @return the production pattern for this alternative
-         *
-         * @see #Pattern
-         *
-         * @deprecated Use the Pattern property instead.
-         */
-        public ProductionPattern GetPattern()
-        {
-            return Pattern;
-        }
-
-        /**
          * The look-ahead set property. This property contains the
          * look-ahead set associated with this alternative.
          */
@@ -94,20 +80,6 @@ namespace PerCederberg.Grammatica.Runtime
         public int Count
         {
             get { return elements.Count; }
-        }
-
-        /**
-         * Returns the number of elements in this alternative.
-         *
-         * @return the number of elements in this alternative
-         *
-         * @see #Count
-         *
-         * @deprecated Use the Count property instead.
-         */
-        public int GetElementCount()
-        {
-            return Count;
         }
 
         /**
