@@ -25,7 +25,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
      * @author   Per Cederberg
      * @version  1.0
      */
-    internal class RegExpException : Exception
+    public class RegExpException : Exception
     {
         /**
          * The error type enumeration.

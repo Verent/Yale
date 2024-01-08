@@ -755,7 +755,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @return a unified look-ahead set
          */
-        private LookAheadSet FindUnion(ProductionPattern pattern)
+        private static LookAheadSet FindUnion(ProductionPattern pattern)
         {
             LookAheadSet result;
             int length = 0;
@@ -853,7 +853,7 @@ namespace PerCederberg.Grammatica.Runtime
          * A name value stack. This stack is used to detect loops and
          * repetitions of the same production during look-ahead analysis.
          */
-        private class CallStack
+        private sealed class CallStack
         {
             /**
              * A stack with names.

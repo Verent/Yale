@@ -6,7 +6,7 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements;
 
-internal class RootExpressionElement : BaseExpressionElement
+internal sealed class RootExpressionElement : BaseExpressionElement
 {
     private readonly BaseExpressionElement _child;
     private readonly Type _resultType;

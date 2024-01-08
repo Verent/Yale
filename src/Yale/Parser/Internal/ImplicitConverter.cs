@@ -4,7 +4,7 @@ using System.Reflection.Emit;
 
 namespace Yale.Parser.Internal;
 
-internal class ImplicitConverter
+internal sealed class ImplicitConverter
 {
     /// <summary>
     /// Table of results for binary operations using primitives

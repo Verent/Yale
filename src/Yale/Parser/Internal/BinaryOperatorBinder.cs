@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Yale.Parser.Internal;
 
-internal class BinaryOperatorBinder : CustomBinder
+internal sealed class BinaryOperatorBinder : CustomBinder
 {
     private readonly Type leftType;
     private readonly Type rightType;

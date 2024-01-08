@@ -26,48 +26,16 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    internal class Token : Node
+    internal sealed class Token : Node
     {
         /**
          * The token pattern used for this token.
          */
         private TokenPattern pattern;
 
-        /**
-         * The characters that constitute this token. This is normally
-         * referred to as the token image.
-         */
-        private string image;
+        private Token? previous;
 
-        /**
-         * The line number of the first character in the token image.
-         */
-        private int startLine;
-
-        /**
-         * The column number of the first character in the token image.
-         */
-        private int startColumn;
-
-        /**
-         * The line number of the last character in the token image.
-         */
-        private int endLine;
-
-        /**
-         * The column number of the last character in the token image.
-         */
-        private int endColumn;
-
-        /**
-         * The previous token in the list of tokens.
-         */
-        private Token previous = null;
-
-        /**
-         * The next token in the list of tokens.
-         */
-        private Token next = null;
+        private Token? next;
 
         /**
          * Creates a new token.
@@ -80,16 +48,16 @@ namespace PerCederberg.Grammatica.Runtime
         public Token(TokenPattern pattern, string image, int line, int col)
         {
             this.pattern = pattern;
-            this.image = image;
-            this.startLine = line;
-            this.startColumn = col;
-            this.endLine = line;
-            this.endColumn = col + image.Length - 1;
+            Image = image;
+            StartLine = line;
+            StartColumn = col;
+            EndLine = line;
+            EndColumn = col + image.Length - 1;
             for (int pos = 0; image.IndexOf('\n', pos) >= 0; )
             {
                 pos = image.IndexOf('\n', pos) + 1;
-                this.endLine++;
-                endColumn = image.Length - pos;
+                this.EndLine++;
+                EndColumn = image.Length - pos;
             }
         }
 
@@ -122,10 +90,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public override int StartLine
-        {
-            get { return startLine; }
-        }
+        public override int StartLine { get; }
 
         /**
          * The column number property of the first character in this
@@ -134,10 +99,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public override int StartColumn
-        {
-            get { return startColumn; }
-        }
+        public override int StartColumn { get; }
 
         /**
          * The line number property of the last character in this node
@@ -146,10 +108,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public override int EndLine
-        {
-            get { return endLine; }
-        }
+        public override int EndLine { get; }
 
         /**
          * The column number property of the last character in this
@@ -158,10 +117,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public override int EndColumn
-        {
-            get { return endColumn; }
-        }
+        public override int EndColumn { get; }
 
         /**
          * The token image property (read-only). The token image
@@ -170,10 +126,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public string Image
-        {
-            get { return image; }
-        }
+        public string Image { get; }
 
         /**
          * The token pattern property (read-only).
@@ -197,17 +150,17 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public Token Previous
+        public Token? Previous
         {
             get { return previous; }
             set
             {
-                if (previous != null)
+                if (previous is not null)
                 {
                     previous.next = null;
                 }
                 previous = value;
-                if (previous != null)
+                if (previous is not null)
                 {
                     previous.next = this;
                 }
@@ -228,17 +181,17 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public Token Next
+        public Token? Next
         {
             get { return next; }
             set
             {
-                if (next != null)
+                if (next is not null)
                 {
                     next.previous = null;
                 }
                 next = value;
-                if (next != null)
+                if (next is not null)
                 {
                     next.previous = this;
                 }
@@ -253,7 +206,7 @@ namespace PerCederberg.Grammatica.Runtime
         public override string ToString()
         {
             StringBuilder buffer = new();
-            int newline = image.IndexOf('\n');
+            int newline = Image.IndexOf('\n');
 
             buffer.Append(pattern.Name);
             buffer.Append('(');
@@ -261,21 +214,21 @@ namespace PerCederberg.Grammatica.Runtime
             buffer.Append("): \"");
             if (newline >= 0)
             {
-                if (newline > 0 && image[newline - 1] == '\r')
+                if (newline > 0 && Image[newline - 1] == '\r')
                 {
                     newline--;
                 }
-                buffer.Append(image.AsSpan(0, newline));
+                buffer.Append(Image.AsSpan(0, newline));
                 buffer.Append("(...)");
             }
             else
             {
-                buffer.Append(image);
+                buffer.Append(Image);
             }
             buffer.Append("\", line: ");
-            buffer.Append(startLine);
+            buffer.Append(StartLine);
             buffer.Append(", col: ");
-            buffer.Append(startColumn);
+            buffer.Append(StartColumn);
 
             return buffer.ToString();
         }
@@ -290,21 +243,21 @@ namespace PerCederberg.Grammatica.Runtime
         public string ToShortString()
         {
             StringBuilder buffer = new();
-            int newline = image.IndexOf('\n');
+            int newline = Image.IndexOf('\n');
 
             buffer.Append('"');
             if (newline >= 0)
             {
-                if (newline > 0 && image[newline - 1] == '\r')
+                if (newline > 0 && Image[newline - 1] == '\r')
                 {
                     newline--;
                 }
-                buffer.Append(image.AsSpan(0, newline));
+                buffer.Append(Image.AsSpan(0, newline));
                 buffer.Append("(...)");
             }
             else
             {
-                buffer.Append(image);
+                buffer.Append(Image);
             }
             buffer.Append('"');
             if (pattern.Type == TokenPattern.PatternType.REGEXP)

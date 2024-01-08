@@ -30,7 +30,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
      * @author   Per Cederberg
      * @version  1.5
      */
-    internal class RegExp
+    internal sealed class RegExp
     {
         /**
          * The base regular expression element.
@@ -692,7 +692,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
          *
          * @return the combined element
          */
-        private Element CombineElements(ArrayList list)
+        private static Element CombineElements(ArrayList list)
         {
             Element prev;
             Element elem;

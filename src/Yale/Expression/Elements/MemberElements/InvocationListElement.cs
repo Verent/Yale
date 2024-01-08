@@ -10,7 +10,7 @@ namespace Yale.Expression.Elements.MemberElements;
 /// <summary>
 /// Todo: What is invocation list element?
 /// </summary>
-internal class InvocationListElement : BaseExpressionElement
+internal sealed class InvocationListElement : BaseExpressionElement
 {
     //Todo: Some description would be nice
     private readonly MemberElement _tail;

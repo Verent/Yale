@@ -4,7 +4,7 @@ using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.Literals;
 
-internal class CharLiteralElement : LiteralElement
+internal sealed class CharLiteralElement : LiteralElement
 {
     private readonly char _value;
 

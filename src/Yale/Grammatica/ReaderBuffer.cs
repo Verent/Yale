@@ -32,7 +32,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @version  1.5
      * @since    1.5
      */
-    internal class ReaderBuffer
+    internal sealed class ReaderBuffer
     {
         /**
          * The stream reading block size. All reads from the underlying

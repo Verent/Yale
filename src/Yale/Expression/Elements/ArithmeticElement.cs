@@ -9,7 +9,7 @@ using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements;
 
-internal class ArithmeticElement : BinaryExpressionElement
+internal sealed class ArithmeticElement : BinaryExpressionElement
 {
     private static readonly MethodInfo powerMethodInfo = typeof(Math).GetMethod(
         nameof(Math.Pow),

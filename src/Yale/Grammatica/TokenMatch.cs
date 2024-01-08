@@ -23,7 +23,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @version  1.5
      * @since    1.5
      */
-    internal class TokenMatch
+    internal sealed class TokenMatch
     {
         /**
          * The length of the longest match.

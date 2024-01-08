@@ -6,7 +6,7 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements;
 
-internal class ConditionalElement : BaseExpressionElement
+internal sealed class ConditionalElement : BaseExpressionElement
 {
     private readonly BaseExpressionElement condition;
     private readonly BaseExpressionElement whenTrue;

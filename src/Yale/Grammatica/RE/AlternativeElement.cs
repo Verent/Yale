@@ -23,7 +23,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
      * @author   Per Cederberg
      * @version  1.5
      */
-    internal class AlternativeElement : Element
+    internal sealed class AlternativeElement : Element
     {
         /**
          * The first alternative element.

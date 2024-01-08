@@ -21,7 +21,7 @@ namespace Yale.Parser;
 /// A class providing callback methods for the parser.
 /// This extends ExpressionAnalyzer with Yale specific callback methods
 /// </summary>
-internal class YaleExpressionAnalyzer : ExpressionAnalyzer
+internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
 {
     private readonly Regex unicodeEscapeRegex =
         new("\\\\u[0-9a-f]{4}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -312,10 +312,10 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
         return node;
     }
 
-    private void AddFirstChildValue(Production node) =>
+    private static void AddFirstChildValue(Production node) =>
         node.AddValue(GetChildAt(node, 0).Values[0]);
 
-    private void AddUnaryOp(Production node, Type elementType)
+    private static void AddUnaryOp(Production node, Type elementType)
     {
         var childValues = GetChildValues(node);
 
@@ -330,7 +330,7 @@ internal class YaleExpressionAnalyzer : ExpressionAnalyzer
         }
     }
 
-    private void AddBinaryOp<T>(Production node)
+    private static void AddBinaryOp<T>(Production node)
         where T : BinaryExpressionElement, new()
     {
         var childValues = GetChildValues(node);

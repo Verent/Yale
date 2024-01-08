@@ -9,7 +9,7 @@ namespace Yale.Expression.Elements.LogicalBitwise;
 /// <summary>
 ///
 /// </summary>
-internal class NotElement : UnaryElement
+internal sealed class NotElement : UnaryElement
 {
     public override Type ResultType { get; }
 

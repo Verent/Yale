@@ -24,7 +24,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    internal class ParseException : Exception
+    public class ParseException : Exception
     {
         /**
          * The error type enumeration.

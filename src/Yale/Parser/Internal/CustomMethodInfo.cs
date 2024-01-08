@@ -8,7 +8,7 @@ namespace Yale.Parser.Internal;
 /// <summary>
 /// "Helper class to resolve overloads"
 /// </summary>
-internal class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<CustomMethodInfo>
+internal sealed class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<CustomMethodInfo>
 {
     /// <summary>
     /// The rating of how close the method matches the given arguments (0 is best)
@@ -48,7 +48,7 @@ internal class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<Cust
     /// <param name="parameters"></param>
     /// <param name="argTypes"></param>
     /// <returns></returns>
-    private float ComputeScoreInternal(ParameterInfo[] parameters, Type[] argTypes)
+    private static float ComputeScoreInternal(ParameterInfo[] parameters, Type[] argTypes)
     {
         // Our score is the average of the scores of each parameter.  The lower the score, the better the match.
         int sum = ComputeSum(parameters, argTypes);

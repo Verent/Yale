@@ -26,12 +26,12 @@ namespace PerCederberg.Grammatica.Runtime.RE
      * @author   Per Cederberg
      * @version  1.5
      */
-    internal class Matcher
+    internal sealed class Matcher
     {
         /**
          * The base regular expression element.
          */
-        private Element element;
+        private readonly Element element;
 
         /**
          * The input character buffer to work with.
@@ -41,7 +41,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
         /**
          * The character case ignore flag.
          */
-        private bool ignoreCase;
+        private readonly bool ignoreCase;
 
         /**
          * The start of the latest match found.
@@ -68,10 +68,10 @@ namespace PerCederberg.Grammatica.Runtime.RE
          */
         internal Matcher(Element e, ReaderBuffer buffer, bool ignoreCase)
         {
-            this.element = e;
+            element = e;
             this.buffer = buffer;
             this.ignoreCase = ignoreCase;
-            this.start = 0;
+            start = 0;
             Reset();
         }
 
@@ -229,7 +229,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
         {
             if (length <= 0)
             {
-                return "";
+                return string.Empty;
             }
             else
             {

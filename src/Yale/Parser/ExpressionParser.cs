@@ -7,7 +7,7 @@ namespace Yale.Parser;
 /// A token stream parser. Defines all productions equal to the grammar defined in
 /// the Expression.grammer file.
 /// </summary>
-internal class ExpressionParser : RecursiveDescentParser
+internal sealed class ExpressionParser : RecursiveDescentParser
 {
     private enum SyntheticPatterns
     {

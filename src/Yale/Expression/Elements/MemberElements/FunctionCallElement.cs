@@ -11,7 +11,7 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements.MemberElements;
 
-internal class FunctionCallElement : MemberElement
+internal sealed class FunctionCallElement : MemberElement
 {
     private readonly ArgumentList arguments;
     private readonly ICollection<MethodInfo> methods;
@@ -393,7 +393,7 @@ internal class FunctionCallElement : MemberElement
     /// <summary>
     ///  Emit the arguments to a regular method call
     /// </summary>
-    private void EmitRegularFunctionInternal(
+    private static void EmitRegularFunctionInternal(
         ParameterInfo[] parameters,
         BaseExpressionElement[] elements,
         YaleIlGenerator ilg,

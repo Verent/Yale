@@ -24,7 +24,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
      * @author   Per Cederberg
      * @version  1.5
      */
-    internal class StringElement : Element
+    internal sealed class StringElement : Element
     {
         /**
          * The string to match with.

@@ -8,7 +8,7 @@ namespace Yale.Parser;
 /// A character stream tokenizer. Defines all tokens equal to the tokens defined in
 /// the Expression.grammer file.
 /// </summary>
-internal class ExpressionTokenizer : Tokenizer
+internal sealed class ExpressionTokenizer : Tokenizer
 {
     public ExpressionTokenizer(TextReader input)
         : base(input, true)

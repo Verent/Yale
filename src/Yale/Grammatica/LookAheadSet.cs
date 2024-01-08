@@ -32,7 +32,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.1
      */
-    internal class LookAheadSet
+    internal sealed class LookAheadSet
     {
         /**
          * The set of token look-ahead sequences. Each sequence in
@@ -648,7 +648,7 @@ namespace PerCederberg.Grammatica.Runtime
          * @author   Per Cederberg
          * @version  1.0
          */
-        private class Sequence
+        private sealed class Sequence
         {
             /**
              * The repeat flag. If this flag is set, the token

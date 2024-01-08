@@ -6,7 +6,7 @@ using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.Literals.Real;
 
-internal class SingleLiteralElement : RealLiteralElement
+internal sealed class SingleLiteralElement : RealLiteralElement
 {
     private readonly float _value;
 

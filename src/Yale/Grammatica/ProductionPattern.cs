@@ -28,7 +28,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    internal class ProductionPattern
+    internal sealed class ProductionPattern
     {
         /**
          * The production pattern identity.

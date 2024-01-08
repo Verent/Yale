@@ -23,17 +23,17 @@ namespace PerCederberg.Grammatica.Runtime.RE
      * @author   Per Cederberg
      * @version  1.5
      */
-    internal class CombineElement : Element
+    internal sealed class CombineElement : Element
     {
         /**
          * The first element.
          */
-        private Element elem1;
+        private readonly Element elem1;
 
         /**
          * The second element.
          */
-        private Element elem2;
+        private readonly Element elem2;
 
         /**
          * Creates a new combine element.
@@ -80,10 +80,10 @@ namespace PerCederberg.Grammatica.Runtime.RE
          */
         public override int Match(Matcher m, ReaderBuffer buffer, int start, int skip)
         {
-            int length1 = -1;
-            int length2 = 0;
-            int skip1 = 0;
-            int skip2 = 0;
+            var length1 = -1;
+            var length2 = 0;
+            var skip1 = 0;
+            var skip2 = 0;
 
             while (skip >= 0)
             {

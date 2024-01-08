@@ -9,7 +9,7 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements;
 
-internal class CastElement : BaseExpressionElement
+internal sealed class CastElement : BaseExpressionElement
 {
     private readonly BaseExpressionElement castExpression;
     private readonly Type? destType;
@@ -185,7 +185,7 @@ internal class CastElement : BaseExpressionElement
         return IsValidCast(sourceType, destType);
     }
 
-    private bool IsValidExplicitReferenceCast(Type sourceType, Type destType)
+    private static bool IsValidExplicitReferenceCast(Type sourceType, Type destType)
     {
         Debug.Assert(
             sourceType.IsValueType == false & destType.IsValueType == false,

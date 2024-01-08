@@ -6,7 +6,7 @@ using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.Literals.Real;
 
-internal class DoubleLiteralElement : RealLiteralElement
+internal sealed class DoubleLiteralElement : RealLiteralElement
 {
     private readonly double value;
 

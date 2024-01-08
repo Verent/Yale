@@ -5,7 +5,7 @@ using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.Literals;
 
-internal class NullLiteralElement : LiteralElement
+internal sealed class NullLiteralElement : LiteralElement
 {
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
     {

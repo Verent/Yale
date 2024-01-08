@@ -19,7 +19,7 @@ public class ExpressionBuilderOptions : IExpressionOptions
     /// If true, integer literals will be treated as double
     /// Default: false
     /// </summary>
-    public bool IntegerAsDouble { get; set; } = false;
+    public bool IntegerAsDouble { get; set; }
 
     /// <summary>
     /// Support case sensitive expressions
@@ -43,6 +43,8 @@ public class ExpressionBuilderOptions : IExpressionOptions
 
     public void AssertTypeIsAccessible(Type type)
     {
+        ArgumentNullException.ThrowIfNull(nameof(type));
+
         if (type.IsNested)
         {
             AssertNestedTypeIsAccessible(type);

@@ -7,7 +7,7 @@ using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.Literals.Real;
 
-internal class DecimalLiteralElement : RealLiteralElement
+internal sealed class DecimalLiteralElement : RealLiteralElement
 {
     private static readonly ConstructorInfo OurConstructorInfo = GetConstructor();
     private readonly decimal _value;

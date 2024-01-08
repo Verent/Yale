@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Yale.Parser.Internal;
 
-internal class ExplicitOperatorMethodBinder : CustomBinder
+internal sealed class ExplicitOperatorMethodBinder : CustomBinder
 {
     private readonly Type returnType;
     private readonly Type argType;

@@ -7,7 +7,7 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements.Literals;
 
-internal class DateTimeLiteralElement : LiteralElement
+internal sealed class DateTimeLiteralElement : LiteralElement
 {
     private readonly DateTime _value;
 

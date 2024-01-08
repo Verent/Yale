@@ -4,7 +4,7 @@ using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.Literals.Integral;
 
-internal class UInt64LiteralElement : IntegralLiteralElement
+internal sealed class UInt64LiteralElement : IntegralLiteralElement
 {
     private readonly UInt64 _value;
 

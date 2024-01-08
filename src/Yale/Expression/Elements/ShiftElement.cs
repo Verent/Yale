@@ -6,7 +6,7 @@ using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements;
 
-internal class ShiftElement : BinaryExpressionElement
+internal sealed class ShiftElement : BinaryExpressionElement
 {
     private ShiftOperation operation;
 

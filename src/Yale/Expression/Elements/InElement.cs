@@ -9,7 +9,7 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements;
 
-internal class InElement : BaseExpressionElement
+internal sealed class InElement : BaseExpressionElement
 {
     // Element we will search for
     private readonly BaseExpressionElement operand;

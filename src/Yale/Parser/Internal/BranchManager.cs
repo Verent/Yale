@@ -7,7 +7,7 @@ namespace Yale.Parser.Internal;
 /// <summary>
 /// Manages branch information and allows us to determine if we should emit a short or long branch
 /// </summary>
-internal class BranchManager
+internal sealed class BranchManager
 {
     private readonly IList<BranchInfo> branchInfos = new List<BranchInfo>();
 
@@ -57,7 +57,7 @@ internal class BranchManager
     /// <param name="dest"></param>
     /// <returns></returns>
     /// <remarks></remarks>
-    private int CountLongBranches(ICollection<BranchInfo> dest)
+    private static int CountLongBranches(ICollection<BranchInfo> dest)
     {
         var count = 0;
 

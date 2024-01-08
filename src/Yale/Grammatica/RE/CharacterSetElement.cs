@@ -29,7 +29,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
      * @author   Per Cederberg
      * @version  1.5
      */
-    internal class CharacterSetElement : Element
+    internal sealed class CharacterSetElement : Element
     {
         /**
          * The dot ('.') character set. This element matches a single
@@ -112,7 +112,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
          */
         public void AddCharacters(string str)
         {
-            for (int i = 0; i < str.Length; i++)
+            for (var i = 0; i < str.Length; i++)
             {
                 AddCharacter(str[i]);
             }
@@ -242,19 +242,13 @@ namespace PerCederberg.Grammatica.Runtime.RE
          * @return true if the character is present, or
          *         false otherwise
          */
-        private bool InDotSet(char c)
+        private static bool InDotSet(char c)
         {
-            switch (c)
+            return c switch
             {
-                case '\n':
-                case '\r':
-                case '\u0085':
-                case '\u2028':
-                case '\u2029':
-                    return false;
-                default:
-                    return true;
-            }
+                '\n' or '\r' or '\u0085' or '\u2028' or '\u2029' => false,
+                _ => true,
+            };
         }
 
         /**
@@ -266,9 +260,9 @@ namespace PerCederberg.Grammatica.Runtime.RE
          * @return true if the character is a digit, or
          *         false otherwise
          */
-        private bool InDigitSet(char c)
+        private static bool InDigitSet(char c)
         {
-            return '0' <= c && c <= '9';
+            return c is >= '0' and <= '9';
         }
 
         /**
@@ -280,20 +274,13 @@ namespace PerCederberg.Grammatica.Runtime.RE
          * @return true if the character is a whitespace character, or
          *         false otherwise
          */
-        private bool InWhitespaceSet(char c)
+        private static bool InWhitespaceSet(char c)
         {
-            switch (c)
+            return c switch
             {
-                case ' ':
-                case '\t':
-                case '\n':
-                case '\f':
-                case '\r':
-                case (char)11:
-                    return true;
-                default:
-                    return false;
-            }
+                ' ' or '\t' or '\n' or '\f' or '\r' or (char)11 => true,
+                _ => false,
+            };
         }
 
         /**
@@ -305,12 +292,9 @@ namespace PerCederberg.Grammatica.Runtime.RE
          * @return true if the character is a word character, or
          *         false otherwise
          */
-        private bool InWordSet(char c)
+        private static bool InWordSet(char c)
         {
-            return ('a' <= c && c <= 'z')
-                || ('A' <= c && c <= 'Z')
-                || ('0' <= c && c <= '9')
-                || c == '_';
+            return c is >= 'a' and <= 'z' or >= 'A' and <= 'Z' or >= '0' and <= '9' or '_';
         }
 
         /**
@@ -325,34 +309,28 @@ namespace PerCederberg.Grammatica.Runtime.RE
          */
         private bool InUserSet(char value)
         {
-            object obj;
-            char c;
-            Range r;
-            CharacterSetElement e;
+            object? obj;
 
-            for (int i = 0; i < contents.Count; i++)
+            for (var i = 0; i < contents.Count; i++)
             {
                 obj = contents[i];
-                if (obj is char)
+                if (obj is char @char)
                 {
-                    c = (char)obj;
-                    if (c == value)
+                    if (@char == value)
                     {
                         return true;
                     }
                 }
-                else if (obj is Range)
+                else if (obj is Range range)
                 {
-                    r = (Range)obj;
-                    if (r.Inside(value))
+                    if (range.Inside(value))
                     {
                         return true;
                     }
                 }
-                else if (obj is CharacterSetElement)
+                else if (obj is CharacterSetElement element)
                 {
-                    e = (CharacterSetElement)obj;
-                    if (e.InSet(value))
+                    if (element.InSet(value))
                     {
                         return true;
                     }
@@ -421,7 +399,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
             {
                 buffer.Append('[');
             }
-            for (int i = 0; i < contents.Count; i++)
+            for (var i = 0; i < contents.Count; i++)
             {
                 buffer.Append(contents[i]);
             }
@@ -433,7 +411,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
         /**
          * A character range class.
          */
-        private class Range
+        private sealed class Range
         {
             /**
              * The minimum character value.

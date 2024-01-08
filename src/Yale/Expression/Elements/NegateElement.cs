@@ -12,7 +12,7 @@ namespace Yale.Expression.Elements;
     "CA1812:Avoid uninstantiated internal classes",
     Justification = "<Pending>"
 )]
-internal class NegateElement : UnaryElement
+internal sealed class NegateElement : UnaryElement
 {
     private const string UnaryNegation = nameof(UnaryNegation);
 

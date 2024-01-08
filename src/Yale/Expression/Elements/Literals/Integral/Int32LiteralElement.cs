@@ -5,7 +5,7 @@ using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.Literals.Integral;
 
-internal class Int32LiteralElement : IntegralLiteralElement
+internal sealed class Int32LiteralElement : IntegralLiteralElement
 {
     private const string MinValue = "2147483648";
     private readonly bool isMinValue;

@@ -9,7 +9,7 @@ namespace Yale.Expression.Elements.MemberElements;
 /// <summary>
 /// Encapsulates an argument list
 /// </summary>
-internal class ArgumentList
+internal sealed class ArgumentList
 {
     private readonly IList<BaseExpressionElement> _elements;
 

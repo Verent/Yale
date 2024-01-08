@@ -26,7 +26,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @version  1.5
      * @since    1.1
      */
-    internal class ParserLogException : Exception
+    public class ParserLogException : Exception
     {
         /**
          * The list of errors found.

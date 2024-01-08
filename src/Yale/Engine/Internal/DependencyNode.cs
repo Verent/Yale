@@ -6,7 +6,7 @@ namespace Yale.Engine.Internal;
 /// <summary>
 /// Dependency Graph Vertex
 /// </summary>
-internal class DependencyNode
+internal sealed class DependencyNode
 {
     public DependencyNode(string key)
     {

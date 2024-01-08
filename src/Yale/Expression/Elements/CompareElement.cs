@@ -8,7 +8,7 @@ using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements;
 
-internal class CompareElement : BinaryExpressionElement
+internal sealed class CompareElement : BinaryExpressionElement
 {
     private LogicalCompareOperation operation;
 

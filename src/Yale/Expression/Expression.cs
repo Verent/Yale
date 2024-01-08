@@ -6,7 +6,7 @@ namespace Yale.Expression;
 /// This class contains information about an expression and the delegate used to evaluate it.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-internal class Expression<T>
+internal sealed class Expression<T>
 {
     /// <summary>
     /// The compiled delegate used to evaluate the expression

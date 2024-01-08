@@ -13,7 +13,7 @@ public class ComputeInstanceOptions
     /// Results are only calculated when retrieving the result or
     /// the result of an expression that depend on it. Lazy recalculate will only work when AutoRecalculate is true. Default is false.
     /// </summary>
-    public bool LazyRecalculate { get; set; } = false;
+    public bool LazyRecalculate { get; set; }
 
     public ExpressionBuilderOptions ExpressionOptions { get; set; } =
         new ExpressionBuilderOptions();

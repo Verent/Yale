@@ -6,7 +6,7 @@ using System.Reflection.Emit;
 
 namespace Yale.Parser.Internal;
 
-internal class YaleIlGenerator
+internal sealed class YaleIlGenerator
 {
     private readonly ILGenerator _ilGenerator;
     private readonly Dictionary<Type, LocalBuilder> _localBuilderTemp;

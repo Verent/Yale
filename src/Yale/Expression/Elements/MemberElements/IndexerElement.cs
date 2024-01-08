@@ -11,7 +11,7 @@ namespace Yale.Expression.Elements.MemberElements;
 /// <summary>
 /// Element representing an array index
 /// </summary>
-internal class IndexerElement : MemberElement
+internal sealed class IndexerElement : MemberElement
 {
     private BaseExpressionElement _indexerElement;
 

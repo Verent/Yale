@@ -26,7 +26,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    internal class TokenPattern
+    internal sealed class TokenPattern
     {
         /**
          * The pattern type enumeration.
@@ -47,33 +47,13 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * The token pattern identity.
-         */
-        private int id;
-
-        /**
-         * The token pattern name.
-         */
-        private string name;
-
-        /**
-         * The token pattern type.
-         */
-        private PatternType type;
-
-        /**
-         * The token pattern.
-         */
-        private string pattern;
-
-        /**
          * The token error flag. If this flag is set, it means that an
          * error should be reported if the token is found. The error
          * message is present in the errorMessage variable.
          *
          * @see #errorMessage
          */
-        private bool error = false;
+        private bool error;
 
         /**
          * The token error message. This message will only be set if the
@@ -81,17 +61,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @see #error
          */
-        private string errorMessage = null;
-
-        /**
-         * The token ignore flag. If this flag is set, it means that the
-         * token should be ignored if found. If an ignore message is
-         * present in the ignoreMessage variable, it will also be reported
-         * as a warning.
-         *
-         * @see #ignoreMessage
-         */
-        private bool ignore = false;
+        private string? errorMessage;
 
         /**
          * The token ignore message. If this message is set when the token
@@ -100,13 +70,13 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @see #ignore
          */
-        private string ignoreMessage = null;
+        private string? ignoreMessage;
 
         /**
          * The optional debug information message. This is normally set
          * when the token pattern is analyzed by the tokenizer.
          */
-        private string debugInfo = null;
+        private string? debugInfo;
 
         /**
          * Creates a new token pattern.
@@ -118,10 +88,10 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public TokenPattern(int id, string name, PatternType type, string pattern)
         {
-            this.id = id;
-            this.name = name;
-            this.type = type;
-            this.pattern = pattern;
+            Id = id;
+            Name = name;
+            Type = type;
+            Pattern = pattern;
         }
 
         /**
@@ -130,30 +100,21 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public int Id
-        {
-            get { return id; }
-        }
+        public int Id { get; }
 
         /**
          * The token pattern name property (read-only).
          *
          * @since 1.5
          */
-        public string Name
-        {
-            get { return name; }
-        }
+        public string Name { get; }
 
         /**
          * The token pattern type property (read-only).
          *
          * @since 1.5
          */
-        public PatternType Type
-        {
-            get { return type; }
-        }
+        public PatternType Type { get; }
 
         /**
          * The token pattern property (read-only). This property
@@ -162,10 +123,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public string Pattern
-        {
-            get { return pattern; }
-        }
+        public string Pattern { get; }
 
         /**
          * The error flag property. If this property is true, the
@@ -182,7 +140,7 @@ namespace PerCederberg.Grammatica.Runtime
             set
             {
                 error = value;
-                if (error && errorMessage == null)
+                if (error && errorMessage is null)
                 {
                     errorMessage = "unrecognized token found";
                 }
@@ -198,7 +156,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public string ErrorMessage
+        public string? ErrorMessage
         {
             get { return errorMessage; }
             set
@@ -209,61 +167,13 @@ namespace PerCederberg.Grammatica.Runtime
         }
 
         /**
-         * Checks if the pattern corresponds to an error token. If this
-         * is true, it means that an error should be reported if a
-         * matching token is found.
-         *
-         * @return true if the pattern maps to an error token, or
-         *         false otherwise
-         *
-         * @see #Error
-         *
-         * @deprecated Use the Error property instead.
-         */
-        public bool IsError()
-        {
-            return Error;
-        }
-
-        /**
-         * Sets the token error flag and assigns a default error message.
-         *
-         * @see #Error
-         *
-         * @deprecated Use the Error property instead.
-         */
-        public void SetError()
-        {
-            Error = true;
-        }
-
-        /**
-         * Sets the token error flag and assigns the specified error
-         * message.
-         *
-         * @param message        the error message to display
-         *
-         * @see #ErrorMessage
-         *
-         * @deprecated Use the ErrorMessage property instead.
-         */
-        public void SetError(string message)
-        {
-            ErrorMessage = message;
-        }
-
-        /**
          * The ignore flag property. If this property is true, the
          * token pattern corresponds to an ignore token and should be
          * skipped if a match is found.
          *
          * @since 1.5
          */
-        public bool Ignore
-        {
-            get { return ignore; }
-            set { ignore = value; }
-        }
+        public bool Ignore { get; set; }
 
         /**
          * The token ignore message property. The ignore message is
@@ -274,57 +184,14 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public string IgnoreMessage
+        public string? IgnoreMessage
         {
             get { return ignoreMessage; }
             set
             {
-                ignore = true;
+                Ignore = true;
                 ignoreMessage = value;
             }
-        }
-
-        /**
-         * Checks if the pattern corresponds to an ignored token. If this
-         * is true, it means that the token should be ignored if found.
-         *
-         * @return true if the pattern maps to an ignored token, or
-         *         false otherwise
-         *
-         * @see #Ignore
-         *
-         * @deprecated Use the Ignore property instead.
-         */
-        public bool IsIgnore()
-        {
-            return Ignore;
-        }
-
-        /**
-         * Sets the token ignore flag and clears the ignore message.
-         *
-         * @see #Ignore
-         *
-         * @deprecated Use the Ignore property instead.
-         */
-        public void SetIgnore()
-        {
-            Ignore = true;
-        }
-
-        /**
-         * Sets the token ignore flag and assigns the specified ignore
-         * message.
-         *
-         * @param message        the ignore message to display
-         *
-         * @see #IgnoreMessage
-         *
-         * @deprecated Use the IgnoreMessage property instead.
-         */
-        public void SetIgnore(string message)
-        {
-            IgnoreMessage = message;
         }
 
         /**
@@ -333,7 +200,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public string DebugInfo
+        public string? DebugInfo
         {
             get { return debugInfo; }
             set { debugInfo = value; }
@@ -348,30 +215,30 @@ namespace PerCederberg.Grammatica.Runtime
         {
             StringBuilder buffer = new();
 
-            buffer.Append(name);
+            buffer.Append(Name);
             buffer.Append(" (");
-            buffer.Append(id);
+            buffer.Append(Id);
             buffer.Append("): ");
-            switch (type)
+            switch (Type)
             {
                 case PatternType.STRING:
                     buffer.Append('"');
-                    buffer.Append(pattern);
+                    buffer.Append(Pattern);
                     buffer.Append('"');
                     break;
                 case PatternType.REGEXP:
                     buffer.Append("<<");
-                    buffer.Append(pattern);
+                    buffer.Append(Pattern);
                     buffer.Append(">>");
                     break;
             }
-            if (error)
+            if (Error)
             {
                 buffer.Append(" ERROR: \"");
                 buffer.Append(errorMessage);
                 buffer.Append('"');
             }
-            if (ignore)
+            if (Ignore)
             {
                 buffer.Append(" IGNORE");
                 if (ignoreMessage != null)
@@ -381,10 +248,10 @@ namespace PerCederberg.Grammatica.Runtime
                     buffer.Append('"');
                 }
             }
-            if (debugInfo != null)
+            if (DebugInfo is not null)
             {
                 buffer.Append("\n  ");
-                buffer.Append(debugInfo);
+                buffer.Append(DebugInfo);
             }
             return buffer.ToString();
         }
@@ -397,30 +264,30 @@ namespace PerCederberg.Grammatica.Runtime
         public string ToShortString()
         {
             StringBuilder buffer = new();
-            int newline = pattern.IndexOf('\n');
+            int newline = Pattern.IndexOf('\n');
 
-            if (type == PatternType.STRING)
+            if (Type == PatternType.STRING)
             {
                 buffer.Append('"');
                 if (newline >= 0)
                 {
-                    if (newline > 0 && pattern[newline - 1] == '\r')
+                    if (newline > 0 && Pattern[newline - 1] == '\r')
                     {
                         newline--;
                     }
-                    buffer.Append(pattern.AsSpan(0, newline));
+                    buffer.Append(Pattern.AsSpan(0, newline));
                     buffer.Append("(...)");
                 }
                 else
                 {
-                    buffer.Append(pattern);
+                    buffer.Append(Pattern);
                 }
                 buffer.Append('"');
             }
             else
             {
                 buffer.Append('<');
-                buffer.Append(name);
+                buffer.Append(Name);
                 buffer.Append('>');
             }
 

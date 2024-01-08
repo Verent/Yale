@@ -25,7 +25,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    internal class Production : Node
+    internal sealed class Production : Node
     {
         /**
          * The production pattern used for this production.

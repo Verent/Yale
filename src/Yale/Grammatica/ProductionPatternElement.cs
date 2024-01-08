@@ -27,7 +27,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    internal class ProductionPatternElement
+    internal sealed class ProductionPatternElement
     {
         /**
          * The token flag. This flag is true for token elements, and

@@ -29,7 +29,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @author   Per Cederberg
      * @version  1.5
      */
-    internal class ProductionPatternAlternative
+    internal sealed class ProductionPatternAlternative
     {
         /**
          * The element list.

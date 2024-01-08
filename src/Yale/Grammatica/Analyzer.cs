@@ -69,7 +69,7 @@ namespace PerCederberg.Grammatica.Runtime
          * @throws ParserLogException if the node analysis discovered
          *             errors
          */
-        public Node Analyze(Node node)
+        public Node? Analyze(Node node)
         {
             ParserLogException log = new();
 
@@ -95,15 +95,12 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @return the resulting parse tree node
          */
-        private Node Analyze(Node node, ParserLogException log)
+        private Node? Analyze(Node node, ParserLogException log)
         {
-            Production prod;
-            int errorCount;
+            var errorCount = log.Count;
 
-            errorCount = log.Count;
-            if (node is Production)
+            if (node is Production prod)
             {
-                prod = (Production)node;
                 prod = NewProduction(prod.Pattern);
                 try
                 {
@@ -237,11 +234,11 @@ namespace PerCederberg.Grammatica.Runtime
          * @throws ParseException if either the node or the child node
          *             was null
          */
-        protected Node GetChildAt(Node node, int pos)
+        protected static Node GetChildAt(Node node, int pos)
         {
             Node child;
 
-            if (node == null)
+            if (node is null)
             {
                 throw new ParseException(
                     ParseException.ErrorType.Internal,
@@ -251,7 +248,7 @@ namespace PerCederberg.Grammatica.Runtime
                 );
             }
             child = node[pos];
-            if (child == null)
+            if (child is null)
             {
                 throw new ParseException(
                     ParseException.ErrorType.Internal,
@@ -277,11 +274,11 @@ namespace PerCederberg.Grammatica.Runtime
          * @throws ParseException if the node was null, or a child node
          *             couldn't be found
          */
-        protected Node GetChildWithId(Node node, int id)
+        protected static Node GetChildWithId(Node node, int id)
         {
             Node child;
 
-            if (node == null)
+            if (node is null)
             {
                 throw new ParseException(
                     ParseException.ErrorType.Internal,
@@ -290,10 +287,10 @@ namespace PerCederberg.Grammatica.Runtime
                     -1
                 );
             }
-            for (int i = 0; i < node.Count; i++)
+            for (var i = 0; i < node.Count; i++)
             {
                 child = node[i];
-                if (child != null && child.Id == id)
+                if (child is not null && child.Id == id)
                 {
                     return child;
                 }
@@ -318,11 +315,11 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @throws ParseException if either the node or the value was null
          */
-        protected object GetValue(Node node, int pos)
+        protected static object? GetValue(Node node, int pos)
         {
-            object value;
+            object? value;
 
-            if (node == null)
+            if (node is null)
             {
                 throw new ParseException(
                     ParseException.ErrorType.Internal,
@@ -332,7 +329,7 @@ namespace PerCederberg.Grammatica.Runtime
                 );
             }
             value = node.Values[pos];
-            if (value == null)
+            if (value is null)
             {
                 throw new ParseException(
                     ParseException.ErrorType.Internal,
@@ -358,14 +355,12 @@ namespace PerCederberg.Grammatica.Runtime
          * @throws ParseException if either the node was null, or the
          *             value wasn't an integer
          */
-        protected int GetIntValue(Node node, int pos)
+        protected static int GetIntValue(Node node, int pos)
         {
-            object value;
-
-            value = GetValue(node, pos);
-            if (value is int)
+            var value = GetValue(node, pos);
+            if (value is int intValue)
             {
-                return (int)value;
+                return intValue;
             }
             else
             {
@@ -392,14 +387,12 @@ namespace PerCederberg.Grammatica.Runtime
          * @throws ParseException if either the node was null, or the
          *             value wasn't a string
          */
-        protected string GetStringValue(Node node, int pos)
+        protected static string GetStringValue(Node node, int pos)
         {
-            object value;
-
-            value = GetValue(node, pos);
-            if (value is string)
+            var value = GetValue(node, pos);
+            if (value is string stringValue)
             {
-                return (string)value;
+                return stringValue;
             }
             else
             {
@@ -421,17 +414,17 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.3
          */
-        protected ArrayList GetChildValues(Node node)
+        protected static ArrayList GetChildValues(Node node)
         {
             ArrayList result = new();
             Node child;
             ArrayList values;
 
-            for (int i = 0; i < node.Count; i++)
+            for (var i = 0; i < node.Count; i++)
             {
                 child = node[i];
                 values = child.Values;
-                if (values != null)
+                if (values is not null)
                 {
                     result.AddRange(values);
                 }

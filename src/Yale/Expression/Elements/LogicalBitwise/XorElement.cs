@@ -5,7 +5,7 @@ using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.LogicalBitwise;
 
-internal class XorElement : BinaryExpressionElement
+internal sealed class XorElement : BinaryExpressionElement
 {
     protected override Type? GetResultType(Type leftType, Type rightType)
     {

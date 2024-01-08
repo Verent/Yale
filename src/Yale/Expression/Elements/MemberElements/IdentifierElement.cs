@@ -15,7 +15,7 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements.MemberElements;
 
-internal class IdentifierElement : MemberElement
+internal sealed class IdentifierElement : MemberElement
 {
     private FieldInfo? field;
     private PropertyInfo property;

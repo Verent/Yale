@@ -29,7 +29,7 @@ namespace PerCederberg.Grammatica.Runtime
      * @version  1.5
      * @since    1.5
      */
-    internal class TokenNFA
+    internal sealed class TokenNFA
     {
         /**
          * The initial state lookup table, indexed by the first ASCII
@@ -102,13 +102,13 @@ namespace PerCederberg.Grammatica.Runtime
             string debug = "DFA regexp; " + parser.GetDebugInfo();
             bool isAscii;
 
-            isAscii = parser.start.IsAsciiOutgoing();
+            isAscii = parser._start.IsAsciiOutgoing();
             for (int i = 0; isAscii && i < 128; i++)
             {
                 bool match = false;
-                for (int j = 0; j < parser.start.outgoing.Length; j++)
+                for (int j = 0; j < parser._start.outgoing.Length; j++)
                 {
-                    if (parser.start.outgoing[j].Match((char)i))
+                    if (parser._start.outgoing[j].Match((char)i))
                     {
                         if (match)
                         {
@@ -123,20 +123,20 @@ namespace PerCederberg.Grammatica.Runtime
                     isAscii = false;
                 }
             }
-            if (parser.start.incoming.Length > 0)
+            if (parser._start.incoming.Length > 0)
             {
-                initial.AddOut(new NFAEpsilonTransition(parser.start));
+                initial.AddOut(new NFAEpsilonTransition(parser._start));
                 debug += ", uses initial epsilon";
             }
             else if (isAscii && !ignoreCase)
             {
                 for (int i = 0; isAscii && i < 128; i++)
                 {
-                    for (int j = 0; j < parser.start.outgoing.Length; j++)
+                    for (int j = 0; j < parser._start.outgoing.Length; j++)
                     {
-                        if (parser.start.outgoing[j].Match((char)i))
+                        if (parser._start.outgoing[j].Match((char)i))
                         {
-                            initialChar[i] = parser.start.outgoing[j].state;
+                            initialChar[i] = parser._start.outgoing[j].state;
                         }
                     }
                 }
@@ -144,10 +144,10 @@ namespace PerCederberg.Grammatica.Runtime
             }
             else
             {
-                parser.start.MergeInto(initial);
+                parser._start.MergeInto(initial);
                 debug += ", uses initial state";
             }
-            parser.end.value = value;
+            parser._end.value = value;
             value.DebugInfo = debug;
         }
 
@@ -218,7 +218,7 @@ namespace PerCederberg.Grammatica.Runtime
      * An NFA state. The NFA consists of a series of states, each
      * having zero or more transitions to other states.
      */
-    internal class NFAState
+    internal sealed class NFAState
     {
         /**
         * The optional state value (if it is a final state).
@@ -517,7 +517,7 @@ namespace PerCederberg.Grammatica.Runtime
      * read any input. As such, it returns false in the match method
      * and is handled specially everywhere.
      */
-    internal class NFAEpsilonTransition : NFATransition
+    internal sealed class NFAEpsilonTransition : NFATransition
     {
         /**
          * Creates a new epsilon transition.
@@ -569,12 +569,12 @@ namespace PerCederberg.Grammatica.Runtime
     /**
      * A single character match transition.
      */
-    internal class NFACharTransition : NFATransition
+    internal sealed class NFACharTransition : NFATransition
     {
         /**
          * The character to match.
          */
-        protected char match;
+        private readonly char _match;
 
         /**
          * Creates a new character transition.
@@ -585,7 +585,7 @@ namespace PerCederberg.Grammatica.Runtime
         public NFACharTransition(char match, NFAState state)
             : base(state)
         {
-            this.match = match;
+            _match = match;
         }
 
         /**
@@ -597,7 +597,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public override bool IsAscii()
         {
-            return 0 <= match && match < 128;
+            return 0 <= _match && _match < 128;
         }
 
         /**
@@ -610,7 +610,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public override bool Match(char ch)
         {
-            return this.match == ch;
+            return _match == ch;
         }
 
         /**
@@ -623,7 +623,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public override NFATransition Copy(NFAState state)
         {
-            return new NFACharTransition(match, state);
+            return new NFACharTransition(_match, state);
         }
     }
 
@@ -631,17 +631,17 @@ namespace PerCederberg.Grammatica.Runtime
      * A character range match transition. Used for user-defined
      * character sets in regular expressions.
      */
-    internal class NFACharRangeTransition : NFATransition
+    internal sealed class NFACharRangeTransition : NFATransition
     {
         /**
          * The inverse match flag.
          */
-        protected bool inverse;
+        private readonly bool inverse;
 
         /**
          * The case-insensitive match flag.
          */
-        protected bool ignoreCase;
+        private readonly bool ignoreCase;
 
         /**
          * The character set content. This array may contain either
@@ -803,17 +803,17 @@ namespace PerCederberg.Grammatica.Runtime
         /**
          * A character range class.
          */
-        private class Range
+        private readonly struct Range
         {
             /**
              * The minimum character value.
              */
-            private char min;
+            private readonly char _min;
 
             /**
              * The maximum character value.
              */
-            private char max;
+            private readonly char _max;
 
             /**
              * Creates a new character range.
@@ -823,8 +823,8 @@ namespace PerCederberg.Grammatica.Runtime
              */
             public Range(char min, char max)
             {
-                this.min = min;
-                this.max = max;
+                _min = min;
+                _max = max;
             }
 
             /**
@@ -835,7 +835,7 @@ namespace PerCederberg.Grammatica.Runtime
              */
             public bool IsAscii()
             {
-                return 0 <= min && min < 128 && 0 <= max && max < 128;
+                return 0 <= _min && _min < 128 && 0 <= _max && _max < 128;
             }
 
             /**
@@ -848,7 +848,7 @@ namespace PerCederberg.Grammatica.Runtime
              */
             public bool Inside(char c)
             {
-                return min <= c && c <= max;
+                return _min <= c && c <= _max;
             }
         }
     }
@@ -858,7 +858,7 @@ namespace PerCederberg.Grammatica.Runtime
      * matches a single character that is not equal to a newline
      * character.
      */
-    internal class NFADotTransition : NFATransition
+    internal sealed class NFADotTransition : NFATransition
     {
         /**
          * Creates a new dot character set transition.
@@ -921,7 +921,7 @@ namespace PerCederberg.Grammatica.Runtime
      * The digit character set transition. This transition matches a
      * single numeric character.
      */
-    internal class NFADigitTransition : NFATransition
+    internal sealed class NFADigitTransition : NFATransition
     {
         /**
          * Creates a new digit character set transition.
@@ -974,7 +974,7 @@ namespace PerCederberg.Grammatica.Runtime
      * The non-digit character set transition. This transition
      * matches a single non-numeric character.
      */
-    internal class NFANonDigitTransition : NFATransition
+    internal sealed class NFANonDigitTransition : NFATransition
     {
         /**
          * Creates a new non-digit character set transition.
@@ -1027,7 +1027,7 @@ namespace PerCederberg.Grammatica.Runtime
      * The whitespace character set transition. This transition
      * matches a single whitespace character.
      */
-    internal class NFAWhitespaceTransition : NFATransition
+    internal sealed class NFAWhitespaceTransition : NFATransition
     {
         /**
          * Creates a new whitespace character set transition.
@@ -1091,7 +1091,7 @@ namespace PerCederberg.Grammatica.Runtime
      * The non-whitespace character set transition. This transition
      * matches a single non-whitespace character.
      */
-    internal class NFANonWhitespaceTransition : NFATransition
+    internal sealed class NFANonWhitespaceTransition : NFATransition
     {
         /**
          * Creates a new non-whitespace character set transition.
@@ -1155,7 +1155,7 @@ namespace PerCederberg.Grammatica.Runtime
      * The word character set transition. This transition matches a
      * single word character.
      */
-    internal class NFAWordTransition : NFATransition
+    internal sealed class NFAWordTransition : NFATransition
     {
         /**
          * Creates a new word character set transition.
@@ -1211,7 +1211,7 @@ namespace PerCederberg.Grammatica.Runtime
      * The non-word character set transition. This transition matches
      * a single non-word character.
      */
-    internal class NFANonWordTransition : NFATransition
+    internal sealed class NFANonWordTransition : NFATransition
     {
         /**
          * Creates a new non-word character set transition.
@@ -1279,7 +1279,7 @@ namespace PerCederberg.Grammatica.Runtime
      * enlarged automatically if too many states are being processed
      * at a single time.
      */
-    internal class NFAStateQueue
+    internal sealed class NFAStateQueue
     {
         /**
         * The state queue array. Will be enlarged as needed.
@@ -1289,18 +1289,18 @@ namespace PerCederberg.Grammatica.Runtime
         /**
         * The position of the first entry in the queue (inclusive).
         */
-        private int first = 0;
+        private int first;
 
         /**
         * The position just after the last entry in the queue
         * (exclusive).
         */
-        private int last = 0;
+        private int last;
 
         /**
         * The current queue mark position.
         */
-        private int mark = 0;
+        private int mark;
 
         /**
          * The empty queue property (read-only).
@@ -1347,7 +1347,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @return the previous first entry in the queue
          */
-        public NFAState RemoveFirst()
+        public NFAState? RemoveFirst()
         {
             if (first < last)
             {

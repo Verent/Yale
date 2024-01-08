@@ -6,7 +6,7 @@ using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.LogicalBitwise;
 
-internal class AndOrElement : BinaryExpressionElement
+internal sealed class AndOrElement : BinaryExpressionElement
 {
     private AndOrOperation myOperation;
     private static readonly object OurTrueTerminalKey = new();

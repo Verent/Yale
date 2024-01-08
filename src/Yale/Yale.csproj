@@ -13,12 +13,16 @@
 		<!-- <TreatWarningsAsErrors>true</TreatWarningsAsErrors> -->
 		
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
-		<AnalysisLevel>latest-all</AnalysisLevel>
+		<AnalysisLevel>latest-Recommended</AnalysisLevel>
 		
 		<Features>strict</Features>
 		<Nullable>enable</Nullable>
+		
 		<PackageReadmeFile></PackageReadmeFile>
+		<NeutralLanguage>en-001</NeutralLanguage>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Include="..\..\.editorconfig" Link=".editorconfig" />

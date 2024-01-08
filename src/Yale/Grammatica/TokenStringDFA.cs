@@ -13,6 +13,7 @@
  */
 
 using System;
+using System.Globalization;
 using System.Text;
 
 namespace PerCederberg.Grammatica.Runtime
@@ -67,7 +68,7 @@ namespace PerCederberg.Grammatica.Runtime
 
             if (caseInsensitive)
             {
-                c = Char.ToLower(c);
+                c = char.ToLower(c, culture: CultureInfo.InvariantCulture);
             }
             if (c < 128)
             {
@@ -193,12 +194,12 @@ namespace PerCederberg.Grammatica.Runtime
      * @version  1.5
      * @since    1.5
      */
-    internal class DFAState
+    internal sealed class DFAState
     {
         /**
          * The token pattern matched at this state.
          */
-        internal TokenPattern value = null;
+        internal TokenPattern? value;
 
         /**
          * The automaton state transition tree. Each transition from one
@@ -218,28 +219,28 @@ namespace PerCederberg.Grammatica.Runtime
      * @version  1.5
      * @since    1.5
      */
-    internal class TransitionTree
+    internal sealed class TransitionTree
     {
         /**
          * The transition character. If this value is set to the zero
          * character ('\0'), this tree is empty.
          */
-        private char value = '\0';
+        private char _value;
 
         /**
          * The transition target state.
          */
-        private DFAState state = null;
+        private DFAState? _state;
 
         /**
          * The left subtree.
          */
-        private TransitionTree left = null;
+        private TransitionTree? _left;
 
         /**
          * The right subtree.
          */
-        private TransitionTree right = null;
+        private TransitionTree? _right;
 
         /**
          * Creates a new empty automaton transition tree.
@@ -258,23 +259,23 @@ namespace PerCederberg.Grammatica.Runtime
          * @return the automaton state found, or
          *         null if no transition exists
          */
-        public DFAState Find(char c, bool lowerCase)
+        public DFAState? Find(char c, bool lowerCase)
         {
             if (lowerCase)
             {
                 c = Char.ToLower(c);
             }
-            if (value == '\0' || value == c)
+            if (_value == '\0' || _value == c)
             {
-                return state;
+                return _state;
             }
-            else if (value > c)
+            else if (_value > c)
             {
-                return left.Find(c, false);
+                return _left?.Find(c, false);
             }
             else
             {
-                return right.Find(c, false);
+                return _right?.Find(c, false);
             }
         }
 
@@ -291,22 +292,24 @@ namespace PerCederberg.Grammatica.Runtime
         {
             if (lowerCase)
             {
-                c = Char.ToLower(c);
+                c = char.ToLower(c);
             }
-            if (value == '\0')
+
+            //Initial value \0, initialize _left, _right and _state
+            if (_value == '\0')
             {
-                this.value = c;
-                this.state = state;
-                this.left = new TransitionTree();
-                this.right = new TransitionTree();
+                _value = c;
+                _state = state;
+                _left = new TransitionTree();
+                _right = new TransitionTree();
             }
-            else if (value > c)
+            else if (_value > c)
             {
-                left.Add(c, false, state);
+                _left!.Add(c, false, state);
             }
             else
             {
-                right.Add(c, false, state);
+                _right!.Add(c, false, state);
             }
         }
 
@@ -316,31 +319,27 @@ namespace PerCederberg.Grammatica.Runtime
          * @param buffer         the string buffer
          * @param indent         the current indentation
          */
-        public void PrintTo(StringBuilder buffer, String indent)
+        public void PrintTo(StringBuilder buffer, string indent)
         {
-            if (this.left != null)
+            _left?.PrintTo(buffer, indent);
+
+            if (_value is not '\0')
             {
-                this.left.PrintTo(buffer, indent);
-            }
-            if (this.value != '\0')
-            {
-                if (buffer.Length > 0 && buffer[buffer.Length - 1] == '\n')
+                if (buffer.Length > 0 && buffer[^1] == '\n')
                 {
                     buffer.Append(indent);
                 }
-                buffer.Append(this.value);
-                if (this.state.value != null)
+                buffer.Append(_value);
+                if (_state!.value is not null) //state is not null when value is not \0
                 {
                     buffer.Append(": ");
-                    buffer.Append(this.state.value);
+                    buffer.Append(_state.value);
                     buffer.Append('\n');
                 }
-                this.state.tree.PrintTo(buffer, indent + " ");
+                _state.tree.PrintTo(buffer, indent + " ");
             }
-            if (this.right != null)
-            {
-                this.right.PrintTo(buffer, indent);
-            }
+
+            _right?.PrintTo(buffer, indent);
         }
     }
 }

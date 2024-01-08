@@ -6,7 +6,7 @@ namespace Yale.Engine.Internal;
 /// <summary>
 /// Keeps track of expression dependencies
 /// </summary>
-internal class DependencyManager
+internal sealed class DependencyManager
 {
     /// <summary>
     /// Map of a node with edges

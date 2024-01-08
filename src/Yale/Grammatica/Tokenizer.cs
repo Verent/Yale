@@ -472,7 +472,7 @@ namespace PerCederberg.Grammatica.Runtime
      * with another matcher for regular expressions. Internally it
      * uses a DFA to provide high performance.
      */
-    internal class StringDFAMatcher : TokenMatcher
+    internal sealed class StringDFAMatcher : TokenMatcher
     {
         /**
          * The deterministic finite state automaton used for
@@ -528,7 +528,7 @@ namespace PerCederberg.Grammatica.Runtime
      * it uses a NFA to provide high performance and low memory
      * usage.
      */
-    internal class NFAMatcher : TokenMatcher
+    internal sealed class NFAMatcher : TokenMatcher
     {
         /**
          * The non-deterministic finite state automaton used for
@@ -588,7 +588,7 @@ namespace PerCederberg.Grammatica.Runtime
      * performance or the native java.util.regex package for maximum
      * compatibility.
      */
-    internal class RegExpMatcher : TokenMatcher
+    internal sealed class RegExpMatcher : TokenMatcher
     {
         /**
          * The regular expression handlers.
@@ -674,7 +674,7 @@ namespace PerCederberg.Grammatica.Runtime
     /**
      * The Grammatica built-in regular expression handler.
      */
-    internal class GrammaticaRE : REHandler
+    internal sealed class GrammaticaRE : REHandler
     {
         /**
          * The compiled regular expression.
@@ -728,7 +728,7 @@ namespace PerCederberg.Grammatica.Runtime
     /**
      * The .NET system regular expression handler.
      */
-    internal class SystemRE : REHandler
+    internal sealed class SystemRE : REHandler
     {
         /**
          * The parsed regular expression.

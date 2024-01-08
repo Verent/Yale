@@ -6,7 +6,7 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements.Literals;
 
-internal class TimeSpanLiteralElement : LiteralElement
+internal sealed class TimeSpanLiteralElement : LiteralElement
 {
     private readonly TimeSpan _value;
 
