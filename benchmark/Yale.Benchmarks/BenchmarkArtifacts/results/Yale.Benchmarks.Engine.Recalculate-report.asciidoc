@@ -9,9 +9,9 @@ BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.2861/23H2/2023Update/SunValley3
 [options="header"]
 |===
 |Method                          |Mean        |StdErr   |StdDev    |Min         |Q1          |Median      |Q3          |Max         |Op/s     |Rank  
-|Flee_Recalculate_Off            |    897.1 μs|  3.10 μs|  11.60 μs|    875.3 μs|    895.2 μs|    897.7 μs|    901.5 μs|    914.6 μs|  1,114.7|     1
-|Flee_Recalculate_Manual         |    922.6 μs|  2.36 μs|   9.12 μs|    912.2 μs|    914.7 μs|    920.9 μs|    928.2 μs|    937.6 μs|  1,083.9|     2
-|AddExpression_Recalculate_Auto  |  1,069.6 μs|  2.76 μs|  10.69 μs|  1,056.3 μs|  1,060.0 μs|  1,071.6 μs|  1,076.5 μs|  1,089.1 μs|    934.9|     3
-|AddExpression_Recalculate_Lazy  |  1,073.6 μs|  1.70 μs|   6.60 μs|  1,066.8 μs|  1,068.1 μs|  1,071.7 μs|  1,077.3 μs|  1,088.7 μs|    931.4|     3
-|AddExpression_Recalculate_Off   |  1,118.4 μs|  1.54 μs|   5.97 μs|  1,107.9 μs|  1,114.6 μs|  1,118.6 μs|  1,122.2 μs|  1,129.0 μs|    894.2|     4
+|Flee_Recalculate_Manual         |    877.4 μs|  1.38 μs|   4.99 μs|    870.6 μs|    873.8 μs|    876.3 μs|    881.3 μs|    884.6 μs|  1,139.8|     1
+|Flee_Recalculate_Off            |    912.2 μs|  3.25 μs|  12.15 μs|    895.5 μs|    905.2 μs|    911.5 μs|    913.1 μs|    933.8 μs|  1,096.2|     2
+|AddExpression_Recalculate_Auto  |  1,089.7 μs|  2.90 μs|  10.85 μs|  1,076.8 μs|  1,080.2 μs|  1,089.2 μs|  1,094.9 μs|  1,108.2 μs|    917.7|     3
+|AddExpression_Recalculate_Lazy  |  1,120.5 μs|  1.85 μs|   6.68 μs|  1,108.8 μs|  1,117.8 μs|  1,120.4 μs|  1,125.1 μs|  1,134.4 μs|    892.5|     4
+|AddExpression_Recalculate_Off   |  1,184.3 μs|  3.10 μs|  11.99 μs|  1,158.1 μs|  1,177.7 μs|  1,186.7 μs|  1,191.2 μs|  1,206.0 μs|    844.4|     5
 |===
