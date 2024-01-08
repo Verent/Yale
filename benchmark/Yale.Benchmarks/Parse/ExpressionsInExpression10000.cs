@@ -17,11 +17,14 @@ public class ExpressionsInExpression10000
     public void Setup() { }
 
     [Benchmark(Baseline = true)]
-    public void AddExpression_Recalculate_Off()
+    public void AddExpression_Recalculate_Never()
     {
         ComputeInstance instance =
             new(
-                options: new ComputeInstanceOptions { Recalculate = false, LazyRecalculate = false }
+                options: new ComputeInstanceOptions
+                {
+                    Recalculate = ComputeInstanceOptions.RecalculateMode.Never
+                }
             );
         var key = Parse(instance);
 
@@ -33,7 +36,10 @@ public class ExpressionsInExpression10000
     {
         ComputeInstance instance =
             new(
-                options: new ComputeInstanceOptions { Recalculate = true, LazyRecalculate = false, }
+                options: new ComputeInstanceOptions
+                {
+                    Recalculate = ComputeInstanceOptions.RecalculateMode.Auto
+                }
             );
         var key = Parse(instance);
         var result = instance.GetResult<int>(key);
@@ -44,7 +50,10 @@ public class ExpressionsInExpression10000
     {
         ComputeInstance instance =
             new(
-                options: new ComputeInstanceOptions { Recalculate = true, LazyRecalculate = true, }
+                options: new ComputeInstanceOptions
+                {
+                    Recalculate = ComputeInstanceOptions.RecalculateMode.Lazy
+                }
             );
         var key = Parse(instance);
         var result = instance.GetResult<int>(key);

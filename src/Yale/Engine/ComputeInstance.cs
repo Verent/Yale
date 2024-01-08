@@ -9,6 +9,7 @@ using Yale.Core;
 using Yale.Engine.Interface;
 using Yale.Engine.Internal;
 using Yale.Expression;
+using Yale.Expression.Elements.MemberElements;
 using Yale.Parser.Internal;
 
 namespace Yale.Engine;
@@ -59,15 +60,13 @@ public class ComputeInstance
 
     #region Recalculate
 
-    private bool ShouldRecalculate => options.Recalculate && options.LazyRecalculate == false;
-
     private void BindToValuesEvents()
     {
-        if (ShouldRecalculate)
+        if (options.Recalculate == ComputeInstanceOptions.RecalculateMode.Auto)
         {
             Variables.PropertyChanged += RecalculateValues;
         }
-        else
+        else if (options.Recalculate == ComputeInstanceOptions.RecalculateMode.Lazy)
         {
             Variables.PropertyChanged += TagResultsAsDirty;
         }
@@ -86,17 +85,17 @@ public class ComputeInstance
         IExpressionResult node = nameNodeMap[key];
         node.Dirty = true;
 
-        foreach (string dependent in dependencies.GetDependents(key))
+        foreach (var dependent in dependencies.GetDependents(key))
         {
-            RecalculateNodeAndDependents(dependent);
+            TagNodeAndDependentsAsDirty(dependent);
         }
     }
 
     private void RecalculateValues(object? sender, PropertyChangedEventArgs e)
     {
-        foreach (string dependent in dependencies.GetDependents(e.PropertyName!))
+        foreach (var dependentKey in dependencies.GetDependents(e.PropertyName!))
         {
-            RecalculateNodeAndDependents(dependent);
+            RecalculateNodeAndDependents(dependentKey);
         }
     }
 
@@ -150,11 +149,11 @@ public class ComputeInstance
 
         foreach (string dependent in dependencies.GetDependents(key))
         {
-            if (ShouldRecalculate)
+            if (options.Recalculate == ComputeInstanceOptions.RecalculateMode.Auto)
             {
                 RecalculateNodeAndDependents(dependent);
             }
-            else
+            if (options.Recalculate == ComputeInstanceOptions.RecalculateMode.Lazy)
             {
                 TagNodeAndDependentsAsDirty(dependent);
             }
@@ -198,7 +197,7 @@ public class ComputeInstance
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        if (options.Recalculate)
+        if (options.Recalculate == ComputeInstanceOptions.RecalculateMode.Lazy)
         {
             RecalculateIfNeeded(key);
         }
@@ -250,7 +249,7 @@ public class ComputeInstance
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        ExpressionResult<object> result = (ExpressionResult<object>)nameNodeMap[key];
+        var result = (ExpressionResult<object>)nameNodeMap[key];
         return result.Expression.ExpressionText;
     }
 
@@ -258,7 +257,7 @@ public class ComputeInstance
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        ExpressionResult<T> result = (ExpressionResult<T>)nameNodeMap[key];
+        var result = (ExpressionResult<T>)nameNodeMap[key];
         return result.Expression.ExpressionText;
     }
 
@@ -306,14 +305,14 @@ public class ComputeInstance
         ilGenerator.Emit(OpCodes.Callvirt, propertyInfo.GetGetMethod());
 
         //Find and load expression result
-        MemberInfo[] members = typeof(ComputeInstance).FindMembers(
+        var members = typeof(ComputeInstance).FindMembers(
             MemberTypes.Method,
             BindingFlags.Instance | BindingFlags.Public,
             Type.FilterName,
             "GetResult"
         );
-        MethodInfo methodInfo = members.Cast<MethodInfo>().First(method => method.IsGenericMethod);
-        Type? resultType = ResultType(expressionKey);
+        var methodInfo = members.Cast<MethodInfo>().First(method => method.IsGenericMethod);
+        var resultType = ResultType(expressionKey);
         methodInfo = methodInfo.MakeGenericMethod(resultType);
 
         ilGenerator.Emit(OpCodes.Ldstr, expressionKey);

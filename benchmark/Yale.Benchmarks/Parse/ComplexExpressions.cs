@@ -21,19 +21,27 @@ public class ComplexExpressions
     public void Setup() { }
 
     [Benchmark(Baseline = true)]
-    public void AddExpression_Recalculate_False()
+    public void AddExpression_Recalculate_Never()
     {
         ComputeInstance instance =
-            new(options: new ComputeInstanceOptions { Recalculate = false, });
+            new(
+                options: new ComputeInstanceOptions
+                {
+                    Recalculate = ComputeInstanceOptions.RecalculateMode.Never
+                }
+            );
         Parse(instance);
     }
 
     [Benchmark]
-    public void AddExpression_Recalculate_True()
+    public void AddExpression_Recalculate_Auto()
     {
         ComputeInstance instance =
             new(
-                options: new ComputeInstanceOptions { Recalculate = true, LazyRecalculate = false, }
+                options: new ComputeInstanceOptions
+                {
+                    Recalculate = ComputeInstanceOptions.RecalculateMode.Auto
+                }
             );
         Parse(instance);
     }
@@ -43,7 +51,10 @@ public class ComplexExpressions
     {
         ComputeInstance instance =
             new(
-                options: new ComputeInstanceOptions { Recalculate = true, LazyRecalculate = true, }
+                options: new ComputeInstanceOptions
+                {
+                    Recalculate = ComputeInstanceOptions.RecalculateMode.Lazy
+                }
             );
         Parse(instance);
     }

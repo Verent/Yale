@@ -23,7 +23,10 @@ public class Recalculate
     {
         ComputeInstance instance =
             new(
-                options: new ComputeInstanceOptions { Recalculate = false, LazyRecalculate = false }
+                options: new ComputeInstanceOptions
+                {
+                    Recalculate = ComputeInstanceOptions.RecalculateMode.Never
+                }
             );
         Parse(instance);
     }
@@ -33,7 +36,10 @@ public class Recalculate
     {
         ComputeInstance instance =
             new(
-                options: new ComputeInstanceOptions { Recalculate = true, LazyRecalculate = false, }
+                options: new ComputeInstanceOptions
+                {
+                    Recalculate = ComputeInstanceOptions.RecalculateMode.Auto
+                }
             );
         Parse(instance);
     }
@@ -43,7 +49,10 @@ public class Recalculate
     {
         ComputeInstance instance =
             new(
-                options: new ComputeInstanceOptions { Recalculate = true, LazyRecalculate = true, }
+                options: new ComputeInstanceOptions
+                {
+                    Recalculate = ComputeInstanceOptions.RecalculateMode.Lazy
+                }
             );
         Parse(instance);
     }

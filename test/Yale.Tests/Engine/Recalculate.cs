@@ -8,13 +8,22 @@ namespace Yale.Tests.Engine;
 public class Recalculate
 {
     private readonly ComputeInstance autoInstance =
-        new(new ComputeInstanceOptions { Recalculate = true });
+        new(
+            new ComputeInstanceOptions { Recalculate = ComputeInstanceOptions.RecalculateMode.Auto }
+        );
 
     private readonly ComputeInstance lazyInstance =
-        new(new ComputeInstanceOptions { Recalculate = true, LazyRecalculate = true });
+        new(
+            new ComputeInstanceOptions { Recalculate = ComputeInstanceOptions.RecalculateMode.Lazy }
+        );
 
     private readonly ComputeInstance noRecalculateInstance =
-        new(new ComputeInstanceOptions { Recalculate = false, LazyRecalculate = false });
+        new(
+            new ComputeInstanceOptions
+            {
+                Recalculate = ComputeInstanceOptions.RecalculateMode.Never
+            }
+        );
 
     [TestMethod]
     public void AutoRecalculate_ValueUpdated_ReturnsUpdatedValue()
