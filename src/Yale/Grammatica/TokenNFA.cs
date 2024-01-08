@@ -647,7 +647,7 @@ namespace PerCederberg.Grammatica.Runtime
          * The character set content. This array may contain either
          * range objects or Character objects.
          */
-        private object[] contents = new object[0];
+        private object[] contents = Array.Empty<object>();
 
         /**
          * Creates a new character range transition.

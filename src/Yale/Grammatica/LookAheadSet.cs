@@ -629,7 +629,7 @@ namespace PerCederberg.Grammatica.Runtime
             StringBuilder buffer = new();
             Sequence seq;
 
-            buffer.Append("{");
+            buffer.Append('{');
             for (int i = 0; i < elements.Count; i++)
             {
                 seq = (Sequence)elements[i];
@@ -934,18 +934,18 @@ namespace PerCederberg.Grammatica.Runtime
                 }
                 else
                 {
-                    buffer.Append("[");
+                    buffer.Append('[');
                     for (int i = 0; i < tokens.Count; i++)
                     {
                         id = (int)tokens[i];
                         str = tokenizer.GetPatternDescription(id);
                         if (i > 0)
                         {
-                            buffer.Append(" ");
+                            buffer.Append(' ');
                         }
                         buffer.Append(str);
                     }
-                    buffer.Append("]");
+                    buffer.Append(']');
                 }
                 if (repeat)
                 {

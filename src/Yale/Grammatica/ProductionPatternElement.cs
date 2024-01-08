@@ -221,11 +221,11 @@ namespace PerCederberg.Grammatica.Runtime
             }
             if (min != 1 || max != 1)
             {
-                buffer.Append("{");
+                buffer.Append('{');
                 buffer.Append(min);
-                buffer.Append(",");
+                buffer.Append(',');
                 buffer.Append(max);
-                buffer.Append("}");
+                buffer.Append('}');
             }
             return buffer.ToString();
         }

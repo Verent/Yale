@@ -420,13 +420,13 @@ namespace PerCederberg.Grammatica.Runtime.RE
             }
             else
             {
-                buffer.Append("[");
+                buffer.Append('[');
             }
             for (int i = 0; i < contents.Count; i++)
             {
                 buffer.Append(contents[i]);
             }
-            buffer.Append("]");
+            buffer.Append(']');
 
             return buffer.ToString();
         }

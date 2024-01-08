@@ -229,15 +229,15 @@ namespace PerCederberg.Grammatica.Runtime
                     case ErrorType.INFINITE_LOOP:
                         buffer.Append("infinite loop found in production pattern '");
                         buffer.Append(name);
-                        buffer.Append("'");
+                        buffer.Append('\'');
                         break;
                     case ErrorType.INHERENT_AMBIGUITY:
                         buffer.Append("inherent ambiguity in production '");
                         buffer.Append(name);
-                        buffer.Append("'");
+                        buffer.Append('\'');
                         if (info != null)
                         {
-                            buffer.Append(" ");
+                            buffer.Append(' ');
                             buffer.Append(info);
                         }
                         if (details != null)

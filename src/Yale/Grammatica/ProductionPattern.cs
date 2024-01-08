@@ -339,12 +339,12 @@ namespace PerCederberg.Grammatica.Runtime
             int i;
 
             buffer.Append(name);
-            buffer.Append("(");
+            buffer.Append('(');
             buffer.Append(id);
             buffer.Append(") ");
             for (i = 0; i < buffer.Length; i++)
             {
-                indent.Append(" ");
+                indent.Append(' ');
             }
             for (i = 0; i < alternatives.Count; i++)
             {
@@ -354,7 +354,7 @@ namespace PerCederberg.Grammatica.Runtime
                 }
                 else
                 {
-                    buffer.Append("\n");
+                    buffer.Append('\n');
                     buffer.Append(indent);
                     buffer.Append("| ");
                 }

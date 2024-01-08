@@ -374,7 +374,7 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 if (i > 0)
                 {
-                    buffer.Append(" ");
+                    buffer.Append(' ');
                 }
                 buffer.Append(elements[i]);
             }

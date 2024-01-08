@@ -246,7 +246,7 @@ namespace PerCederberg.Grammatica.Runtime
                     case ErrorType.UNEXPECTED_CHAR:
                         buffer.Append("unexpected character '");
                         buffer.Append(info);
-                        buffer.Append("'");
+                        buffer.Append('\'');
                         break;
                     case ErrorType.UNEXPECTED_TOKEN:
                         buffer.Append("unexpected token ");

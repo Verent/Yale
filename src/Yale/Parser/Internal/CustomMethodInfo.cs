@@ -60,8 +60,8 @@ internal class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<Cust
     {
         Debug.Assert(parameters.Length == argTypes.Length);
 
-        int sum = 0;
-        for (int i = 0; i <= parameters.Length - 1; i++)
+        var sum = 0;
+        for (var i = 0; i <= parameters.Length - 1; i++)
         {
             sum += ImplicitConverter.GetImplicitConvertScore(
                 argTypes[i],
@@ -74,15 +74,15 @@ internal class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<Cust
 
     private float ComputeScoreForParamArray(ParameterInfo[] parameters, Type[] argTypes)
     {
-        ParameterInfo paramArrayParameter = parameters[^1];
+        var paramArrayParameter = parameters[^1];
         int fixedParameterCount = paramArrayParameter.Position;
-        ParameterInfo[] fixedParameters = new ParameterInfo[fixedParameterCount];
+        var fixedParameters = new ParameterInfo[fixedParameterCount];
 
         Array.Copy(parameters, fixedParameters, fixedParameterCount);
 
-        int fixedSum = ComputeSum(fixedParameters, FixedArgTypes);
-        Type paramArrayElementType = paramArrayParameter.ParameterType.GetElementType();
-        int paramArraySum = 0;
+        var fixedSum = ComputeSum(fixedParameters, FixedArgTypes);
+        var paramArrayElementType = paramArrayParameter.ParameterType.GetElementType();
+        var paramArraySum = 0;
 
         foreach (Type argType in ParamArrayArgTypes)
         {
@@ -107,7 +107,7 @@ internal class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<Cust
     /// <returns></returns>
     public bool IsMatch(Type[] argTypes)
     {
-        ParameterInfo[] parameters = Target.GetParameters();
+        var parameters = Target.GetParameters();
 
         // If there are no parameters and no arguments were passed, then we are a match.
         if (parameters.Length == 0 & argTypes.Length == 0)
@@ -122,7 +122,7 @@ internal class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<Cust
         }
 
         // Is the last parameter a paramArray?
-        ParameterInfo lastParam = parameters[^1];
+        var lastParam = parameters[^1];
 
         if (lastParam.IsDefined(typeof(ParamArrayAttribute), false) == false)
         {
@@ -163,9 +163,9 @@ internal class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<Cust
     )
     {
         // Get the count of arguments before the paramArray parameter
-        int fixedParameterCount = paramArrayParameter.Position;
-        Type[] fixedArgTypes = new Type[fixedParameterCount];
-        ParameterInfo[] fixedParameters = new ParameterInfo[fixedParameterCount];
+        var fixedParameterCount = paramArrayParameter.Position;
+        var fixedArgTypes = new Type[fixedParameterCount];
+        var fixedParameters = new ParameterInfo[fixedParameterCount];
 
         // Get the argument types and parameters before the paramArray
         Array.Copy(argTypes, fixedArgTypes, fixedParameterCount);
@@ -181,7 +181,7 @@ internal class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<Cust
         ParamArrayElementType = paramArrayParameter.ParameterType.GetElementType();
 
         // Get the types of the arguments passed to the paramArray
-        Type[] paramArrayArgTypes = new Type[argTypes.Length - fixedParameterCount];
+        var paramArrayArgTypes = new Type[argTypes.Length - fixedParameterCount];
         Array.Copy(argTypes, fixedParameterCount, paramArrayArgTypes, 0, paramArrayArgTypes.Length);
 
         // Check each argument
@@ -223,9 +223,7 @@ internal class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatable<Cust
         return true;
     }
 
-    public int CompareTo(CustomMethodInfo other) => score.CompareTo(other.score);
+    public int CompareTo(CustomMethodInfo? other) => score.CompareTo(other?.score);
 
-    private bool Equals1(CustomMethodInfo other) => score == other.score;
-
-    bool IEquatable<CustomMethodInfo>.Equals(CustomMethodInfo other) => Equals1(other);
+    bool IEquatable<CustomMethodInfo>.Equals(CustomMethodInfo? other) => score == other?.score;
 }

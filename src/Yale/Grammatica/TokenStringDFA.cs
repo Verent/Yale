@@ -175,7 +175,7 @@ namespace PerCederberg.Grammatica.Runtime
                     {
                         buffer.Append(": ");
                         buffer.Append(ascii[i].value);
-                        buffer.Append("\n");
+                        buffer.Append('\n');
                     }
                     ascii[i].tree.PrintTo(buffer, " ");
                 }
@@ -333,7 +333,7 @@ namespace PerCederberg.Grammatica.Runtime
                 {
                     buffer.Append(": ");
                     buffer.Append(this.state.value);
-                    buffer.Append("\n");
+                    buffer.Append('\n');
                 }
                 this.state.tree.PrintTo(buffer, indent + " ");
             }

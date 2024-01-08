@@ -355,9 +355,9 @@ namespace PerCederberg.Grammatica.Runtime
             switch (type)
             {
                 case PatternType.STRING:
-                    buffer.Append("\"");
+                    buffer.Append('"');
                     buffer.Append(pattern);
-                    buffer.Append("\"");
+                    buffer.Append('"');
                     break;
                 case PatternType.REGEXP:
                     buffer.Append("<<");
@@ -369,7 +369,7 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 buffer.Append(" ERROR: \"");
                 buffer.Append(errorMessage);
-                buffer.Append("\"");
+                buffer.Append('"');
             }
             if (ignore)
             {
@@ -378,7 +378,7 @@ namespace PerCederberg.Grammatica.Runtime
                 {
                     buffer.Append(": \"");
                     buffer.Append(ignoreMessage);
-                    buffer.Append("\"");
+                    buffer.Append('"');
                 }
             }
             if (debugInfo != null)
@@ -401,7 +401,7 @@ namespace PerCederberg.Grammatica.Runtime
 
             if (type == PatternType.STRING)
             {
-                buffer.Append("\"");
+                buffer.Append('"');
                 if (newline >= 0)
                 {
                     if (newline > 0 && pattern[newline - 1] == '\r')
@@ -415,13 +415,13 @@ namespace PerCederberg.Grammatica.Runtime
                 {
                     buffer.Append(pattern);
                 }
-                buffer.Append("\"");
+                buffer.Append('"');
             }
             else
             {
-                buffer.Append("<");
+                buffer.Append('<');
                 buffer.Append(name);
-                buffer.Append(">");
+                buffer.Append('>');
             }
 
             return buffer.ToString();

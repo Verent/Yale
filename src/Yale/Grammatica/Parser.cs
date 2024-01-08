@@ -709,7 +709,7 @@ namespace PerCederberg.Grammatica.Runtime
             for (int i = 0; i < patterns.Count; i++)
             {
                 buffer.Append(ToString((ProductionPattern)patterns[i]));
-                buffer.Append("\n");
+                buffer.Append('\n');
             }
             return buffer.ToString();
         }
@@ -734,7 +734,7 @@ namespace PerCederberg.Grammatica.Runtime
             buffer.Append(") ");
             for (i = 0; i < buffer.Length; i++)
             {
-                indent.Append(" ");
+                indent.Append(' ');
             }
             buffer.Append("= ");
             indent.Append("| ");
@@ -745,7 +745,7 @@ namespace PerCederberg.Grammatica.Runtime
                     buffer.Append(indent);
                 }
                 buffer.Append(ToString(prod[i]));
-                buffer.Append("\n");
+                buffer.Append('\n');
             }
             for (i = 0; i < prod.Count; i++)
             {
@@ -758,7 +758,7 @@ namespace PerCederberg.Grammatica.Runtime
                     buffer.Append(i + 1);
                     buffer.Append(": ");
                     buffer.Append(set.ToString(tokenizer));
-                    buffer.Append("\n");
+                    buffer.Append('\n');
                 }
             }
             return buffer.ToString();
@@ -780,7 +780,7 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 if (i > 0)
                 {
-                    buffer.Append(" ");
+                    buffer.Append(' ');
                 }
                 buffer.Append(ToString(alt[i]));
             }
@@ -803,7 +803,7 @@ namespace PerCederberg.Grammatica.Runtime
 
             if (min == 0 && max == 1)
             {
-                buffer.Append("[");
+                buffer.Append('[');
             }
             if (elem.IsToken())
             {
@@ -815,23 +815,23 @@ namespace PerCederberg.Grammatica.Runtime
             }
             if (min == 0 && max == 1)
             {
-                buffer.Append("]");
+                buffer.Append(']');
             }
             else if (min == 0 && max == Int32.MaxValue)
             {
-                buffer.Append("*");
+                buffer.Append('*');
             }
             else if (min == 1 && max == Int32.MaxValue)
             {
-                buffer.Append("+");
+                buffer.Append('+');
             }
             else if (min != 1 || max != 1)
             {
-                buffer.Append("{");
+                buffer.Append('{');
                 buffer.Append(min);
-                buffer.Append(",");
+                buffer.Append(',');
                 buffer.Append(max);
-                buffer.Append("}");
+                buffer.Append('}');
             }
             return buffer.ToString();
         }

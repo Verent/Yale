@@ -255,7 +255,7 @@ namespace PerCederberg.Grammatica.Runtime
             int newline = image.IndexOf('\n');
 
             buffer.Append(pattern.Name);
-            buffer.Append("(");
+            buffer.Append('(');
             buffer.Append(pattern.Id);
             buffer.Append("): \"");
             if (newline >= 0)
@@ -310,7 +310,7 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 buffer.Append(" <");
                 buffer.Append(pattern.Name);
-                buffer.Append(">");
+                buffer.Append('>');
             }
 
             return buffer.ToString();

@@ -717,7 +717,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
             }
 
             // Combine all remaining elements
-            elem = (Element)list[list.Count - 1];
+            elem = (Element)list[^1];
             for (i = list.Count - 2; i >= 0; i--)
             {
                 prev = (Element)list[i];
