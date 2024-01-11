@@ -15,7 +15,7 @@
 using System;
 using System.IO;
 
-namespace PerCederberg.Grammatica.Runtime.RE
+namespace Yale.Parser.RE
 {
     /**
      * A regular expression element. This is the common base class for

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using PerCederberg.Grammatica.Runtime;
 using Yale.Expression;
 using Yale.Expression.Elements;
 using Yale.Expression.Elements.Base;
@@ -35,80 +34,78 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     public override void Reset() => context = null;
 
-    public override Node ExitExpression(Production node)
+    public override Production ExitExpression(Production production)
     {
-        AddFirstChildValue(node);
-        return node;
+        AddFirstChildValue(production);
+        return production;
     }
 
-    public override Node ExitExpressionGroup(Production node)
+    public override Production ExitExpressionGroup(Production production)
     {
-        node.AddValues(GetChildValues(node));
-        return node;
+        production.Values.AddRange(GetChildValues(production));
+        return production;
     }
 
-    public override Node ExitXorExpression(Production node)
+    public override Production ExitXorExpression(Production production)
     {
-        AddBinaryOp<XorElement>(node);
-        return node;
+        AddBinaryOp<XorElement>(production);
+        return production;
     }
 
-    public override Node ExitOrExpression(Production node)
+    public override Production ExitOrExpression(Production production)
     {
-        AddBinaryOp<AndOrElement>(node);
-        return node;
+        AddBinaryOp<AndOrElement>(production);
+        return production;
     }
 
-    public override Node ExitAndExpression(Production node)
+    public override Production ExitAndExpression(Production production)
     {
-        AddBinaryOp<AndOrElement>(node);
-        return node;
+        AddBinaryOp<AndOrElement>(production);
+        return production;
     }
 
-    public override Node ExitNotExpression(Production node)
+    public override Production ExitNotExpression(Production production)
     {
-        AddUnaryOp(node, typeof(NotElement));
-        return node;
+        AddUnaryOp(production, typeof(NotElement));
+        return production;
     }
 
-    public override Node ExitCompareExpression(Production node)
+    public override Production ExitCompareExpression(Production production)
     {
-        AddBinaryOp<CompareElement>(node);
-        return node;
+        AddBinaryOp<CompareElement>(production);
+        return production;
     }
 
-    public override Node ExitShiftExpression(Production node)
+    public override Production ExitShiftExpression(Production production)
     {
-        AddBinaryOp<ShiftElement>(node);
-        return node;
+        AddBinaryOp<ShiftElement>(production);
+        return production;
     }
 
-    public override Node ExitAdditiveExpression(Production node)
+    public override Production ExitAdditiveExpression(Production production)
     {
-        AddBinaryOp<ArithmeticElement>(node);
-        return node;
+        AddBinaryOp<ArithmeticElement>(production);
+        return production;
     }
 
-    public override Node ExitMultiplicativeExpression(Production node)
+    public override Production ExitMultiplicativeExpression(Production production)
     {
-        AddBinaryOp<ArithmeticElement>(node);
-        return node;
+        AddBinaryOp<ArithmeticElement>(production);
+        return production;
     }
 
-    public override Node ExitPowerExpression(Production node)
+    public override Production ExitPowerExpression(Production production)
     {
-        AddBinaryOp<ArithmeticElement>(node);
-        return node;
+        AddBinaryOp<ArithmeticElement>(production);
+        return production;
     }
 
     // Try to fold a negated constant int32.  We have to do this so that parsing int32.MinValue will work
-    public override Node ExitNegateExpression(Production node)
+    public override Production ExitNegateExpression(Production production)
     {
-        IList childValues = GetChildValues(node);
+        var childValues = GetChildValues(production);
 
-        // Get last child
-        BaseExpressionElement childElement = (BaseExpressionElement)
-            childValues[childValues.Count - 1];
+        var childElement = childValues[^1];
 
         // Is it an signed integer constant?
         if (
@@ -118,7 +115,7 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
         {
             ((Int32LiteralElement)childElement).Negate();
             // Add it directly instead of the negate element since it will already be negated
-            node.AddValue(childElement);
+            production.Values.Add(childElement);
         }
         else if (
             ReferenceEquals(childElement.GetType(), typeof(Int64LiteralElement))
@@ -127,129 +124,125 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
         {
             ((Int64LiteralElement)childElement).Negate();
             // Add it directly instead of the negate element since it will already be negated
-            node.AddValue(childElement);
+            production.Values.Add(childElement);
         }
         else
         {
             // No so just add a regular negate
-            AddUnaryOp(node, typeof(NegateElement));
+            AddUnaryOp(production, typeof(NegateElement));
         }
 
-        return node;
+        return production;
     }
 
-    public override Node ExitMemberExpression(Production node)
+    public override Production ExitMemberExpression(Production production)
     {
-        IList childValues = GetChildValues(node);
-        object first = childValues[0];
+        var childValues = GetChildValues(production);
+        var first = childValues[0];
 
         if (childValues.Count == 1 && first is not MemberElement)
         {
-            node.AddValue(first);
+            production.Values.Add(first);
         }
         else
         {
             InvocationListElement invocationListElement = new(childValues, context);
-            node.AddValue(invocationListElement);
+            production.Values.Add(invocationListElement);
         }
 
-        return node;
+        return production;
     }
 
-    public override Node ExitIndexExpression(Production node)
+    public override Production ExitIndexExpression(Production production)
     {
-        IList childValues = GetChildValues(node);
+        var childValues = GetChildValues(production);
         ArgumentList args = new(childValues);
         IndexerElement e = new(args);
-        node.AddValue(e);
-        return node;
+        production.Values.Add(e);
+        return production;
     }
 
-    public override Node ExitMemberAccessExpression(Production node)
+    public override Production ExitMemberAccessExpression(Production production)
     {
-        node.AddValue(node.GetChildAt(1).GetValue(0));
-        return node;
+        var firstChild = production[1];
+        var value = firstChild.GetValue(0);
+        production.Values.Add(value);
+        return production;
     }
 
-    public override Node ExitSpecialFunctionExpression(Production node)
+    public override Production ExitSpecialFunctionExpression(Production production)
     {
-        AddFirstChildValue(node);
-        return node;
+        AddFirstChildValue(production);
+        return production;
     }
 
-    public override Node ExitIfExpression(Production node)
+    public override Production ExitIfExpression(Production production)
     {
-        IList childValues = GetChildValues(node);
-        ConditionalElement op =
-            new(
-                (BaseExpressionElement)childValues[0],
-                (BaseExpressionElement)childValues[1],
-                (BaseExpressionElement)childValues[2]
-            );
-        node.AddValue(op);
-        return node;
+        var childValues = GetChildValues(production);
+        ConditionalElement op = new(childValues[0], childValues[1], childValues[2]);
+        production.Values.Add(op);
+        return production;
     }
 
-    public override Node ExitInExpression(Production node)
+    public override Production ExitInExpression(Production production)
     {
-        IList childValues = GetChildValues(node);
+        var childValues = GetChildValues(production);
 
         if (childValues.Count == 1)
         {
-            AddFirstChildValue(node);
-            return node;
+            AddFirstChildValue(production);
+            return production;
         }
 
-        BaseExpressionElement operand = (BaseExpressionElement)childValues[0];
+        var operand = childValues[0];
         childValues.RemoveAt(0);
 
-        object second = childValues[0];
+        var second = childValues[0];
         InElement op;
 
         if (second is IList list)
         {
-            op = new InElement(operand, list);
+            op = new(operand, list);
         }
         else
         {
             InvocationListElement invocationListElement = new(childValues, context);
-            op = new InElement(operand, invocationListElement);
+            op = new(operand, invocationListElement);
         }
 
-        node.AddValue(op);
-        return node;
+        production.Values.Add(op);
+        return production;
     }
 
-    public override Node ExitInTargetExpression(Production node)
+    public override Production ExitInTargetExpression(Production production)
     {
-        AddFirstChildValue(node);
-        return node;
+        AddFirstChildValue(production);
+        return production;
     }
 
-    public override Node ExitInListTargetExpression(Production node)
+    public override Production ExitInListTargetExpression(Production production)
     {
-        IList childValues = GetChildValues(node);
-        node.AddValue(childValues);
-        return node;
+        var childValues = GetChildValues(production);
+        production.Values.AddRange(childValues);
+        return production;
     }
 
-    public override Node ExitCastExpression(Production node)
+    public override Production ExitCastExpression(Production production)
     {
-        IList childValues = GetChildValues(node);
-        string[] destTypeParts = (string[])childValues[1];
+        var childValues = GetChildValues(production);
+        string[] destTypeParts = childValues[1];
         bool isArray = (bool)childValues[2];
-        CastElement op =
-            new((BaseExpressionElement)childValues[0], destTypeParts, isArray, context);
-        node.AddValue(op);
-        return node;
+        CastElement op = new(childValues[0], destTypeParts, isArray, context);
+        production.Values.Add(op);
+        return production;
     }
 
-    public override Node ExitCastTypeExpression(Production node)
+    public override Production ExitCastTypeExpression(Production production)
     {
-        IList childValues = GetChildValues(node);
+        var childValues = GetChildValues(production);
         List<string> parts = new();
 
-        foreach (string part in childValues)
+        foreach (var part in childValues)
         {
             parts.Add(part);
         }
@@ -262,87 +255,90 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
             parts.RemoveAt(parts.Count - 1);
         }
 
-        node.AddValue(parts.ToArray());
-        node.AddValue(isArray);
-        return node;
+        production.Values.Add(parts.ToArray());
+        production.Values.Add(isArray);
+        return production;
     }
 
-    public override Node ExitMemberFunctionExpression(Production node)
+    public override Production ExitMemberFunctionExpression(Production production)
     {
-        AddFirstChildValue(node);
-        return node;
+        AddFirstChildValue(production);
+        return production;
     }
 
-    public override Node ExitFieldPropertyExpression(Production node)
+    public override Production ExitFieldPropertyExpression(Production production)
     {
         //string name = ((Token)node.GetChildAt(0))?.Image;
-        var name = node.GetChildAt(0).GetValue(0).ToString();
+        var name = production[0].GetValue(0).ToString();
         IdentifierElement elem = new(name);
-        node.AddValue(elem);
-        return node;
+        production.Values.Add(elem);
+        return production;
     }
 
-    public override Node ExitFunctionCallExpression(Production node)
+    public override Production ExitFunctionCallExpression(Production production)
     {
-        var childValues = GetChildValues(node);
+        var childValues = GetChildValues(production);
         var name = (string)childValues[0];
         childValues.RemoveAt(0);
         ArgumentList args = new(childValues);
         FunctionCallElement funcCall = new(name, args);
-        node.AddValue(funcCall);
-        return node;
+        production.Values.Add(funcCall);
+        return production;
     }
 
-    public override Node ExitArgumentList(Production node)
+    public override Production ExitArgumentList(Production production)
     {
-        var childValues = GetChildValues(node);
-        node.AddValues(childValues);
-        return node;
+        var childValues = GetChildValues(production);
+        production.Values.AddRange(childValues);
+        return production;
     }
 
-    public override Node ExitBasicExpression(Production node)
+    public override Production ExitBasicExpression(Production production)
     {
-        AddFirstChildValue(node);
-        return node;
+        AddFirstChildValue(production);
+        return production;
     }
 
-    public override Node ExitLiteralExpression(Production node)
+    public override Production ExitLiteralExpression(Production production)
     {
-        AddFirstChildValue(node);
-        return node;
+        AddFirstChildValue(production);
+        return production;
     }
 
-    private static void AddFirstChildValue(Production node) =>
-        node.AddValue(GetChildAt(node, 0).Values[0]);
-
-    private static void AddUnaryOp(Production node, Type elementType)
+    private static void AddFirstChildValue(Production production)
     {
-        var childValues = GetChildValues(node);
+        var value = GetChildAt(production, 0).Values[0];
+        production.Values.Add(value);
+    }
+
+    private static void AddUnaryOp(Production production, Type elementType)
+    {
+        var childValues = GetChildValues(production);
 
         if (childValues.Count == 2)
         {
             var element = (UnaryElement)Activator.CreateInstance(elementType, childValues[1]);
-            node.AddValue(element);
+            production.Values.Add(element);
         }
         else
         {
-            node.AddValue(childValues[0]);
+            production.Values.Add(childValues[0]);
         }
     }
 
-    private static void AddBinaryOp<T>(Production node)
+    private static void AddBinaryOp<T>(Production production)
         where T : BinaryExpressionElement, new()
     {
-        var childValues = GetChildValues(node);
+        var childValues = GetChildValues(production);
 
         if (childValues.Count > 1)
         {
             var expressionElement = BinaryExpressionElement.CreateElement<T>(childValues);
-            node.AddValue(expressionElement);
+            production.Values.Add(expressionElement);
         }
         else if (childValues.Count == 1)
         {
-            node.AddValue(childValues[0]);
+            production.Values.Add(childValues[0]);
         }
         else
         {
@@ -351,85 +347,85 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
         }
     }
 
-    public override Node ExitReal(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitReal(Token token)
     {
-        var element = RealLiteralElement.Create(node.Image, context.BuilderOptions);
+        var element = RealLiteralElement.Create(token.Image, context.BuilderOptions);
 
-        node.AddValue(element);
-        return node;
+        token.AddValue(element);
+        return token;
     }
 
-    public override Node ExitInteger(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitInteger(Token token)
     {
         var element = IntegralLiteralElement.Create(
-            node.Image,
+            token.Image,
             false,
             inUnaryNegate,
             context.BuilderOptions
         );
-        node.AddValue(element);
-        return node;
+        token.AddValue(element);
+        return token;
     }
 
-    public override Node ExitHexliteral(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitHexliteral(Token token)
     {
         var element = IntegralLiteralElement.Create(
-            node.Image,
+            token.Image,
             true,
             inUnaryNegate,
             context.BuilderOptions
         );
-        node.AddValue(element);
-        return node;
+        token.AddValue(element);
+        return token;
     }
 
-    public override Node ExitBooleanLiteralExpression(Production node)
+    public override Token ExitBooleanLiteralExpression(Production production)
     {
-        AddFirstChildValue(node);
-        return node;
+        AddFirstChildValue(production);
+        return production;
     }
 
-    public override Node ExitTrue(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitTrue(Token token)
     {
-        node.AddValue(new BooleanLiteralElement(true));
-        return node;
+        token.AddValue(new BooleanLiteralElement(true));
+        return token;
     }
 
-    public override Node ExitFalse(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitFalse(Token token)
     {
-        node.AddValue(new BooleanLiteralElement(false));
-        return node;
+        token.AddValue(new BooleanLiteralElement(false));
+        return token;
     }
 
-    public override Node ExitStringLiteral(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitStringLiteral(Token token)
     {
-        var s = DoEscapes(node.Image);
+        var s = DoEscapes(token.Image);
         StringLiteralElement element = new(s);
-        node.AddValue(element);
-        return node;
+        token.AddValue(element);
+        return token;
     }
 
-    public override Node ExitCharLiteral(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitCharLiteral(Token token)
     {
-        var s = DoEscapes(node.Image);
-        node.AddValue(new CharLiteralElement(s[0]));
-        return node;
+        var s = DoEscapes(token.Image);
+        token.AddValue(new CharLiteralElement(s[0]));
+        return token;
     }
 
-    public override Node ExitDatetime(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitDatetime(Token token)
     {
-        var image = node.Image[1..^1];
+        var image = token.Image[1..^1];
         DateTimeLiteralElement element = new(image, context);
-        node.AddValue(element);
-        return node;
+        token.AddValue(element);
+        return token;
     }
 
-    public override Node ExitTimeSpan(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitTimeSpan(Token token)
     {
-        var image = node.Image[2..^1];
+        var image = token.Image[2..^1];
         TimeSpanLiteralElement element = new(image);
-        node.AddValue(element);
-        return node;
+        token.AddValue(element);
+        return token;
     }
 
     private string DoEscapes(string image)
@@ -449,29 +445,14 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
         // Remove leading \
         matchValue = matchValue.Remove(0, 1);
 
-        switch (matchValue)
+        return matchValue switch
         {
-            case "\\":
-            case "\"":
-            case "'":
-                return matchValue;
-
-            case "t":
-            case "T":
-                return Convert.ToChar(9).ToString();
-
-            case "n":
-            case "N":
-                return Convert.ToChar(10).ToString();
-
-            case "r":
-            case "R":
-                return Convert.ToChar(13).ToString();
-
-            default:
-                //Todo: Throw proper yale exception
-                throw new Exception("Unrecognized escape sequence");
-        }
+            "\\" or "\"" or "'" => matchValue,
+            "t" or "T" => Convert.ToChar(9).ToString(),
+            "n" or "N" => Convert.ToChar(10).ToString(),
+            "r" or "R" => Convert.ToChar(13).ToString(),
+            _ => throw new Exception("Unrecognized escape sequence"), //Todo: Throw proper yale exception
+        };
     }
 
     private string UnicodeEscapeMatcher(Match m)
@@ -484,135 +465,135 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
         return c.ToString();
     }
 
-    public override Node ExitIdentifier(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitIdentifier(Token token)
     {
-        node.AddValue(node.Image);
-        return node;
+        token.AddValue(token.Image);
+        return token;
     }
 
-    public override Node ExitNullLiteral(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitNullLiteral(Token token)
     {
-        node.AddValue(new NullLiteralElement());
-        return node;
+        token.AddValue(new NullLiteralElement());
+        return token;
     }
 
-    public override Node ExitArrayBraces(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitArrayBraces(Token token)
     {
-        node.AddValue("[]");
-        return node;
+        token.AddValue("[]");
+        return token;
     }
 
-    public override Node ExitAdd(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitAdd(Token token)
     {
-        node.AddValue(BinaryArithmeticOperation.Add);
-        return node;
+        token.AddValue(BinaryArithmeticOperation.Add);
+        return token;
     }
 
-    public override Node ExitSub(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitSub(Token token)
     {
-        node.AddValue(BinaryArithmeticOperation.Subtract);
-        return node;
+        token.AddValue(BinaryArithmeticOperation.Subtract);
+        return token;
     }
 
-    public override Node ExitMul(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitMul(Token token)
     {
-        node.AddValue(BinaryArithmeticOperation.Multiply);
-        return node;
+        token.AddValue(BinaryArithmeticOperation.Multiply);
+        return token;
     }
 
-    public override Node ExitDiv(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitDiv(Token token)
     {
-        node.AddValue(BinaryArithmeticOperation.Divide);
-        return node;
+        token.AddValue(BinaryArithmeticOperation.Divide);
+        return token;
     }
 
-    public override Node ExitMod(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitMod(Token token)
     {
-        node.AddValue(BinaryArithmeticOperation.Mod);
-        return node;
+        token.AddValue(BinaryArithmeticOperation.Mod);
+        return token;
     }
 
-    public override Node ExitPower(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitPower(Token token)
     {
-        node.AddValue(BinaryArithmeticOperation.Power);
-        return node;
+        token.AddValue(BinaryArithmeticOperation.Power);
+        return token;
     }
 
-    public override Node ExitEq(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitEq(Token token)
     {
-        node.AddValue(LogicalCompareOperation.Equal);
-        return node;
+        token.AddValue(LogicalCompareOperation.Equal);
+        return token;
     }
 
-    public override Node ExitNe(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitNe(Token token)
     {
-        node.AddValue(LogicalCompareOperation.NotEqual);
-        return node;
+        token.AddValue(LogicalCompareOperation.NotEqual);
+        return token;
     }
 
-    public override Node ExitLt(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitLt(Token token)
     {
-        node.AddValue(LogicalCompareOperation.LessThan);
-        return node;
+        token.AddValue(LogicalCompareOperation.LessThan);
+        return token;
     }
 
-    public override Node ExitGt(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitGt(Token token)
     {
-        node.AddValue(LogicalCompareOperation.GreaterThan);
-        return node;
+        token.AddValue(LogicalCompareOperation.GreaterThan);
+        return token;
     }
 
-    public override Node ExitLte(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitLte(Token token)
     {
-        node.AddValue(LogicalCompareOperation.LessThanOrEqual);
-        return node;
+        token.AddValue(LogicalCompareOperation.LessThanOrEqual);
+        return token;
     }
 
-    public override Node ExitGte(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitGte(Token token)
     {
-        node.AddValue(LogicalCompareOperation.GreaterThanOrEqual);
-        return node;
+        token.AddValue(LogicalCompareOperation.GreaterThanOrEqual);
+        return token;
     }
 
-    public override Node ExitAnd(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitAnd(Token token)
     {
-        node.AddValue(AndOrOperation.And);
-        return node;
+        token.AddValue(AndOrOperation.And);
+        return token;
     }
 
-    public override Node ExitOr(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitOr(Token token)
     {
-        node.AddValue(AndOrOperation.Or);
-        return node;
+        token.AddValue(AndOrOperation.Or);
+        return token;
     }
 
-    public override Node ExitXor(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitXor(Token token)
     {
-        node.AddValue("Xor");
-        return node;
+        token.AddValue("Xor");
+        return token;
     }
 
-    public override Node ExitNot(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitNot(Token token)
     {
-        node.AddValue(string.Empty);
-        return node;
+        token.AddValue(string.Empty);
+        return token;
     }
 
-    public override Node ExitLeftShift(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitLeftShift(Token token)
     {
-        node.AddValue(ShiftOperation.LeftShift);
-        return node;
+        token.AddValue(ShiftOperation.LeftShift);
+        return token;
     }
 
-    public override Node ExitRightShift(PerCederberg.Grammatica.Runtime.Token node)
+    public override Token ExitRightShift(Token token)
     {
-        node.AddValue(ShiftOperation.RightShift);
-        return node;
+        token.AddValue(ShiftOperation.RightShift);
+        return token;
     }
 
     public override void Child(Production node, Node child)
     {
         base.Child(node, child);
-        inUnaryNegate = node.Id == (int)Token.NEGATE_EXPRESSION & child.Id == (int)Token.SUB;
+        inUnaryNegate = node.TypeId == TokenId.NEGATE_EXPRESSION & child.TypeId == TokenId.SUB;
     }
 }

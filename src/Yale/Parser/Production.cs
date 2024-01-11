@@ -12,10 +12,10 @@
  * Copyright (c) 2003-2015 Per Cederberg. All rights reserved.
  */
 
-using System.Collections;
 using System.Collections.Generic;
+using Yale.Expression.Elements.Base;
 
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A production node. This class represents a grammar production
@@ -50,7 +50,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public override int Id
+        public override TokenId TypeId
         {
             get { return Pattern.Id; }
         }
@@ -70,33 +70,23 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public override int Count
+        public int Count
         {
             get { return children.Count; }
         }
 
-        /**
-         * The child node index (read-only).
-         *
-         * @param index          the child index, 0 <= index < Count
-         *
-         * @return the child node found, or
-         *         null if index out of bounds
-         *
-         * @since 1.5
-         */
-        public override Node? this[int index]
+        public List<BaseExpressionElement> Values
+        {
+            get;
+        } = new();
+
+
+        #region Children
+        public Node this[int index]
         {
             get
             {
-                if (index < 0 || index >= children.Count)
-                {
-                    return null;
-                }
-                else
-                {
-                    return children[index];
-                }
+                return children[index];
             }
         }
 
@@ -104,16 +94,15 @@ namespace PerCederberg.Grammatica.Runtime
          * Adds a child node. The node will be added last in the list of
          * children.
          *
-         * @param child          the child node to add
+         * @param child  the child node to add
          */
         public void AddChild(Node child)
         {
-            if (child != null)
-            {
-                child.SetParent(this);
-                children.Add(child);
-            }
+            child.Parent = this;
+            children.Add(child);
         }
+
+        #endregion Children
 
         /**
          * The production pattern property (read-only). This property
@@ -122,6 +111,72 @@ namespace PerCederberg.Grammatica.Runtime
          * @since 1.5
          */
         public ProductionPattern Pattern { get; }
+
+        public override int StartLine
+        {
+            get
+            {
+                for (var i = 0; i < Count; i++)
+                {
+                    var line = this[i].StartLine;
+                    if (line >= 0)
+                    {
+                        return line;
+                    }
+                }
+                return -1;
+            }
+        }
+
+        public override int StartColumn
+        {
+            get
+            {
+                for (var i = 0; i < Count; i++)
+                {
+                    var col = this[i].StartColumn;
+                    if (col >= 0)
+                    {
+                        return col;
+                    }
+                }
+                return -1;
+            }
+        }
+
+        public override int EndLine
+        {
+            get
+            {
+                for (var i = Count - 1; i >= 0; i--)
+                {
+                    var line = this[i].EndLine;
+                    if (line >= 0)
+                    {
+                        return line;
+                    }
+                }
+                return -1;
+            }
+        }
+
+        public override int EndColumn
+        {
+            get
+            {
+                for (var i = Count - 1; i >= 0; i--)
+                {
+                    var col = this[i].EndColumn;
+                    if (col >= 0)
+                    {
+                        return col;
+                    }
+                }
+                return -1;
+            }
+        }
+
+        public override bool HasChildren => Values.Count > 0;
 
         /**
          * Checks if this node is hidden, i.e. if it should not be visible

@@ -14,7 +14,7 @@
 
 using System;
 
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A non-deterministic finite state automaton (NFA) for matching
@@ -174,40 +174,40 @@ namespace PerCederberg.Grammatica.Runtime
 
             // The first step of the match loop has been unrolled and
             // optimized for performance below.
-            this.queue.Clear();
+            queue.Clear();
             peekChar = buffer.Peek(0);
             if (0 <= peekChar && peekChar < 128)
             {
-                state = this.initialChar[peekChar];
+                state = initialChar[peekChar];
                 if (state != null)
                 {
-                    this.queue.AddLast(state);
+                    queue.AddLast(state);
                 }
             }
             if (peekChar >= 0)
             {
-                this.initial.MatchTransitions((char)peekChar, this.queue, true);
+                initial.MatchTransitions((char)peekChar, queue, true);
             }
-            this.queue.MarkEnd();
+            queue.MarkEnd();
             peekChar = buffer.Peek(1);
 
             // The remaining match loop processes all subsequent states
-            while (!this.queue.Empty)
+            while (!queue.Empty)
             {
-                if (this.queue.Marked)
+                if (queue.Marked)
                 {
                     pos++;
                     peekChar = buffer.Peek(pos);
-                    this.queue.MarkEnd();
+                    queue.MarkEnd();
                 }
-                state = this.queue.RemoveFirst();
+                state = queue.RemoveFirst();
                 if (state.value != null)
                 {
                     match.Update(pos, state.value);
                 }
                 if (peekChar >= 0)
                 {
-                    state.MatchTransitions((char)peekChar, this.queue, false);
+                    state.MatchTransitions((char)peekChar, queue, false);
                 }
             }
             return length;
@@ -298,8 +298,8 @@ namespace PerCederberg.Grammatica.Runtime
             if (ignoreCase)
             {
                 state ??= new NFAState();
-                AddOut(new NFACharTransition(Char.ToLower(ch), state));
-                AddOut(new NFACharTransition(Char.ToUpper(ch), state));
+                AddOut(new NFACharTransition(char.ToLower(ch), state));
+                AddOut(new NFACharTransition(char.ToUpper(ch), state));
                 return state;
             }
             else
@@ -392,7 +392,7 @@ namespace PerCederberg.Grammatica.Runtime
                     return null;
                 }
             }
-            return (res == null) ? null : res.state;
+            return res == null ? null : res.state;
         }
 
         /**
@@ -710,7 +710,7 @@ namespace PerCederberg.Grammatica.Runtime
         {
             if (ignoreCase)
             {
-                c = Char.ToLower(c);
+                c = char.ToLower(c);
             }
             AddContent(c);
         }
@@ -725,8 +725,8 @@ namespace PerCederberg.Grammatica.Runtime
         {
             if (ignoreCase)
             {
-                min = Char.ToLower(min);
-                max = Char.ToLower(max);
+                min = char.ToLower(min);
+                max = char.ToLower(max);
             }
             AddContent(new Range(min, max));
         }
@@ -736,7 +736,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @param obj            the object to add
          */
-        private void AddContent(Object obj)
+        private void AddContent(object obj)
         {
             Array.Resize(ref contents, contents.Length + 1);
             contents[contents.Length - 1] = obj;
@@ -758,7 +758,7 @@ namespace PerCederberg.Grammatica.Runtime
 
             if (ignoreCase)
             {
-                ch = Char.ToLower(ch);
+                ch = char.ToLower(ch);
             }
             for (int i = 0; i < contents.Length; i++)
             {
@@ -1187,9 +1187,9 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public override bool Match(char ch)
         {
-            return ('a' <= ch && ch <= 'z')
-                || ('A' <= ch && ch <= 'Z')
-                || ('0' <= ch && ch <= '9')
+            return 'a' <= ch && ch <= 'z'
+                || 'A' <= ch && ch <= 'Z'
+                || '0' <= ch && ch <= '9'
                 || ch == '_';
         }
 
@@ -1244,9 +1244,9 @@ namespace PerCederberg.Grammatica.Runtime
         public override bool Match(char ch)
         {
             bool word =
-                ('a' <= ch && ch <= 'z')
-                || ('A' <= ch && ch <= 'Z')
-                || ('0' <= ch && ch <= '9')
+                'a' <= ch && ch <= 'z'
+                || 'A' <= ch && ch <= 'Z'
+                || '0' <= ch && ch <= '9'
                 || ch == '_';
             return !word;
         }
@@ -1307,7 +1307,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public bool Empty
         {
-            get { return (last <= first); }
+            get { return last <= first; }
         }
 
         /**

@@ -16,9 +16,9 @@ using System;
 using System.Collections;
 using System.Globalization;
 using System.Text;
-using PerCederberg.Grammatica.Runtime.RE;
+using Yale.Parser.RE;
 
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A regular expression parser. The parser creates an NFA for the
@@ -188,7 +188,7 @@ namespace PerCederberg.Grammatica.Runtime
                 {
                     start.AddOut(new NFAEpsilonTransition(subStart));
                 }
-                if (subEnd.outgoing.Length == 0 || (!end.HasTransitions() && PeekChar(0) != '|'))
+                if (subEnd.outgoing.Length == 0 || !end.HasTransitions() && PeekChar(0) != '|')
                 {
                     subEnd.MergeInto(end);
                 }
@@ -270,7 +270,7 @@ namespace PerCederberg.Grammatica.Runtime
             else
             {
                 placeholder.MergeInto(start);
-                return (end == placeholder) ? start : end;
+                return end == placeholder ? start : end;
             }
         }
 
@@ -369,7 +369,7 @@ namespace PerCederberg.Grammatica.Runtime
                         }
                     }
                     ReadChar('}');
-                    if (max == 0 || (max > 0 && min > max))
+                    if (max == 0 || max > 0 && min > max)
                     {
                         throw new RegExpException(
                             RegExpException.ErrorType.InvalidRepeatCount,
@@ -628,7 +628,7 @@ namespace PerCederberg.Grammatica.Runtime
                     str = ReadChar().ToString() + ReadChar().ToString();
                     try
                     {
-                        value = Int32.Parse(str, NumberStyles.AllowHexSpecifier);
+                        value = int.Parse(str, NumberStyles.AllowHexSpecifier);
                         return (char)value;
                     }
                     catch (FormatException)
@@ -647,7 +647,7 @@ namespace PerCederberg.Grammatica.Runtime
                         + ReadChar().ToString();
                     try
                     {
-                        value = Int32.Parse(str, NumberStyles.AllowHexSpecifier);
+                        value = int.Parse(str, NumberStyles.AllowHexSpecifier);
                         return (char)value;
                     }
                     catch (FormatException)
@@ -671,7 +671,7 @@ namespace PerCederberg.Grammatica.Runtime
                 case 'e':
                     return '\u001B';
                 default:
-                    if (('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z'))
+                    if ('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z')
                     {
                         throw new RegExpException(
                             RegExpException.ErrorType.UnsupportedEscapeCharacter,
@@ -712,7 +712,7 @@ namespace PerCederberg.Grammatica.Runtime
                     _pattern
                 );
             }
-            return Int32.Parse(buf.ToString());
+            return int.Parse(buf.ToString());
         }
 
         /**

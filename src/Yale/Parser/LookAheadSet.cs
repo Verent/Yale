@@ -13,9 +13,12 @@
  */
 
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Text;
 
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A token look-ahead set. This class contains a set of token id
@@ -39,7 +42,7 @@ namespace PerCederberg.Grammatica.Runtime
          * turn is represented by an ArrayList with Integers for the
          * token id:s.
          */
-        private readonly ArrayList elements = new();
+        private readonly List<Sequence> elements = new();
 
         /**
          * The maximum length of any look-ahead sequence.
@@ -64,8 +67,7 @@ namespace PerCederberg.Grammatica.Runtime
          * @param maxLength      the maximum token sequence length
          * @param set            the look-ahead set to copy
          */
-        public LookAheadSet(int maxLength, LookAheadSet set)
-            : this(maxLength)
+        public LookAheadSet(int maxLength, LookAheadSet set) : this(maxLength)
         {
             AddAll(set);
         }
@@ -88,18 +90,17 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public int GetMinLength()
         {
-            Sequence seq;
-            int min = -1;
+            var min = -1;
 
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                seq = (Sequence)elements[i];
+                var seq = elements[i];
                 if (min < 0 || seq.Length() < min)
                 {
                     min = seq.Length();
                 }
             }
-            return (min < 0) ? 0 : min;
+            return min < 0 ? 0 : min;
         }
 
         /**
@@ -110,12 +111,10 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public int GetMaxLength()
         {
-            Sequence seq;
-            int max = 0;
-
-            for (int i = 0; i < elements.Count; i++)
+            var max = 0;
+            for (var i = 0; i < elements.Count; i++)
             {
-                seq = (Sequence)elements[i];
+                var seq = elements[i];
                 if (seq.Length() > max)
                 {
                     max = seq.Length();
@@ -130,27 +129,19 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @return a list of the initial token id:s in this look-ahead set
          */
-        public int[] GetInitialTokens()
+        public TokenId[] GetInitialTokens()
         {
-            ArrayList list = new();
-            int[] result;
-            object token;
-            int i;
+            List<TokenId> list = new();
 
-            for (i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                token = ((Sequence)elements[i]).GetToken(0);
-                if (token != null && !list.Contains(token))
+                var token = elements[i].GetToken(0);
+                if (token is not null && list.Contains(token.Value) == false)
                 {
-                    list.Add(token);
+                    list.Add(token.Value);
                 }
             }
-            result = new int[list.Count];
-            for (i = 0; i < list.Count; i++)
-            {
-                result[i] = (int)list[i];
-            }
-            return result;
+            return list.ToArray();
         }
 
         /**
@@ -162,11 +153,9 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public bool IsRepetitive()
         {
-            Sequence seq;
-
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                seq = (Sequence)elements[i];
+                var seq = elements[i];
                 if (seq.IsRepetitive())
                 {
                     return true;
@@ -186,11 +175,9 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public bool IsNext(Parser parser)
         {
-            Sequence seq;
-
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                seq = (Sequence)elements[i];
+                var seq = elements[i];
                 if (seq.IsNext(parser))
                 {
                     return true;
@@ -211,11 +198,9 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public bool IsNext(Parser parser, int length)
         {
-            Sequence seq;
-
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                seq = (Sequence)elements[i];
+                var seq = elements[i];
                 if (seq.IsNext(parser, length))
                 {
                     return true;
@@ -237,9 +222,9 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public bool IsOverlap(LookAheadSet set)
         {
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                if (set.IsOverlap((Sequence)elements[i]))
+                if (set.IsOverlap(elements[i]))
                 {
                     return true;
                 }
@@ -260,11 +245,9 @@ namespace PerCederberg.Grammatica.Runtime
          */
         private bool IsOverlap(Sequence seq)
         {
-            Sequence elem;
-
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                elem = (Sequence)elements[i];
+                var elem = elements[i];
                 if (seq.StartsWith(elem) || elem.StartsWith(seq))
                 {
                     return true;
@@ -284,7 +267,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         private bool Contains(Sequence elem)
         {
-            return FindSequence(elem) != null;
+            return FindSequence(elem) is not null;
         }
 
         /**
@@ -298,9 +281,9 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public bool Intersects(LookAheadSet set)
         {
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                if (set.Contains((Sequence)elements[i]))
+                if (set.Contains(elements[i]))
                 {
                     return true;
                 }
@@ -316,13 +299,13 @@ namespace PerCederberg.Grammatica.Runtime
          * @return an identical the token sequence if found, or
          *         null if not found
          */
-        private Sequence FindSequence(Sequence elem)
+        private Sequence? FindSequence(Sequence elem)
         {
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
                 if (elements[i].Equals(elem))
                 {
-                    return (Sequence)elements[i];
+                    return elements[i];
                 }
             }
             return null;
@@ -342,7 +325,7 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 seq = new Sequence(maxLength, seq);
             }
-            if (!Contains(seq))
+            if (Contains(seq) is false)
             {
                 elements.Add(seq);
             }
@@ -355,7 +338,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @param token          the token to add
          */
-        public void Add(int token)
+        public void Add(TokenId token)
         {
             Add(new Sequence(false, token));
         }
@@ -370,7 +353,7 @@ namespace PerCederberg.Grammatica.Runtime
         {
             for (int i = 0; i < set.elements.Count; i++)
             {
-                Add((Sequence)set.elements[i]);
+                Add(set.elements[i]);
             }
         }
 
@@ -401,9 +384,9 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public void RemoveAll(LookAheadSet set)
         {
-            for (int i = 0; i < set.elements.Count; i++)
+            for (var i = 0; i < set.elements.Count; i++)
             {
-                Remove((Sequence)set.elements[i]);
+                Remove(set.elements[i]);
             }
         }
 
@@ -417,17 +400,15 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @return a new look-ahead set containing the remaining tokens
          */
-        public LookAheadSet CreateNextSet(int token)
+        public LookAheadSet CreateNextSet(TokenId token)
         {
             LookAheadSet result = new(maxLength - 1);
-            Sequence seq;
-            object value;
 
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                seq = (Sequence)elements[i];
-                value = seq.GetToken(0);
-                if (value != null && token == (int)value)
+                var seq = elements[i];
+                var value = seq.GetToken(0);
+                if (value is not null && token == value)
                 {
                     result.Add(seq.Subsequence(1));
                 }
@@ -448,18 +429,16 @@ namespace PerCederberg.Grammatica.Runtime
         public LookAheadSet CreateIntersection(LookAheadSet set)
         {
             LookAheadSet result = new(maxLength);
-            Sequence seq1;
-            Sequence seq2;
 
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                seq1 = (Sequence)elements[i];
-                seq2 = set.FindSequence(seq1);
-                if (seq2 != null && seq1.IsRepetitive())
+                var seq1 = elements[i];
+                var seq2 = set.FindSequence(seq1);
+                if (seq2 is not null && seq1.IsRepetitive())
                 {
                     result.Add(seq2);
                 }
-                else if (seq2 != null)
+                else if (seq2 is not null)
                 {
                     result.Add(seq1);
                 }
@@ -482,8 +461,6 @@ namespace PerCederberg.Grammatica.Runtime
         public LookAheadSet CreateCombination(LookAheadSet set)
         {
             LookAheadSet result = new(maxLength);
-            Sequence first;
-            Sequence second;
 
             // Handle special cases
             if (Size() <= 0)
@@ -496,9 +473,9 @@ namespace PerCederberg.Grammatica.Runtime
             }
 
             // Create combinations
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                first = (Sequence)elements[i];
+                var first = elements[i];
                 if (first.Length() >= maxLength)
                 {
                     result.Add(first);
@@ -509,9 +486,9 @@ namespace PerCederberg.Grammatica.Runtime
                 }
                 else
                 {
-                    for (int j = 0; j < set.elements.Count; j++)
+                    for (var j = 0; j < set.elements.Count; j++)
                     {
-                        second = (Sequence)set.elements[j];
+                        var second = set.elements[j];
                         result.Add(first.Concat(maxLength, second));
                     }
                 }
@@ -531,11 +508,10 @@ namespace PerCederberg.Grammatica.Runtime
         public LookAheadSet CreateOverlaps(LookAheadSet set)
         {
             LookAheadSet result = new(maxLength);
-            Sequence seq;
 
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                seq = (Sequence)elements[i];
+                var seq = elements[i];
                 if (set.IsOverlap(seq))
                 {
                     result.Add(seq);
@@ -556,22 +532,20 @@ namespace PerCederberg.Grammatica.Runtime
         public LookAheadSet CreateFilter(LookAheadSet set)
         {
             LookAheadSet result = new(maxLength);
-            Sequence first;
-            Sequence second;
 
             // Handle special cases
-            if (this.Size() <= 0 || set.Size() <= 0)
+            if (Size() <= 0 || set.Size() <= 0)
             {
                 return this;
             }
 
             // Create combinations
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                first = (Sequence)elements[i];
+                var first = elements[i];
                 for (int j = 0; j < set.elements.Count; j++)
                 {
-                    second = (Sequence)set.elements[j];
+                    var second = set.elements[j];
                     if (first.StartsWith(second))
                     {
                         result.Add(first.Subsequence(second.Length()));
@@ -590,11 +564,10 @@ namespace PerCederberg.Grammatica.Runtime
         public LookAheadSet CreateRepetitive()
         {
             LookAheadSet result = new(maxLength);
-            Sequence seq;
 
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                seq = (Sequence)elements[i];
+                var seq = elements[i];
                 if (seq.IsRepetitive())
                 {
                     result.Add(seq);
@@ -627,12 +600,11 @@ namespace PerCederberg.Grammatica.Runtime
         public string ToString(Tokenizer? tokenizer)
         {
             StringBuilder buffer = new();
-            Sequence seq;
 
             buffer.Append('{');
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                seq = (Sequence)elements[i];
+                var seq = elements[i];
                 buffer.Append("\n  ");
                 buffer.Append(seq.ToString(tokenizer));
             }
@@ -659,7 +631,7 @@ namespace PerCederberg.Grammatica.Runtime
             /**
              * The list of token ids in this sequence.
              */
-            private readonly ArrayList tokens;
+            private readonly List<TokenId> tokens;
 
             /**
              * Creates a new empty token sequence. The repeat flag
@@ -668,7 +640,7 @@ namespace PerCederberg.Grammatica.Runtime
             public Sequence()
             {
                 repeat = false;
-                tokens = new ArrayList(0);
+                tokens = new();
             }
 
             /**
@@ -677,10 +649,10 @@ namespace PerCederberg.Grammatica.Runtime
              * @param repeat         the repeat flag value
              * @param token          the token to add
              */
-            public Sequence(bool repeat, int token)
+            public Sequence(bool repeat, TokenId token)
             {
                 this.repeat = repeat;
-                tokens = new ArrayList(1) { token };
+                tokens = new List<TokenId>(1) { token };
             }
 
             /**
@@ -695,7 +667,7 @@ namespace PerCederberg.Grammatica.Runtime
             public Sequence(int length, Sequence seq)
             {
                 repeat = seq.repeat;
-                tokens = new ArrayList(length);
+                tokens = new List<TokenId>(length);
                 if (seq.Length() < length)
                 {
                     length = seq.Length();
@@ -737,7 +709,7 @@ namespace PerCederberg.Grammatica.Runtime
              *
              * @return the token id found, or null
              */
-            public object? GetToken(int pos)
+            public TokenId? GetToken(int pos)
             {
                 if (pos >= 0 && pos < tokens.Count)
                 {
@@ -785,36 +757,26 @@ namespace PerCederberg.Grammatica.Runtime
              */
             public bool Equals(Sequence seq)
             {
-                if (tokens.Count != seq.tokens.Count)
-                {
-                    return false;
-                }
-                for (var i = 0; i < tokens.Count; i++)
-                {
-                    if (!tokens[i].Equals(seq.tokens[i]))
-                    {
-                        return false;
-                    }
-                }
-                return true;
+                return tokens.SequenceEqual(seq.tokens);
             }
 
-            /**
-             * Returns a hash code for this object.
-             *
-             * @return a hash code for this object
-             */
-            public override int GetHashCode()
-            {
-                return tokens.Count.GetHashCode();
-            }
+            ///**
+            // * Returns a hash code for this object.
+            // *
+            // * @return a hash code for this object
+            // */
+            //public override int GetHashCode()
+            //{
+            //    return tokens.Count.GetHashCode();
+            //}
+
 
             /**
              * Checks if this token sequence starts with the tokens from
              * another sequence. If the other sequence is longer than this
              * sequence, this method will always return false.
              *
-             * @param seq            the token sequence to check
+             * @param seq the token sequence to check
              *
              * @return true if this sequence starts with the other, or
              *         false otherwise
@@ -825,9 +787,9 @@ namespace PerCederberg.Grammatica.Runtime
                 {
                     return false;
                 }
-                for (int i = 0; i < seq.tokens.Count; i++)
+                for (var i = 0; i < seq.tokens.Count; i++)
                 {
-                    if (!tokens[i].Equals(seq.tokens[i]))
+                    if (tokens[i].Equals(seq.tokens[i]) == false)
                     {
                         return false;
                     }
@@ -859,13 +821,12 @@ namespace PerCederberg.Grammatica.Runtime
             public bool IsNext(Parser parser)
             {
                 Token token;
-                int id;
 
                 for (int i = 0; i < tokens.Count; i++)
                 {
-                    id = (int)tokens[i];
+                    var id = tokens[i];
                     token = parser.PeekToken(i);
-                    if (token == null || token.Id != id)
+                    if (token is null || token.TypeId != id)
                     {
                         return false;
                     }
@@ -885,18 +846,15 @@ namespace PerCederberg.Grammatica.Runtime
              */
             public bool IsNext(Parser parser, int length)
             {
-                Token token;
-                int id;
-
                 if (length > tokens.Count)
                 {
                     length = tokens.Count;
                 }
-                for (int i = 0; i < length; i++)
+                for (var i = 0; i < length; i++)
                 {
-                    id = (int)tokens[i];
-                    token = parser.PeekToken(i);
-                    if (token == null || token.Id != id)
+                    var id = tokens[i];
+                    var token = parser.PeekToken(i);
+                    if (token == null || token.TypeId != id)
                     {
                         return false;
                     }
@@ -904,13 +862,10 @@ namespace PerCederberg.Grammatica.Runtime
                 return true;
             }
 
-            /**
-             * Returns a string representation of this object.
-             *
-             * @return a string representation of this object
-             */
             public override string ToString()
             {
+                Debugger.Break();
+                //Todo: What is the point of this?
                 return ToString(null);
             }
 
@@ -921,23 +876,21 @@ namespace PerCederberg.Grammatica.Runtime
              *
              * @return a string representation of this object
              */
-            public string ToString(Tokenizer tokenizer)
+            public string ToString(Tokenizer? tokenizer)
             {
                 StringBuilder buffer = new();
-                string str;
-                int id;
 
-                if (tokenizer == null)
+                if (tokenizer is null)
                 {
                     buffer.Append(tokens.ToString());
                 }
                 else
                 {
                     buffer.Append('[');
-                    for (int i = 0; i < tokens.Count; i++)
+                    for (var i = 0; i < tokens.Count; i++)
                     {
-                        id = (int)tokens[i];
-                        str = tokenizer.GetPatternDescription(id);
+                        var id = tokens[i];
+                        var str = tokenizer.GetPatternDescription(id);
                         if (i > 0)
                         {
                             buffer.Append(' ');
@@ -971,7 +924,7 @@ namespace PerCederberg.Grammatica.Runtime
                 {
                     res.repeat = true;
                 }
-                length -= this.Length();
+                length -= Length();
                 if (length > seq.Length())
                 {
                     res.tokens.AddRange(seq.tokens);

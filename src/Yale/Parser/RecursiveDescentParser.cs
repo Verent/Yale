@@ -14,8 +14,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A recursive descent parser. This parser handles LL(n) grammars,
@@ -90,7 +91,8 @@ namespace PerCederberg.Grammatica.Runtime
 
             // Performs production pattern checks
             base.Prepare();
-            SetInitialized(false);
+
+            initialized = false;
 
             // Calculate production look-ahead sets
             e = GetPatterns().GetEnumerator();
@@ -100,7 +102,7 @@ namespace PerCederberg.Grammatica.Runtime
             }
 
             // Set initialized flag
-            SetInitialized(true);
+            initialized = true;
         }
 
         /**
@@ -327,19 +329,16 @@ namespace PerCederberg.Grammatica.Runtime
         private void CalculateLookAhead(ProductionPattern pattern)
         {
             ProductionPatternAlternative alt;
-            LookAheadSet result;
-            LookAheadSet[] alternatives;
             LookAheadSet conflicts;
             LookAheadSet previous = new(0);
             int length = 1;
-            int i;
             CallStack stack = new();
 
             // Calculate simple look-ahead
             stack.Push(pattern.Name, 1);
-            result = new LookAheadSet(1);
-            alternatives = new LookAheadSet[pattern.Count];
-            for (i = 0; i < pattern.Count; i++)
+            var result = new LookAheadSet(1);
+            var alternatives = new LookAheadSet[pattern.Count];
+            for (var i = 0; i < pattern.Count; i++)
             {
                 alt = pattern[i];
                 alternatives[i] = FindLookAhead(alt, 1, 0, stack, null);
@@ -356,7 +355,7 @@ namespace PerCederberg.Grammatica.Runtime
                 stack.Clear();
                 stack.Push(pattern.Name, length);
                 conflicts.AddAll(previous);
-                for (i = 0; i < pattern.Count; i++)
+                for (var i = 0; i < pattern.Count; i++)
                 {
                     alt = pattern[i];
                     if (alternatives[i].Intersects(conflicts))
@@ -382,7 +381,7 @@ namespace PerCederberg.Grammatica.Runtime
             }
 
             // Resolve conflicts inside rules
-            for (i = 0; i < pattern.Count; i++)
+            for (var i = 0; i < pattern.Count; i++)
             {
                 CalculateLookAhead(pattern[i], 0);
             }
@@ -408,7 +407,7 @@ namespace PerCederberg.Grammatica.Runtime
             LookAheadSet follow;
             LookAheadSet conflicts;
             LookAheadSet previous = new(0);
-            String location;
+            string location;
             int length = 1;
 
             // Check trivial cases
@@ -474,7 +473,7 @@ namespace PerCederberg.Grammatica.Runtime
             ProductionPattern pattern,
             int length,
             CallStack stack,
-            LookAheadSet filter
+            LookAheadSet? filter
         )
         {
             LookAheadSet result;
@@ -486,7 +485,7 @@ namespace PerCederberg.Grammatica.Runtime
                 throw new ParserCreationException(
                     ParserCreationException.ErrorType.InfiniteLoop,
                     pattern.Name,
-                    (String)null
+                    null
                 );
             }
 
@@ -526,7 +525,7 @@ namespace PerCederberg.Grammatica.Runtime
             int length,
             int pos,
             CallStack stack,
-            LookAheadSet filter
+            LookAheadSet? filter
         )
         {
             LookAheadSet first;
@@ -592,7 +591,7 @@ namespace PerCederberg.Grammatica.Runtime
             ProductionPatternElement elem,
             int length,
             CallStack stack,
-            LookAheadSet filter
+            LookAheadSet? filter
         )
         {
             LookAheadSet result;
@@ -610,7 +609,7 @@ namespace PerCederberg.Grammatica.Runtime
             }
 
             // Handle element repetitions
-            if (elem.MaxCount == Int32.MaxValue)
+            if (elem.MaxCount == int.MaxValue)
             {
                 first = first.CreateRepetitive();
             }
@@ -656,9 +655,9 @@ namespace PerCederberg.Grammatica.Runtime
         private LookAheadSet FindLookAhead(
             ProductionPatternElement elem,
             int length,
-            int dummy,
+            int dummy, //Todo: remove this!
             CallStack stack,
-            LookAheadSet filter
+            LookAheadSet? filter
         )
         {
             LookAheadSet result;
@@ -790,18 +789,17 @@ namespace PerCederberg.Grammatica.Runtime
         private void ThrowParseException(LookAheadSet set)
         {
             Token token;
-            ArrayList list = new();
-            int[] initials;
+            List<string> list = new();
 
             // Read tokens until mismatch
             while (set.IsNext(this, 1))
             {
-                set = set.CreateNextSet(NextToken().Id);
+                set = set.CreateNextSet(NextToken().TypeId);
             }
 
             // Find next token descriptions
-            initials = set.GetInitialTokens();
-            for (int i = 0; i < initials.Length; i++)
+            var initials = set.GetInitialTokens();
+            for (var i = 0; i < initials.Length; i++)
             {
                 list.Add(GetTokenDescription(initials[i]));
             }
@@ -831,10 +829,9 @@ namespace PerCederberg.Grammatica.Runtime
         private void ThrowAmbiguityException(string pattern, string location, LookAheadSet set)
         {
             ArrayList list = new();
-            int[] initials;
 
             // Find next token descriptions
-            initials = set.GetInitialTokens();
+            var initials = set.GetInitialTokens();
             for (int i = 0; i < initials.Length; i++)
             {
                 list.Add(GetTokenDescription(initials[i]));

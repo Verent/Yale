@@ -1,22 +1,4 @@
-/*
- * ProductionPatternAlternative.cs
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the BSD license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * LICENSE.txt file for more details.
- *
- * Copyright (c) 2003-2015 Per Cederberg. All rights reserved.
- */
-
-using System;
-using System.Collections;
-using System.Text;
-
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A production pattern alternative. This class represents a list of
@@ -34,7 +16,7 @@ namespace PerCederberg.Grammatica.Runtime
         /**
          * The element list.
          */
-        private readonly ArrayList elements = new();
+        private readonly List<ProductionPatternElement> elements = new();
 
         /**
          * The look-ahead set associated with this alternative.
@@ -52,7 +34,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public ProductionPattern Pattern { get; private set; }
+        public ProductionPattern? Pattern { get; private set; }
 
         /**
          * The look-ahead set property. This property contains the
@@ -85,7 +67,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public ProductionPatternElement this[int index]
         {
-            get { return (ProductionPatternElement)elements[index]; }
+            get { return elements[index]; }
         }
 
         /**
@@ -113,11 +95,9 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public bool IsLeftRecursive()
         {
-            ProductionPatternElement elem;
-
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                elem = (ProductionPatternElement)elements[i];
+                var elem = elements[i];
                 if (elem.Id == Pattern.Id)
                 {
                     return true;
@@ -140,11 +120,9 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public bool IsRightRecursive()
         {
-            ProductionPatternElement elem;
-
-            for (int i = elements.Count - 1; i >= 0; i--)
+            for (var i = elements.Count - 1; i >= 0; i--)
             {
-                elem = (ProductionPatternElement)elements[i];
+                var elem = elements[i];
                 if (elem.Id == Pattern.Id)
                 {
                     return true;
@@ -179,7 +157,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         internal void SetPattern(ProductionPattern pattern)
         {
-            this.Pattern = pattern;
+            Pattern = pattern;
         }
 
         /**
@@ -191,12 +169,11 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public int GetMinElementCount()
         {
-            ProductionPatternElement elem;
             int min = 0;
 
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                elem = (ProductionPatternElement)elements[i];
+                var elem = elements[i];
                 min += elem.MinCount;
             }
             return min;
@@ -211,15 +188,14 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public int GetMaxElementCount()
         {
-            ProductionPatternElement elem;
             int max = 0;
 
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                elem = (ProductionPatternElement)elements[i];
-                if (elem.MaxCount >= Int32.MaxValue)
+                var elem = elements[i];
+                if (elem.MaxCount >= int.MaxValue)
                 {
-                    return Int32.MaxValue;
+                    return int.MaxValue;
                 }
                 else
                 {
@@ -240,7 +216,7 @@ namespace PerCederberg.Grammatica.Runtime
          * @param max            the maximum number of occurancies, or
          *                       -1 for infinite
          */
-        public void AddToken(int id, int min, int max)
+        public void AddToken(TokenId id, int min, int max)
         {
             AddElement(new ProductionPatternElement(true, id, min, max));
         }
@@ -256,7 +232,7 @@ namespace PerCederberg.Grammatica.Runtime
          * @param max            the maximum number of occurancies, or
          *                       -1 for infinite
          */
-        public void AddProduction(int id, int min, int max)
+        public void AddProduction(TokenId id, int min, int max)
         {
             AddElement(new ProductionPatternElement(false, id, min, max));
         }
@@ -333,9 +309,9 @@ namespace PerCederberg.Grammatica.Runtime
             {
                 return false;
             }
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                if (!elements[i].Equals(alt.elements[i]))
+                if (elements[i].Equals(alt.elements[i]) is false)
                 {
                     return false;
                 }
@@ -362,7 +338,7 @@ namespace PerCederberg.Grammatica.Runtime
         {
             StringBuilder buffer = new();
 
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
                 if (i > 0)
                 {

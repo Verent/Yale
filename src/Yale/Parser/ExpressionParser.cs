@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using PerCederberg.Grammatica.Runtime;
 
 namespace Yale.Parser;
 
@@ -34,284 +33,278 @@ internal sealed class ExpressionParser : RecursiveDescentParser
 
     private void CreatePatterns()
     {
-        ProductionPattern pattern = new((int)Token.EXPRESSION, "Expression");
+        ProductionPattern pattern = new(TokenId.EXPRESSION, "Expression");
         ProductionPatternAlternative alt = new();
-        alt.AddProduction((int)Token.XOR_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.XOR_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.XOR_EXPRESSION, "XorExpression");
+        pattern = new ProductionPattern(TokenId.XOR_EXPRESSION, "XorExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.OR_EXPRESSION, 1, 1);
-        alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_1, 0, -1);
+        alt.AddProduction(TokenId.OR_EXPRESSION, 1, 1);
+        alt.AddProduction(SyntheticPatterns.SUBPRODUCTION_1, 0, -1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.OR_EXPRESSION, "OrExpression");
+        pattern = new ProductionPattern(TokenId.OR_EXPRESSION, "OrExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.AND_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.AND_EXPRESSION, 1, 1);
         alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_2, 0, -1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.AND_EXPRESSION, "AndExpression");
+        pattern = new ProductionPattern(TokenId.AND_EXPRESSION, "AndExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.NOT_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.NOT_EXPRESSION, 1, 1);
         alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_3, 0, -1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.NOT_EXPRESSION, "NotExpression");
+        pattern = new ProductionPattern(TokenId.NOT_EXPRESSION, "NotExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.NOT, 0, 1);
-        alt.AddProduction((int)Token.IN_EXPRESSION, 1, 1);
+        alt.AddToken(TokenId.NOT, 0, 1);
+        alt.AddProduction(TokenId.IN_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.IN_EXPRESSION, "InExpression");
+        pattern = new ProductionPattern((int)TokenId.IN_EXPRESSION, "InExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.COMPARE_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.COMPARE_EXPRESSION, 1, 1);
         alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_4, 0, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.IN_TARGET_EXPRESSION, "InTargetExpression");
+        pattern = new ProductionPattern(TokenId.IN_TARGET_EXPRESSION, "InTargetExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.FIELD_PROPERTY_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.FIELD_PROPERTY_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.IN_LIST_TARGET_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.IN_LIST_TARGET_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
         pattern = new ProductionPattern(
-            (int)Token.IN_LIST_TARGET_EXPRESSION,
+            TokenId.IN_LIST_TARGET_EXPRESSION,
             "InListTargetExpression"
         );
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.LEFT_PAREN, 1, 1);
-        alt.AddProduction((int)Token.ARGUMENT_LIST, 1, 1);
-        alt.AddToken((int)Token.RIGHT_PAREN, 1, 1);
+        alt.AddToken(TokenId.LEFT_PAREN, 1, 1);
+        alt.AddProduction(TokenId.ARGUMENT_LIST, 1, 1);
+        alt.AddToken(TokenId.RIGHT_PAREN, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.COMPARE_EXPRESSION, "CompareExpression");
+        pattern = new ProductionPattern(TokenId.COMPARE_EXPRESSION, "CompareExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.SHIFT_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.SHIFT_EXPRESSION, 1, 1);
         alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_6, 0, -1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.SHIFT_EXPRESSION, "ShiftExpression");
+        pattern = new ProductionPattern(TokenId.SHIFT_EXPRESSION, "ShiftExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.ADDITIVE_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.ADDITIVE_EXPRESSION, 1, 1);
         alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_8, 0, -1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.ADDITIVE_EXPRESSION, "AdditiveExpression");
+        pattern = new ProductionPattern(TokenId.ADDITIVE_EXPRESSION, "AdditiveExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.MULTIPLICATIVE_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.MULTIPLICATIVE_EXPRESSION, 1, 1);
         alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_10, 0, -1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
         pattern = new ProductionPattern(
-            (int)Token.MULTIPLICATIVE_EXPRESSION,
+            TokenId.MULTIPLICATIVE_EXPRESSION,
             "MultiplicativeExpression"
         );
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.POWER_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.POWER_EXPRESSION, 1, 1);
         alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_12, 0, -1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.POWER_EXPRESSION, "PowerExpression");
+        pattern = new ProductionPattern(TokenId.POWER_EXPRESSION, "PowerExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.NEGATE_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.NEGATE_EXPRESSION, 1, 1);
         alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_13, 0, -1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.NEGATE_EXPRESSION, "NegateExpression");
+        pattern = new ProductionPattern(TokenId.NEGATE_EXPRESSION, "NegateExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.SUB, 0, 1);
-        alt.AddProduction((int)Token.MEMBER_EXPRESSION, 1, 1);
+        alt.AddToken(TokenId.SUB, 0, 1);
+        alt.AddProduction(TokenId.MEMBER_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.MEMBER_EXPRESSION, "MemberExpression");
+        pattern = new ProductionPattern(TokenId.MEMBER_EXPRESSION, "MemberExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.BASIC_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.BASIC_EXPRESSION, 1, 1);
         alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_14, 0, -1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern(
-            (int)Token.MEMBER_ACCESS_EXPRESSION,
-            "MemberAccessExpression"
-        );
+        pattern = new ProductionPattern(TokenId.MEMBER_ACCESS_EXPRESSION, "MemberAccessExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.DOT, 1, 1);
-        alt.AddProduction((int)Token.MEMBER_FUNCTION_EXPRESSION, 1, 1);
+        alt.AddToken(TokenId.DOT, 1, 1);
+        alt.AddProduction(TokenId.MEMBER_FUNCTION_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.BASIC_EXPRESSION, "BasicExpression");
+        pattern = new ProductionPattern(TokenId.BASIC_EXPRESSION, "BasicExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.LITERAL_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.LITERAL_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.EXPRESSION_GROUP, 1, 1);
+        alt.AddProduction(TokenId.EXPRESSION_GROUP, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.MEMBER_FUNCTION_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.MEMBER_FUNCTION_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.SPECIAL_FUNCTION_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.SPECIAL_FUNCTION_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
         pattern = new ProductionPattern(
-            (int)Token.MEMBER_FUNCTION_EXPRESSION,
+            TokenId.MEMBER_FUNCTION_EXPRESSION,
             "MemberFunctionExpression"
         );
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.FIELD_PROPERTY_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.FIELD_PROPERTY_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.FUNCTION_CALL_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.FUNCTION_CALL_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
         pattern = new ProductionPattern(
-            (int)Token.FIELD_PROPERTY_EXPRESSION,
+            TokenId.FIELD_PROPERTY_EXPRESSION,
             "FieldPropertyExpression"
         );
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.IDENTIFIER, 1, 1);
+        alt.AddToken(TokenId.IDENTIFIER, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
         pattern = new ProductionPattern(
-            (int)Token.SPECIAL_FUNCTION_EXPRESSION,
+            TokenId.SPECIAL_FUNCTION_EXPRESSION,
             "SpecialFunctionExpression"
         );
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.IF_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.IF_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.CAST_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.CAST_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.IF_EXPRESSION, "IfExpression");
+        pattern = new ProductionPattern(TokenId.IF_EXPRESSION, "IfExpression");
         //if(expr;expr;expr)
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.IF, 1, 1);
-        alt.AddToken((int)Token.LEFT_PAREN, 1, 1);
-        alt.AddProduction((int)Token.EXPRESSION, 1, 1);
-        alt.AddToken((int)Token.ARGUMENT_SEPARATOR, 1, 1);
-        alt.AddProduction((int)Token.EXPRESSION, 1, 1);
-        alt.AddToken((int)Token.ARGUMENT_SEPARATOR, 1, 1);
-        alt.AddProduction((int)Token.EXPRESSION, 1, 1);
-        alt.AddToken((int)Token.RIGHT_PAREN, 1, 1);
+        alt.AddToken(TokenId.IF, 1, 1);
+        alt.AddToken(TokenId.LEFT_PAREN, 1, 1);
+        alt.AddProduction(TokenId.EXPRESSION, 1, 1);
+        alt.AddToken(TokenId.ARGUMENT_SEPARATOR, 1, 1);
+        alt.AddProduction(TokenId.EXPRESSION, 1, 1);
+        alt.AddToken(TokenId.ARGUMENT_SEPARATOR, 1, 1);
+        alt.AddProduction(TokenId.EXPRESSION, 1, 1);
+        alt.AddToken(TokenId.RIGHT_PAREN, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.CAST_EXPRESSION, "CastExpression");
+        pattern = new ProductionPattern(TokenId.CAST_EXPRESSION, "CastExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.CAST, 1, 1);
-        alt.AddToken((int)Token.LEFT_PAREN, 1, 1);
-        alt.AddProduction((int)Token.EXPRESSION, 1, 1);
-        alt.AddToken((int)Token.ARGUMENT_SEPARATOR, 1, 1);
-        alt.AddProduction((int)Token.CAST_TYPE_EXPRESSION, 1, 1);
-        alt.AddToken((int)Token.RIGHT_PAREN, 1, 1);
+        alt.AddToken(TokenId.CAST, 1, 1);
+        alt.AddToken(TokenId.LEFT_PAREN, 1, 1);
+        alt.AddProduction(TokenId.EXPRESSION, 1, 1);
+        alt.AddToken(TokenId.ARGUMENT_SEPARATOR, 1, 1);
+        alt.AddProduction(TokenId.CAST_TYPE_EXPRESSION, 1, 1);
+        alt.AddToken(TokenId.RIGHT_PAREN, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.CAST_TYPE_EXPRESSION, "CastTypeExpression");
+        pattern = new ProductionPattern(TokenId.CAST_TYPE_EXPRESSION, "CastTypeExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.IDENTIFIER, 1, 1);
+        alt.AddToken(TokenId.IDENTIFIER, 1, 1);
         alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_15, 0, -1);
-        alt.AddToken((int)Token.ARRAY_BRACES, 0, 1);
+        alt.AddToken(TokenId.ARRAY_BRACES, 0, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.INDEX_EXPRESSION, "IndexExpression");
+        pattern = new ProductionPattern(TokenId.INDEX_EXPRESSION, "IndexExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.LEFT_BRACE, 1, 1);
-        alt.AddProduction((int)Token.ARGUMENT_LIST, 1, 1);
-        alt.AddToken((int)Token.RIGHT_BRACE, 1, 1);
+        alt.AddToken(TokenId.LEFT_BRACE, 1, 1);
+        alt.AddProduction(TokenId.ARGUMENT_LIST, 1, 1);
+        alt.AddToken(TokenId.RIGHT_BRACE, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern(
-            (int)Token.FUNCTION_CALL_EXPRESSION,
-            "FunctionCallExpression"
-        );
+        pattern = new ProductionPattern(TokenId.FUNCTION_CALL_EXPRESSION, "FunctionCallExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.IDENTIFIER, 1, 1);
-        alt.AddToken((int)Token.LEFT_PAREN, 1, 1);
-        alt.AddProduction((int)Token.ARGUMENT_LIST, 0, 1);
-        alt.AddToken((int)Token.RIGHT_PAREN, 1, 1);
+        alt.AddToken(TokenId.IDENTIFIER, 1, 1);
+        alt.AddToken(TokenId.LEFT_PAREN, 1, 1);
+        alt.AddProduction(TokenId.ARGUMENT_LIST, 0, 1);
+        alt.AddToken(TokenId.RIGHT_PAREN, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.ARGUMENT_LIST, "ArgumentList");
+        pattern = new ProductionPattern(TokenId.ARGUMENT_LIST, "ArgumentList");
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.EXPRESSION, 1, 1);
         alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_16, 0, -1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.LITERAL_EXPRESSION, "LiteralExpression");
+        pattern = new ProductionPattern(TokenId.LITERAL_EXPRESSION, "LiteralExpression");
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.INTEGER, 1, 1);
+        alt.AddToken(TokenId.INTEGER, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.REAL, 1, 1);
+        alt.AddToken(TokenId.REAL, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.STRING_LITERAL, 1, 1);
+        alt.AddToken(TokenId.STRING_LITERAL, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.BOOLEAN_LITERAL_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.BOOLEAN_LITERAL_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.HEX_LITERAL, 1, 1);
+        alt.AddToken(TokenId.HEX_LITERAL, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.CHAR_LITERAL, 1, 1);
+        alt.AddToken(TokenId.CHAR_LITERAL, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.NULL_LITERAL, 1, 1);
+        alt.AddToken(TokenId.NULL_LITERAL, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.DATETIME, 1, 1);
+        alt.AddToken(TokenId.DATETIME, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.TIMESPAN, 1, 1);
+        alt.AddToken(TokenId.TIMESPAN, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
         pattern = new ProductionPattern(
-            (int)Token.BOOLEAN_LITERAL_EXPRESSION,
+            TokenId.BOOLEAN_LITERAL_EXPRESSION,
             "BooleanLiteralExpression"
         );
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.TRUE, 1, 1);
+        alt.AddToken(TokenId.TRUE, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.FALSE, 1, 1);
+        alt.AddToken(TokenId.FALSE, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
-        pattern = new ProductionPattern((int)Token.EXPRESSION_GROUP, "ExpressionGroup");
+        pattern = new ProductionPattern(TokenId.EXPRESSION_GROUP, "ExpressionGroup");
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.LEFT_PAREN, 1, 1);
-        alt.AddProduction((int)Token.EXPRESSION, 1, 1);
-        alt.AddToken((int)Token.RIGHT_PAREN, 1, 1);
+        alt.AddToken(TokenId.LEFT_PAREN, 1, 1);
+        alt.AddProduction(TokenId.EXPRESSION, 1, 1);
+        alt.AddToken(TokenId.RIGHT_PAREN, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -320,8 +313,8 @@ internal sealed class ExpressionParser : RecursiveDescentParser
             Synthetic = true
         };
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.XOR, 1, 1);
-        alt.AddProduction((int)Token.OR_EXPRESSION, 1, 1);
+        alt.AddToken(TokenId.XOR, 1, 1);
+        alt.AddProduction(TokenId.OR_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -330,8 +323,8 @@ internal sealed class ExpressionParser : RecursiveDescentParser
             Synthetic = true
         };
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.OR, 1, 1);
-        alt.AddProduction((int)Token.AND_EXPRESSION, 1, 1);
+        alt.AddToken(TokenId.OR, 1, 1);
+        alt.AddProduction(TokenId.AND_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -340,8 +333,8 @@ internal sealed class ExpressionParser : RecursiveDescentParser
             Synthetic = true
         };
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.AND, 1, 1);
-        alt.AddProduction((int)Token.NOT_EXPRESSION, 1, 1);
+        alt.AddToken(TokenId.AND, 1, 1);
+        alt.AddProduction(TokenId.NOT_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -350,8 +343,8 @@ internal sealed class ExpressionParser : RecursiveDescentParser
             Synthetic = true
         };
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.IN, 1, 1);
-        alt.AddProduction((int)Token.IN_TARGET_EXPRESSION, 1, 1);
+        alt.AddToken(TokenId.IN, 1, 1);
+        alt.AddProduction(TokenId.IN_TARGET_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -360,22 +353,22 @@ internal sealed class ExpressionParser : RecursiveDescentParser
             Synthetic = true
         };
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.EQ, 1, 1);
+        alt.AddToken(TokenId.EQ, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.GT, 1, 1);
+        alt.AddToken(TokenId.GT, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.LT, 1, 1);
+        alt.AddToken(TokenId.LT, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.GTE, 1, 1);
+        alt.AddToken(TokenId.GTE, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.LTE, 1, 1);
+        alt.AddToken(TokenId.LTE, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.NE, 1, 1);
+        alt.AddToken(TokenId.NE, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -385,7 +378,7 @@ internal sealed class ExpressionParser : RecursiveDescentParser
         };
         alt = new ProductionPatternAlternative();
         alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_5, 1, 1);
-        alt.AddProduction((int)Token.SHIFT_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.SHIFT_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -394,10 +387,10 @@ internal sealed class ExpressionParser : RecursiveDescentParser
             Synthetic = true
         };
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.LEFT_SHIFT, 1, 1);
+        alt.AddToken(TokenId.LEFT_SHIFT, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.RIGHT_SHIFT, 1, 1);
+        alt.AddToken(TokenId.RIGHT_SHIFT, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -407,7 +400,7 @@ internal sealed class ExpressionParser : RecursiveDescentParser
         };
         alt = new ProductionPatternAlternative();
         alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_7, 1, 1);
-        alt.AddProduction((int)Token.ADDITIVE_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.ADDITIVE_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -416,10 +409,10 @@ internal sealed class ExpressionParser : RecursiveDescentParser
             Synthetic = true
         };
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.ADD, 1, 1);
+        alt.AddToken(TokenId.ADD, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.SUB, 1, 1);
+        alt.AddToken(TokenId.SUB, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -429,7 +422,7 @@ internal sealed class ExpressionParser : RecursiveDescentParser
         };
         alt = new ProductionPatternAlternative();
         alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_9, 1, 1);
-        alt.AddProduction((int)Token.MULTIPLICATIVE_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.MULTIPLICATIVE_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -438,13 +431,13 @@ internal sealed class ExpressionParser : RecursiveDescentParser
             Synthetic = true
         };
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.MUL, 1, 1);
+        alt.AddToken(TokenId.MUL, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.DIV, 1, 1);
+        alt.AddToken(TokenId.DIV, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.MOD, 1, 1);
+        alt.AddToken(TokenId.MOD, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -454,7 +447,7 @@ internal sealed class ExpressionParser : RecursiveDescentParser
         };
         alt = new ProductionPatternAlternative();
         alt.AddProduction((int)SyntheticPatterns.SUBPRODUCTION_11, 1, 1);
-        alt.AddProduction((int)Token.POWER_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.POWER_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -463,8 +456,8 @@ internal sealed class ExpressionParser : RecursiveDescentParser
             Synthetic = true
         };
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.POWER, 1, 1);
-        alt.AddProduction((int)Token.NEGATE_EXPRESSION, 1, 1);
+        alt.AddToken(TokenId.POWER, 1, 1);
+        alt.AddProduction(TokenId.NEGATE_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -473,10 +466,10 @@ internal sealed class ExpressionParser : RecursiveDescentParser
             Synthetic = true
         };
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.MEMBER_ACCESS_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.MEMBER_ACCESS_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         alt = new ProductionPatternAlternative();
-        alt.AddProduction((int)Token.INDEX_EXPRESSION, 1, 1);
+        alt.AddProduction(TokenId.INDEX_EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -485,8 +478,8 @@ internal sealed class ExpressionParser : RecursiveDescentParser
             Synthetic = true
         };
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.DOT, 1, 1);
-        alt.AddToken((int)Token.IDENTIFIER, 1, 1);
+        alt.AddToken(TokenId.DOT, 1, 1);
+        alt.AddToken(TokenId.IDENTIFIER, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
 
@@ -495,8 +488,8 @@ internal sealed class ExpressionParser : RecursiveDescentParser
             Synthetic = true
         };
         alt = new ProductionPatternAlternative();
-        alt.AddToken((int)Token.ARGUMENT_SEPARATOR, 1, 1);
-        alt.AddProduction((int)Token.EXPRESSION, 1, 1);
+        alt.AddToken(TokenId.ARGUMENT_SEPARATOR, 1, 1);
+        alt.AddProduction(TokenId.EXPRESSION, 1, 1);
         pattern.AddAlternative(alt);
         AddPattern(pattern);
     }

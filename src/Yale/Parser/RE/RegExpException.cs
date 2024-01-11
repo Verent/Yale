@@ -15,7 +15,7 @@
 using System;
 using System.Text;
 
-namespace PerCederberg.Grammatica.Runtime.RE
+namespace Yale.Parser.RE
 {
     /**
      * A regular expression exception. This exception is thrown if a
@@ -94,7 +94,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
         public RegExpException(ErrorType type, int pos, string pattern)
         {
             this.type = type;
-            this.position = pos;
+            position = pos;
             this.pattern = pattern;
         }
 

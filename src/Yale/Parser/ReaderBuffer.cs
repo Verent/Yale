@@ -15,7 +15,7 @@
 using System;
 using System.IO;
 
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A character buffer that automatically reads from an input source
@@ -206,7 +206,7 @@ namespace PerCederberg.Grammatica.Runtime
                 EnsureBuffered(offset + 1);
                 index = pos + offset;
             }
-            return (index >= length) ? -1 : buffer[index];
+            return index >= length ? -1 : buffer[index];
         }
 
         /**
@@ -305,7 +305,7 @@ namespace PerCederberg.Grammatica.Runtime
             // Remove (almost all) old characters from buffer
             if (pos > BlockSize)
             {
-                length -= (pos - 16);
+                length -= pos - 16;
                 Array.Copy(buffer, pos - 16, buffer, 0, length);
                 pos = 16;
             }

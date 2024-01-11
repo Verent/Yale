@@ -1,20 +1,6 @@
-/*
- * Analyzer.cs
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the BSD license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * LICENSE.txt file for more details.
- *
- * Copyright (c) 2003-2015 Per Cederberg. All rights reserved.
- */
+using Yale.Expression.Elements.Base;
 
-using System.Collections;
-
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A parse tree analyzer. This class provides callback methods that
@@ -110,11 +96,11 @@ namespace PerCederberg.Grammatica.Runtime
                 {
                     log.AddError(e);
                 }
-                for (int i = 0; i < node.Count; i++)
+                for (var i = 0; i < prod.Count; i++)
                 {
                     try
                     {
-                        Child(prod, Analyze(node[i], log));
+                        Child(prod, Analyze(prod[i], log));
                     }
                     catch (ParseException e)
                     {
@@ -184,8 +170,9 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @throws ParseException if the node analysis discovered errors
          */
-        public virtual void Enter(Node node) { }
+        public virtual void Enter(Token token) { }
 
+        public virtual void Enter(Production production) { }
         /**
          * Called when exiting a parse tree node. By default this method
          * returns the node. A subclass can override this method to handle
@@ -199,9 +186,14 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @throws ParseException if the node analysis discovered errors
          */
-        public virtual Node Exit(Node node)
+        public virtual Node Exit(Token token)
         {
-            return node;
+            return token;
+        }
+
+        public virtual Node Exit(Production production)
+        {
+            return production;
         }
 
         /**
@@ -234,10 +226,8 @@ namespace PerCederberg.Grammatica.Runtime
          * @throws ParseException if either the node or the child node
          *             was null
          */
-        protected static Node GetChildAt(Node node, int pos)
+        protected static Node GetChildAt(Production node, int pos)
         {
-            Node child;
-
             if (node is null)
             {
                 throw new ParseException(
@@ -247,7 +237,7 @@ namespace PerCederberg.Grammatica.Runtime
                     -1
                 );
             }
-            child = node[pos];
+            var child = node[pos];
             if (child is null)
             {
                 throw new ParseException(
@@ -258,49 +248,6 @@ namespace PerCederberg.Grammatica.Runtime
                 );
             }
             return child;
-        }
-
-        /**
-         * Returns the first child with the specified id. If the node is
-         * null, or no child with the specified id could be found, this
-         * method will throw a parse exception with the internal error
-         * type.
-         *
-         * @param node           the parent node
-         * @param id             the child node id
-         *
-         * @return the child node
-         *
-         * @throws ParseException if the node was null, or a child node
-         *             couldn't be found
-         */
-        protected static Node GetChildWithId(Node node, int id)
-        {
-            Node child;
-
-            if (node is null)
-            {
-                throw new ParseException(
-                    ParseException.ErrorType.Internal,
-                    "attempt to read 'null' parse tree node",
-                    -1,
-                    -1
-                );
-            }
-            for (var i = 0; i < node.Count; i++)
-            {
-                child = node[i];
-                if (child is not null && child.Id == id)
-                {
-                    return child;
-                }
-            }
-            throw new ParseException(
-                ParseException.ErrorType.Internal,
-                "node '" + node.Name + "' has no child with id " + id,
-                node.StartLine,
-                node.StartColumn
-            );
         }
 
         /**
@@ -315,10 +262,8 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @throws ParseException if either the node or the value was null
          */
-        protected static object? GetValue(Node node, int pos)
+        protected static object? GetValue(Node? node, int pos)
         {
-            object? value;
-
             if (node is null)
             {
                 throw new ParseException(
@@ -328,17 +273,16 @@ namespace PerCederberg.Grammatica.Runtime
                     -1
                 );
             }
-            value = node.Values[pos];
-            if (value is null)
-            {
-                throw new ParseException(
-                    ParseException.ErrorType.Internal,
-                    "node '" + node.Name + "' has no value at " + "position " + pos,
-                    node.StartLine,
-                    node.StartColumn
-                );
-            }
-            return value;
+
+            var value = node.Values[pos];
+            if (value is not null) return value;
+
+            throw new ParseException(
+                ParseException.ErrorType.Internal,
+                "node '" + node.Name + "' has no value at " + "position " + pos,
+                node.StartLine,
+                node.StartColumn
+            );
         }
 
         /**
@@ -414,19 +358,19 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.3
          */
-        protected static ArrayList GetChildValues(Node node)
+        protected static List<BaseExpressionElement> GetChildValues(Production node)
         {
-            ArrayList result = new();
-            Node child;
-            ArrayList values;
+            List<BaseExpressionElement> result = new();
 
             for (var i = 0; i < node.Count; i++)
             {
-                child = node[i];
-                values = child.Values;
-                if (values is not null)
+                if (node[i] is Production child)
                 {
-                    result.AddRange(values);
+                    var values = child.Values;
+                    if (values is not null)
+                    {
+                        result.AddRange(values);
+                    }
                 }
             }
             return result;

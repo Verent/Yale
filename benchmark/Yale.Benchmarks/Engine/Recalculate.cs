@@ -65,7 +65,7 @@ public class Recalculate
 
         ParseFlee(engine, context);
 
-        var result = engine.GetResult<int>("expr_b");
+        _ = engine.GetResult<int>("expr_b");
     }
 
     [Benchmark]
@@ -78,7 +78,7 @@ public class Recalculate
 
         engine.Recalculate("expr_b");
 
-        var result = engine.GetResult<int>("expr_b");
+        _ = engine.GetResult<int>("expr_b");
     }
 
     private static void ParseFlee(CalculationEngine engine, ExpressionContext context)
@@ -100,6 +100,6 @@ public class Recalculate
         instance.Variables["a"] = 5;
         instance.Variables["a"] = 10;
 
-        var result = instance.GetResult<int>("expr_b");
+        _ = instance.GetResult<int>("expr_b");
     }
 }

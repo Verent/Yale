@@ -14,10 +14,11 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A base parser class. This class provides the standard parser
@@ -31,24 +32,24 @@ namespace PerCederberg.Grammatica.Runtime
         /**
          * The parser initialization flag.
          */
-        private bool initialized;
+        protected bool initialized;
 
         /**
          * The list of production patterns.
          */
-        private readonly ArrayList patterns = new();
+        private readonly List<ProductionPattern> patterns = new();
 
         /**
          * The map with production patterns and their id:s. This map
          * contains the production patterns indexed by their id:s.
          */
-        private readonly Hashtable patternIds = new();
+        private readonly Dictionary<TokenId, ProductionPattern> patternIds = new();
 
         /**
          * The list of buffered tokens. This list will contain tokens that
          * have been read from the tokenizer, but not yet consumed.
          */
-        private readonly ArrayList tokens = new();
+        private readonly List<Token> tokens = new();
 
         /**
          * The error log. All parse errors will be added to this log as
@@ -96,18 +97,6 @@ namespace PerCederberg.Grammatica.Runtime
         public Analyzer Analyzer { get; }
 
         /**
-         * Sets the parser initialized flag. Normally this flag is set by
-         * the prepare() method, but this method allows further
-         * modifications to it.
-         *
-         * @param initialized    the new initialized flag
-         */
-        internal void SetInitialized(bool initialized)
-        {
-            this.initialized = initialized;
-        }
-
-        /**
          * Adds a new production pattern to the parser. The first pattern
          * added is assumed to be the starting point in the grammar. The
          * patterns added may be validated to some extent.
@@ -137,7 +126,7 @@ namespace PerCederberg.Grammatica.Runtime
             }
             patterns.Add(pattern);
             patternIds.Add(pattern.Id, pattern);
-            SetInitialized(false);
+            initialized = false;
         }
 
         /**
@@ -159,9 +148,9 @@ namespace PerCederberg.Grammatica.Runtime
             }
             for (var i = 0; i < patterns.Count; i++)
             {
-                CheckPattern((ProductionPattern)patterns[i]);
+                CheckPattern(patterns[i]);
             }
-            SetInitialized(true);
+            initialized = true;
         }
 
         /**
@@ -215,7 +204,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         private void CheckElement(string name, ProductionPatternElement elem)
         {
-            if (elem.IsProduction() && GetPattern(elem.Id) == null)
+            if (elem.IsProduction() && GetPattern(elem.Id) is null)
             {
                 throw new ParserCreationException(
                     ParserCreationException.ErrorType.InvalidProduction,
@@ -267,9 +256,9 @@ namespace PerCederberg.Grammatica.Runtime
          * @see #Reset
          * @see Tokenizer#Reset
          */
-        public Node? Parse()
+        public Node Parse()
         {
-            Node? root = null;
+            Node root;
 
             // Initialize parser
             if (initialized == false)
@@ -356,9 +345,9 @@ namespace PerCederberg.Grammatica.Runtime
          * @return the production pattern found, or
          *         null if non-existent
          */
-        internal ProductionPattern GetPattern(int id)
+        internal ProductionPattern GetPattern(TokenId id)
         {
-            return (ProductionPattern)patternIds[id];
+            return patternIds[id];
         }
 
         /**
@@ -367,7 +356,7 @@ namespace PerCederberg.Grammatica.Runtime
          * @return the start production pattern, or
          *         null if no patterns have been added
          */
-        internal ProductionPattern GetStartPattern()
+        internal ProductionPattern? GetStartPattern()
         {
             if (patterns.Count <= 0)
             {
@@ -375,7 +364,7 @@ namespace PerCederberg.Grammatica.Runtime
             }
             else
             {
-                return (ProductionPattern)patterns[0];
+                return patterns[0];
             }
         }
 
@@ -393,7 +382,7 @@ namespace PerCederberg.Grammatica.Runtime
          * Handles the parser entering a production. This method calls the
          * appropriate analyzer callback if the node is not hidden. Note
          * that this method will not call any callback if an error
-         * requiring recovery has ocurred.
+         * requiring recovery has occurred.
          *
          * @param node           the parse tree node
          */
@@ -448,7 +437,7 @@ namespace PerCederberg.Grammatica.Runtime
          * @param node           the parent parse tree node
          * @param child          the child parse tree node, or null
          */
-        internal void AddNode(Production node, Node child)
+        internal void AddNode(Production node, Node? child)
         {
             if (errorRecovery >= 0)
             {
@@ -456,11 +445,14 @@ namespace PerCederberg.Grammatica.Runtime
             }
             else if (node.IsHidden())
             {
-                node.AddChild(child);
+                if (child is not null)
+                {
+                    node.AddChild(child);
+                }
             }
-            else if (child != null && child.IsHidden())
+            else if (child is not null && child.IsHidden())
             {
-                for (int i = 0; i < child.Count; i++)
+                for (var i = 0; i < child.Count; i++)
                 {
                     AddNode(node, child[i]);
                 }
@@ -492,7 +484,7 @@ namespace PerCederberg.Grammatica.Runtime
         {
             Token token = PeekToken(0);
 
-            if (token != null)
+            if (token is not null)
             {
                 tokens.RemoveAt(0);
                 return token;
@@ -510,7 +502,7 @@ namespace PerCederberg.Grammatica.Runtime
 
         /**
          * Reads and consumes the next token in the queue. If no token was
-         * available for consumation, a parse error will be thrown. A
+         * available for consummation, a parse error will be thrown. A
          * parse error will also be thrown if the token id didn't match
          * the specified one.
          *
@@ -521,12 +513,12 @@ namespace PerCederberg.Grammatica.Runtime
          * @throws ParseException if the input stream couldn't be parsed
          *             correctly, or if the token wasn't expected
          */
-        internal Token NextToken(int id)
+        internal Token NextToken(TokenId id)
         {
             Token token = NextToken();
             ArrayList list;
 
-            if (token.Id == id)
+            if (token.TypeId == id)
             {
                 if (errorRecovery > 0)
                 {
@@ -557,16 +549,14 @@ namespace PerCederberg.Grammatica.Runtime
          * @return the token in the queue, or
          *         null if no more tokens in the queue
          */
-        internal Token PeekToken(int steps)
+        internal Token? PeekToken(int steps)
         {
-            Token token;
-
             while (steps >= tokens.Count)
             {
                 try
                 {
-                    token = Tokenizer.Next();
-                    if (token == null)
+                    var token = Tokenizer.Next();
+                    if (token is null)
                     {
                         return null;
                     }
@@ -580,7 +570,7 @@ namespace PerCederberg.Grammatica.Runtime
                     AddError(e, true);
                 }
             }
-            return (Token)tokens[steps];
+            return tokens[steps];
         }
 
         /**
@@ -594,9 +584,9 @@ namespace PerCederberg.Grammatica.Runtime
         {
             StringBuilder buffer = new();
 
-            for (int i = 0; i < patterns.Count; i++)
+            for (var i = 0; i < patterns.Count; i++)
             {
-                buffer.Append(ToString((ProductionPattern)patterns[i]));
+                buffer.Append(ToString(patterns[i]));
                 buffer.Append('\n');
             }
             return buffer.ToString();
@@ -613,20 +603,18 @@ namespace PerCederberg.Grammatica.Runtime
         {
             StringBuilder buffer = new();
             StringBuilder indent = new();
-            LookAheadSet set;
-            int i;
 
             buffer.Append(prod.Name);
             buffer.Append(" (");
             buffer.Append(prod.Id);
             buffer.Append(") ");
-            for (i = 0; i < buffer.Length; i++)
+            for (var i = 0; i < buffer.Length; i++)
             {
                 indent.Append(' ');
             }
             buffer.Append("= ");
             indent.Append("| ");
-            for (i = 0; i < prod.Count; i++)
+            for (var i = 0; i < prod.Count; i++)
             {
                 if (i > 0)
                 {
@@ -635,9 +623,9 @@ namespace PerCederberg.Grammatica.Runtime
                 buffer.Append(ToString(prod[i]));
                 buffer.Append('\n');
             }
-            for (i = 0; i < prod.Count; i++)
+            for (var i = 0; i < prod.Count; i++)
             {
-                set = prod[i].LookAhead;
+                var set = prod[i].LookAhead;
                 if (set.GetMaxLength() > 1)
                 {
                     buffer.Append("Using ");
@@ -664,7 +652,7 @@ namespace PerCederberg.Grammatica.Runtime
         {
             StringBuilder buffer = new();
 
-            for (int i = 0; i < alt.Count; i++)
+            for (var i = 0; i < alt.Count; i++)
             {
                 if (i > 0)
                 {
@@ -727,20 +715,13 @@ namespace PerCederberg.Grammatica.Runtime
         /**
          * Returns a token description for a specified token.
          *
-         * @param token          the token to describe
+         * @param token the token to describe
          *
          * @return the token description
          */
-        internal string GetTokenDescription(int token)
+        internal string? GetTokenDescription(TokenId token)
         {
-            if (Tokenizer is null)
-            {
-                return "";
-            }
-            else
-            {
-                return Tokenizer.GetPatternDescription(token);
-            }
+            return Tokenizer?.GetPatternDescription(token) ?? string.Empty;
         }
     }
 }

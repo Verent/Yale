@@ -14,11 +14,12 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
 
-namespace PerCederberg.Grammatica.Runtime.RE
+namespace Yale.Parser.RE
 {
     /**
      * A regular expression. This class creates and holds an internal
@@ -80,8 +81,8 @@ namespace PerCederberg.Grammatica.Runtime.RE
         {
             this.pattern = pattern;
             this.ignoreCase = ignoreCase;
-            this.pos = 0;
-            this.element = ParseExpr();
+            pos = 0;
+            element = ParseExpr();
             if (pos < pattern.Length)
             {
                 throw new RegExpException(
@@ -180,9 +181,10 @@ namespace PerCederberg.Grammatica.Runtime.RE
          */
         private Element ParseTerm()
         {
-            ArrayList list = new();
-
-            list.Add(ParseFact());
+            List<Element> list = new()
+            {
+                ParseFact()
+            };
             while (true)
             {
                 switch (PeekChar(0))
@@ -324,7 +326,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
                         }
                     }
                     ReadChar('}');
-                    if (max == 0 || (max > 0 && min > max))
+                    if (max == 0 || max > 0 && min > max)
                     {
                         throw new RegExpException(
                             RegExpException.ErrorType.InvalidRepeatCount,
@@ -368,7 +370,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
         private CharacterSetElement ParseCharSet()
         {
             CharacterSetElement charset;
-            Element elem;
+            Element element;
             bool repeat = true;
             char start;
             char end;
@@ -392,14 +394,14 @@ namespace PerCederberg.Grammatica.Runtime.RE
                         repeat = false;
                         break;
                     case '\\':
-                        elem = ParseEscapeChar();
-                        if (elem is StringElement)
+                        element = ParseEscapeChar();
+                        if (element is StringElement stringElement)
                         {
-                            charset.AddCharacters((StringElement)elem);
+                            charset.AddCharacters(stringElement);
                         }
                         else
                         {
-                            charset.AddCharacterSet((CharacterSetElement)elem);
+                            charset.AddCharacterSet((CharacterSetElement)element);
                         }
                         break;
                     default:
@@ -495,7 +497,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
                     str = ReadChar().ToString() + ReadChar().ToString();
                     try
                     {
-                        value = Int32.Parse(str, NumberStyles.AllowHexSpecifier);
+                        value = int.Parse(str, NumberStyles.AllowHexSpecifier);
                         return new StringElement(FixChar((char)value));
                     }
                     catch (FormatException)
@@ -514,7 +516,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
                         + ReadChar().ToString();
                     try
                     {
-                        value = Int32.Parse(str, NumberStyles.AllowHexSpecifier);
+                        value = int.Parse(str, NumberStyles.AllowHexSpecifier);
                         return new StringElement(FixChar((char)value));
                     }
                     catch (FormatException)
@@ -550,7 +552,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
                 case 'W':
                     return CharacterSetElement.NON_WORD;
                 default:
-                    if (('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z'))
+                    if ('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z')
                     {
                         throw new RegExpException(
                             RegExpException.ErrorType.UnsupportedEscapeCharacter,
@@ -573,7 +575,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
          */
         private char FixChar(char c)
         {
-            return ignoreCase ? Char.ToLower(c) : c;
+            return ignoreCase ? char.ToLower(c) : c;
         }
 
         /**
@@ -605,7 +607,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
                     pattern
                 );
             }
-            return Int32.Parse(buf.ToString());
+            return int.Parse(buf.ToString());
         }
 
         /**
@@ -692,38 +694,37 @@ namespace PerCederberg.Grammatica.Runtime.RE
          *
          * @return the combined element
          */
-        private static Element CombineElements(ArrayList list)
+        private static Element CombineElements(List<Element> list)
         {
-            Element prev;
-            Element elem;
+            Element currentElement;
             string str;
             int i;
 
             // Concatenate string elements
-            prev = (Element)list[0];
+            var prevElement = list[0];
             for (i = 1; i < list.Count; i++)
             {
-                elem = (Element)list[i];
-                if (prev is StringElement && elem is StringElement)
+                currentElement = list[i];
+                if (prevElement is StringElement prevAsStringElement && currentElement is StringElement elementAsStringElement)
                 {
-                    str = ((StringElement)prev).GetString() + ((StringElement)elem).GetString();
-                    elem = new StringElement(str);
+                    str = prevAsStringElement.GetString() + elementAsStringElement.GetString();
+                    currentElement = new StringElement(str);
                     list.RemoveAt(i);
-                    list[i - 1] = elem;
+                    list[i - 1] = currentElement;
                     i--;
                 }
-                prev = elem;
+                prevElement = currentElement;
             }
 
             // Combine all remaining elements
-            elem = (Element)list[^1];
+            currentElement = list[^1];
             for (i = list.Count - 2; i >= 0; i--)
             {
-                prev = (Element)list[i];
-                elem = new CombineElement(prev, elem);
+                prevElement = list[i];
+                currentElement = new CombineElement(prevElement, currentElement);
             }
 
-            return elem;
+            return currentElement;
         }
     }
 }

@@ -17,7 +17,7 @@ using System.Collections;
 using System.IO;
 using System.Text;
 
-namespace PerCederberg.Grammatica.Runtime.RE
+namespace Yale.Parser.RE
 {
     /**
      * A regular expression character set element. This element
@@ -195,7 +195,7 @@ namespace PerCederberg.Grammatica.Runtime.RE
             }
             if (m.IsCaseInsensitive())
             {
-                c = (int)Char.ToLower((char)c);
+                c = char.ToLower((char)c);
             }
             return InSet((char)c) ? 1 : -1;
         }

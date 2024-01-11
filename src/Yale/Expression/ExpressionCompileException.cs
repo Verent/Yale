@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using PerCederberg.Grammatica.Runtime;
 using Yale.Resources;
 
 namespace Yale.Expression;

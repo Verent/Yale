@@ -16,7 +16,7 @@ using System;
 using System.Collections;
 using System.IO;
 
-namespace PerCederberg.Grammatica.Runtime.RE
+namespace Yale.Parser.RE
 {
     /**
      * A regular expression element repeater. The element repeats the
@@ -95,15 +95,15 @@ namespace PerCederberg.Grammatica.Runtime.RE
             this.min = min;
             if (max <= 0)
             {
-                this.max = Int32.MaxValue;
+                this.max = int.MaxValue;
             }
             else
             {
                 this.max = max;
             }
             this.type = type;
-            this.matchStart = -1;
-            this.matches = null;
+            matchStart = -1;
+            matches = null;
         }
 
         /**

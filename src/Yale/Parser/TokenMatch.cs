@@ -12,7 +12,7 @@
  * Copyright (c) 2003-2015 Per Cederberg. All rights reserved.
  */
 
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * The token match status. This class contains logic to ensure that

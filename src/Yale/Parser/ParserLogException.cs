@@ -16,7 +16,7 @@ using System;
 using System.Collections;
 using System.Text;
 
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A parser log exception. This class contains a list of all the

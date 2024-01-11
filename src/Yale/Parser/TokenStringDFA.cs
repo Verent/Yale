@@ -16,7 +16,7 @@ using System;
 using System.Globalization;
 using System.Text;
 
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A deterministic finite state automaton for matching exact strings.
@@ -123,7 +123,7 @@ namespace PerCederberg.Grammatica.Runtime
             }
             if (caseInsensitive)
             {
-                c = Char.ToLower((char)c);
+                c = char.ToLower((char)c);
             }
             if (c < 128)
             {
@@ -263,7 +263,7 @@ namespace PerCederberg.Grammatica.Runtime
         {
             if (lowerCase)
             {
-                c = Char.ToLower(c);
+                c = char.ToLower(c);
             }
             if (_value == '\0' || _value == c)
             {

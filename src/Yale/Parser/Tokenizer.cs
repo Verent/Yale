@@ -16,9 +16,9 @@ using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using PerCederberg.Grammatica.Runtime.RE;
+using Yale.Parser.RE;
 
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A character stream tokenizer. This class groups the characters read
@@ -63,7 +63,7 @@ namespace PerCederberg.Grammatica.Runtime
         /**
         * The character stream reader buffer.
         */
-        private ReaderBuffer? buffer;
+        private ReaderBuffer buffer;
 
         /**
         * The last token match found.
@@ -124,14 +124,13 @@ namespace PerCederberg.Grammatica.Runtime
          * @return the token pattern description, or
          *         null if not present
          */
-        public string GetPatternDescription(int id)
+        public string? GetPatternDescription(TokenId id)
         {
-            TokenPattern pattern;
+            var pattern = stringDfaMatcher.GetPattern(id)
+                ?? nfaMatcher.GetPattern(id)
+                ?? regExpMatcher.GetPattern(id);
 
-            pattern = stringDfaMatcher.GetPattern(id);
-            pattern ??= nfaMatcher.GetPattern(id);
-            pattern ??= regExpMatcher.GetPattern(id);
-            return (pattern == null) ? null : pattern.ToShortString();
+            return pattern?.ToShortString();
         }
 
         /**
@@ -422,9 +421,9 @@ namespace PerCederberg.Grammatica.Runtime
          * @return the token pattern found, or
          *         null if not found
          */
-        public TokenPattern? GetPattern(int id)
+        public TokenPattern? GetPattern(TokenId id)
         {
-            for (int i = 0; i < patterns.Length; i++)
+            for (var i = 0; i < patterns.Length; i++)
             {
                 if (patterns[i].Id == id)
                 {

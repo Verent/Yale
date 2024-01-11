@@ -15,7 +15,7 @@
 using System;
 using System.IO;
 
-namespace PerCederberg.Grammatica.Runtime.RE
+namespace Yale.Parser.RE
 {
     /**
      * A regular expression string element. This element only matches
@@ -104,9 +104,9 @@ namespace PerCederberg.Grammatica.Runtime.RE
                 }
                 if (m.IsCaseInsensitive())
                 {
-                    c = (int)Char.ToLower((char)c);
+                    c = char.ToLower((char)c);
                 }
-                if (c != (int)value[i])
+                if (c != value[i])
                 {
                     return -1;
                 }

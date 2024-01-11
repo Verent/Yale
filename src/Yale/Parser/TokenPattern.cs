@@ -15,7 +15,7 @@
 using System;
 using System.Text;
 
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A token pattern. This class contains the definition of a token
@@ -86,7 +86,7 @@ namespace PerCederberg.Grammatica.Runtime
          * @param type           the token pattern type
          * @param pattern        the token pattern
          */
-        public TokenPattern(int id, string name, PatternType type, string pattern)
+        public TokenPattern(TokenId id, string name, PatternType type, string pattern)
         {
             Id = id;
             Name = name;
@@ -100,7 +100,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public int Id { get; }
+        public TokenId Id { get; }
 
         /**
          * The token pattern name property (read-only).

@@ -83,7 +83,7 @@ public class ComplexExpressions
         engine.Add("expr_a", expressionOne, context);
         engine.Add("expr_b", expressionTwo_Flee, context);
 
-        var result = engine.GetResult<bool>("expr_b");
+        _ = engine.GetResult<bool>("expr_b");
     }
 
     private static void Parse(ComputeInstance instance)
@@ -91,6 +91,6 @@ public class ComplexExpressions
         instance.Variables["a"] = 0;
         instance.AddExpression("expr_a", expressionOne);
         instance.AddExpression("expr_b", expressionTwo);
-        var result = instance.GetResult<bool>("expr_b");
+        _ = instance.GetResult<bool>("expr_b");
     }
 }

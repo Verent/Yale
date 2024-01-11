@@ -12,11 +12,7 @@
  * Copyright (c) 2003-2015 Per Cederberg. All rights reserved.
  */
 
-using System;
-using System.Collections;
-using System.Text;
-
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A parser creation exception. This exception is used for signalling
@@ -90,7 +86,7 @@ namespace PerCederberg.Grammatica.Runtime
          * @param type           the parse error type
          * @param info           the additional error information
          */
-        public ParserCreationException(ErrorType type, string info)
+        public ParserCreationException(ErrorType type, string? info)
             : this(type: type, name: null, info: info) { }
 
         /**
@@ -100,7 +96,7 @@ namespace PerCederberg.Grammatica.Runtime
          * @param name           the token or production pattern name
          * @param info           the additional error information
          */
-        public ParserCreationException(ErrorType type, string? name, string info)
+        public ParserCreationException(ErrorType type, string? name, string? info)
             : this(type: type, name: name, info: info, details: null) { }
 
         /**
@@ -114,7 +110,7 @@ namespace PerCederberg.Grammatica.Runtime
         public ParserCreationException(
             ErrorType type,
             string? name,
-            string info,
+            string? info,
             ArrayList? details
         )
         {
@@ -143,7 +139,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public string Info { get; }
+        public string? Info { get; }
 
         /**
          * The detailed error information property (read-only).

@@ -15,7 +15,7 @@
 using System.Collections;
 using System.Text;
 
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A production pattern. This class represents a set of production
@@ -48,13 +48,13 @@ namespace PerCederberg.Grammatica.Runtime
          * @param id             the production pattern id
          * @param name           the production pattern name
          */
-        public ProductionPattern(int id, string name)
+        public ProductionPattern(TokenId id, string name)
         {
             Id = id;
             Name = name;
             Synthetic = false;
-            this.alternatives = new ArrayList();
-            this.defaultAlt = -1;
+            alternatives = new ArrayList();
+            defaultAlt = -1;
             LookAhead = null;
         }
 
@@ -64,7 +64,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public int Id { get; }
+        public TokenId Id { get; }
 
         /**
          * The production pattern name property (read-only).

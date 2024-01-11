@@ -15,7 +15,7 @@
 using System;
 using System.Text;
 
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A production pattern element. This class represents a reference to
@@ -35,11 +35,11 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @param isToken        the token flag
          * @param id             the node identity
-         * @param min            the minimum number of occurancies
-         * @param max            the maximum number of occurancies, or
+         * @param min            the minimum number of occupancies
+         * @param max            the maximum number of occupancies, or
          *                       negative for infinite
          */
-        public ProductionPatternElement(bool isToken, int id, int min, int max)
+        public ProductionPatternElement(bool isToken, TokenId id, int min, int max)
         {
             IsToken = isToken;
             Id = id;
@@ -65,7 +65,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public int Id { get; }
+        public TokenId Id { get; }
 
         /**
          * The minimum occurrence count property (read-only).
@@ -118,7 +118,7 @@ namespace PerCederberg.Grammatica.Runtime
          */
         public bool IsMatch(Token token)
         {
-            return IsToken && token is not null && token.Id == Id;
+            return IsToken && token is not null && token.TypeId == Id;
         }
 
         /**
@@ -146,21 +146,12 @@ namespace PerCederberg.Grammatica.Runtime
             }
         }
 
-        /**
-         * Returns a hash code for this object.
-         *
-         * @return a hash code for this object
-         */
-        public override int GetHashCode()
-        {
-            return Id * 37;
-        }
 
-        /**
-         * Returns a string representation of this object.
-         *
-         * @return a string representation of this object
-         */
+        //public override int GetHashCode()
+        //{
+        //    return Id * 37;
+        //}
+
         public override string ToString()
         {
             StringBuilder buffer = new();

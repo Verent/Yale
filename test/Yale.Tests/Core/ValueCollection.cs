@@ -72,7 +72,7 @@ public class ValueCollection
     [TestMethod]
     public void Enumerator_Works()
     {
-        foreach (System.Collections.Generic.KeyValuePair<string, object> variable in Variables)
+        foreach (System.Collections.Generic.KeyValuePair<string, object> _ in Variables)
         {
             Assert.Fail("No variables added");
         }

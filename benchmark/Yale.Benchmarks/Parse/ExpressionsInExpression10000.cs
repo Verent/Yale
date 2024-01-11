@@ -28,7 +28,7 @@ public class ExpressionsInExpression10000
             );
         var key = Parse(instance);
 
-        var result = instance.GetResult<int>(key);
+        _ = instance.GetResult<int>(key);
     }
 
     [Benchmark]
@@ -42,7 +42,7 @@ public class ExpressionsInExpression10000
                 }
             );
         var key = Parse(instance);
-        var result = instance.GetResult<int>(key);
+        _ = instance.GetResult<int>(key);
     }
 
     [Benchmark]
@@ -56,7 +56,7 @@ public class ExpressionsInExpression10000
                 }
             );
         var key = Parse(instance);
-        var result = instance.GetResult<int>(key);
+        _ = instance.GetResult<int>(key);
     }
 
     [Benchmark]
@@ -65,7 +65,7 @@ public class ExpressionsInExpression10000
         CalculationEngine engine = new();
         ExpressionContext context = new();
         var key = ParseFlee(engine, context);
-        var result = engine.GetResult<int>(key);
+        _ = engine.GetResult<int>(key);
     }
 
     [Benchmark]
@@ -76,7 +76,7 @@ public class ExpressionsInExpression10000
         var key = ParseFlee(engine, context);
 
         engine.Recalculate(key);
-        var result = engine.GetResult<int>(key);
+        _ = engine.GetResult<int>(key);
     }
 
     private static string ParseFlee(CalculationEngine engine, ExpressionContext context)

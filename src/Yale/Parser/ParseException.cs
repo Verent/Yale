@@ -14,9 +14,10 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 
-namespace PerCederberg.Grammatica.Runtime
+namespace Yale.Parser
 {
     /**
      * A parse exception.
@@ -86,7 +87,7 @@ namespace PerCederberg.Grammatica.Runtime
          * @param line           the line number, or -1 for unknown
          * @param column         the column number, or -1 for unknown
          */
-        public ParseException(ErrorType type, string info, int line, int column)
+        public ParseException(ErrorType type, string? info, int line, int column)
             : this(type, info, details: null, line, column) { }
 
         /**
@@ -101,7 +102,7 @@ namespace PerCederberg.Grammatica.Runtime
          * @param line           the line number, or -1 for unknown
          * @param column         the column number, or -1 for unknown
          */
-        public ParseException(ErrorType type, string info, ArrayList? details, int line, int column)
+        public ParseException(ErrorType type, string? info, List<string>? details, int line, int column)
         {
             Type = type;
             Info = info;
@@ -122,7 +123,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public string Info { get; }
+        public string? Info { get; }
 
         /**
          * The additional detailed error information property
@@ -130,7 +131,7 @@ namespace PerCederberg.Grammatica.Runtime
          *
          * @since 1.5
          */
-        public ArrayList? Details { get; }
+        public List<string>? Details { get; }
 
         /**
          * The line number property (read-only). This is the line

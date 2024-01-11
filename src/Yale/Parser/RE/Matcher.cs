@@ -14,7 +14,7 @@
 
 using System.IO;
 
-namespace PerCederberg.Grammatica.Runtime.RE
+namespace Yale.Parser.RE
 {
     /**
      * A regular expression string matcher. This class handles the

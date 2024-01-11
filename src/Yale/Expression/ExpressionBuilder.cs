@@ -1,12 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection.Emit;
-using PerCederberg.Grammatica.Runtime;
 using Yale.Core;
 using Yale.Engine;
 using Yale.Expression.Elements;
 using Yale.Expression.Elements.Base;
-using Yale.Parser;
 using Yale.Parser.Internal;
 
 namespace Yale.Expression;
@@ -86,7 +83,7 @@ internal sealed class ExpressionBuilder
         YaleExpressionAnalyzer analyzer = (YaleExpressionAnalyzer)Parser.Analyzer;
 
         analyzer.SetContext(context);
-        Node rootNode = Parse();
+        var rootNode = Parse();
         analyzer.Reset();
 
         BaseExpressionElement topElement = (BaseExpressionElement)rootNode.Values[0];
@@ -108,7 +105,7 @@ internal sealed class ExpressionBuilder
     {
         try
         {
-            return Parser.Parse();
+            return (Production)Parser.Parse();
         }
         catch (ParserLogException ex)
         {
