@@ -119,12 +119,12 @@ namespace Yale.Parser
                     }
                 }
             }
-            else
+            else if (node is Token token)
             {
                 node.Values.Clear();
                 try
                 {
-                    Enter(node);
+                    Enter(token);
                 }
                 catch (ParseException e)
                 {
@@ -132,7 +132,7 @@ namespace Yale.Parser
                 }
                 try
                 {
-                    return Exit(node);
+                    return Exit(token);
                 }
                 catch (ParseException e)
                 {
@@ -161,37 +161,16 @@ namespace Yale.Parser
             return new Production(pattern);
         }
 
-        /**
-         * Called when entering a parse tree node. By default this method
-         * does nothing. A subclass can override this method to handle
-         * each node separately.
-         *
-         * @param node           the node being entered
-         *
-         * @throws ParseException if the node analysis discovered errors
-         */
+        public virtual void Enter(Production production) { }
+
         public virtual void Enter(Token token) { }
 
-        public virtual void Enter(Production production) { }
-        /**
-         * Called when exiting a parse tree node. By default this method
-         * returns the node. A subclass can override this method to handle
-         * each node separately. If no parse tree should be created, this
-         * method should return null.
-         *
-         * @param node           the node being exited
-         *
-         * @return the node to add to the parse tree, or
-         *         null if no parse tree should be created
-         *
-         * @throws ParseException if the node analysis discovered errors
-         */
-        public virtual Node Exit(Token token)
+        public virtual Token Exit(Token token)
         {
             return token;
         }
 
-        public virtual Node Exit(Production production)
+        public virtual Production Exit(Production production)
         {
             return production;
         }
@@ -226,9 +205,9 @@ namespace Yale.Parser
          * @throws ParseException if either the node or the child node
          *             was null
          */
-        protected static Node GetChildAt(Production node, int pos)
+        protected static Node GetChildAt(Production production, int pos)
         {
-            if (node is null)
+            if (production is null)
             {
                 throw new ParseException(
                     ParseException.ErrorType.Internal,
@@ -237,14 +216,14 @@ namespace Yale.Parser
                     -1
                 );
             }
-            var child = node[pos];
+            var child = production[pos];
             if (child is null)
             {
                 throw new ParseException(
                     ParseException.ErrorType.Internal,
-                    "node '" + node.Name + "' has no child at " + "position " + pos,
-                    node.StartLine,
-                    node.StartColumn
+                    "node '" + production.Name + "' has no child at " + "position " + pos,
+                    production.StartLine,
+                    production.StartColumn
                 );
             }
             return child;
@@ -275,7 +254,8 @@ namespace Yale.Parser
             }
 
             var value = node.Values[pos];
-            if (value is not null) return value;
+            if (value is not null)
+                return value;
 
             throw new ParseException(
                 ParseException.ErrorType.Internal,
@@ -358,9 +338,9 @@ namespace Yale.Parser
          *
          * @since 1.3
          */
-        protected static List<BaseExpressionElement> GetChildValues(Production node)
+        protected static List<object> GetChildValues(Production node)
         {
-            List<BaseExpressionElement> result = new();
+            List<object> result = new();
 
             for (var i = 0; i < node.Count; i++)
             {

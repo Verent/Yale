@@ -1,17 +1,3 @@
-/*
- * Node.cs
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the BSD license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * LICENSE.txt file for more details.
- *
- * Copyright (c) 2003-2015 Per Cederberg. All rights reserved.
- */
-
 using System.IO;
 
 namespace Yale.Parser
@@ -83,34 +69,12 @@ namespace Yale.Parser
          */
         public abstract int EndColumn { get; }
 
-        /**
-         * The parent node property (read-only).
-         * @since 1.5
-         */
         public Node? Parent { get; set; }
-        public abstract bool HasChildren { get; }
 
-        ///**
-        // * The child node count property (read-only).
-        // *
-        // * @since 1.5
-        // */
-        //public virtual int Count
-        //{
-        //    get { return 0; }
-        //}
-
-        ///**
-        // * Returns the number of child nodes.
-        // *
-        // * @return the number of child nodes
-        // *
-        // * @deprecated Use the Count property instead.
-        // */
-        //public virtual int GetChildCount()
-        //{
-        //    return Count;
-        //}
+        public virtual int Count
+        {
+            get { return 0; }
+        }
 
         ///**
         // * Returns the number of descendant nodes.
@@ -119,46 +83,29 @@ namespace Yale.Parser
         // *
         // * @since 1.2
         // */
-        //public int GetDescendantCount()
-        //{
-        //    int count = 0;
+        public int GetDescendantCount()
+        {
+            int count = 0;
 
-        //    for (int i = 0; i < Count; i++)
-        //    {
-        //        count += 1 + this[i].GetDescendantCount();
-        //    }
-        //    return count;
-        //}
+            for (int i = 0; i < Count; i++)
+            {
+                count += 1 + this[i].GetDescendantCount();
+            }
+            return count;
+        }
 
         ///**
         // * The child node index (read-only).
         // *
         // * @param index          the child index, 0 <= index < Count
         // *
-        // * @return the child node found, or
-        // *         null if index out of bounds
+        // * @return the child node found, or null if index out of bounds
         // *
-        // * @since 1.5
         // */
-        //public virtual Node this[int index]
-        //{
-        //    get { return null; }
-        //}
-
-        ///**
-        // * Returns the child node with the specified index.
-        // *
-        // * @param index          the child index, 0 <= index < count
-        // *
-        // * @return the child node found, or
-        // *         null if index out of bounds
-        // *
-        // * @deprecated Use the class indexer instead.
-        // */
-        //public virtual Node GetChildAt(int index)
-        //{
-        //    return this[index];
-        //}
+        public virtual Node? this[int index]
+        {
+            get { return null; }
+        }
 
         ///**
         // * The node values property. This property provides direct
@@ -170,88 +117,16 @@ namespace Yale.Parser
         // *
         // * @since 1.5
         // */
-        //public ArrayList Values
-        //{
-        //    get
-        //    {
-        //        values ??= new ArrayList();
-        //        return values;
-        //    }
-        //    set { this.values = value; }
-        //}
-
-        ///**
-        // * Returns a computed value of this node, if previously set. A
-        // * value may be used for storing intermediate results in the
-        // * parse tree during analysis.
-        // *
-        // * @param pos             the value position, 0 <= pos < count
-        // *
-        // * @return the computed node value, or
-        // *         null if not set
-        // *
-        // * @see #Values
-        // *
-        // * @deprecated Use the Values property and it's array indexer
-        // *     instead.
-        // */
-        //public object GetValue(int pos)
-        //{
-        //    return Values[pos];
-        //}
-
-        ///**
-        // * Adds a computed value to this node. The computed value may
-        // * be used for storing intermediate results in the parse tree
-        // * during analysis.
-        // *
-        // * @param value          the node value
-        // *
-        // * @see #Values
-        // *
-        // * @deprecated Use the Values property and the Values.Add
-        // *     method instead.
-        // */
-        //public void AddValue(object value)
-        //{
-        //    if (value != null)
-        //    {
-        //        Values.Add(value);
-        //    }
-        //}
-
-        ///**
-        // * Adds a set of computed values to this node.
-        // *
-        // * @param values         the vector with node values
-        // *
-        // * @see #Values
-        // *
-        // * @deprecated Use the Values property and the Values.AddRange
-        // *     method instead.
-        // */
-        //public void AddValues(ArrayList values)
-        //{
-        //    if (values != null)
-        //    {
-        //        Values.AddRange(values);
-        //    }
-        //}
-
-        ///**
-        // * Removes all computed values stored in this node.
-        // *
-        // * @see #Values
-        // *
-        // * @deprecated Use the Values property and the Values.Clear
-        // *     method instead. Alternatively the Values property can
-        // *     be set to null.
-        // */
-        //public void RemoveAllValues()
-        //{
-        //    values = null;
-        //}
-
+        private List<object>? values;
+        public List<object> Values
+        {
+            get
+            {
+                values ??= new List<object>();
+                return values;
+            }
+            set { values = value; }
+        }
 
         /**
          * Prints this node and all subnodes to the specified output
@@ -276,10 +151,10 @@ namespace Yale.Parser
         {
             output.WriteLine(indent + ToString());
             indent += "  ";
-            //for (var i = 0; i < Count; i++)
-            //{
-            //    this[i].PrintTo(output, indent);
-            //}
+            for (var i = 0; i < Count; i++)
+            {
+                this[i]?.PrintTo(output, indent);
+            }
         }
     }
 }

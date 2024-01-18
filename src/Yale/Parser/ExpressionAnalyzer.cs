@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace Yale.Parser;
+﻿namespace Yale.Parser;
 
 /// <summary>
 /// Callback methods for the parser.
@@ -17,127 +15,102 @@ internal class ExpressionAnalyzer : Analyzer
 
             case TokenId.XOR_EXPRESSION:
                 EnterXorExpression(production);
-
                 break;
 
             case TokenId.OR_EXPRESSION:
                 EnterOrExpression(production);
-
                 break;
 
             case TokenId.AND_EXPRESSION:
                 EnterAndExpression(production);
-
                 break;
 
             case TokenId.NOT_EXPRESSION:
                 EnterNotExpression(production);
-
                 break;
 
             case TokenId.IN_EXPRESSION:
                 EnterInExpression(production);
-
                 break;
 
             case TokenId.IN_TARGET_EXPRESSION:
                 EnterInTargetExpression(production);
-
                 break;
 
             case TokenId.IN_LIST_TARGET_EXPRESSION:
                 EnterInListTargetExpression(production);
-
                 break;
 
             case TokenId.COMPARE_EXPRESSION:
                 EnterCompareExpression(production);
-
                 break;
 
             case TokenId.SHIFT_EXPRESSION:
                 EnterShiftExpression(production);
-
                 break;
 
             case TokenId.ADDITIVE_EXPRESSION:
                 EnterAdditiveExpression(production);
-
                 break;
 
             case TokenId.MULTIPLICATIVE_EXPRESSION:
                 EnterMultiplicativeExpression(production);
-
                 break;
 
             case TokenId.POWER_EXPRESSION:
                 EnterPowerExpression(production);
-
                 break;
 
             case TokenId.NEGATE_EXPRESSION:
                 EnterNegateExpression(production);
-
                 break;
 
             case TokenId.MEMBER_EXPRESSION:
                 EnterMemberExpression(production);
-
                 break;
 
             case TokenId.MEMBER_ACCESS_EXPRESSION:
                 EnterMemberAccessExpression(production);
-
                 break;
 
             case TokenId.BASIC_EXPRESSION:
                 EnterBasicExpression(production);
-
                 break;
 
             case TokenId.MEMBER_FUNCTION_EXPRESSION:
                 EnterMemberFunctionExpression(production);
-
                 break;
 
             case TokenId.FIELD_PROPERTY_EXPRESSION:
                 EnterFieldPropertyExpression(production);
-
                 break;
 
             case TokenId.SPECIAL_FUNCTION_EXPRESSION:
                 EnterSpecialFunctionExpression(production);
-
                 break;
 
             case TokenId.IF_EXPRESSION:
                 EnterIfExpression(production);
-
                 break;
 
             case TokenId.CAST_EXPRESSION:
                 EnterCastExpression(production);
-
                 break;
 
             case TokenId.CAST_TYPE_EXPRESSION:
                 EnterCastTypeExpression(production);
-
                 break;
 
             case TokenId.INDEX_EXPRESSION:
                 EnterIndexExpression(production);
-
                 break;
 
             case TokenId.FUNCTION_CALL_EXPRESSION:
                 EnterFunctionCallExpression(production);
-
                 break;
 
             case TokenId.ARGUMENT_LIST:
                 EnterArgumentList(production);
-
                 break;
 
             case TokenId.LITERAL_EXPRESSION:
@@ -147,12 +120,10 @@ internal class ExpressionAnalyzer : Analyzer
 
             case TokenId.BOOLEAN_LITERAL_EXPRESSION:
                 EnterBooleanLiteralExpression(production);
-
                 break;
 
             case TokenId.EXPRESSION_GROUP:
                 EnterExpressionGroup(production);
-
                 break;
         }
     }
@@ -183,177 +154,142 @@ internal class ExpressionAnalyzer : Analyzer
 
             case TokenId.POWER:
                 EnterPower(token);
-
                 break;
 
             case TokenId.MOD:
                 EnterMod(token);
-
                 break;
 
             case TokenId.LEFT_PAREN:
                 EnterLeftParen(token);
-
                 break;
 
             case TokenId.RIGHT_PAREN:
                 EnterRightParen(token);
-
                 break;
 
             case TokenId.LEFT_BRACE:
                 EnterLeftBrace(token);
-
                 break;
 
             case TokenId.RIGHT_BRACE:
                 EnterRightBrace(token);
-
                 break;
 
             case TokenId.EQ:
                 EnterEq(token);
-
                 break;
 
             case TokenId.LT:
                 EnterLt(token);
-
                 break;
 
             case TokenId.GT:
                 EnterGt(token);
-
                 break;
 
             case TokenId.LTE:
                 EnterLte(token);
-
                 break;
 
             case TokenId.GTE:
                 EnterGte(token);
-
                 break;
 
             case TokenId.NE:
                 EnterNe(token);
-
                 break;
 
             case TokenId.AND:
                 EnterAnd(token);
-
                 break;
 
             case TokenId.OR:
                 EnterOr(token);
-
                 break;
 
             case TokenId.XOR:
                 EnterXor(token);
-
                 break;
 
             case TokenId.NOT:
                 EnterNot(token);
-
                 break;
 
             case TokenId.IN:
                 EnterIn(token);
-
                 break;
 
             case TokenId.DOT:
                 EnterDot(token);
-
                 break;
 
             case TokenId.ARGUMENT_SEPARATOR:
                 EnterArgumentSeparator(token);
-
                 break;
 
             case TokenId.ARRAY_BRACES:
                 EnterArrayBraces(token);
-
                 break;
 
             case TokenId.LEFT_SHIFT:
                 EnterLeftShift(token);
-
                 break;
 
             case TokenId.RIGHT_SHIFT:
                 EnterRightShift(token);
-
                 break;
 
             case TokenId.INTEGER:
                 EnterInteger(token);
-
                 break;
 
             case TokenId.REAL:
                 EnterReal(token);
-
                 break;
 
             case TokenId.STRING_LITERAL:
                 EnterStringLiteral(token);
-
                 break;
 
             case TokenId.CHAR_LITERAL:
                 EnterCharLiteral(token);
-
                 break;
 
             case TokenId.TRUE:
                 EnterTrue(token);
-
                 break;
 
             case TokenId.FALSE:
                 EnterFalse(token);
-
                 break;
 
             case TokenId.IDENTIFIER:
                 EnterIdentifier(token);
-
                 break;
 
             case TokenId.HEX_LITERAL:
                 EnterHexLiteral(token);
-
                 break;
 
             case TokenId.NULL_LITERAL:
                 EnterNullLiteral(token);
-
                 break;
 
             case TokenId.TIMESPAN:
                 EnterTimespan(token);
-
                 break;
 
             case TokenId.DATETIME:
                 EnterDatetime(token);
-
                 break;
 
             case TokenId.IF:
                 EnterIf(token);
-
                 break;
 
             case TokenId.CAST:
                 EnterCast(token);
-
                 break;
         }
     }
@@ -527,119 +463,90 @@ internal class ExpressionAnalyzer : Analyzer
         switch (production.TypeId)
         {
             case TokenId.EXPRESSION:
-
                 return ExitExpression(production);
 
             case TokenId.XOR_EXPRESSION:
-
                 return ExitXorExpression(production);
 
             case TokenId.OR_EXPRESSION:
-
                 return ExitOrExpression(production);
 
             case TokenId.AND_EXPRESSION:
-
                 return ExitAndExpression(production);
 
             case TokenId.NOT_EXPRESSION:
-
                 return ExitNotExpression(production);
 
             case TokenId.IN_EXPRESSION:
-
                 return ExitInExpression(production);
 
             case TokenId.IN_TARGET_EXPRESSION:
-
                 return ExitInTargetExpression(production);
 
             case TokenId.IN_LIST_TARGET_EXPRESSION:
-
                 return ExitInListTargetExpression(production);
 
             case TokenId.COMPARE_EXPRESSION:
-
                 return ExitCompareExpression(production);
 
             case TokenId.SHIFT_EXPRESSION:
-
                 return ExitShiftExpression(production);
 
             case TokenId.ADDITIVE_EXPRESSION:
-
                 return ExitAdditiveExpression(production);
 
             case TokenId.MULTIPLICATIVE_EXPRESSION:
-
                 return ExitMultiplicativeExpression(production);
 
             case TokenId.POWER_EXPRESSION:
-
                 return ExitPowerExpression(production);
 
             case TokenId.NEGATE_EXPRESSION:
-
                 return ExitNegateExpression(production);
 
             case TokenId.MEMBER_EXPRESSION:
-
                 return ExitMemberExpression(production);
 
             case TokenId.MEMBER_ACCESS_EXPRESSION:
-
                 return ExitMemberAccessExpression(production);
 
             case TokenId.BASIC_EXPRESSION:
-
                 return ExitBasicExpression(production);
 
             case TokenId.MEMBER_FUNCTION_EXPRESSION:
-
                 return ExitMemberFunctionExpression(production);
 
             case TokenId.FIELD_PROPERTY_EXPRESSION:
-
                 return ExitFieldPropertyExpression(production);
 
             case TokenId.SPECIAL_FUNCTION_EXPRESSION:
-
                 return ExitSpecialFunctionExpression(production);
 
             case TokenId.IF_EXPRESSION:
-
                 return ExitIfExpression(production);
 
             case TokenId.CAST_EXPRESSION:
-
                 return ExitCastExpression(production);
 
             case TokenId.CAST_TYPE_EXPRESSION:
-
                 return ExitCastTypeExpression(production);
 
             case TokenId.INDEX_EXPRESSION:
-
                 return ExitIndexExpression(production);
 
             case TokenId.FUNCTION_CALL_EXPRESSION:
-
                 return ExitFunctionCallExpression(production);
 
             case TokenId.ARGUMENT_LIST:
-
                 return ExitArgumentList(production);
 
             case TokenId.LITERAL_EXPRESSION:
-
                 return ExitLiteralExpression(production);
 
             case TokenId.BOOLEAN_LITERAL_EXPRESSION:
-
                 return ExitBooleanLiteralExpression(production);
 
             case TokenId.EXPRESSION_GROUP:
-
                 return ExitExpressionGroup(production);
         }
         return production;
@@ -652,151 +559,122 @@ internal class ExpressionAnalyzer : Analyzer
     /// <param name="child"></param>
     public override void Child(Production production, Node child)
     {
-        switch ((TokenId)production.TypeId)
+        switch (production.TypeId)
         {
             case TokenId.EXPRESSION:
                 ChildExpression(production, child);
-
                 break;
 
             case TokenId.XOR_EXPRESSION:
                 ChildXorExpression(production, child);
-
                 break;
 
             case TokenId.OR_EXPRESSION:
                 ChildOrExpression(production, child);
-
                 break;
 
             case TokenId.AND_EXPRESSION:
                 ChildAndExpression(production, child);
-
                 break;
 
             case TokenId.NOT_EXPRESSION:
                 ChildNotExpression(production, child);
-
                 break;
 
             case TokenId.IN_EXPRESSION:
                 ChildInExpression(production, child);
-
                 break;
 
             case TokenId.IN_TARGET_EXPRESSION:
                 ChildInTargetExpression(production, child);
-
                 break;
 
             case TokenId.IN_LIST_TARGET_EXPRESSION:
                 ChildInListTargetExpression(production, child);
-
                 break;
 
             case TokenId.COMPARE_EXPRESSION:
                 ChildCompareExpression(production, child);
-
                 break;
 
             case TokenId.SHIFT_EXPRESSION:
                 ChildShiftExpression(production, child);
-
                 break;
 
             case TokenId.ADDITIVE_EXPRESSION:
                 ChildAdditiveExpression(production, child);
-
                 break;
 
             case TokenId.MULTIPLICATIVE_EXPRESSION:
                 ChildMultiplicativeExpression(production, child);
-
                 break;
 
             case TokenId.POWER_EXPRESSION:
                 ChildPowerExpression(production, child);
-
                 break;
 
             case TokenId.NEGATE_EXPRESSION:
                 ChildNegateExpression(production, child);
-
                 break;
 
             case TokenId.MEMBER_EXPRESSION:
                 ChildMemberExpression(production, child);
-
                 break;
 
             case TokenId.MEMBER_ACCESS_EXPRESSION:
                 ChildMemberAccessExpression(production, child);
-
                 break;
 
             case TokenId.BASIC_EXPRESSION:
                 ChildBasicExpression(production, child);
-
                 break;
 
             case TokenId.MEMBER_FUNCTION_EXPRESSION:
                 ChildMemberFunctionExpression(production, child);
-
                 break;
 
             case TokenId.FIELD_PROPERTY_EXPRESSION:
                 ChildFieldPropertyExpression(production, child);
-
                 break;
 
             case TokenId.SPECIAL_FUNCTION_EXPRESSION:
                 ChildSpecialFunctionExpression(production, child);
-
                 break;
 
             case TokenId.IF_EXPRESSION:
                 ChildIfExpression(production, child);
-
                 break;
 
             case TokenId.CAST_EXPRESSION:
                 ChildCastExpression(production, child);
-
                 break;
 
             case TokenId.CAST_TYPE_EXPRESSION:
                 ChildCastTypeExpression(production, child);
-
                 break;
 
             case TokenId.INDEX_EXPRESSION:
                 ChildIndexExpression(production, child);
-
                 break;
 
             case TokenId.FUNCTION_CALL_EXPRESSION:
                 ChildFunctionCallExpression(production, child);
-
                 break;
 
             case TokenId.ARGUMENT_LIST:
                 ChildArgumentList(production, child);
-
                 break;
 
             case TokenId.LITERAL_EXPRESSION:
                 ChildLiteralExpression(production, child);
-
                 break;
 
             case TokenId.BOOLEAN_LITERAL_EXPRESSION:
                 ChildBooleanLiteralExpression(production, child);
-
                 break;
 
             case TokenId.EXPRESSION_GROUP:
                 ChildExpressionGroup(production, child);
-
                 break;
         }
     }

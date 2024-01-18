@@ -39,7 +39,7 @@ namespace Yale.Parser
     {
         /**
          * The set of token look-ahead sequences. Each sequence in
-         * turn is represented by an ArrayList with Integers for the
+         * turn is represented by a List with Integers for the
          * token id:s.
          */
         private readonly List<Sequence> elements = new();
@@ -67,7 +67,8 @@ namespace Yale.Parser
          * @param maxLength      the maximum token sequence length
          * @param set            the look-ahead set to copy
          */
-        public LookAheadSet(int maxLength, LookAheadSet set) : this(maxLength)
+        public LookAheadSet(int maxLength, LookAheadSet set)
+            : this(maxLength)
         {
             AddAll(set);
         }

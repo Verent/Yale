@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
 using Yale.Expression;
 using Yale.Expression.Elements;
 using Yale.Expression.Elements.Base;
@@ -165,7 +160,7 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
     public override Production ExitMemberAccessExpression(Production production)
     {
         var firstChild = production[1];
-        var value = firstChild.GetValue(0);
+        var value = firstChild.Values[0];
         production.Values.Add(value);
         return production;
     }
@@ -179,7 +174,12 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
     public override Production ExitIfExpression(Production production)
     {
         var childValues = GetChildValues(production);
-        ConditionalElement op = new(childValues[0], childValues[1], childValues[2]);
+        ConditionalElement op =
+            new(
+                condition: (BaseExpressionElement)childValues[0],
+                whenTrue: (BaseExpressionElement)childValues[1],
+                whenFalse: (BaseExpressionElement)childValues[2]
+            );
         production.Values.Add(op);
         return production;
     }
@@ -194,7 +194,7 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
             return production;
         }
 
-        var operand = childValues[0];
+        BaseExpressionElement operand = (BaseExpressionElement)childValues[0];
         childValues.RemoveAt(0);
 
         var second = childValues[0];
@@ -230,9 +230,17 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
     public override Production ExitCastExpression(Production production)
     {
         var childValues = GetChildValues(production);
-        string[] destTypeParts = childValues[1];
+        string[] destTypeParts = childValues[1] as string[];
         bool isArray = (bool)childValues[2];
-        CastElement op = new(childValues[0], destTypeParts, isArray, context);
+
+        CastElement op =
+            new(
+                castExpression: (BaseExpressionElement)childValues[0],
+                destinationTypeParts: destTypeParts,
+                isArray: isArray,
+                context: context
+            );
+
         production.Values.Add(op);
         return production;
     }
@@ -242,7 +250,8 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
         var childValues = GetChildValues(production);
         List<string> parts = new();
 
-        foreach (var part in childValues)
+        //Todo: remove this implicit casting
+        foreach (string part in childValues)
         {
             parts.Add(part);
         }
@@ -268,8 +277,7 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     public override Production ExitFieldPropertyExpression(Production production)
     {
-        //string name = ((Token)node.GetChildAt(0))?.Image;
-        var name = production[0].GetValue(0).ToString();
+        var name = production[0].Values[0].ToString();
         IdentifierElement elem = new(name);
         production.Values.Add(elem);
         return production;
@@ -342,7 +350,7 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
         }
         else
         {
-            //Todo: Imrove error handling
+            //Todo: Improve error handling
             Debug.Assert(false, "Wrong number of children");
         }
     }
@@ -351,7 +359,7 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
     {
         var element = RealLiteralElement.Create(token.Image, context.BuilderOptions);
 
-        token.AddValue(element);
+        token.Values.Add(element);
         return token;
     }
 
@@ -363,7 +371,7 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
             inUnaryNegate,
             context.BuilderOptions
         );
-        token.AddValue(element);
+        token.Values.Add(element);
         return token;
     }
 
@@ -375,11 +383,11 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
             inUnaryNegate,
             context.BuilderOptions
         );
-        token.AddValue(element);
+        token.Values.Add(element);
         return token;
     }
 
-    public override Token ExitBooleanLiteralExpression(Production production)
+    public override Production ExitBooleanLiteralExpression(Production production)
     {
         AddFirstChildValue(production);
         return production;
@@ -387,13 +395,13 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     public override Token ExitTrue(Token token)
     {
-        token.AddValue(new BooleanLiteralElement(true));
+        token.Values.Add(new BooleanLiteralElement(true));
         return token;
     }
 
     public override Token ExitFalse(Token token)
     {
-        token.AddValue(new BooleanLiteralElement(false));
+        token.Values.Add(new BooleanLiteralElement(false));
         return token;
     }
 
@@ -401,14 +409,14 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
     {
         var s = DoEscapes(token.Image);
         StringLiteralElement element = new(s);
-        token.AddValue(element);
+        token.Values.Add(element);
         return token;
     }
 
     public override Token ExitCharLiteral(Token token)
     {
         var s = DoEscapes(token.Image);
-        token.AddValue(new CharLiteralElement(s[0]));
+        token.Values.Add(new CharLiteralElement(s[0]));
         return token;
     }
 
@@ -416,7 +424,7 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
     {
         var image = token.Image[1..^1];
         DateTimeLiteralElement element = new(image, context);
-        token.AddValue(element);
+        token.Values.Add(element);
         return token;
     }
 
@@ -424,7 +432,7 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
     {
         var image = token.Image[2..^1];
         TimeSpanLiteralElement element = new(image);
-        token.AddValue(element);
+        token.Values.Add(element);
         return token;
     }
 
@@ -467,127 +475,127 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     public override Token ExitIdentifier(Token token)
     {
-        token.AddValue(token.Image);
+        token.Values.Add(token.Image);
         return token;
     }
 
     public override Token ExitNullLiteral(Token token)
     {
-        token.AddValue(new NullLiteralElement());
+        token.Values.Add(new NullLiteralElement());
         return token;
     }
 
     public override Token ExitArrayBraces(Token token)
     {
-        token.AddValue("[]");
+        token.Values.Add("[]");
         return token;
     }
 
     public override Token ExitAdd(Token token)
     {
-        token.AddValue(BinaryArithmeticOperation.Add);
+        token.Values.Add(BinaryArithmeticOperation.Add);
         return token;
     }
 
     public override Token ExitSub(Token token)
     {
-        token.AddValue(BinaryArithmeticOperation.Subtract);
+        token.Values.Add(BinaryArithmeticOperation.Subtract);
         return token;
     }
 
     public override Token ExitMul(Token token)
     {
-        token.AddValue(BinaryArithmeticOperation.Multiply);
+        token.Values.Add(BinaryArithmeticOperation.Multiply);
         return token;
     }
 
     public override Token ExitDiv(Token token)
     {
-        token.AddValue(BinaryArithmeticOperation.Divide);
+        token.Values.Add(BinaryArithmeticOperation.Divide);
         return token;
     }
 
     public override Token ExitMod(Token token)
     {
-        token.AddValue(BinaryArithmeticOperation.Mod);
+        token.Values.Add(BinaryArithmeticOperation.Mod);
         return token;
     }
 
     public override Token ExitPower(Token token)
     {
-        token.AddValue(BinaryArithmeticOperation.Power);
+        token.Values.Add(BinaryArithmeticOperation.Power);
         return token;
     }
 
     public override Token ExitEq(Token token)
     {
-        token.AddValue(LogicalCompareOperation.Equal);
+        token.Values.Add(LogicalCompareOperation.Equal);
         return token;
     }
 
     public override Token ExitNe(Token token)
     {
-        token.AddValue(LogicalCompareOperation.NotEqual);
+        token.Values.Add(LogicalCompareOperation.NotEqual);
         return token;
     }
 
     public override Token ExitLt(Token token)
     {
-        token.AddValue(LogicalCompareOperation.LessThan);
+        token.Values.Add(LogicalCompareOperation.LessThan);
         return token;
     }
 
     public override Token ExitGt(Token token)
     {
-        token.AddValue(LogicalCompareOperation.GreaterThan);
+        token.Values.Add(LogicalCompareOperation.GreaterThan);
         return token;
     }
 
     public override Token ExitLte(Token token)
     {
-        token.AddValue(LogicalCompareOperation.LessThanOrEqual);
+        token.Values.Add(LogicalCompareOperation.LessThanOrEqual);
         return token;
     }
 
     public override Token ExitGte(Token token)
     {
-        token.AddValue(LogicalCompareOperation.GreaterThanOrEqual);
+        token.Values.Add(LogicalCompareOperation.GreaterThanOrEqual);
         return token;
     }
 
     public override Token ExitAnd(Token token)
     {
-        token.AddValue(AndOrOperation.And);
+        token.Values.Add(AndOrOperation.And);
         return token;
     }
 
     public override Token ExitOr(Token token)
     {
-        token.AddValue(AndOrOperation.Or);
+        token.Values.Add(AndOrOperation.Or);
         return token;
     }
 
     public override Token ExitXor(Token token)
     {
-        token.AddValue("Xor");
+        token.Values.Add("Xor");
         return token;
     }
 
     public override Token ExitNot(Token token)
     {
-        token.AddValue(string.Empty);
+        token.Values.Add(string.Empty);
         return token;
     }
 
     public override Token ExitLeftShift(Token token)
     {
-        token.AddValue(ShiftOperation.LeftShift);
+        token.Values.Add(ShiftOperation.LeftShift);
         return token;
     }
 
     public override Token ExitRightShift(Token token)
     {
-        token.AddValue(ShiftOperation.RightShift);
+        token.Values.Add(ShiftOperation.RightShift);
         return token;
     }
 

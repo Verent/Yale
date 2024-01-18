@@ -1,22 +1,5 @@
-/*
- * Parser.cs
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the BSD license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * LICENSE.txt file for more details.
- *
- * Copyright (c) 2003-2015 Per Cederberg. All rights reserved.
- */
-
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Yale.Parser
 {
@@ -37,7 +20,7 @@ namespace Yale.Parser
         /**
          * The list of production patterns.
          */
-        private readonly List<ProductionPattern> patterns = new();
+        protected readonly List<ProductionPattern> Patterns = new();
 
         /**
          * The map with production patterns and their id:s. This map
@@ -113,7 +96,7 @@ namespace Yale.Parser
                 throw new ParserCreationException(
                     ParserCreationException.ErrorType.InvalidProduction,
                     pattern.Name,
-                    "no production alternatives are present (must have at " + "least one)"
+                    "no production alternatives are present (must have at least one)"
                 );
             }
             if (patternIds.ContainsKey(pattern.Id))
@@ -124,7 +107,7 @@ namespace Yale.Parser
                     "another pattern with the same id (" + pattern.Id + ") has already been added"
                 );
             }
-            patterns.Add(pattern);
+            Patterns.Add(pattern);
             patternIds.Add(pattern.Id, pattern);
             initialized = false;
         }
@@ -139,16 +122,16 @@ namespace Yale.Parser
          */
         public virtual void Prepare()
         {
-            if (patterns.Count <= 0)
+            if (Patterns.Count <= 0)
             {
                 throw new ParserCreationException(
                     ParserCreationException.ErrorType.InvalidParser,
                     "no production patterns have been added"
                 );
             }
-            for (var i = 0; i < patterns.Count; i++)
+            for (var i = 0; i < Patterns.Count; i++)
             {
-                CheckPattern(patterns[i]);
+                CheckPattern(Patterns[i]);
             }
             initialized = true;
         }
@@ -185,7 +168,7 @@ namespace Yale.Parser
          */
         private void CheckAlternative(string name, ProductionPatternAlternative alt)
         {
-            for (int i = 0; i < alt.Count; i++)
+            for (var i = 0; i < alt.Count; i++)
             {
                 CheckElement(name, alt[i]);
             }
@@ -258,7 +241,7 @@ namespace Yale.Parser
          */
         public Node Parse()
         {
-            Node root;
+            Node? root = default;
 
             // Initialize parser
             if (initialized == false)
@@ -285,7 +268,8 @@ namespace Yale.Parser
                 throw errorLog;
             }
 
-            return root;
+            //Todo: Fix this
+            return root!;
         }
 
         /**
@@ -353,29 +337,11 @@ namespace Yale.Parser
         /**
          * Returns the production pattern for the starting production.
          *
-         * @return the start production pattern, or
-         *         null if no patterns have been added
+         * @throws ArgumentOutOfRangeException if there is not patterns
          */
-        internal ProductionPattern? GetStartPattern()
+        internal ProductionPattern GetStartPattern()
         {
-            if (patterns.Count <= 0)
-            {
-                return null;
-            }
-            else
-            {
-                return patterns[0];
-            }
-        }
-
-        /**
-         * Returns the ordered set of production patterns.
-         *
-         * @return the ordered set of production patterns
-         */
-        internal ICollection GetPatterns()
-        {
-            return patterns;
+            return Patterns[0];
         }
 
         /**
@@ -386,13 +352,28 @@ namespace Yale.Parser
          *
          * @param node           the parse tree node
          */
-        internal void EnterNode(Node node)
+        internal void EnterNode(Token token)
         {
-            if (!node.IsHidden() && errorRecovery < 0)
+            if (token.IsHidden() == false && errorRecovery < 0)
             {
                 try
                 {
-                    Analyzer.Enter(node);
+                    Analyzer.Enter(token);
+                }
+                catch (ParseException e)
+                {
+                    AddError(e, false);
+                }
+            }
+        }
+
+        internal void EnterNode(Production production)
+        {
+            if (production.IsHidden() == false && errorRecovery < 0)
+            {
+                try
+                {
+                    Analyzer.Enter(production);
                 }
                 catch (ParseException e)
                 {
@@ -405,34 +386,51 @@ namespace Yale.Parser
          * Handles the parser leaving a production. This method calls the
          * appropriate analyzer callback if the node is not hidden, and
          * returns the result. Note that this method will not call any
-         * callback if an error requiring recovery has ocurred.
+         * callback if an error requiring recovery has occurred.
          *
          * @param node           the parse tree node
          *
          * @return the parse tree node, or
          *         null if no parse tree should be created
          */
-        internal Node ExitNode(Node node)
+
+        internal Token ExitNode(Token token)
         {
-            if (!node.IsHidden() && errorRecovery < 0)
+            if (token.IsHidden() == false && errorRecovery < 0)
             {
                 try
                 {
-                    return Analyzer.Exit(node);
+                    return Analyzer.Exit(token);
                 }
                 catch (ParseException e)
                 {
                     AddError(e, false);
                 }
             }
-            return node;
+            return token;
+        }
+
+        internal Production ExitNode(Production production)
+        {
+            if (production.IsHidden() == false && errorRecovery < 0)
+            {
+                try
+                {
+                    return Analyzer.Exit(production);
+                }
+                catch (ParseException e)
+                {
+                    AddError(e, false);
+                }
+            }
+            return production;
         }
 
         /**
          * Handles the parser adding a child node to a production. This
          * method calls the appropriate analyzer callback. Note that this
          * method will not call any callback if an error requiring
-         * recovery has ocurred.
+         * recovery has occurred.
          *
          * @param node           the parent parse tree node
          * @param child          the child parse tree node, or null
@@ -440,9 +438,7 @@ namespace Yale.Parser
         internal void AddNode(Production node, Node? child)
         {
             if (errorRecovery >= 0)
-            {
-                // Do nothing
-            }
+                return;
             else if (node.IsHidden())
             {
                 if (child is not null)
@@ -472,7 +468,7 @@ namespace Yale.Parser
 
         /**
          * Reads and consumes the next token in the queue. If no token
-         * was available for consumation, a parse error will be
+         * was available for consummation, a parse error will be
          * thrown.
          *
          * @return the token consumed
@@ -482,7 +478,7 @@ namespace Yale.Parser
          */
         internal Token NextToken()
         {
-            Token token = PeekToken(0);
+            Token? token = PeekToken(0);
 
             if (token is not null)
             {
@@ -516,7 +512,7 @@ namespace Yale.Parser
         internal Token NextToken(TokenId id)
         {
             Token token = NextToken();
-            ArrayList list;
+            List<string> list;
 
             if (token.TypeId == id)
             {
@@ -528,7 +524,7 @@ namespace Yale.Parser
             }
             else
             {
-                list = new ArrayList(1) { Tokenizer.GetPatternDescription(id) };
+                list = new List<string> { Tokenizer.GetPatternDescription(id) };
                 throw new ParseException(
                     ParseException.ErrorType.UnexpectedToken,
                     token.ToShortString(),
@@ -584,9 +580,9 @@ namespace Yale.Parser
         {
             StringBuilder buffer = new();
 
-            for (var i = 0; i < patterns.Count; i++)
+            for (var i = 0; i < Patterns.Count; i++)
             {
-                buffer.Append(ToString(patterns[i]));
+                buffer.Append(ToString(Patterns[i]));
                 buffer.Append('\n');
             }
             return buffer.ToString();

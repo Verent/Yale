@@ -4,6 +4,7 @@ using Yale.Core;
 using Yale.Engine;
 using Yale.Expression.Elements;
 using Yale.Expression.Elements.Base;
+using Yale.Parser;
 using Yale.Parser.Internal;
 
 namespace Yale.Expression;
@@ -43,7 +44,7 @@ internal sealed class ExpressionBuilder
     internal Expression<T> BuildExpression<T>(string expressionName, string expression)
     {
         object owner = DefaultExpressionOwner.Instance;
-        Type ownerType = DefaultExpressionOwner.Type;
+        var ownerType = DefaultExpressionOwner.Type;
 
         Imports.ImportOwner(ownerType);
 
@@ -80,11 +81,10 @@ internal sealed class ExpressionBuilder
         StringReader stringReader = new(expression);
 
         Parser.Reset(stringReader);
-        YaleExpressionAnalyzer analyzer = (YaleExpressionAnalyzer)Parser.Analyzer;
 
-        analyzer.SetContext(context);
+        Analyzer.SetContext(context);
         var rootNode = Parse();
-        analyzer.Reset();
+        Analyzer.Reset();
 
         BaseExpressionElement topElement = (BaseExpressionElement)rootNode.Values[0];
         return topElement;
@@ -105,7 +105,7 @@ internal sealed class ExpressionBuilder
     {
         try
         {
-            return (Production)Parser.Parse();
+            return Parser.Parse();
         }
         catch (ParserLogException ex)
         {

@@ -1,55 +1,10 @@
-/*
- * RecursiveDescentParser.cs
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the BSD license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * LICENSE.txt file for more details.
- *
- * Copyright (c) 2003-2015 Per Cederberg. All rights reserved.
- */
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
 namespace Yale.Parser
 {
-    /**
-     * A recursive descent parser. This parser handles LL(n) grammars,
-     * selecting the appropriate pattern to parse based on the next few
-     * tokens. The parser is more efficient the fewer look-ahead tokens
-     * that is has to consider.
-     *
-     * @author   Per Cederberg
-     * @version  1.5
-     */
     internal class RecursiveDescentParser : Parser
     {
-        /**
-         * Creates a new parser.
-         *
-         * @param tokenizer      the tokenizer to use
-         * @param analyzer       the analyzer callback to use
-         */
         public RecursiveDescentParser(Tokenizer tokenizer, Analyzer analyzer)
             : base(tokenizer, analyzer) { }
 
-        /**
-         * Adds a new production pattern to the parser. The pattern
-         * will be added last in the list. The first pattern added is
-         * assumed to be the starting point in the grammar. The
-         * pattern will be validated against the grammar type to some
-         * extent.
-         *
-         * @param pattern        the pattern to add
-         *
-         * @throws ParserCreationException if the pattern couldn't be
-         *             added correctly to the parser
-         */
         public override void AddPattern(ProductionPattern pattern)
         {
             // Check for empty matches
@@ -76,54 +31,30 @@ namespace Yale.Parser
             base.AddPattern(pattern);
         }
 
-        /**
-         * Initializes the parser. All the added production patterns
-         * will be analysed for ambiguities and errors. This method
-         * also initializes the internal data structures used during
-         * the parsing.
-         *
-         * @throws ParserCreationException if the parser couldn't be
-         *             initialized correctly
-         */
         public override void Prepare()
         {
-            IEnumerator e;
-
             // Performs production pattern checks
             base.Prepare();
 
             initialized = false;
 
             // Calculate production look-ahead sets
-            e = GetPatterns().GetEnumerator();
-            while (e.MoveNext())
+            foreach (var pattern in Patterns)
             {
-                CalculateLookAhead((ProductionPattern)e.Current);
+                CalculateLookAhead(pattern);
             }
 
             // Set initialized flag
             initialized = true;
         }
 
-        /**
-         * Parses the input stream and creates a parse tree.
-         *
-         * @return the parse tree
-         *
-         * @throws ParseException if the input couldn't be parsed
-         *             correctly
-         */
         protected override Node ParseStart()
         {
-            Token token;
-            Node node;
-            ArrayList list;
-
-            node = ParsePattern(GetStartPattern());
-            token = PeekToken(0);
-            if (token != null)
+            var node = ParsePattern(GetStartPattern());
+            var token = PeekToken(0);
+            if (token is not null)
             {
-                list = new ArrayList(1) { "<EOF>" };
+                var list = new List<string>(1) { "<EOF>" };
                 throw new ParseException(
                     ParseException.ErrorType.UnexpectedToken,
                     token.ToShortString(),
@@ -137,7 +68,7 @@ namespace Yale.Parser
 
         /**
          * Parses a production pattern. A parse tree node may or may
-         * not be created depending on the analyzer callbacks.
+         * not be created depending on the analyzer callback.
          *
          * @param pattern        the production pattern to parse
          *
@@ -148,19 +79,16 @@ namespace Yale.Parser
          */
         private Node ParsePattern(ProductionPattern pattern)
         {
-            ProductionPatternAlternative alt;
-            ProductionPatternAlternative defaultAlt;
-
-            defaultAlt = pattern.DefaultAlternative;
-            for (int i = 0; i < pattern.Count; i++)
+            var defaultAlt = pattern.DefaultAlternative;
+            for (var i = 0; i < pattern.Count; i++)
             {
-                alt = pattern[i];
+                var alt = pattern[i];
                 if (defaultAlt != alt && IsNext(alt))
                 {
                     return ParseAlternative(alt);
                 }
             }
-            if (defaultAlt == null || !IsNext(defaultAlt))
+            if (defaultAlt is null || !IsNext(defaultAlt))
             {
                 ThrowParseException(FindUnion(pattern));
             }
@@ -181,15 +109,13 @@ namespace Yale.Parser
          */
         private Node ParseAlternative(ProductionPatternAlternative alt)
         {
-            Production node;
-
-            node = NewProduction(alt.Pattern);
-            EnterNode(node);
-            for (int i = 0; i < alt.Count; i++)
+            var production = NewProduction(alt.Pattern);
+            EnterNode(production);
+            for (var i = 0; i < alt.Count; i++)
             {
                 try
                 {
-                    ParseElement(node, alt[i]);
+                    ParseElement(production, alt[i]);
                 }
                 catch (ParseException e)
                 {
@@ -198,7 +124,7 @@ namespace Yale.Parser
                     i--;
                 }
             }
-            return ExitNode(node);
+            return ExitNode(production);
         }
 
         /**
@@ -214,21 +140,19 @@ namespace Yale.Parser
          */
         private void ParseElement(Production node, ProductionPatternElement elem)
         {
-            Node child;
-
-            for (int i = 0; i < elem.MaxCount; i++)
+            for (var i = 0; i < elem.MaxCount; i++)
             {
                 if (i < elem.MinCount || IsNext(elem))
                 {
                     if (elem.IsToken)
                     {
-                        child = NextToken(elem.Id);
+                        var child = NextToken(elem.Id);
                         EnterNode(child);
                         AddNode(node, ExitNode(child));
                     }
                     else
                     {
-                        child = ParsePattern(GetPattern(elem.Id));
+                        var child = ParsePattern(GetPattern(elem.Id));
                         AddNode(node, child);
                     }
                 }
@@ -253,7 +177,7 @@ namespace Yale.Parser
         {
             LookAheadSet set = pattern.LookAhead;
 
-            if (set == null)
+            if (set is null)
             {
                 return false;
             }
@@ -277,7 +201,7 @@ namespace Yale.Parser
         {
             LookAheadSet set = alt.LookAhead;
 
-            if (set == null)
+            if (set is null)
             {
                 return false;
             }
@@ -302,7 +226,7 @@ namespace Yale.Parser
         {
             LookAheadSet set = elem.LookAhead;
 
-            if (set != null)
+            if (set is not null)
             {
                 return set.IsNext(this);
             }
@@ -328,8 +252,6 @@ namespace Yale.Parser
          */
         private void CalculateLookAhead(ProductionPattern pattern)
         {
-            ProductionPatternAlternative alt;
-            LookAheadSet conflicts;
             LookAheadSet previous = new(0);
             int length = 1;
             CallStack stack = new();
@@ -340,13 +262,13 @@ namespace Yale.Parser
             var alternatives = new LookAheadSet[pattern.Count];
             for (var i = 0; i < pattern.Count; i++)
             {
-                alt = pattern[i];
+                var alt = pattern[i];
                 alternatives[i] = FindLookAhead(alt, 1, 0, stack, null);
                 alt.LookAhead = alternatives[i];
                 result.AddAll(alternatives[i]);
             }
             pattern.LookAhead ??= result;
-            conflicts = FindConflicts(pattern, 1);
+            var conflicts = FindConflicts(pattern, 1);
 
             // Resolve conflicts
             while (conflicts.Size() > 0)
@@ -357,7 +279,7 @@ namespace Yale.Parser
                 conflicts.AddAll(previous);
                 for (var i = 0; i < pattern.Count; i++)
                 {
-                    alt = pattern[i];
+                    var alt = pattern[i];
                     if (alternatives[i].Intersects(conflicts))
                     {
                         alternatives[i] = FindLookAhead(alt, length, 0, stack, conflicts);
@@ -828,7 +750,7 @@ namespace Yale.Parser
          */
         private void ThrowAmbiguityException(string pattern, string location, LookAheadSet set)
         {
-            ArrayList list = new();
+            List<string> list = new();
 
             // Find next token descriptions
             var initials = set.GetInitialTokens();
@@ -846,21 +768,10 @@ namespace Yale.Parser
             );
         }
 
-        /**
-         * A name value stack. This stack is used to detect loops and
-         * repetitions of the same production during look-ahead analysis.
-         */
         private sealed class CallStack
         {
-            /**
-             * A stack with names.
-             */
-            private readonly ArrayList nameStack = new();
-
-            /**
-             * A stack with values.
-             */
-            private readonly ArrayList valueStack = new();
+            private readonly List<string> nameStack = new();
+            private readonly List<int> valueStack = new();
 
             /**
              * Checks if the specified name is on the stack.
@@ -887,9 +798,12 @@ namespace Yale.Parser
              */
             public bool Contains(string name, int value)
             {
-                for (int i = 0; i < nameStack.Count; i++)
+                for (var i = 0; i < nameStack.Count; i++)
                 {
-                    if (nameStack[i].Equals(name) && valueStack[i].Equals(value))
+                    if (
+                        nameStack[i].Equals(name, StringComparison.Ordinal)
+                        && valueStack[i] == value
+                    )
                     {
                         return true;
                     }

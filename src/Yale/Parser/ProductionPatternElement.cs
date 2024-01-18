@@ -62,22 +62,16 @@ namespace Yale.Parser
 
         /**
          * The node identity property (read-only).
-         *
-         * @since 1.5
          */
         public TokenId Id { get; }
 
         /**
          * The minimum occurrence count property (read-only).
-         *
-         * @since 1.5
          */
         public int MinCount { get; }
 
         /**
          * The maximum occurrence count property (read-only).
-         *
-         * @since 1.5
          */
         public int MaxCount { get; }
 
@@ -89,21 +83,15 @@ namespace Yale.Parser
 
         /**
          * Returns true if this element represents a token.
-         *
-         * @return true if the element is a token, or
-         *         false otherwise
          */
         public bool IsToken { get; }
 
         /**
          * Returns true if this element represents a production.
-         *
-         * @return true if the element is a production, or
-         *         false otherwise
          */
         public bool IsProduction()
         {
-            return IsToken == false;
+            return IsToken is false;
         }
 
         /**
@@ -145,7 +133,6 @@ namespace Yale.Parser
                 return false;
             }
         }
-
 
         //public override int GetHashCode()
         //{

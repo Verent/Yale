@@ -16,20 +16,20 @@ internal sealed class CastElement : BaseExpressionElement
 
     public CastElement(
         BaseExpressionElement castExpression,
-        string[] destintaionTypeParts,
+        string[] destinationTypeParts,
         bool isArray,
         ExpressionContext context
     )
     {
         this.castExpression = castExpression;
-        destType = GetDestType(destintaionTypeParts, context);
+        destType = GetDestType(destinationTypeParts, context);
 
         if (destType is null)
         {
             throw CreateCompileException(
                 CompileErrors.CouldNotResolveType,
                 CompileExceptionReason.UndefinedName,
-                GetDestinationTypeString(destintaionTypeParts, isArray)
+                GetDestinationTypeString(destinationTypeParts, isArray)
             );
         }
 
@@ -110,7 +110,7 @@ internal sealed class CastElement : BaseExpressionElement
             return IsValidExplicitEnumCast(sourceType, destType);
         }
 
-        if (GetExplictOverloadedOperator(sourceType, destType) != null)
+        if (GetExplicitOverloadedOperator(sourceType, destType) != null)
         {
             // Overloaded explict cast exists
             return true;
@@ -136,7 +136,7 @@ internal sealed class CastElement : BaseExpressionElement
         return IsValidExplicitReferenceCast(sourceType, destType);
     }
 
-    private MethodInfo? GetExplictOverloadedOperator(Type sourceType, Type destType)
+    private MethodInfo? GetExplicitOverloadedOperator(Type sourceType, Type destType)
     {
         ExplicitOperatorMethodBinder methodBinder = new(destType, sourceType);
 
@@ -309,7 +309,7 @@ internal sealed class CastElement : BaseExpressionElement
         ExpressionContext context
     )
     {
-        MethodInfo? explicitOperator = GetExplictOverloadedOperator(sourceType, destType);
+        MethodInfo? explicitOperator = GetExplicitOverloadedOperator(sourceType, destType);
         if (ReferenceEquals(sourceType, destType))
         {
             // Identity cast; do nothing

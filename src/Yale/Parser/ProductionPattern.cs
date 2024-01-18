@@ -1,20 +1,3 @@
-/*
- * ProductionPattern.cs
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the BSD license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * LICENSE.txt file for more details.
- *
- * Copyright (c) 2003-2015 Per Cederberg. All rights reserved.
- */
-
-using System.Collections;
-using System.Text;
-
 namespace Yale.Parser
 {
     /**
@@ -33,7 +16,7 @@ namespace Yale.Parser
         /**
          * The list of production pattern alternatives.
          */
-        private readonly ArrayList alternatives;
+        private readonly List<object> alternatives;
 
         /**
          * The default production pattern alternative. This alternative
@@ -53,7 +36,7 @@ namespace Yale.Parser
             Id = id;
             Name = name;
             Synthetic = false;
-            alternatives = new ArrayList();
+            alternatives = new();
             defaultAlt = -1;
             LookAhead = null;
         }
@@ -81,7 +64,6 @@ namespace Yale.Parser
          * will be added directly to the parent node. By default this
          * property is set to false.
          *
-         * @since 1.5
          */
         public bool Synthetic { get; set; }
 

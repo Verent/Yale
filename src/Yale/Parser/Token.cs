@@ -178,11 +178,7 @@ namespace Yale.Parser
             }
         }
 
-        public override bool HasChildren => false;
-
         /**
-         * Returns a string representation of this token.
-         *
          * @return a string representation of this token
          */
         public override string ToString()

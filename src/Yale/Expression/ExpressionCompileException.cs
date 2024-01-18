@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Yale.Parser;
 using Yale.Resources;
 
 namespace Yale.Expression;

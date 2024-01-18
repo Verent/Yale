@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Reflection;
 using System.Reflection.Emit;
 using Yale.Expression.Elements.Base.Literals;
 using Yale.Parser.Internal;
@@ -30,9 +30,7 @@ internal sealed class TimeSpanLiteralElement : LiteralElement
 
         EmitLoad(_value.Ticks, ilGenerator);
 
-        System.Reflection.ConstructorInfo constructorInfo = typeof(TimeSpan).GetConstructor(
-            new[] { typeof(Int64) }
-        );
+        ConstructorInfo constructorInfo = typeof(TimeSpan).GetConstructor(new[] { typeof(long) })!;
 
         ilGenerator.Emit(OpCodes.Call, constructorInfo);
 
