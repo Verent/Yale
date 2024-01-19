@@ -344,7 +344,7 @@ namespace Yale.Parser
 
             for (var i = 0; i < node.Count; i++)
             {
-                if (node[i] is Production child)
+                if (node[i] is Node child)
                 {
                     var values = child.Values;
                     if (values is not null)
