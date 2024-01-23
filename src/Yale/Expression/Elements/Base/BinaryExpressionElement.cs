@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Diagnostics;
-using System.Reflection;
-using System.Reflection.Emit;
+﻿using System.Diagnostics;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
@@ -13,8 +9,8 @@ namespace Yale.Expression.Elements.Base;
 /// </summary>
 internal abstract class BinaryExpressionElement : BaseExpressionElement
 {
-    protected BaseExpressionElement LeftChild;
-    protected BaseExpressionElement RightChild;
+    protected BaseExpressionElement? LeftChild;
+    protected BaseExpressionElement? RightChild;
     private Type? resultType;
 
     /// <summary>
@@ -65,8 +61,8 @@ internal abstract class BinaryExpressionElement : BaseExpressionElement
 
     protected MethodInfo? GetOverloadedBinaryOperator(string name, object operation)
     {
-        Type leftType = LeftChild.ResultType;
-        Type rightType = RightChild.ResultType;
+        var leftType = LeftChild.ResultType;
+        var rightType = RightChild.ResultType;
         BinaryOperatorBinder binder = new(leftType, rightType);
 
         // If both arguments are of the same type, pick either as the owner type

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Yale.Expression.Elements.Base;
+﻿using Yale.Expression.Elements.Base;
 using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.MemberElements;
@@ -9,13 +6,13 @@ namespace Yale.Expression.Elements.MemberElements;
 /// <summary>
 /// Encapsulates an argument list
 /// </summary>
-internal class ArgumentList
+internal sealed class ArgumentList
 {
-    private readonly IList<BaseExpressionElement> _elements;
+    private readonly BaseExpressionElement[] _elements;
 
     public ArgumentList(ICollection elements)
     {
-        BaseExpressionElement[] arr = new BaseExpressionElement[elements.Count];
+        var arr = new BaseExpressionElement[elements.Count];
         elements.CopyTo(arr, 0);
         _elements = arr;
     }
@@ -24,7 +21,7 @@ internal class ArgumentList
     {
         List<string> list = new();
 
-        foreach (BaseExpressionElement expressionElement in _elements)
+        foreach (var expressionElement in _elements)
         {
             list.Add(expressionElement.ResultType.Name);
         }
@@ -36,7 +33,7 @@ internal class ArgumentList
     {
         List<Type> list = new();
 
-        foreach (BaseExpressionElement e in _elements)
+        foreach (var e in _elements)
         {
             list.Add(e.ResultType);
         }
@@ -46,18 +43,18 @@ internal class ArgumentList
 
     public override string ToString()
     {
-        string[] typeNames = GetArgumentTypeNames();
+        var typeNames = GetArgumentTypeNames();
         return Utility.FormatList(typeNames);
     }
 
     public BaseExpressionElement[] ToArray()
     {
-        BaseExpressionElement[] arr = new BaseExpressionElement[_elements.Count];
+        var arr = new BaseExpressionElement[_elements.Length];
         _elements.CopyTo(arr, 0);
         return arr;
     }
 
     public BaseExpressionElement this[int index] => _elements[index];
 
-    public int Count => _elements.Count;
+    public int Count => _elements.Length;
 }

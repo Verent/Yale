@@ -1,12 +1,10 @@
-﻿using System;
-using System.Reflection.Emit;
-using Yale.Expression.Elements.Base;
+﻿using Yale.Expression.Elements.Base;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
 namespace Yale.Expression.Elements;
 
-internal class ConditionalElement : BaseExpressionElement
+internal sealed class ConditionalElement : BaseExpressionElement
 {
     private readonly BaseExpressionElement condition;
     private readonly BaseExpressionElement whenTrue;

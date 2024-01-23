@@ -1,12 +1,10 @@
-﻿using System;
-using System.Reflection.Emit;
-using Yale.Expression.Elements.Base;
+﻿using Yale.Expression.Elements.Base;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
 namespace Yale.Expression.Elements;
 
-internal class RootExpressionElement : BaseExpressionElement
+internal sealed class RootExpressionElement : BaseExpressionElement
 {
     private readonly BaseExpressionElement _child;
     private readonly Type _resultType;
@@ -26,7 +24,7 @@ internal class RootExpressionElement : BaseExpressionElement
         ImplicitConverter.EmitImplicitConvert(_child.ResultType, _resultType, ilGenerator);
 
         //Todo: Verify if this convert stuff works
-        if ("isGeneric".Equals("false"))
+        if ("isGeneric".Equals("false", StringComparison.Ordinal))
         {
             ImplicitConverter.EmitImplicitConvert(_resultType, typeof(object), ilGenerator);
         }

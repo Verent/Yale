@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Emit;
-using Yale.Expression.Elements.Base;
+﻿using Yale.Expression.Elements.Base;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
@@ -11,7 +7,7 @@ namespace Yale.Expression.Elements.MemberElements;
 /// <summary>
 /// Element representing an array index
 /// </summary>
-internal class IndexerElement : MemberElement
+internal sealed class IndexerElement : MemberElement
 {
     private BaseExpressionElement _indexerElement;
 

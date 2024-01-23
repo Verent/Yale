@@ -23,7 +23,10 @@ public class Recalculate
     {
         ComputeInstance instance =
             new(
-                options: new ComputeInstanceOptions { Recalculate = false, LazyRecalculate = false }
+                options: new ComputeInstanceOptions
+                {
+                    Recalculate = ComputeInstanceOptions.RecalculateMode.Never
+                }
             );
         Parse(instance);
     }
@@ -33,7 +36,10 @@ public class Recalculate
     {
         ComputeInstance instance =
             new(
-                options: new ComputeInstanceOptions { Recalculate = true, LazyRecalculate = false, }
+                options: new ComputeInstanceOptions
+                {
+                    Recalculate = ComputeInstanceOptions.RecalculateMode.Auto
+                }
             );
         Parse(instance);
     }
@@ -43,7 +49,10 @@ public class Recalculate
     {
         ComputeInstance instance =
             new(
-                options: new ComputeInstanceOptions { Recalculate = true, LazyRecalculate = true, }
+                options: new ComputeInstanceOptions
+                {
+                    Recalculate = ComputeInstanceOptions.RecalculateMode.Lazy
+                }
             );
         Parse(instance);
     }
@@ -56,10 +65,8 @@ public class Recalculate
 
         ParseFlee(engine, context);
 
-        var result = engine.GetResult<int>("expr_b");
+        _ = engine.GetResult<int>("expr_b");
     }
-
-
 
     [Benchmark]
     public void Flee_Recalculate_Manual()
@@ -71,7 +78,7 @@ public class Recalculate
 
         engine.Recalculate("expr_b");
 
-        var result = engine.GetResult<int>("expr_b");
+        _ = engine.GetResult<int>("expr_b");
     }
 
     private static void ParseFlee(CalculationEngine engine, ExpressionContext context)
@@ -93,6 +100,6 @@ public class Recalculate
         instance.Variables["a"] = 5;
         instance.Variables["a"] = 10;
 
-        var result = instance.GetResult<int>("expr_b");
+        _ = instance.GetResult<int>("expr_b");
     }
 }

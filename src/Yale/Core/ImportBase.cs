@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using Yale.Core.Interfaces;
+﻿using Yale.Core.Interfaces;
 
 namespace Yale.Core;
 
@@ -59,7 +55,7 @@ internal abstract class ImportBase : IEnumerable<ImportBase>, IEquatable<ImportB
     }
 
     //Todo: Reimplement
-    protected bool AlwaysMemberFilter(MemberInfo? member, object? criteria) => true;
+    protected static bool AlwaysMemberFilter(MemberInfo? member, object? criteria) => true;
 
     internal abstract bool IsMatch(string name);
 

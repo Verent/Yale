@@ -1,11 +1,9 @@
-﻿using System;
-using System.Reflection.Emit;
-using Yale.Expression.Elements.Base;
+﻿using Yale.Expression.Elements.Base;
 using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.LogicalBitwise;
 
-internal class XorElement : BinaryExpressionElement
+internal sealed class XorElement : BinaryExpressionElement
 {
     protected override Type? GetResultType(Type leftType, Type rightType)
     {

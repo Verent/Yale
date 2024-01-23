@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Emit;
-using Yale.Expression.Elements.Base;
+﻿using Yale.Expression.Elements.Base;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
 namespace Yale.Expression.Elements;
 
-internal class InElement : BaseExpressionElement
+internal sealed class InElement : BaseExpressionElement
 {
     // Element we will search for
     private readonly BaseExpressionElement operand;

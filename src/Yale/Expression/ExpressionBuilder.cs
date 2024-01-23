@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Reflection.Emit;
-using PerCederberg.Grammatica.Runtime;
+﻿using System.IO;
 using Yale.Core;
 using Yale.Engine;
 using Yale.Expression.Elements;
@@ -11,7 +8,7 @@ using Yale.Parser.Internal;
 
 namespace Yale.Expression;
 
-public class ExpressionBuilder
+internal sealed class ExpressionBuilder
 {
     public ExpressionBuilderOptions Options { get; private set; }
     internal ComputeInstance ComputeInstance { get; set; }
@@ -46,7 +43,7 @@ public class ExpressionBuilder
     internal Expression<T> BuildExpression<T>(string expressionName, string expression)
     {
         object owner = DefaultExpressionOwner.Instance;
-        Type ownerType = DefaultExpressionOwner.Type;
+        var ownerType = DefaultExpressionOwner.Type;
 
         Imports.ImportOwner(ownerType);
 
@@ -83,11 +80,10 @@ public class ExpressionBuilder
         StringReader stringReader = new(expression);
 
         Parser.Reset(stringReader);
-        YaleExpressionAnalyzer analyzer = (YaleExpressionAnalyzer)Parser.Analyzer;
 
-        analyzer.SetContext(context);
-        Node rootNode = Parse();
-        analyzer.Reset();
+        Analyzer.SetContext(context);
+        var rootNode = Parse();
+        Analyzer.Reset();
 
         BaseExpressionElement topElement = (BaseExpressionElement)rootNode.Values[0];
         return topElement;

@@ -1,8 +1,6 @@
-﻿using System.Collections;
+﻿namespace Yale.Parser.Internal;
 
-namespace Yale.Parser.Internal;
-
-internal class ShortCircuitInfo
+internal sealed class ShortCircuitInfo
 {
     public Stack Operands;
     public Stack Operators;

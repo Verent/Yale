@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace Yale.Parser.Internal;
+﻿namespace Yale.Parser.Internal;
 
 /// <summary>
 /// Represents a location in an IL stream
 /// </summary>
-internal class ILLocation : IEquatable<ILLocation>, IComparable<ILLocation>
+internal sealed class ILLocation : IEquatable<ILLocation>, IComparable<ILLocation>
 {
     private int position;
 

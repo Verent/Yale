@@ -1,10 +1,9 @@
-﻿using System;
-using Yale.Core;
+﻿using Yale.Core;
 using Yale.Engine;
 
 namespace Yale.Expression;
 
-internal class ExpressionContext
+internal sealed class ExpressionContext
 {
     public ExpressionContext(
         ExpressionBuilderOptions builderOptions,

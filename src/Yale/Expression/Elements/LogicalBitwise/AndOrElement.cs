@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Reflection.Emit;
-using Yale.Expression.Elements.Base;
+﻿using Yale.Expression.Elements.Base;
 using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.LogicalBitwise;
 
-internal class AndOrElement : BinaryExpressionElement
+internal sealed class AndOrElement : BinaryExpressionElement
 {
     private AndOrOperation myOperation;
     private static readonly object OurTrueTerminalKey = new();
@@ -128,7 +125,7 @@ internal class AndOrElement : BinaryExpressionElement
     /// </summary>
     /// <param name="ilg"></param>
     /// <param name="info"></param>
-    /// <param name="services"></param>
+    /// <param name="context"></param>
     private static void EmitLogicalShortCircuit(
         YaleIlGenerator ilg,
         ShortCircuitInfo info,

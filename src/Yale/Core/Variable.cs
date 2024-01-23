@@ -1,9 +1,8 @@
-﻿using System;
-using Yale.Core.Interfaces;
+﻿using Yale.Core.Interfaces;
 
 namespace Yale.Core;
 
-internal class Variable : IVariable
+internal sealed class Variable : IVariable
 {
     public Variable(object value)
     {

@@ -1,22 +1,20 @@
-﻿using System;
-using System.Globalization;
-using Yale.Expression.Elements.Base.Literals;
+﻿using Yale.Expression.Elements.Base.Literals;
 using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.Literals.Integral;
 
-internal class UInt32LiteralElement : IntegralLiteralElement
+internal sealed class UInt32LiteralElement : IntegralLiteralElement
 {
-    private readonly UInt32 _myValue;
+    private readonly uint _myValue;
 
-    public UInt32LiteralElement(UInt32 value)
+    public UInt32LiteralElement(uint value)
     {
         _myValue = value;
     }
 
-    public static UInt32LiteralElement TryCreate(string image, NumberStyles numberStyles)
+    public static UInt32LiteralElement? TryCreate(string image, NumberStyles numberStyles)
     {
-        if (UInt32.TryParse(image, numberStyles, null, out uint value))
+        if (uint.TryParse(image, numberStyles, null, out uint value))
         {
             return new UInt32LiteralElement(value);
         }
@@ -29,5 +27,5 @@ internal class UInt32LiteralElement : IntegralLiteralElement
         EmitLoad(Convert.ToInt32(_myValue), ilGenerator);
     }
 
-    public override Type ResultType => typeof(UInt32);
+    public override Type ResultType => typeof(uint);
 }

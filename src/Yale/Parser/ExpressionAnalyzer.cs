@@ -1,355 +1,295 @@
-﻿using PerCederberg.Grammatica.Runtime;
-using GrammaticaToken = PerCederberg.Grammatica.Runtime.Token;
-
-namespace Yale.Parser;
+﻿namespace Yale.Parser;
 
 /// <summary>
 /// Callback methods for the parser.
 /// </summary>
 internal class ExpressionAnalyzer : Analyzer
 {
+    public override void Enter(Production production)
+    {
+        switch (production.TypeId)
+        {
+            case TokenId.EXPRESSION:
+                EnterExpression(production);
+                break;
+
+            case TokenId.XOR_EXPRESSION:
+                EnterXorExpression(production);
+                break;
+
+            case TokenId.OR_EXPRESSION:
+                EnterOrExpression(production);
+                break;
+
+            case TokenId.AND_EXPRESSION:
+                EnterAndExpression(production);
+                break;
+
+            case TokenId.NOT_EXPRESSION:
+                EnterNotExpression(production);
+                break;
+
+            case TokenId.IN_EXPRESSION:
+                EnterInExpression(production);
+                break;
+
+            case TokenId.IN_TARGET_EXPRESSION:
+                EnterInTargetExpression(production);
+                break;
+
+            case TokenId.IN_LIST_TARGET_EXPRESSION:
+                EnterInListTargetExpression(production);
+                break;
+
+            case TokenId.COMPARE_EXPRESSION:
+                EnterCompareExpression(production);
+                break;
+
+            case TokenId.SHIFT_EXPRESSION:
+                EnterShiftExpression(production);
+                break;
+
+            case TokenId.ADDITIVE_EXPRESSION:
+                EnterAdditiveExpression(production);
+                break;
+
+            case TokenId.MULTIPLICATIVE_EXPRESSION:
+                EnterMultiplicativeExpression(production);
+                break;
+
+            case TokenId.POWER_EXPRESSION:
+                EnterPowerExpression(production);
+                break;
+
+            case TokenId.NEGATE_EXPRESSION:
+                EnterNegateExpression(production);
+                break;
+
+            case TokenId.MEMBER_EXPRESSION:
+                EnterMemberExpression(production);
+                break;
+
+            case TokenId.MEMBER_ACCESS_EXPRESSION:
+                EnterMemberAccessExpression(production);
+                break;
+
+            case TokenId.BASIC_EXPRESSION:
+                EnterBasicExpression(production);
+                break;
+
+            case TokenId.MEMBER_FUNCTION_EXPRESSION:
+                EnterMemberFunctionExpression(production);
+                break;
+
+            case TokenId.FIELD_PROPERTY_EXPRESSION:
+                EnterFieldPropertyExpression(production);
+                break;
+
+            case TokenId.SPECIAL_FUNCTION_EXPRESSION:
+                EnterSpecialFunctionExpression(production);
+                break;
+
+            case TokenId.IF_EXPRESSION:
+                EnterIfExpression(production);
+                break;
+
+            case TokenId.CAST_EXPRESSION:
+                EnterCastExpression(production);
+                break;
+
+            case TokenId.CAST_TYPE_EXPRESSION:
+                EnterCastTypeExpression(production);
+                break;
+
+            case TokenId.INDEX_EXPRESSION:
+                EnterIndexExpression(production);
+                break;
+
+            case TokenId.FUNCTION_CALL_EXPRESSION:
+                EnterFunctionCallExpression(production);
+                break;
+
+            case TokenId.ARGUMENT_LIST:
+                EnterArgumentList(production);
+                break;
+
+            case TokenId.LITERAL_EXPRESSION:
+                EnterLiteralExpression(production);
+
+                break;
+
+            case TokenId.BOOLEAN_LITERAL_EXPRESSION:
+                EnterBooleanLiteralExpression(production);
+                break;
+
+            case TokenId.EXPRESSION_GROUP:
+                EnterExpressionGroup(production);
+                break;
+        }
+    }
+
     /// <summary>
     /// Called when entering a parse tree node.
     /// </summary>
-    /// <param name="node"></param>
-    public override void Enter(Node node)
+    /// <param name="token"></param>
+    public override void Enter(Token token)
     {
-        switch ((Token)node.Id)
+        switch (token.TypeId)
         {
-            case Token.ADD:
-                EnterAdd((GrammaticaToken)node);
+            case TokenId.ADD:
+                EnterAdd(token);
                 break;
 
-            case Token.SUB:
-                EnterSub((GrammaticaToken)node);
+            case TokenId.SUB:
+                EnterSub(token);
                 break;
 
-            case Token.MUL:
-                EnterMul((GrammaticaToken)node);
+            case TokenId.MUL:
+                EnterMul(token);
                 break;
 
-            case Token.DIV:
-                EnterDiv((GrammaticaToken)node);
+            case TokenId.DIV:
+                EnterDiv(token);
                 break;
 
-            case Token.POWER:
-                EnterPower((GrammaticaToken)node);
-
-                break;
-
-            case Token.MOD:
-                EnterMod((GrammaticaToken)node);
-
-                break;
-
-            case Token.LEFT_PAREN:
-                EnterLeftParen((GrammaticaToken)node);
-
-                break;
-
-            case Token.RIGHT_PAREN:
-                EnterRightParen((GrammaticaToken)node);
-
-                break;
-
-            case Token.LEFT_BRACE:
-                EnterLeftBrace((GrammaticaToken)node);
-
-                break;
-
-            case Token.RIGHT_BRACE:
-                EnterRightBrace((GrammaticaToken)node);
-
-                break;
-
-            case Token.EQ:
-                EnterEq((GrammaticaToken)node);
-
-                break;
-
-            case Token.LT:
-                EnterLt((GrammaticaToken)node);
-
-                break;
-
-            case Token.GT:
-                EnterGt((GrammaticaToken)node);
-
-                break;
-
-            case Token.LTE:
-                EnterLte((GrammaticaToken)node);
-
-                break;
-
-            case Token.GTE:
-                EnterGte((GrammaticaToken)node);
-
-                break;
-
-            case Token.NE:
-                EnterNe((GrammaticaToken)node);
-
-                break;
-
-            case Token.AND:
-                EnterAnd((GrammaticaToken)node);
-
-                break;
-
-            case Token.OR:
-                EnterOr((GrammaticaToken)node);
-
-                break;
-
-            case Token.XOR:
-                EnterXor((GrammaticaToken)node);
-
-                break;
-
-            case Token.NOT:
-                EnterNot((GrammaticaToken)node);
-
-                break;
-
-            case Token.IN:
-                EnterIn((GrammaticaToken)node);
-
-                break;
-
-            case Token.DOT:
-                EnterDot((GrammaticaToken)node);
-
-                break;
-
-            case Token.ARGUMENT_SEPARATOR:
-                EnterArgumentSeparator((GrammaticaToken)node);
-
-                break;
-
-            case Token.ARRAY_BRACES:
-                EnterArrayBraces((GrammaticaToken)node);
-
-                break;
-
-            case Token.LEFT_SHIFT:
-                EnterLeftShift((GrammaticaToken)node);
-
+            case TokenId.POWER:
+                EnterPower(token);
                 break;
 
-            case Token.RIGHT_SHIFT:
-                EnterRightShift((GrammaticaToken)node);
-
-                break;
-
-            case Token.INTEGER:
-                EnterInteger((GrammaticaToken)node);
-
-                break;
-
-            case Token.REAL:
-                EnterReal((GrammaticaToken)node);
-
-                break;
-
-            case Token.STRING_LITERAL:
-                EnterStringLiteral((GrammaticaToken)node);
-
-                break;
-
-            case Token.CHAR_LITERAL:
-                EnterCharLiteral((GrammaticaToken)node);
-
-                break;
-
-            case Token.TRUE:
-                EnterTrue((GrammaticaToken)node);
-
-                break;
-
-            case Token.FALSE:
-                EnterFalse((GrammaticaToken)node);
-
-                break;
-
-            case Token.IDENTIFIER:
-                EnterIdentifier((GrammaticaToken)node);
-
+            case TokenId.MOD:
+                EnterMod(token);
                 break;
 
-            case Token.HEX_LITERAL:
-                EnterHexLiteral((GrammaticaToken)node);
-
-                break;
-
-            case Token.NULL_LITERAL:
-                EnterNullLiteral((GrammaticaToken)node);
-
+            case TokenId.LEFT_PAREN:
+                EnterLeftParen(token);
                 break;
-
-            case Token.TIMESPAN:
-                EnterTimespan((GrammaticaToken)node);
-
-                break;
-
-            case Token.DATETIME:
-                EnterDatetime((GrammaticaToken)node);
 
+            case TokenId.RIGHT_PAREN:
+                EnterRightParen(token);
                 break;
 
-            case Token.IF:
-                EnterIf((GrammaticaToken)node);
-
+            case TokenId.LEFT_BRACE:
+                EnterLeftBrace(token);
                 break;
 
-            case Token.CAST:
-                EnterCast((GrammaticaToken)node);
-
+            case TokenId.RIGHT_BRACE:
+                EnterRightBrace(token);
                 break;
-
-            case Token.EXPRESSION:
-                EnterExpression((Production)node);
 
+            case TokenId.EQ:
+                EnterEq(token);
                 break;
 
-            case Token.XOR_EXPRESSION:
-                EnterXorExpression((Production)node);
-
+            case TokenId.LT:
+                EnterLt(token);
                 break;
-
-            case Token.OR_EXPRESSION:
-                EnterOrExpression((Production)node);
 
+            case TokenId.GT:
+                EnterGt(token);
                 break;
 
-            case Token.AND_EXPRESSION:
-                EnterAndExpression((Production)node);
-
+            case TokenId.LTE:
+                EnterLte(token);
                 break;
-
-            case Token.NOT_EXPRESSION:
-                EnterNotExpression((Production)node);
 
+            case TokenId.GTE:
+                EnterGte(token);
                 break;
 
-            case Token.IN_EXPRESSION:
-                EnterInExpression((Production)node);
-
+            case TokenId.NE:
+                EnterNe(token);
                 break;
-
-            case Token.IN_TARGET_EXPRESSION:
-                EnterInTargetExpression((Production)node);
 
+            case TokenId.AND:
+                EnterAnd(token);
                 break;
 
-            case Token.IN_LIST_TARGET_EXPRESSION:
-                EnterInListTargetExpression((Production)node);
-
+            case TokenId.OR:
+                EnterOr(token);
                 break;
-
-            case Token.COMPARE_EXPRESSION:
-                EnterCompareExpression((Production)node);
 
+            case TokenId.XOR:
+                EnterXor(token);
                 break;
 
-            case Token.SHIFT_EXPRESSION:
-                EnterShiftExpression((Production)node);
-
+            case TokenId.NOT:
+                EnterNot(token);
                 break;
-
-            case Token.ADDITIVE_EXPRESSION:
-                EnterAdditiveExpression((Production)node);
 
+            case TokenId.IN:
+                EnterIn(token);
                 break;
 
-            case Token.MULTIPLICATIVE_EXPRESSION:
-                EnterMultiplicativeExpression((Production)node);
-
+            case TokenId.DOT:
+                EnterDot(token);
                 break;
-
-            case Token.POWER_EXPRESSION:
-                EnterPowerExpression((Production)node);
 
+            case TokenId.ARGUMENT_SEPARATOR:
+                EnterArgumentSeparator(token);
                 break;
 
-            case Token.NEGATE_EXPRESSION:
-                EnterNegateExpression((Production)node);
-
+            case TokenId.ARRAY_BRACES:
+                EnterArrayBraces(token);
                 break;
-
-            case Token.MEMBER_EXPRESSION:
-                EnterMemberExpression((Production)node);
 
+            case TokenId.LEFT_SHIFT:
+                EnterLeftShift(token);
                 break;
 
-            case Token.MEMBER_ACCESS_EXPRESSION:
-                EnterMemberAccessExpression((Production)node);
-
+            case TokenId.RIGHT_SHIFT:
+                EnterRightShift(token);
                 break;
-
-            case Token.BASIC_EXPRESSION:
-                EnterBasicExpression((Production)node);
 
+            case TokenId.INTEGER:
+                EnterInteger(token);
                 break;
 
-            case Token.MEMBER_FUNCTION_EXPRESSION:
-                EnterMemberFunctionExpression((Production)node);
-
+            case TokenId.REAL:
+                EnterReal(token);
                 break;
-
-            case Token.FIELD_PROPERTY_EXPRESSION:
-                EnterFieldPropertyExpression((Production)node);
 
+            case TokenId.STRING_LITERAL:
+                EnterStringLiteral(token);
                 break;
 
-            case Token.SPECIAL_FUNCTION_EXPRESSION:
-                EnterSpecialFunctionExpression((Production)node);
-
+            case TokenId.CHAR_LITERAL:
+                EnterCharLiteral(token);
                 break;
-
-            case Token.IF_EXPRESSION:
-                EnterIfExpression((Production)node);
 
+            case TokenId.TRUE:
+                EnterTrue(token);
                 break;
 
-            case Token.CAST_EXPRESSION:
-                EnterCastExpression((Production)node);
-
+            case TokenId.FALSE:
+                EnterFalse(token);
                 break;
-
-            case Token.CAST_TYPE_EXPRESSION:
-                EnterCastTypeExpression((Production)node);
 
+            case TokenId.IDENTIFIER:
+                EnterIdentifier(token);
                 break;
 
-            case Token.INDEX_EXPRESSION:
-                EnterIndexExpression((Production)node);
-
+            case TokenId.HEX_LITERAL:
+                EnterHexLiteral(token);
                 break;
-
-            case Token.FUNCTION_CALL_EXPRESSION:
-                EnterFunctionCallExpression((Production)node);
 
+            case TokenId.NULL_LITERAL:
+                EnterNullLiteral(token);
                 break;
 
-            case Token.ARGUMENT_LIST:
-                EnterArgumentList((Production)node);
-
+            case TokenId.TIMESPAN:
+                EnterTimespan(token);
                 break;
-
-            case Token.LITERAL_EXPRESSION:
-                EnterLiteralExpression((Production)node);
 
+            case TokenId.DATETIME:
+                EnterDatetime(token);
                 break;
 
-            case Token.BOOLEAN_LITERAL_EXPRESSION:
-                EnterBooleanLiteralExpression((Production)node);
-
+            case TokenId.IF:
+                EnterIf(token);
                 break;
-
-            case Token.EXPRESSION_GROUP:
-                EnterExpressionGroup((Production)node);
 
+            case TokenId.CAST:
+                EnterCast(token);
                 break;
         }
     }
@@ -358,781 +298,743 @@ internal class ExpressionAnalyzer : Analyzer
     /// Called when exiting a parse tree node.
     /// The node being exited the node to add to the parse tree, or null if no parse tree should be created
     /// </summary>
-    /// <param name="node"></param>
+    /// <param name="token"></param>
     /// <returns></returns>
-    public override Node Exit(Node node)
+    public override Token Exit(Token token)
     {
-        switch ((Token)node.Id)
+        switch (token.TypeId)
         {
-            case Token.ADD:
+            case TokenId.ADD:
 
-                return ExitAdd((GrammaticaToken)node);
+                return ExitAdd(token);
 
-            case Token.SUB:
+            case TokenId.SUB:
 
-                return ExitSub((GrammaticaToken)node);
+                return ExitSub(token);
 
-            case Token.MUL:
+            case TokenId.MUL:
 
-                return ExitMul((GrammaticaToken)node);
+                return ExitMul(token);
 
-            case Token.DIV:
+            case TokenId.DIV:
 
-                return ExitDiv((GrammaticaToken)node);
+                return ExitDiv(token);
 
-            case Token.POWER:
+            case TokenId.POWER:
 
-                return ExitPower((GrammaticaToken)node);
+                return ExitPower(token);
 
-            case Token.MOD:
+            case TokenId.MOD:
 
-                return ExitMod((GrammaticaToken)node);
+                return ExitMod(token);
 
-            case Token.LEFT_PAREN:
+            case TokenId.LEFT_PAREN:
 
-                return ExitLeftParen((GrammaticaToken)node);
+                return ExitLeftParen(token);
 
-            case Token.RIGHT_PAREN:
+            case TokenId.RIGHT_PAREN:
 
-                return ExitRightParen((GrammaticaToken)node);
+                return ExitRightParen(token);
 
-            case Token.LEFT_BRACE:
+            case TokenId.LEFT_BRACE:
 
-                return ExitLeftBrace((GrammaticaToken)node);
+                return ExitLeftBrace(token);
 
-            case Token.RIGHT_BRACE:
+            case TokenId.RIGHT_BRACE:
 
-                return ExitRightBrace((GrammaticaToken)node);
+                return ExitRightBrace(token);
 
-            case Token.EQ:
+            case TokenId.EQ:
 
-                return ExitEq((GrammaticaToken)node);
+                return ExitEq(token);
 
-            case Token.LT:
+            case TokenId.LT:
 
-                return ExitLt((GrammaticaToken)node);
+                return ExitLt(token);
 
-            case Token.GT:
+            case TokenId.GT:
 
-                return ExitGt((GrammaticaToken)node);
+                return ExitGt(token);
 
-            case Token.LTE:
+            case TokenId.LTE:
 
-                return ExitLte((GrammaticaToken)node);
+                return ExitLte(token);
 
-            case Token.GTE:
+            case TokenId.GTE:
 
-                return ExitGte((GrammaticaToken)node);
+                return ExitGte(token);
 
-            case Token.NE:
+            case TokenId.NE:
 
-                return ExitNe((GrammaticaToken)node);
+                return ExitNe(token);
 
-            case Token.AND:
+            case TokenId.AND:
 
-                return ExitAnd((GrammaticaToken)node);
+                return ExitAnd(token);
 
-            case Token.OR:
+            case TokenId.OR:
 
-                return ExitOr((GrammaticaToken)node);
+                return ExitOr(token);
 
-            case Token.XOR:
+            case TokenId.XOR:
 
-                return ExitXor((GrammaticaToken)node);
+                return ExitXor(token);
 
-            case Token.NOT:
+            case TokenId.NOT:
 
-                return ExitNot((GrammaticaToken)node);
+                return ExitNot(token);
 
-            case Token.IN:
+            case TokenId.IN:
 
-                return ExitIn((GrammaticaToken)node);
+                return ExitIn(token);
 
-            case Token.DOT:
+            case TokenId.DOT:
 
-                return ExitDot((GrammaticaToken)node);
+                return ExitDot(token);
 
-            case Token.ARGUMENT_SEPARATOR:
+            case TokenId.ARGUMENT_SEPARATOR:
 
-                return ExitArgumentSeparator((GrammaticaToken)node);
+                return ExitArgumentSeparator(token);
 
-            case Token.ARRAY_BRACES:
+            case TokenId.ARRAY_BRACES:
 
-                return ExitArrayBraces((GrammaticaToken)node);
+                return ExitArrayBraces(token);
 
-            case Token.LEFT_SHIFT:
+            case TokenId.LEFT_SHIFT:
 
-                return ExitLeftShift((GrammaticaToken)node);
+                return ExitLeftShift(token);
 
-            case Token.RIGHT_SHIFT:
+            case TokenId.RIGHT_SHIFT:
 
-                return ExitRightShift((GrammaticaToken)node);
+                return ExitRightShift(token);
 
-            case Token.INTEGER:
+            case TokenId.INTEGER:
 
-                return ExitInteger((GrammaticaToken)node);
+                return ExitInteger(token);
 
-            case Token.REAL:
+            case TokenId.REAL:
 
-                return ExitReal((GrammaticaToken)node);
+                return ExitReal(token);
 
-            case Token.STRING_LITERAL:
+            case TokenId.STRING_LITERAL:
 
-                return ExitStringLiteral((GrammaticaToken)node);
+                return ExitStringLiteral(token);
 
-            case Token.CHAR_LITERAL:
+            case TokenId.CHAR_LITERAL:
 
-                return ExitCharLiteral((GrammaticaToken)node);
+                return ExitCharLiteral(token);
 
-            case Token.TRUE:
+            case TokenId.TRUE:
 
-                return ExitTrue((GrammaticaToken)node);
+                return ExitTrue(token);
 
-            case Token.FALSE:
+            case TokenId.FALSE:
 
-                return ExitFalse((GrammaticaToken)node);
+                return ExitFalse(token);
 
-            case Token.IDENTIFIER:
+            case TokenId.IDENTIFIER:
 
-                return ExitIdentifier((GrammaticaToken)node);
+                return ExitIdentifier(token);
 
-            case Token.HEX_LITERAL:
+            case TokenId.HEX_LITERAL:
 
-                return ExitHexliteral((GrammaticaToken)node);
+                return ExitHexliteral(token);
 
-            case Token.NULL_LITERAL:
+            case TokenId.NULL_LITERAL:
+                return ExitNullLiteral(token);
 
-                return ExitNullLiteral((GrammaticaToken)node);
+            case TokenId.TIMESPAN:
+                return ExitTimeSpan(token);
 
-            case Token.TIMESPAN:
+            case TokenId.DATETIME:
+                return ExitDatetime(token);
 
-                return ExitTimeSpan((GrammaticaToken)node);
+            case TokenId.IF:
+                return ExitIf(token);
 
-            case Token.DATETIME:
-
-                return ExitDatetime((GrammaticaToken)node);
-
-            case Token.IF:
-
-                return ExitIf((GrammaticaToken)node);
-
-            case Token.CAST:
-
-                return ExitCast((GrammaticaToken)node);
-
-            case Token.EXPRESSION:
-
-                return ExitExpression((Production)node);
-
-            case Token.XOR_EXPRESSION:
-
-                return ExitXorExpression((Production)node);
-
-            case Token.OR_EXPRESSION:
-
-                return ExitOrExpression((Production)node);
-
-            case Token.AND_EXPRESSION:
-
-                return ExitAndExpression((Production)node);
-
-            case Token.NOT_EXPRESSION:
-
-                return ExitNotExpression((Production)node);
-
-            case Token.IN_EXPRESSION:
-
-                return ExitInExpression((Production)node);
-
-            case Token.IN_TARGET_EXPRESSION:
-
-                return ExitInTargetExpression((Production)node);
-
-            case Token.IN_LIST_TARGET_EXPRESSION:
-
-                return ExitInListTargetExpression((Production)node);
-
-            case Token.COMPARE_EXPRESSION:
-
-                return ExitCompareExpression((Production)node);
-
-            case Token.SHIFT_EXPRESSION:
-
-                return ExitShiftExpression((Production)node);
-
-            case Token.ADDITIVE_EXPRESSION:
-
-                return ExitAdditiveExpression((Production)node);
-
-            case Token.MULTIPLICATIVE_EXPRESSION:
-
-                return ExitMultiplicativeExpression((Production)node);
-
-            case Token.POWER_EXPRESSION:
-
-                return ExitPowerExpression((Production)node);
-
-            case Token.NEGATE_EXPRESSION:
-
-                return ExitNegateExpression((Production)node);
-
-            case Token.MEMBER_EXPRESSION:
-
-                return ExitMemberExpression((Production)node);
-
-            case Token.MEMBER_ACCESS_EXPRESSION:
-
-                return ExitMemberAccessExpression((Production)node);
-
-            case Token.BASIC_EXPRESSION:
-
-                return ExitBasicExpression((Production)node);
-
-            case Token.MEMBER_FUNCTION_EXPRESSION:
-
-                return ExitMemberFunctionExpression((Production)node);
-
-            case Token.FIELD_PROPERTY_EXPRESSION:
-
-                return ExitFieldPropertyExpression((Production)node);
-
-            case Token.SPECIAL_FUNCTION_EXPRESSION:
-
-                return ExitSpecialFunctionExpression((Production)node);
-
-            case Token.IF_EXPRESSION:
-
-                return ExitIfExpression((Production)node);
-
-            case Token.CAST_EXPRESSION:
-
-                return ExitCastExpression((Production)node);
-
-            case Token.CAST_TYPE_EXPRESSION:
-
-                return ExitCastTypeExpression((Production)node);
-
-            case Token.INDEX_EXPRESSION:
-
-                return ExitIndexExpression((Production)node);
-
-            case Token.FUNCTION_CALL_EXPRESSION:
-
-                return ExitFunctionCallExpression((Production)node);
-
-            case Token.ARGUMENT_LIST:
-
-                return ExitArgumentList((Production)node);
-
-            case Token.LITERAL_EXPRESSION:
-
-                return ExitLiteralExpression((Production)node);
-
-            case Token.BOOLEAN_LITERAL_EXPRESSION:
-
-                return ExitBooleanLiteralExpression((Production)node);
-
-            case Token.EXPRESSION_GROUP:
-
-                return ExitExpressionGroup((Production)node);
+            case TokenId.CAST:
+                return ExitCast(token);
         }
-        return node;
+        return token;
+    }
+
+    public override Production Exit(Production production)
+    {
+        switch (production.TypeId)
+        {
+            case TokenId.EXPRESSION:
+                return ExitExpression(production);
+
+            case TokenId.XOR_EXPRESSION:
+                return ExitXorExpression(production);
+
+            case TokenId.OR_EXPRESSION:
+                return ExitOrExpression(production);
+
+            case TokenId.AND_EXPRESSION:
+                return ExitAndExpression(production);
+
+            case TokenId.NOT_EXPRESSION:
+                return ExitNotExpression(production);
+
+            case TokenId.IN_EXPRESSION:
+                return ExitInExpression(production);
+
+            case TokenId.IN_TARGET_EXPRESSION:
+                return ExitInTargetExpression(production);
+
+            case TokenId.IN_LIST_TARGET_EXPRESSION:
+                return ExitInListTargetExpression(production);
+
+            case TokenId.COMPARE_EXPRESSION:
+                return ExitCompareExpression(production);
+
+            case TokenId.SHIFT_EXPRESSION:
+                return ExitShiftExpression(production);
+
+            case TokenId.ADDITIVE_EXPRESSION:
+                return ExitAdditiveExpression(production);
+
+            case TokenId.MULTIPLICATIVE_EXPRESSION:
+                return ExitMultiplicativeExpression(production);
+
+            case TokenId.POWER_EXPRESSION:
+                return ExitPowerExpression(production);
+
+            case TokenId.NEGATE_EXPRESSION:
+                return ExitNegateExpression(production);
+
+            case TokenId.MEMBER_EXPRESSION:
+                return ExitMemberExpression(production);
+
+            case TokenId.MEMBER_ACCESS_EXPRESSION:
+                return ExitMemberAccessExpression(production);
+
+            case TokenId.BASIC_EXPRESSION:
+                return ExitBasicExpression(production);
+
+            case TokenId.MEMBER_FUNCTION_EXPRESSION:
+                return ExitMemberFunctionExpression(production);
+
+            case TokenId.FIELD_PROPERTY_EXPRESSION:
+                return ExitFieldPropertyExpression(production);
+
+            case TokenId.SPECIAL_FUNCTION_EXPRESSION:
+                return ExitSpecialFunctionExpression(production);
+
+            case TokenId.IF_EXPRESSION:
+                return ExitIfExpression(production);
+
+            case TokenId.CAST_EXPRESSION:
+                return ExitCastExpression(production);
+
+            case TokenId.CAST_TYPE_EXPRESSION:
+                return ExitCastTypeExpression(production);
+
+            case TokenId.INDEX_EXPRESSION:
+                return ExitIndexExpression(production);
+
+            case TokenId.FUNCTION_CALL_EXPRESSION:
+                return ExitFunctionCallExpression(production);
+
+            case TokenId.ARGUMENT_LIST:
+                return ExitArgumentList(production);
+
+            case TokenId.LITERAL_EXPRESSION:
+                return ExitLiteralExpression(production);
+
+            case TokenId.BOOLEAN_LITERAL_EXPRESSION:
+                return ExitBooleanLiteralExpression(production);
+
+            case TokenId.EXPRESSION_GROUP:
+                return ExitExpressionGroup(production);
+        }
+        return production;
     }
 
     /// <summary>
     /// Called when adding a child to a parse tree node.
     /// </summary>
-    /// <param name="node"></param>
+    /// <param name="production"></param>
     /// <param name="child"></param>
-    public override void Child(Production node, Node child)
+    public override void Child(Production production, Node child)
     {
-        switch ((Token)node.Id)
+        switch (production.TypeId)
         {
-            case Token.EXPRESSION:
-                ChildExpression(node, child);
-
+            case TokenId.EXPRESSION:
+                ChildExpression(production, child);
                 break;
 
-            case Token.XOR_EXPRESSION:
-                ChildXorExpression(node, child);
-
+            case TokenId.XOR_EXPRESSION:
+                ChildXorExpression(production, child);
                 break;
 
-            case Token.OR_EXPRESSION:
-                ChildOrExpression(node, child);
-
+            case TokenId.OR_EXPRESSION:
+                ChildOrExpression(production, child);
                 break;
 
-            case Token.AND_EXPRESSION:
-                ChildAndExpression(node, child);
-
+            case TokenId.AND_EXPRESSION:
+                ChildAndExpression(production, child);
                 break;
 
-            case Token.NOT_EXPRESSION:
-                ChildNotExpression(node, child);
-
+            case TokenId.NOT_EXPRESSION:
+                ChildNotExpression(production, child);
                 break;
 
-            case Token.IN_EXPRESSION:
-                ChildInExpression(node, child);
-
+            case TokenId.IN_EXPRESSION:
+                ChildInExpression(production, child);
                 break;
 
-            case Token.IN_TARGET_EXPRESSION:
-                ChildInTargetExpression(node, child);
-
+            case TokenId.IN_TARGET_EXPRESSION:
+                ChildInTargetExpression(production, child);
                 break;
 
-            case Token.IN_LIST_TARGET_EXPRESSION:
-                ChildInListTargetExpression(node, child);
-
+            case TokenId.IN_LIST_TARGET_EXPRESSION:
+                ChildInListTargetExpression(production, child);
                 break;
 
-            case Token.COMPARE_EXPRESSION:
-                ChildCompareExpression(node, child);
-
+            case TokenId.COMPARE_EXPRESSION:
+                ChildCompareExpression(production, child);
                 break;
 
-            case Token.SHIFT_EXPRESSION:
-                ChildShiftExpression(node, child);
-
+            case TokenId.SHIFT_EXPRESSION:
+                ChildShiftExpression(production, child);
                 break;
 
-            case Token.ADDITIVE_EXPRESSION:
-                ChildAdditiveExpression(node, child);
-
+            case TokenId.ADDITIVE_EXPRESSION:
+                ChildAdditiveExpression(production, child);
                 break;
 
-            case Token.MULTIPLICATIVE_EXPRESSION:
-                ChildMultiplicativeExpression(node, child);
-
+            case TokenId.MULTIPLICATIVE_EXPRESSION:
+                ChildMultiplicativeExpression(production, child);
                 break;
 
-            case Token.POWER_EXPRESSION:
-                ChildPowerExpression(node, child);
-
+            case TokenId.POWER_EXPRESSION:
+                ChildPowerExpression(production, child);
                 break;
 
-            case Token.NEGATE_EXPRESSION:
-                ChildNegateExpression(node, child);
-
+            case TokenId.NEGATE_EXPRESSION:
+                ChildNegateExpression(production, child);
                 break;
 
-            case Token.MEMBER_EXPRESSION:
-                ChildMemberExpression(node, child);
-
+            case TokenId.MEMBER_EXPRESSION:
+                ChildMemberExpression(production, child);
                 break;
 
-            case Token.MEMBER_ACCESS_EXPRESSION:
-                ChildMemberAccessExpression(node, child);
-
+            case TokenId.MEMBER_ACCESS_EXPRESSION:
+                ChildMemberAccessExpression(production, child);
                 break;
 
-            case Token.BASIC_EXPRESSION:
-                ChildBasicExpression(node, child);
-
+            case TokenId.BASIC_EXPRESSION:
+                ChildBasicExpression(production, child);
                 break;
 
-            case Token.MEMBER_FUNCTION_EXPRESSION:
-                ChildMemberFunctionExpression(node, child);
-
+            case TokenId.MEMBER_FUNCTION_EXPRESSION:
+                ChildMemberFunctionExpression(production, child);
                 break;
 
-            case Token.FIELD_PROPERTY_EXPRESSION:
-                ChildFieldPropertyExpression(node, child);
-
+            case TokenId.FIELD_PROPERTY_EXPRESSION:
+                ChildFieldPropertyExpression(production, child);
                 break;
 
-            case Token.SPECIAL_FUNCTION_EXPRESSION:
-                ChildSpecialFunctionExpression(node, child);
-
+            case TokenId.SPECIAL_FUNCTION_EXPRESSION:
+                ChildSpecialFunctionExpression(production, child);
                 break;
 
-            case Token.IF_EXPRESSION:
-                ChildIfExpression(node, child);
-
+            case TokenId.IF_EXPRESSION:
+                ChildIfExpression(production, child);
                 break;
 
-            case Token.CAST_EXPRESSION:
-                ChildCastExpression(node, child);
-
+            case TokenId.CAST_EXPRESSION:
+                ChildCastExpression(production, child);
                 break;
 
-            case Token.CAST_TYPE_EXPRESSION:
-                ChildCastTypeExpression(node, child);
-
+            case TokenId.CAST_TYPE_EXPRESSION:
+                ChildCastTypeExpression(production, child);
                 break;
 
-            case Token.INDEX_EXPRESSION:
-                ChildIndexExpression(node, child);
-
+            case TokenId.INDEX_EXPRESSION:
+                ChildIndexExpression(production, child);
                 break;
 
-            case Token.FUNCTION_CALL_EXPRESSION:
-                ChildFunctionCallExpression(node, child);
-
+            case TokenId.FUNCTION_CALL_EXPRESSION:
+                ChildFunctionCallExpression(production, child);
                 break;
 
-            case Token.ARGUMENT_LIST:
-                ChildArgumentList(node, child);
-
+            case TokenId.ARGUMENT_LIST:
+                ChildArgumentList(production, child);
                 break;
 
-            case Token.LITERAL_EXPRESSION:
-                ChildLiteralExpression(node, child);
-
+            case TokenId.LITERAL_EXPRESSION:
+                ChildLiteralExpression(production, child);
                 break;
 
-            case Token.BOOLEAN_LITERAL_EXPRESSION:
-                ChildBooleanLiteralExpression(node, child);
-
+            case TokenId.BOOLEAN_LITERAL_EXPRESSION:
+                ChildBooleanLiteralExpression(production, child);
                 break;
 
-            case Token.EXPRESSION_GROUP:
-                ChildExpressionGroup(node, child);
-
+            case TokenId.EXPRESSION_GROUP:
+                ChildExpressionGroup(production, child);
                 break;
         }
     }
 
-    public virtual void EnterAdd(GrammaticaToken node) { }
+    public virtual void EnterAdd(Token token) { }
 
-    public virtual Node ExitAdd(GrammaticaToken node) => node;
+    public virtual Token ExitAdd(Token token) => token;
 
-    public virtual void EnterSub(GrammaticaToken node) { }
+    public virtual void EnterSub(Token token) { }
 
-    public virtual Node ExitSub(GrammaticaToken node) => node;
+    public virtual Token ExitSub(Token token) => token;
 
-    public virtual void EnterMul(GrammaticaToken node) { }
+    public virtual void EnterMul(Token token) { }
 
-    public virtual Node ExitMul(GrammaticaToken node) => node;
+    public virtual Token ExitMul(Token token) => token;
 
-    public virtual void EnterDiv(GrammaticaToken node) { }
+    public virtual void EnterDiv(Token token) { }
 
-    public virtual Node ExitDiv(GrammaticaToken node) => node;
+    public virtual Token ExitDiv(Token token) => token;
 
-    public virtual void EnterPower(GrammaticaToken node) { }
+    public virtual void EnterPower(Token token) { }
 
-    public virtual Node ExitPower(GrammaticaToken node) => node;
+    public virtual Token ExitPower(Token token) => token;
 
-    public virtual void EnterMod(GrammaticaToken node) { }
+    public virtual void EnterMod(Token token) { }
 
-    public virtual Node ExitMod(GrammaticaToken node) => node;
+    public virtual Token ExitMod(Token token) => token;
 
-    public virtual void EnterLeftParen(GrammaticaToken node) { }
+    public virtual void EnterLeftParen(Token token) { }
 
-    public virtual Node ExitLeftParen(GrammaticaToken node) => node;
+    public virtual Token ExitLeftParen(Token token) => token;
 
-    public virtual void EnterRightParen(GrammaticaToken node) { }
+    public virtual void EnterRightParen(Token token) { }
 
-    public virtual Node ExitRightParen(GrammaticaToken node) => node;
+    public virtual Token ExitRightParen(Token token) => token;
 
-    public virtual void EnterLeftBrace(GrammaticaToken node) { }
+    public virtual void EnterLeftBrace(Token token) { }
 
-    public virtual Node ExitLeftBrace(GrammaticaToken node) => node;
+    public virtual Token ExitLeftBrace(Token token) => token;
 
-    public virtual void EnterRightBrace(GrammaticaToken node) { }
+    public virtual void EnterRightBrace(Token token) { }
 
-    public virtual Node ExitRightBrace(GrammaticaToken node) => node;
+    public virtual Token ExitRightBrace(Token token) => token;
 
-    public virtual void EnterEq(GrammaticaToken node) { }
+    public virtual void EnterEq(Token token) { }
 
-    public virtual Node ExitEq(GrammaticaToken node) => node;
+    public virtual Token ExitEq(Token token) => token;
 
-    public virtual void EnterLt(GrammaticaToken node) { }
+    public virtual void EnterLt(Token token) { }
 
-    public virtual Node ExitLt(GrammaticaToken node) => node;
+    public virtual Token ExitLt(Token token) => token;
 
-    public virtual void EnterGt(GrammaticaToken node) { }
+    public virtual void EnterGt(Token token) { }
 
-    public virtual Node ExitGt(GrammaticaToken node) => node;
+    public virtual Token ExitGt(Token token) => token;
 
-    public virtual void EnterLte(GrammaticaToken node) { }
+    public virtual void EnterLte(Token token) { }
 
-    public virtual Node ExitLte(GrammaticaToken node) => node;
+    public virtual Token ExitLte(Token token) => token;
 
-    public virtual void EnterGte(GrammaticaToken node) { }
+    public virtual void EnterGte(Token token) { }
 
-    public virtual Node ExitGte(GrammaticaToken node) => node;
+    public virtual Token ExitGte(Token token) => token;
 
-    public virtual void EnterNe(GrammaticaToken node) { }
+    public virtual void EnterNe(Token token) { }
 
-    public virtual Node ExitNe(GrammaticaToken node) => node;
+    public virtual Token ExitNe(Token token) => token;
 
-    public virtual void EnterAnd(GrammaticaToken node) { }
+    public virtual void EnterAnd(Token token) { }
 
-    public virtual Node ExitAnd(GrammaticaToken node) => node;
+    public virtual Token ExitAnd(Token token) => token;
 
-    public virtual void EnterOr(GrammaticaToken node) { }
+    public virtual void EnterOr(Token token) { }
 
-    public virtual Node ExitOr(GrammaticaToken node) => node;
+    public virtual Token ExitOr(Token token) => token;
 
-    public virtual void EnterXor(GrammaticaToken node) { }
+    public virtual void EnterXor(Token token) { }
 
-    public virtual Node ExitXor(GrammaticaToken node) => node;
+    public virtual Token ExitXor(Token token) => token;
 
-    public virtual void EnterNot(GrammaticaToken node) { }
+    public virtual void EnterNot(Token token) { }
 
-    public virtual Node ExitNot(GrammaticaToken node) => node;
+    public virtual Token ExitNot(Token token) => token;
 
-    public virtual void EnterIn(GrammaticaToken node) { }
+    public virtual void EnterIn(Token token) { }
 
-    public virtual Node ExitIn(GrammaticaToken node) => node;
+    public virtual Token ExitIn(Token token) => token;
 
-    public virtual void EnterDot(GrammaticaToken node) { }
+    public virtual void EnterDot(Token token) { }
 
-    public virtual Node ExitDot(GrammaticaToken node) => node;
+    public virtual Token ExitDot(Token token) => token;
 
-    public virtual void EnterArgumentSeparator(GrammaticaToken node) { }
+    public virtual void EnterArgumentSeparator(Token token) { }
 
-    public virtual Node ExitArgumentSeparator(GrammaticaToken node) => node;
+    public virtual Token ExitArgumentSeparator(Token token) => token;
 
-    public virtual void EnterArrayBraces(GrammaticaToken node) { }
+    public virtual void EnterArrayBraces(Token token) { }
 
-    public virtual Node ExitArrayBraces(GrammaticaToken node) => node;
+    public virtual Token ExitArrayBraces(Token token) => token;
 
-    public virtual void EnterLeftShift(GrammaticaToken node) { }
+    public virtual void EnterLeftShift(Token token) { }
 
-    public virtual Node ExitLeftShift(GrammaticaToken node) => node;
+    public virtual Token ExitLeftShift(Token token) => token;
 
-    public virtual void EnterRightShift(GrammaticaToken node) { }
+    public virtual void EnterRightShift(Token token) { }
 
-    public virtual Node ExitRightShift(GrammaticaToken node) => node;
+    public virtual Token ExitRightShift(Token token) => token;
 
-    public virtual void EnterInteger(GrammaticaToken node) { }
+    public virtual void EnterInteger(Token token) { }
 
-    public virtual Node ExitInteger(GrammaticaToken node) => node;
+    public virtual Token ExitInteger(Token token) => token;
 
-    public virtual void EnterReal(GrammaticaToken node) { }
+    public virtual void EnterReal(Token token) { }
 
-    public virtual Node ExitReal(GrammaticaToken node) => node;
+    public virtual Token ExitReal(Token token) => token;
 
-    public virtual void EnterStringLiteral(GrammaticaToken node) { }
+    public virtual void EnterStringLiteral(Token token) { }
 
-    public virtual Node ExitStringLiteral(GrammaticaToken node) => node;
+    public virtual Token ExitStringLiteral(Token token) => token;
 
-    public virtual void EnterCharLiteral(GrammaticaToken node) { }
+    public virtual void EnterCharLiteral(Token token) { }
 
-    public virtual Node ExitCharLiteral(GrammaticaToken node) => node;
+    public virtual Token ExitCharLiteral(Token token) => token;
 
-    public virtual void EnterTrue(GrammaticaToken node) { }
+    public virtual void EnterTrue(Token token) { }
 
-    public virtual Node ExitTrue(GrammaticaToken node) => node;
+    public virtual Token ExitTrue(Token token) => token;
 
-    public virtual void EnterFalse(GrammaticaToken node) { }
+    public virtual void EnterFalse(Token token) { }
 
-    public virtual Node ExitFalse(GrammaticaToken node) => node;
+    public virtual Token ExitFalse(Token token) => token;
 
-    public virtual void EnterIdentifier(GrammaticaToken node) { }
+    public virtual void EnterIdentifier(Token token) { }
 
-    public virtual Node ExitIdentifier(GrammaticaToken node) => node;
+    public virtual Token ExitIdentifier(Token token) => token;
 
-    public virtual void EnterHexLiteral(GrammaticaToken node) { }
+    public virtual void EnterHexLiteral(Token token) { }
 
-    public virtual Node ExitHexliteral(GrammaticaToken node) => node;
+    public virtual Token ExitHexliteral(Token token) => token;
 
-    public virtual void EnterNullLiteral(GrammaticaToken node) { }
+    public virtual void EnterNullLiteral(Token token) { }
 
-    public virtual Node ExitNullLiteral(GrammaticaToken node) => node;
+    public virtual Token ExitNullLiteral(Token token) => token;
 
-    public virtual void EnterTimespan(GrammaticaToken node) { }
+    public virtual void EnterTimespan(Token token) { }
 
-    public virtual Node ExitTimeSpan(GrammaticaToken node) => node;
+    public virtual Token ExitTimeSpan(Token token) => token;
 
-    public virtual void EnterDatetime(GrammaticaToken node) { }
+    public virtual void EnterDatetime(Token token) { }
 
-    public virtual Node ExitDatetime(GrammaticaToken node) => node;
+    public virtual Token ExitDatetime(Token token) => token;
 
-    public virtual void EnterIf(GrammaticaToken node) { }
+    public virtual void EnterIf(Token token) { }
 
-    public virtual Node ExitIf(GrammaticaToken node) => node;
+    public virtual Token ExitIf(Token token) => token;
 
-    public virtual void EnterCast(GrammaticaToken node) { }
+    public virtual void EnterCast(Token token) { }
 
-    public virtual Node ExitCast(GrammaticaToken node) => node;
+    public virtual Token ExitCast(Token token) => token;
 
-    public virtual void EnterExpression(Production node) { }
+    public virtual void EnterExpression(Production production) { }
 
-    public virtual Node ExitExpression(Production node) => node;
+    public virtual Production ExitExpression(Production production) => production;
 
-    public virtual void ChildExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterXorExpression(Production node) { }
+    public virtual void EnterXorExpression(Production production) { }
 
-    public virtual Node ExitXorExpression(Production node) => node;
+    public virtual Production ExitXorExpression(Production production) => production;
 
-    public virtual void ChildXorExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildXorExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterOrExpression(Production node) { }
+    public virtual void EnterOrExpression(Production production) { }
 
-    public virtual Node ExitOrExpression(Production node) => node;
+    public virtual Production ExitOrExpression(Production production) => production;
 
-    public virtual void ChildOrExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildOrExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterAndExpression(Production node) { }
+    public virtual void EnterAndExpression(Production production) { }
 
-    public virtual Node ExitAndExpression(Production node) => node;
+    public virtual Production ExitAndExpression(Production production) => production;
 
-    public virtual void ChildAndExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildAndExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterNotExpression(Production node) { }
+    public virtual void EnterNotExpression(Production production) { }
 
-    public virtual Node ExitNotExpression(Production node) => node;
+    public virtual Production ExitNotExpression(Production production) => production;
 
-    public virtual void ChildNotExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildNotExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterInExpression(Production node) { }
+    public virtual void EnterInExpression(Production production) { }
 
-    public virtual Node ExitInExpression(Production node) => node;
+    public virtual Production ExitInExpression(Production production) => production;
 
-    public virtual void ChildInExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildInExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterInTargetExpression(Production node) { }
+    public virtual void EnterInTargetExpression(Production production) { }
 
-    public virtual Node ExitInTargetExpression(Production node) => node;
+    public virtual Production ExitInTargetExpression(Production production) => production;
 
-    public virtual void ChildInTargetExpression(Production node, Node child) =>
-        node.AddChild(child);
+    public virtual void ChildInTargetExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterInListTargetExpression(Production node) { }
+    public virtual void EnterInListTargetExpression(Production production) { }
 
-    public virtual Node ExitInListTargetExpression(Production node) => node;
+    public virtual Production ExitInListTargetExpression(Production production) => production;
 
-    public virtual void ChildInListTargetExpression(Production node, Node child) =>
-        node.AddChild(child);
+    public virtual void ChildInListTargetExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterCompareExpression(Production node) { }
+    public virtual void EnterCompareExpression(Production production) { }
 
-    public virtual Node ExitCompareExpression(Production node) => node;
+    public virtual Production ExitCompareExpression(Production production) => production;
 
-    public virtual void ChildCompareExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildCompareExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterShiftExpression(Production node) { }
+    public virtual void EnterShiftExpression(Production production) { }
 
-    public virtual Node ExitShiftExpression(Production node) => node;
+    public virtual Production ExitShiftExpression(Production production) => production;
 
-    public virtual void ChildShiftExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildShiftExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterAdditiveExpression(Production node) { }
+    public virtual void EnterAdditiveExpression(Production production) { }
 
-    public virtual Node ExitAdditiveExpression(Production node) => node;
+    public virtual Production ExitAdditiveExpression(Production production) => production;
 
-    public virtual void ChildAdditiveExpression(Production node, Node child) =>
-        node.AddChild(child);
+    public virtual void ChildAdditiveExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterMultiplicativeExpression(Production node) { }
+    public virtual void EnterMultiplicativeExpression(Production production) { }
 
-    public virtual Node ExitMultiplicativeExpression(Production node) => node;
+    public virtual Production ExitMultiplicativeExpression(Production production) => production;
 
-    public virtual void ChildMultiplicativeExpression(Production node, Node child) =>
-        node.AddChild(child);
+    public virtual void ChildMultiplicativeExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterPowerExpression(Production node) { }
+    public virtual void EnterPowerExpression(Production production) { }
 
-    public virtual Node ExitPowerExpression(Production node) => node;
+    public virtual Production ExitPowerExpression(Production production) => production;
 
-    public virtual void ChildPowerExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildPowerExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterNegateExpression(Production node) { }
+    public virtual void EnterNegateExpression(Production production) { }
 
-    public virtual Node ExitNegateExpression(Production node) => node;
+    public virtual Production ExitNegateExpression(Production production) => production;
 
-    public virtual void ChildNegateExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildNegateExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterMemberExpression(Production node) { }
+    public virtual void EnterMemberExpression(Production production) { }
 
-    public virtual Node ExitMemberExpression(Production node) => node;
+    public virtual Production ExitMemberExpression(Production production) => production;
 
-    public virtual void ChildMemberExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildMemberExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterMemberAccessExpression(Production node) { }
+    public virtual void EnterMemberAccessExpression(Production production) { }
 
-    public virtual Node ExitMemberAccessExpression(Production node) => node;
+    public virtual Production ExitMemberAccessExpression(Production production) => production;
 
-    public virtual void ChildMemberAccessExpression(Production node, Node child) =>
-        node.AddChild(child);
+    public virtual void ChildMemberAccessExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterBasicExpression(Production node) { }
+    public virtual void EnterBasicExpression(Production production) { }
 
-    public virtual Node ExitBasicExpression(Production node) => node;
+    public virtual Production ExitBasicExpression(Production production) => production;
 
-    public virtual void ChildBasicExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildBasicExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterMemberFunctionExpression(Production node) { }
+    public virtual void EnterMemberFunctionExpression(Production production) { }
 
-    public virtual Node ExitMemberFunctionExpression(Production node) => node;
+    public virtual Production ExitMemberFunctionExpression(Production production) => production;
 
-    public virtual void ChildMemberFunctionExpression(Production node, Node child) =>
-        node.AddChild(child);
+    public virtual void ChildMemberFunctionExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterFieldPropertyExpression(Production node) { }
+    public virtual void EnterFieldPropertyExpression(Production production) { }
 
-    public virtual Node ExitFieldPropertyExpression(Production node) => node;
+    public virtual Production ExitFieldPropertyExpression(Production production) => production;
 
-    public virtual void ChildFieldPropertyExpression(Production node, Node child) =>
-        node.AddChild(child);
+    public virtual void ChildFieldPropertyExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterSpecialFunctionExpression(Production node) { }
+    public virtual void EnterSpecialFunctionExpression(Production production) { }
 
-    public virtual Node ExitSpecialFunctionExpression(Production node) => node;
+    public virtual Production ExitSpecialFunctionExpression(Production production) => production;
 
-    public virtual void ChildSpecialFunctionExpression(Production node, Node child) =>
-        node.AddChild(child);
+    public virtual void ChildSpecialFunctionExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterIfExpression(Production node) { }
+    public virtual void EnterIfExpression(Production production) { }
 
-    public virtual Node ExitIfExpression(Production node) => node;
+    public virtual Production ExitIfExpression(Production production) => production;
 
-    public virtual void ChildIfExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildIfExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterCastExpression(Production node) { }
+    public virtual void EnterCastExpression(Production production) { }
 
-    public virtual Node ExitCastExpression(Production node) => node;
+    public virtual Production ExitCastExpression(Production production) => production;
 
-    public virtual void ChildCastExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildCastExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterCastTypeExpression(Production node) { }
+    public virtual void EnterCastTypeExpression(Production production) { }
 
-    public virtual Node ExitCastTypeExpression(Production node) => node;
+    public virtual Production ExitCastTypeExpression(Production production) => production;
 
-    public virtual void ChildCastTypeExpression(Production node, Node child) =>
-        node.AddChild(child);
+    public virtual void ChildCastTypeExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterIndexExpression(Production node) { }
+    public virtual void EnterIndexExpression(Production production) { }
 
-    public virtual Node ExitIndexExpression(Production node) => node;
+    public virtual Production ExitIndexExpression(Production production) => production;
 
-    public virtual void ChildIndexExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildIndexExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterFunctionCallExpression(Production node) { }
+    public virtual void EnterFunctionCallExpression(Production production) { }
 
-    public virtual Node ExitFunctionCallExpression(Production node) => node;
+    public virtual Production ExitFunctionCallExpression(Production production) => production;
 
-    public virtual void ChildFunctionCallExpression(Production node, Node child) =>
-        node.AddChild(child);
+    public virtual void ChildFunctionCallExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterArgumentList(Production node) { }
+    public virtual void EnterArgumentList(Production production) { }
 
-    public virtual Node ExitArgumentList(Production node) => node;
+    public virtual Production ExitArgumentList(Production production) => production;
 
-    public virtual void ChildArgumentList(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildArgumentList(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterLiteralExpression(Production node) { }
+    public virtual void EnterLiteralExpression(Production production) { }
 
-    public virtual Node ExitLiteralExpression(Production node) => node;
+    public virtual Production ExitLiteralExpression(Production production) => production;
 
-    public virtual void ChildLiteralExpression(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildLiteralExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterBooleanLiteralExpression(Production node) { }
+    public virtual void EnterBooleanLiteralExpression(Production production) { }
 
-    public virtual Node ExitBooleanLiteralExpression(Production node) => node;
+    public virtual Production ExitBooleanLiteralExpression(Production production) => production;
 
-    public virtual void ChildBooleanLiteralExpression(Production node, Node child) =>
-        node.AddChild(child);
+    public virtual void ChildBooleanLiteralExpression(Production production, Node child) =>
+        production.AddChild(child);
 
-    public virtual void EnterExpressionGroup(Production node) { }
+    public virtual void EnterExpressionGroup(Production production) { }
 
-    public virtual Node ExitExpressionGroup(Production node) => node;
+    public virtual Production ExitExpressionGroup(Production production) => production;
 
-    public virtual void ChildExpressionGroup(Production node, Node child) => node.AddChild(child);
+    public virtual void ChildExpressionGroup(Production production, Node child) =>
+        production.AddChild(child);
 }

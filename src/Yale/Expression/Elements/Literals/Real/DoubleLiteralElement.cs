@@ -1,12 +1,9 @@
-﻿using System;
-using System.Globalization;
-using System.Reflection.Emit;
-using Yale.Expression.Elements.Base.Literals;
+﻿using Yale.Expression.Elements.Base.Literals;
 using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.Literals.Real;
 
-internal class DoubleLiteralElement : RealLiteralElement
+internal sealed class DoubleLiteralElement : RealLiteralElement
 {
     private readonly double value;
 

@@ -1,17 +1,17 @@
 ....
-BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.2861/23H2/2023Update/SunValley3)
+BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.3007/23H2/2023Update/SunValley3)
 12th Gen Intel Core i9-12900KF, 1 CPU, 24 logical and 16 physical cores
-.NET SDK 8.0.100
+.NET SDK 8.0.200-preview.23624.5
   [Host]     : .NET 6.0.25 (6.0.2523.51912), X64 RyuJIT AVX2
   DefaultJob : .NET 6.0.25 (6.0.2523.51912), X64 RyuJIT AVX2
 
 ....
 [options="header"]
 |===
-|Method                          |Mean     |StdErr    |StdDev    |Min      |Q1       |Median   |Q3       |Max      |Op/s    |Rank  
-|AddExpression_Recalculate_Lazy  |  1.586 s|  0.0072 s|  0.0279 s|  1.558 s|  1.564 s|  1.580 s|  1.603 s|  1.649 s|  0.6306|     1
-|AddExpression_Recalculate_Off   |  1.595 s|  0.0029 s|  0.0112 s|  1.579 s|  1.587 s|  1.597 s|  1.602 s|  1.615 s|  0.6268|     1
-|AddExpression_Recalculate_Auto  |  1.604 s|  0.0086 s|  0.0437 s|  1.550 s|  1.569 s|  1.597 s|  1.622 s|  1.699 s|  0.6232|     1
-|Flee_Recalculate_Off            |  1.972 s|  0.0036 s|  0.0124 s|  1.951 s|  1.966 s|  1.970 s|  1.980 s|  1.995 s|  0.5072|     2
-|Flee_Recalculate_Manual         |  2.158 s|  0.0126 s|  0.1127 s|  1.974 s|  2.074 s|  2.164 s|  2.239 s|  2.415 s|  0.4634|     3
+|Method                           |Mean     |StdErr    |StdDev    |Min      |Q1       |Median   |Q3       |Max      |Op/s    |Rank  
+|Flee_Recalculate_Off             |  2.016 s|  0.0091 s|  0.0351 s|  1.959 s|  1.994 s|  2.015 s|  2.048 s|  2.083 s|  0.4960|     1
+|Flee_Recalculate_Manual          |  2.055 s|  0.0099 s|  0.0395 s|  1.996 s|  2.027 s|  2.056 s|  2.073 s|  2.126 s|  0.4866|     1
+|AddExpression_Recalculate_Never  |  2.435 s|  0.0041 s|  0.0154 s|  2.395 s|  2.427 s|  2.435 s|  2.444 s|  2.458 s|  0.4107|     2
+|AddExpression_Recalculate_Auto   |  2.455 s|  0.0022 s|  0.0080 s|  2.443 s|  2.449 s|  2.455 s|  2.457 s|  2.473 s|  0.4074|     2
+|AddExpression_Recalculate_Lazy   |  2.473 s|  0.0046 s|  0.0178 s|  2.447 s|  2.457 s|  2.476 s|  2.484 s|  2.510 s|  0.4043|     2
 |===

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Reflection.Emit;
-using Yale.Expression.Elements.Base.Literals;
+﻿using Yale.Expression.Elements.Base.Literals;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
 namespace Yale.Expression.Elements.Literals;
 
-internal class TimeSpanLiteralElement : LiteralElement
+internal sealed class TimeSpanLiteralElement : LiteralElement
 {
     private readonly TimeSpan _value;
 
@@ -30,9 +28,7 @@ internal class TimeSpanLiteralElement : LiteralElement
 
         EmitLoad(_value.Ticks, ilGenerator);
 
-        System.Reflection.ConstructorInfo constructorInfo = typeof(TimeSpan).GetConstructor(
-            new[] { typeof(Int64) }
-        );
+        ConstructorInfo constructorInfo = typeof(TimeSpan).GetConstructor(new[] { typeof(long) })!;
 
         ilGenerator.Emit(OpCodes.Call, constructorInfo);
 

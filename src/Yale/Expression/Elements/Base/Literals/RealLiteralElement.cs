@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Yale.Expression.Elements.Literals.Real;
 
 namespace Yale.Expression.Elements.Base.Literals;
@@ -81,7 +80,7 @@ internal abstract class RealLiteralElement : LiteralElement
 
     private static DoubleLiteralElement? CreateDouble(string image)
     {
-        if (image.EndsWith("d", StringComparison.OrdinalIgnoreCase))
+        if (image.EndsWith('d'))
         {
             image = image.Remove(image.Length - 1);
             return DoubleLiteralElement.Parse(image);
@@ -92,7 +91,7 @@ internal abstract class RealLiteralElement : LiteralElement
 
     private static SingleLiteralElement? CreateSingle(string image)
     {
-        if (image.EndsWith("f", StringComparison.OrdinalIgnoreCase))
+        if (image.EndsWith('f'))
         {
             image = image.Remove(image.Length - 1);
             return SingleLiteralElement.Parse(image);
@@ -103,7 +102,7 @@ internal abstract class RealLiteralElement : LiteralElement
 
     private static DecimalLiteralElement? CreateDecimal(string image)
     {
-        if (image.EndsWith("m", StringComparison.OrdinalIgnoreCase))
+        if (image.EndsWith('m'))
         {
             image = image.Remove(image.Length - 1);
             return DecimalLiteralElement.Parse(image);

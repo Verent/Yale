@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Yale.Engine.Internal;
+﻿namespace Yale.Engine.Internal;
 
 /// <summary>
 /// Keeps track of expression dependencies
 /// </summary>
-internal class DependencyManager
+internal sealed class DependencyManager
 {
     /// <summary>
     /// Map of a node with edges
@@ -67,9 +64,9 @@ internal class DependencyManager
 
     public void RemovePrecedents(string nodeKey)
     {
-        if (Nodes.ContainsKey(nodeKey))
+        if (Nodes.TryGetValue(nodeKey, out DependencyNode? value))
         {
-            Nodes[nodeKey].ClearPredecessors();
+            value.ClearPredecessors();
         }
     }
 

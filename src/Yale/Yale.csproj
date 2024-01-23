@@ -6,28 +6,26 @@
 		<VersionPrefix>2.0.0</VersionPrefix>
 		<Authors>Espen Skaufel</Authors>
 		<Description>Yet another expression parser and evaluator library for .Net</Description>
-		<PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
+		<PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<RepositoryUrl>https://github.com/Verent/Yale</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<!-- <TreatWarningsAsErrors>true</TreatWarningsAsErrors> -->
 		
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<!-- <TreatWarningsAsErrors>true</TreatWarningsAsErrors> -->
+		<!-- <GenerateDocumentationFile>true</GenerateDocumentationFile> -->
+
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
-		<AnalysisLevel>latest-recommended</AnalysisLevel>
+		<AnalysisLevel>latest-Recommended</AnalysisLevel>
 		
 		<Features>strict</Features>
 		<Nullable>enable</Nullable>
+		
 		<PackageReadmeFile></PackageReadmeFile>
+		<NeutralLanguage>en-001</NeutralLanguage>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 	</PropertyGroup>
-
 	<ItemGroup>
-		<PackageReference Include="Grammatica" Version="1.6.0" />
-		<PackageReference Include="System.ComponentModel" Version="4.3.0" />
-		<PackageReference Include="System.Reflection" Version="4.3.0" />
-		<PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
-		<PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.7.0" />
-		<PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
+	  <None Include="..\..\.editorconfig" Link=".editorconfig" />
 	</ItemGroup>
 
 	<ItemGroup>

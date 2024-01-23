@@ -1,13 +1,10 @@
-using System;
-using System.Globalization;
-using System.Reflection.Emit;
 using Yale.Expression.Elements.Base.Literals;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
 namespace Yale.Expression.Elements.Literals;
 
-internal class DateTimeLiteralElement : LiteralElement
+internal sealed class DateTimeLiteralElement : LiteralElement
 {
     private readonly DateTime _value;
 
@@ -42,8 +39,8 @@ internal class DateTimeLiteralElement : LiteralElement
         EmitLoad(_value.Ticks, ilGenerator);
 
         System.Reflection.ConstructorInfo constructor = typeof(DateTime).GetConstructor(
-            new[] { typeof(Int64) }
-        );
+            new[] { typeof(long) }
+        )!;
 
         ilGenerator.Emit(OpCodes.Call, constructor);
 

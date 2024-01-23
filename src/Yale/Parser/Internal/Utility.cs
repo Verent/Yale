@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Diagnostics;
-using System.Globalization;
-using System.Reflection;
-using System.Reflection.Emit;
-
-// ReSharper disable MethodTooLong
+﻿using System.Diagnostics;
 
 namespace Yale.Parser.Internal;
 
@@ -236,7 +229,7 @@ internal static class Utility
     /// <param name="sourceType">The type to convert from</param>
     /// <param name="destinationType">The type to convert to</param>
     /// <returns>The operator's method or null of no match is found</returns>
-    public static MethodInfo GetSimpleOverloadedOperator(
+    public static MethodInfo? GetSimpleOverloadedOperator(
         string name,
         Type sourceType,
         Type destinationType
@@ -253,7 +246,7 @@ internal static class Utility
         const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
 
         // Look on the source type
-        MemberInfo[] members = sourceType.FindMembers(
+        var members = sourceType.FindMembers(
             MemberTypes.Method,
             flags,
             SimpleOverloadedOperatorFilter,
@@ -356,7 +349,7 @@ internal static class Utility
 
     public static string FormatList(string[] items)
     {
-        var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ";
+        var separator = CultureInfo.InvariantCulture.TextInfo.ListSeparator + " ";
         return string.Join(separator, items);
     }
 }

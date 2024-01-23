@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
 using Yale.Core;
 using Yale.Engine.Interface;
 using Yale.Engine.Internal;
@@ -46,8 +41,7 @@ public class ComputeInstance
 
     public ComputeInstance(ComputeInstanceOptions options)
     {
-        if (options is null)
-            throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(options);
 
         Builder = new ExpressionBuilder(options: options.ExpressionOptions, instance: this);
         this.options = options;
@@ -60,15 +54,13 @@ public class ComputeInstance
 
     #region Recalculate
 
-    private bool ShouldRecalculate => options.Recalculate && options.LazyRecalculate == false;
-
     private void BindToValuesEvents()
     {
-        if (ShouldRecalculate)
+        if (options.Recalculate == ComputeInstanceOptions.RecalculateMode.Auto)
         {
             Variables.PropertyChanged += RecalculateValues;
         }
-        else
+        else if (options.Recalculate == ComputeInstanceOptions.RecalculateMode.Lazy)
         {
             Variables.PropertyChanged += TagResultsAsDirty;
         }
@@ -87,17 +79,17 @@ public class ComputeInstance
         IExpressionResult node = nameNodeMap[key];
         node.Dirty = true;
 
-        foreach (string dependent in dependencies.GetDependents(key))
+        foreach (var dependent in dependencies.GetDependents(key))
         {
-            RecalculateNodeAndDependents(dependent);
+            TagNodeAndDependentsAsDirty(dependent);
         }
     }
 
     private void RecalculateValues(object? sender, PropertyChangedEventArgs e)
     {
-        foreach (string dependent in dependencies.GetDependents(e.PropertyName!))
+        foreach (var dependentKey in dependencies.GetDependents(e.PropertyName!))
         {
-            RecalculateNodeAndDependents(dependent);
+            RecalculateNodeAndDependents(dependentKey);
         }
     }
 
@@ -133,20 +125,16 @@ public class ComputeInstance
 
     public void SetExpression(string key, string expression)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
-        if (expression is null)
-            throw new ArgumentNullException(nameof(expression));
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(expression);
 
         SetExpression<object>(key, expression);
     }
 
     public void SetExpression<T>(string key, string expression)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
-        if (expression is null)
-            throw new ArgumentNullException(nameof(expression));
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(expression);
 
         dependencies.RemovePrecedents(key);
         nameNodeMap.Remove(key);
@@ -155,11 +143,11 @@ public class ComputeInstance
 
         foreach (string dependent in dependencies.GetDependents(key))
         {
-            if (ShouldRecalculate)
+            if (options.Recalculate == ComputeInstanceOptions.RecalculateMode.Auto)
             {
                 RecalculateNodeAndDependents(dependent);
             }
-            else
+            if (options.Recalculate == ComputeInstanceOptions.RecalculateMode.Lazy)
             {
                 TagNodeAndDependentsAsDirty(dependent);
             }
@@ -173,10 +161,8 @@ public class ComputeInstance
     /// <param name="expression"></param>
     public void AddExpression(string key, string expression)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
-        if (expression is null)
-            throw new ArgumentNullException(nameof(expression));
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(expression);
 
         Expression<object> result = Builder.BuildExpression<object>(key, expression);
         nameNodeMap.Add(key, new ExpressionResult<object>(key, result));
@@ -189,10 +175,8 @@ public class ComputeInstance
     /// <param name="expression"></param>
     public void AddExpression<T>(string key, string expression)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
-        if (expression is null)
-            throw new ArgumentNullException(nameof(expression));
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(expression);
 
         Expression<T> result = Builder.BuildExpression<T>(key, expression);
         nameNodeMap.Add(key, new ExpressionResult<T>(key, result));
@@ -205,10 +189,9 @@ public class ComputeInstance
     /// <returns></returns>
     public object GetResult(string key)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
-        if (options.Recalculate)
+        if (options.Recalculate == ComputeInstanceOptions.RecalculateMode.Lazy)
         {
             RecalculateIfNeeded(key);
         }
@@ -222,16 +205,14 @@ public class ComputeInstance
     /// <returns></returns>
     public T GetResult<T>(string key)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
         return (T)GetResult(key);
     }
 
     public bool TryGetResult(string key, [NotNullWhen(true)] out object? result)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
         result = nameNodeMap.ContainsKey(key) ? GetResult(key) : default;
         return result != null;
@@ -240,8 +221,7 @@ public class ComputeInstance
     public bool TryGetResult<T>(string key, [NotNullWhen(true)] out T? result)
         where T : class
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
         result = nameNodeMap.ContainsKey(key) ? (T)GetResult(key) : default;
         return result != null;
@@ -254,27 +234,24 @@ public class ComputeInstance
     /// <returns></returns>
     public Type? ResultType(string key)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
         return nameNodeMap[key].ResultType;
     }
 
     public string GetExpression(string key)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
-        ExpressionResult<object> result = (ExpressionResult<object>)nameNodeMap[key];
+        var result = (ExpressionResult<object>)nameNodeMap[key];
         return result.Expression.ExpressionText;
     }
 
     public string GetExpression<T>(string key)
     {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
-        ExpressionResult<T> result = (ExpressionResult<T>)nameNodeMap[key];
+        var result = (ExpressionResult<T>)nameNodeMap[key];
         return result.Expression.ExpressionText;
     }
 
@@ -322,14 +299,14 @@ public class ComputeInstance
         ilGenerator.Emit(OpCodes.Callvirt, propertyInfo.GetGetMethod());
 
         //Find and load expression result
-        MemberInfo[] members = typeof(ComputeInstance).FindMembers(
+        var members = typeof(ComputeInstance).FindMembers(
             MemberTypes.Method,
             BindingFlags.Instance | BindingFlags.Public,
             Type.FilterName,
             "GetResult"
         );
-        MethodInfo methodInfo = members.Cast<MethodInfo>().First(method => method.IsGenericMethod);
-        Type? resultType = ResultType(expressionKey);
+        var methodInfo = members.Cast<MethodInfo>().First(method => method.IsGenericMethod);
+        var resultType = ResultType(expressionKey);
         methodInfo = methodInfo.MakeGenericMethod(resultType);
 
         ilGenerator.Emit(OpCodes.Ldstr, expressionKey);

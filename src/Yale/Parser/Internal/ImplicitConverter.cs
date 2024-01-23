@@ -1,10 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using System.Reflection.Emit;
+﻿using System.Diagnostics;
 
 namespace Yale.Parser.Internal;
 
-internal class ImplicitConverter
+internal sealed class ImplicitConverter
 {
     /// <summary>
     /// Table of results for binary operations using primitives
@@ -373,7 +371,10 @@ internal class ImplicitConverter
         return true;
     }
 
-    private static bool ImplicitConvertToInt64(TypeCode sourceTypeCode, YaleIlGenerator ilGenerator)
+    private static bool ImplicitConvertToInt64(
+        TypeCode sourceTypeCode,
+        YaleIlGenerator? ilGenerator
+    )
     {
         switch (sourceTypeCode)
         {
@@ -402,7 +403,7 @@ internal class ImplicitConverter
 
     private static bool ImplicitConvertToUInt64(
         TypeCode sourceTypeCode,
-        YaleIlGenerator ilGenerator
+        YaleIlGenerator? ilGenerator
     )
     {
         switch (sourceTypeCode)
@@ -433,10 +434,10 @@ internal class ImplicitConverter
     /// <param name="t1"></param>
     /// <param name="t2"></param>
     /// <returns></returns>
-    public static Type GetBinaryResultType(Type t1, Type t2)
+    public static Type? GetBinaryResultType(Type t1, Type t2)
     {
-        int index1 = GetTypeIndex(t1);
-        int index2 = GetTypeIndex(t2);
+        var index1 = GetTypeIndex(t1);
+        var index2 = GetTypeIndex(t2);
 
         if (index1 == -1 || index2 == -1)
         {
@@ -526,10 +527,10 @@ internal class ImplicitConverter
 
     private static int GetInheritanceDistance(Type sourceType, Type destinationType)
     {
-        int count = 0;
-        Type current = sourceType;
+        var count = 0;
+        Type? current = sourceType;
 
-        while (!ReferenceEquals(current, destinationType))
+        while (current is not null && (ReferenceEquals(current, destinationType) == false))
         {
             count += 1;
             current = current.BaseType;
@@ -540,10 +541,10 @@ internal class ImplicitConverter
 
     private static int GetInverseDistanceToObject(Type t)
     {
-        int score = 1000;
-        Type current = t.BaseType;
+        var score = 1000;
+        Type? current = t.BaseType;
 
-        while (current != null)
+        while (current is not null)
         {
             score -= 100;
             current = current.BaseType;

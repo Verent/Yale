@@ -1,5 +1,4 @@
-﻿using System;
-using Yale.Engine.Interface;
+﻿using Yale.Engine.Interface;
 using Yale.Expression;
 
 namespace Yale.Engine.Internal;

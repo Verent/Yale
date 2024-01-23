@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Yale.Engine.Interface;
+﻿namespace Yale.Engine.Interface;
 
 internal interface IExpressionResult
 {

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-using System.Reflection.Emit;
+﻿using System.Diagnostics;
 
 namespace Yale.Parser.Internal;
 
-internal class YaleIlGenerator
+internal sealed class YaleIlGenerator
 {
     private readonly ILGenerator _ilGenerator;
     private readonly Dictionary<Type, LocalBuilder> _localBuilderTemp;

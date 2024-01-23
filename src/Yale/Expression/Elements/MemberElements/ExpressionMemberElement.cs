@@ -1,10 +1,9 @@
-﻿using System;
-using Yale.Expression.Elements.Base;
+﻿using Yale.Expression.Elements.Base;
 using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.MemberElements;
 
-internal class ExpressionMemberElement : MemberElement
+internal sealed class ExpressionMemberElement : MemberElement
 {
     private readonly BaseExpressionElement _myElement;
 

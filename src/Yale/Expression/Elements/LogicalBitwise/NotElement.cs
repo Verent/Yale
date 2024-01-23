@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reflection.Emit;
-using Yale.Expression.Elements.Base;
+﻿using Yale.Expression.Elements.Base;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
@@ -9,7 +7,7 @@ namespace Yale.Expression.Elements.LogicalBitwise;
 /// <summary>
 ///
 /// </summary>
-internal class NotElement : UnaryElement
+internal sealed class NotElement : UnaryElement
 {
     public override Type ResultType { get; }
 

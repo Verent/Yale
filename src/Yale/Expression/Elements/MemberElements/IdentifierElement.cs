@@ -1,8 +1,5 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Reflection;
-using System.Reflection.Emit;
 using Yale.Core;
 using Yale.Core.Interfaces;
 using Yale.Expression.Elements.Base;
@@ -15,7 +12,7 @@ using Yale.Resources;
 
 namespace Yale.Expression.Elements.MemberElements;
 
-internal class IdentifierElement : MemberElement
+internal sealed class IdentifierElement : MemberElement
 {
     private FieldInfo? field;
     private PropertyInfo property;
@@ -129,7 +126,7 @@ internal class IdentifierElement : MemberElement
             return false;
         }
 
-        PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(previous.ResultType);
+        var properties = TypeDescriptor.GetProperties(previous.ResultType);
         propertyDescriptor = properties.Find(MemberName, true);
         return propertyDescriptor is not null;
     }
@@ -192,7 +189,7 @@ internal class IdentifierElement : MemberElement
     /// <param name="ilg"></param>
     private void EmitVariableLoad(YaleIlGenerator ilg)
     {
-        MethodInfo methodInfo = VariableCollection.GetVariableLoadMethod(valueType);
+        var methodInfo = VariableCollection.GetVariableLoadMethod(valueType);
         ilg.Emit(OpCodes.Ldstr, MemberName);
         EmitMethodCall(methodInfo, ilg);
     }

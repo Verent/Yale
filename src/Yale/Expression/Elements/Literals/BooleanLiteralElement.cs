@@ -1,10 +1,9 @@
-﻿using System;
-using Yale.Expression.Elements.Base.Literals;
+﻿using Yale.Expression.Elements.Base.Literals;
 using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.Literals;
 
-internal class BooleanLiteralElement : LiteralElement
+internal sealed class BooleanLiteralElement : LiteralElement
 {
     private readonly bool _value;
 

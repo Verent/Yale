@@ -1,12 +1,9 @@
-﻿using System;
-using System.Reflection.Emit;
-
-namespace Yale.Parser.Internal;
+﻿namespace Yale.Parser.Internal;
 
 /// <summary>
 /// Represents a branch from a start location to an end location
 /// </summary>
-internal class BranchInfo : IEquatable<BranchInfo>
+internal sealed class BranchInfo : IEquatable<BranchInfo>
 {
     private readonly ILLocation start;
     private readonly ILLocation end;

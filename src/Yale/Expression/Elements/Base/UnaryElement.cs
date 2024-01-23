@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Yale.Expression.Elements.Base;
+﻿namespace Yale.Expression.Elements.Base;
 
 /// <summary>
 /// Base element that takes one operand (example: Not and Negate)

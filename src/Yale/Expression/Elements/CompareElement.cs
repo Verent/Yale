@@ -1,14 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.Reflection;
-using System.Reflection.Emit;
+﻿using System.Diagnostics;
 using Yale.Expression.Elements.Base;
 using Yale.Expression.Elements.Literals.Integral;
 using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements;
 
-internal class CompareElement : BinaryExpressionElement
+internal sealed class CompareElement : BinaryExpressionElement
 {
     private LogicalCompareOperation operation;
 

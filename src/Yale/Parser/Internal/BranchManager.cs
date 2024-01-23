@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection.Emit;
-
-namespace Yale.Parser.Internal;
+﻿namespace Yale.Parser.Internal;
 
 /// <summary>
 /// Manages branch information and allows us to determine if we should emit a short or long branch
 /// </summary>
-internal class BranchManager
+internal sealed class BranchManager
 {
-    private readonly IList<BranchInfo> branchInfos = new List<BranchInfo>();
+    private readonly List<BranchInfo> branchInfos = new();
 
-    private readonly IDictionary<object, Label> keyLabelMap = new Dictionary<object, Label>();
+    private readonly Dictionary<object, Label> keyLabelMap = new();
 
     /// <summary>
     /// Determine whether to use short or long branches
@@ -57,7 +53,7 @@ internal class BranchManager
     /// <param name="dest"></param>
     /// <returns></returns>
     /// <remarks></remarks>
-    private int CountLongBranches(ICollection<BranchInfo> dest)
+    private static int CountLongBranches(ICollection<BranchInfo> dest)
     {
         var count = 0;
 
@@ -73,15 +69,15 @@ internal class BranchManager
     /// Find all the branches between the start and end locations of a target branch
     /// </summary>
     /// <param name="target"></param>
-    /// <param name="dest"></param>
+    /// <param name="destination"></param>
     /// <remarks></remarks>
-    private void FindBetweenBranches(BranchInfo target, ICollection<BranchInfo> dest)
+    private void FindBetweenBranches(BranchInfo target, List<BranchInfo> destination)
     {
-        foreach (BranchInfo branchInfo in branchInfos)
+        foreach (var branchInfo in branchInfos)
         {
             if (branchInfo.IsBetween(target))
             {
-                dest.Add(branchInfo);
+                destination.Add(branchInfo);
             }
         }
     }

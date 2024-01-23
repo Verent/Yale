@@ -1,5 +1,4 @@
-﻿using System;
-using Yale.Expression;
+﻿using Yale.Expression;
 using Yale.Expression.Elements.Base;
 
 namespace Yale.Parser.Internal;
@@ -7,7 +6,7 @@ namespace Yale.Parser.Internal;
 /// <summary>
 /// Wraps an expression element so that it is loaded from a local slot
 /// </summary>
-internal class LocalBasedElement : BaseExpressionElement
+internal sealed class LocalBasedElement : BaseExpressionElement
 {
     private readonly int _index;
 

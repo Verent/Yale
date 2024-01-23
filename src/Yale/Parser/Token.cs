@@ -1,77 +1,240 @@
-﻿namespace Yale.Parser;
-
-///<remarks>
-/// An enumeration with token and production node constants. (69)
-///</remarks>
-internal enum Token
+namespace Yale.Parser
 {
-    ADD = 1001,
-    SUB = 1002,
-    MUL = 1003,
-    DIV = 1004,
-    POWER = 1005,
-    MOD = 1006,
-    LEFT_PAREN = 1007,
-    RIGHT_PAREN = 1008,
-    LEFT_BRACE = 1009,
-    RIGHT_BRACE = 1010,
-    EQ = 1011,
-    LT = 1012,
-    GT = 1013,
-    LTE = 1014,
-    GTE = 1015,
-    NE = 1016,
-    AND = 1017,
-    OR = 1018,
-    XOR = 1019,
-    NOT = 1020,
-    IN = 1021,
-    DOT = 1022,
-    ARGUMENT_SEPARATOR = 1023,
-    ARRAY_BRACES = 1024,
-    LEFT_SHIFT = 1025,
-    RIGHT_SHIFT = 1026,
-    WHITESPACE = 1027,
-    INTEGER = 1028,
-    REAL = 1029,
-    STRING_LITERAL = 1030,
-    CHAR_LITERAL = 1031,
-    TRUE = 1032,
-    FALSE = 1033,
-    NULL_LITERAL = 1034,
-    HEX_LITERAL = 1035,
-    CAST = 1036,
-    TIMESPAN = 1037,
-    DATETIME = 1038,
-    IF = 1039,
-    IDENTIFIER = 1040,
-    EXPRESSION = 2001,
-    XOR_EXPRESSION = 2002,
-    OR_EXPRESSION = 2003,
-    AND_EXPRESSION = 2004,
-    NOT_EXPRESSION = 2005,
-    IN_EXPRESSION = 2006,
-    IN_TARGET_EXPRESSION = 2007,
-    IN_LIST_TARGET_EXPRESSION = 2008,
-    COMPARE_EXPRESSION = 2009,
-    SHIFT_EXPRESSION = 2010,
-    ADDITIVE_EXPRESSION = 2011,
-    MULTIPLICATIVE_EXPRESSION = 2012,
-    POWER_EXPRESSION = 2013,
-    NEGATE_EXPRESSION = 2014,
-    MEMBER_EXPRESSION = 2015,
-    MEMBER_ACCESS_EXPRESSION = 2016,
-    BASIC_EXPRESSION = 2017,
-    MEMBER_FUNCTION_EXPRESSION = 2018,
-    FIELD_PROPERTY_EXPRESSION = 2019,
-    SPECIAL_FUNCTION_EXPRESSION = 2020,
-    IF_EXPRESSION = 2021,
-    CAST_EXPRESSION = 2022,
-    CAST_TYPE_EXPRESSION = 2023,
-    INDEX_EXPRESSION = 2024,
-    FUNCTION_CALL_EXPRESSION = 2025,
-    ARGUMENT_LIST = 2026,
-    LITERAL_EXPRESSION = 2027,
-    BOOLEAN_LITERAL_EXPRESSION = 2028,
-    EXPRESSION_GROUP = 2029
+    /**
+     * A token node. This class represents a token (i.e. a set of adjacent
+     * characters) in a parse tree. The tokens are created by a tokenizer,
+     * that groups characters together into tokens according to a set of
+     * token patterns.
+     *
+     */
+    internal sealed class Token : Node
+    {
+        private readonly TokenPattern pattern;
+
+        private Token? previous;
+
+        private Token? next;
+
+        /**
+         * Creates a new token.
+         *
+         * @param pattern        the token pattern
+         * @param image          the token image (i.e. characters)
+         * @param line           the line number of the first character
+         * @param col            the column number of the first character
+         */
+        public Token(TokenPattern pattern, string image, int line, int col)
+        {
+            this.pattern = pattern;
+            Image = image;
+            StartLine = line;
+            StartColumn = col;
+            EndLine = line;
+            EndColumn = col + image.Length - 1;
+            for (var pos = 0; image.IndexOf('\n', pos) >= 0; )
+            {
+                pos = image.IndexOf('\n', pos) + 1;
+                EndLine++;
+                EndColumn = image.Length - pos;
+            }
+        }
+
+        /**
+         * The node type id property (read-only). This value is set as
+         * a unique identifier for each type of node, in order to
+         * simplify later identification.
+         *
+         */
+        public override TokenId TypeId
+        {
+            get { return pattern.Id; }
+        }
+
+        /**
+         * The node name property (read-only).
+         *
+         */
+        public override string Name
+        {
+            get { return pattern.Name; }
+        }
+
+        /**
+         * The line number property of the first character in this
+         * node (read-only). If the node has child elements, this
+         * value will be fetched from the first child.
+         *
+         */
+        public override int StartLine { get; }
+
+        /**
+         * The column number property of the first character in this
+         * node (read-only). If the node has child elements, this
+         * value will be fetched from the first child.
+         *
+         */
+        public override int StartColumn { get; }
+
+        /**
+         * The line number property of the last character in this node
+         * (read-only). If the node has child elements, this value
+         * will be fetched from the last child.
+         *
+         */
+        public override int EndLine { get; }
+
+        /**
+         * The column number property of the last character in this
+         * node (read-only). If the node has child elements, this
+         * value will be fetched from the last child.
+         *
+         */
+        public override int EndColumn { get; }
+
+        /**
+         * The token image property (read-only). The token image
+         * consists of the input characters matched to form this
+         * token.
+         *
+         */
+        public string Image { get; }
+
+        /**
+         * The token pattern property (read-only).
+         */
+        internal TokenPattern Pattern
+        {
+            get { return pattern; }
+        }
+
+        /**
+         * The previous token property. If the token list feature is
+         * used in the tokenizer, all tokens found will be chained
+         * together in a double-linked list. The previous token may be
+         * a token that was ignored during the parsing, due to it's
+         * ignore flag being set. If there is no previous token or if
+         * the token list feature wasn't used in the tokenizer (the
+         * default), the previous token will always be null.
+         *
+         * @see #Next
+         * @see Tokenizer#UseTokenList
+         *
+         */
+        public Token? Previous
+        {
+            get { return previous; }
+            set
+            {
+                if (previous is not null)
+                {
+                    previous.next = null;
+                }
+                previous = value;
+                if (previous is not null)
+                {
+                    previous.next = this;
+                }
+            }
+        }
+
+        /**
+         * The next token property. If the token list feature is used
+         * in the tokenizer, all tokens found will be chained together
+         * in a double-linked list. The next token may be a token that
+         * was ignored during the parsing, due to it's ignore flag
+         * being set. If there is no next token or if the token list
+         * feature wasn't used in the tokenizer (the default), the
+         * next token will always be null.
+         *
+         * @see #Previous
+         * @see Tokenizer#UseTokenList
+         *
+         */
+        public Token? Next
+        {
+            get { return next; }
+            set
+            {
+                if (next is not null)
+                {
+                    next.previous = null;
+                }
+                next = value;
+                if (next is not null)
+                {
+                    next.previous = this;
+                }
+            }
+        }
+
+        /**
+         * @return a string representation of this token
+         */
+        public override string ToString()
+        {
+            StringBuilder buffer = new();
+            int newline = Image.IndexOf('\n');
+
+            buffer.Append(pattern.Name);
+            buffer.Append('(');
+            buffer.Append(pattern.Id);
+            buffer.Append("): \"");
+            if (newline >= 0)
+            {
+                if (newline > 0 && Image[newline - 1] == '\r')
+                {
+                    newline--;
+                }
+                buffer.Append(Image.AsSpan(0, newline));
+                buffer.Append("(...)");
+            }
+            else
+            {
+                buffer.Append(Image);
+            }
+            buffer.Append("\", line: ");
+            buffer.Append(StartLine);
+            buffer.Append(", col: ");
+            buffer.Append(StartColumn);
+
+            return buffer.ToString();
+        }
+
+        /**
+         * Returns a short string representation of this token. The
+         * string will only contain the token image and possibly the
+         * token pattern name.
+         *
+         * @return a short string representation of this token
+         */
+        public string ToShortString()
+        {
+            StringBuilder buffer = new();
+            int newline = Image.IndexOf('\n');
+
+            buffer.Append('"');
+            if (newline >= 0)
+            {
+                if (newline > 0 && Image[newline - 1] == '\r')
+                {
+                    newline--;
+                }
+                buffer.Append(Image.AsSpan(0, newline));
+                buffer.Append("(...)");
+            }
+            else
+            {
+                buffer.Append(Image);
+            }
+            buffer.Append('"');
+            if (pattern.Type == TokenPattern.PatternType.REGEXP)
+            {
+                buffer.Append(" <");
+                buffer.Append(pattern.Name);
+                buffer.Append('>');
+            }
+
+            return buffer.ToString();
+        }
+    }
 }

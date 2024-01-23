@@ -61,29 +61,11 @@ namespace Yale.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ambiguous call of function &apos;{0}({1})&apos;.
-        /// </summary>
-        internal static string AmbiguousCallOfFunction {
-            get {
-                return ResourceManager.GetString("AmbiguousCallOfFunction", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Ambiguous overloaded operator (&apos;{2}&apos;) in types &apos;{0}&apos; and &apos;{1}&apos;.
         /// </summary>
         internal static string AmbiguousOverloadedOperator {
             get {
                 return ResourceManager.GetString("AmbiguousOverloadedOperator", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Analysis: {0}.
-        /// </summary>
-        internal static string ANALYSIS {
-            get {
-                return ResourceManager.GetString("ANALYSIS", resourceCulture);
             }
         }
         

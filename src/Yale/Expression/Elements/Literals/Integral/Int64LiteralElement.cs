@@ -1,11 +1,9 @@
-﻿using System;
-using System.Globalization;
-using Yale.Expression.Elements.Base.Literals;
+﻿using Yale.Expression.Elements.Base.Literals;
 using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.Literals.Integral;
 
-internal class Int64LiteralElement : IntegralLiteralElement
+internal sealed class Int64LiteralElement : IntegralLiteralElement
 {
     private Int64 _value;
     private const string MinValue = "9223372036854775808";
