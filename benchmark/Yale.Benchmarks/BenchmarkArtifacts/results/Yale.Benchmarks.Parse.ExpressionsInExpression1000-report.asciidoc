@@ -8,10 +8,10 @@ BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.3007/23H2/2023Update/SunValley3
 ....
 [options="header"]
 |===
-|Method                           |Mean      |StdErr   |StdDev   |Min        |Q1         |Median    |Q3        |Max       |Op/s   |Rank  
-|Flee_Recalculate_Manual          |  102.1 ms|  0.58 ms|  4.62 ms|   93.62 ms|   98.39 ms|  102.7 ms|  105.8 ms|  110.4 ms|  9.793|     1
-|Flee_Recalculate_Off             |  102.6 ms|  0.59 ms|  4.76 ms|   93.92 ms|   98.55 ms|  101.6 ms|  106.6 ms|  111.7 ms|  9.750|     1
-|AddExpression_Recalculate_Auto   |  228.8 ms|  1.21 ms|  6.31 ms|  219.26 ms|  224.00 ms|  227.2 ms|  233.8 ms|  241.0 ms|  4.371|     2
-|AddExpression_Recalculate_Lazy   |  231.1 ms|  0.98 ms|  3.79 ms|  222.24 ms|  229.18 ms|  231.7 ms|  234.0 ms|  236.3 ms|  4.328|     2
-|AddExpression_Recalculate_Never  |  232.6 ms|  1.07 ms|  4.00 ms|  226.05 ms|  230.20 ms|  231.7 ms|  235.6 ms|  239.3 ms|  4.300|     2
+|Method                           |Mean       |StdErr    |StdDev    |Min        |Q1         |Median     |Q3         |Max        |Op/s    |Rank  
+|Flee_Recalculate_Off             |   92.38 ms|  0.167 ms|  0.646 ms|   91.75 ms|   91.95 ms|   92.06 ms|   92.78 ms|   93.60 ms|  10.825|     1
+|Flee_Recalculate_Manual          |   92.88 ms|  0.101 ms|  0.364 ms|   92.17 ms|   92.78 ms|   92.90 ms|   92.99 ms|   93.45 ms|  10.767|     1
+|AddExpression_Recalculate_Auto   |  222.18 ms|  0.465 ms|  1.803 ms|  218.56 ms|  221.58 ms|  222.42 ms|  223.08 ms|  224.83 ms|   4.501|     2
+|AddExpression_Recalculate_Lazy   |  222.53 ms|  0.109 ms|  0.422 ms|  221.64 ms|  222.38 ms|  222.48 ms|  222.82 ms|  223.17 ms|   4.494|     2
+|AddExpression_Recalculate_Never  |  224.45 ms|  0.825 ms|  3.196 ms|  219.25 ms|  222.43 ms|  223.20 ms|  226.80 ms|  229.68 ms|   4.455|     2
 |===
