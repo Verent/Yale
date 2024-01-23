@@ -36,7 +36,7 @@ namespace Yale.Parser
         /**
         * The end NFA state for this regular expression.
         */
-        internal NFAState? _end;
+        internal NFAState _end;
 
         /**
         * The number of states found.
@@ -52,18 +52,6 @@ namespace Yale.Parser
         * The number of epsilon transitions found.
         */
         private int _epsilonCount;
-
-        /**
-         * Creates a new case-sensitive regular expression parser. Note
-         * that this will trigger the parsing of the regular expression.
-         *
-         * @param pattern        the regular expression pattern
-         *
-         * @throws RegExpException if the regular expression couldn't be
-         *             parsed correctly
-         */
-        public TokenRegExpParser(string pattern)
-            : this(pattern, false) { }
 
         /**
          * Creates a new regular expression parser. The regular
@@ -94,8 +82,6 @@ namespace Yale.Parser
         }
 
         /**
-         * Returns the debug information for the generated NFA.
-         *
          * @return the debug information for the generated NFA
          */
         public string GetDebugInfo()
@@ -319,8 +305,8 @@ namespace Yale.Parser
          */
         private NFAState ParseAtomModifier(NFAState start, NFAState end)
         {
-            int min = 0;
-            int max = -1;
+            int min,
+                max;
             int firstPos = _pos;
 
             // Read min and max
@@ -574,17 +560,16 @@ namespace Yale.Parser
          */
         private char ReadEscapeChar()
         {
-            char c;
             string str;
             int value;
 
             ReadChar('\\');
-            c = ReadChar();
+            var c = ReadChar();
             switch (c)
             {
                 case '0':
                     c = ReadChar();
-                    if (c < '0' || c > '3')
+                    if (c is < '0' or > '3')
                     {
                         throw new RegExpException(
                             RegExpException.ErrorType.UnsupportedEscapeCharacter,
@@ -594,12 +579,12 @@ namespace Yale.Parser
                     }
                     value = c - '0';
                     c = (char)PeekChar(0);
-                    if ('0' <= c && c <= '7')
+                    if (c is >= '0' and <= '7')
                     {
                         value *= 8;
                         value += ReadChar() - '0';
                         c = (char)PeekChar(0);
-                        if ('0' <= c && c <= '7')
+                        if (c is >= '0' and <= '7')
                         {
                             value *= 8;
                             value += ReadChar() - '0';
@@ -678,10 +663,9 @@ namespace Yale.Parser
         private int ReadNumber()
         {
             StringBuilder buf = new();
-            int c;
 
-            c = PeekChar(0);
-            while ('0' <= c && c <= '9')
+            var c = PeekChar(0);
+            while (c is >= '0' and <= '9')
             {
                 buf.Append(ReadChar());
                 c = PeekChar(0);
@@ -694,7 +678,7 @@ namespace Yale.Parser
                     _pattern
                 );
             }
-            return int.Parse(buf.ToString());
+            return int.Parse(buf.ToString(), CultureInfo.InvariantCulture);
         }
 
         /**
@@ -708,7 +692,7 @@ namespace Yale.Parser
          */
         private char ReadChar()
         {
-            int c = PeekChar(0);
+            var c = PeekChar(0);
 
             if (c < 0)
             {

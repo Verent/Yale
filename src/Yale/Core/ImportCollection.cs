@@ -3,7 +3,9 @@ using Yale.Resources;
 
 namespace Yale.Core;
 
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
 public sealed class ImportCollection
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
 {
     private const BindingFlags OwnerFlags =
         BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;

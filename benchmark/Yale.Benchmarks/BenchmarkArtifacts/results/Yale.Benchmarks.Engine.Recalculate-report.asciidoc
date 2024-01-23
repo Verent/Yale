@@ -1,7 +1,7 @@
 ....
-BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.2861/23H2/2023Update/SunValley3)
+BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.3007/23H2/2023Update/SunValley3)
 12th Gen Intel Core i9-12900KF, 1 CPU, 24 logical and 16 physical cores
-.NET SDK 8.0.100
+.NET SDK 8.0.200-preview.23624.5
   [Host]     : .NET 6.0.25 (6.0.2523.51912), X64 RyuJIT AVX2
   DefaultJob : .NET 6.0.25 (6.0.2523.51912), X64 RyuJIT AVX2
 
@@ -9,9 +9,9 @@ BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.2861/23H2/2023Update/SunValley3
 [options="header"]
 |===
 |Method                          |Mean        |StdErr   |StdDev    |Min         |Q1          |Median      |Q3          |Max         |Op/s     |Rank  
-|Flee_Recalculate_Manual         |    877.4 μs|  1.38 μs|   4.99 μs|    870.6 μs|    873.8 μs|    876.3 μs|    881.3 μs|    884.6 μs|  1,139.8|     1
-|Flee_Recalculate_Off            |    912.2 μs|  3.25 μs|  12.15 μs|    895.5 μs|    905.2 μs|    911.5 μs|    913.1 μs|    933.8 μs|  1,096.2|     2
-|AddExpression_Recalculate_Auto  |  1,089.7 μs|  2.90 μs|  10.85 μs|  1,076.8 μs|  1,080.2 μs|  1,089.2 μs|  1,094.9 μs|  1,108.2 μs|    917.7|     3
-|AddExpression_Recalculate_Lazy  |  1,120.5 μs|  1.85 μs|   6.68 μs|  1,108.8 μs|  1,117.8 μs|  1,120.4 μs|  1,125.1 μs|  1,134.4 μs|    892.5|     4
-|AddExpression_Recalculate_Off   |  1,184.3 μs|  3.10 μs|  11.99 μs|  1,158.1 μs|  1,177.7 μs|  1,186.7 μs|  1,191.2 μs|  1,206.0 μs|    844.4|     5
+|Flee_Recalculate_Off            |    955.7 μs|  4.77 μs|  26.14 μs|    900.5 μs|    944.4 μs|    960.7 μs|    974.2 μs|    987.2 μs|  1,046.3|     1
+|Flee_Recalculate_Manual         |    970.9 μs|  4.89 μs|  21.86 μs|    943.9 μs|    951.9 μs|    963.3 μs|    991.9 μs|  1,008.3 μs|  1,030.0|     1
+|AddExpression_Recalculate_Auto  |  1,356.1 μs|  7.11 μs|  36.26 μs|  1,304.2 μs|  1,324.8 μs|  1,355.6 μs|  1,374.4 μs|  1,442.5 μs|    737.4|     2
+|AddExpression_Recalculate_Lazy  |  1,370.3 μs|  5.57 μs|  21.56 μs|  1,329.0 μs|  1,357.1 μs|  1,370.3 μs|  1,384.2 μs|  1,405.6 μs|    729.8|     2
+|AddExpression_Recalculate_Off   |  1,382.8 μs|  2.37 μs|   8.53 μs|  1,366.0 μs|  1,377.3 μs|  1,379.9 μs|  1,391.3 μs|  1,395.1 μs|    723.1|     2
 |===

@@ -83,13 +83,12 @@ namespace Yale.Parser
         public void AddRegExpMatch(string pattern, bool ignoreCase, TokenPattern value)
         {
             TokenRegExpParser parser = new(pattern, ignoreCase);
-            string debug = "DFA regexp; " + parser.GetDebugInfo();
-            bool isAscii;
+            var debug = new StringBuilder("DFA regexp; " + parser.GetDebugInfo());
+            var isAscii = parser._start.IsAsciiOutgoing();
 
-            isAscii = parser._start.IsAsciiOutgoing();
-            for (int i = 0; isAscii && i < 128; i++)
+            for (var i = 0; isAscii && i < 128; i++)
             {
-                bool match = false;
+                var match = false;
                 for (int j = 0; j < parser._start.outgoing.Length; j++)
                 {
                     if (parser._start.outgoing[j].Match((char)i))
@@ -110,7 +109,7 @@ namespace Yale.Parser
             if (parser._start.incoming.Length > 0)
             {
                 initial.AddOut(new NFAEpsilonTransition(parser._start));
-                debug += ", uses initial epsilon";
+                debug.Append(", uses initial epsilon");
             }
             else if (isAscii && !ignoreCase)
             {
@@ -124,15 +123,15 @@ namespace Yale.Parser
                         }
                     }
                 }
-                debug += ", uses ASCII lookup";
+                debug.Append(", uses ASCII lookup");
             }
             else
             {
                 parser._start.MergeInto(initial);
-                debug += ", uses initial state";
+                debug.Append(", uses initial state");
             }
             parser._end.value = value;
-            value.DebugInfo = debug;
+            value.DebugInfo = debug.ToString();
         }
 
         /**
@@ -154,16 +153,15 @@ namespace Yale.Parser
             int length = 0;
             int pos = 1;
             int peekChar;
-            NFAState state;
 
             // The first step of the match loop has been unrolled and
             // optimized for performance below.
             queue.Clear();
             peekChar = buffer.Peek(0);
-            if (0 <= peekChar && peekChar < 128)
+            if (peekChar is >= 0 and < 128)
             {
-                state = initialChar[peekChar];
-                if (state != null)
+                var state = initialChar[peekChar];
+                if (state is not null)
                 {
                     queue.AddLast(state);
                 }
@@ -176,7 +174,7 @@ namespace Yale.Parser
             peekChar = buffer.Peek(1);
 
             // The remaining match loop processes all subsequent states
-            while (!queue.Empty)
+            while (queue.Empty is false)
             {
                 if (queue.Marked)
                 {
@@ -184,12 +182,12 @@ namespace Yale.Parser
                     peekChar = buffer.Peek(pos);
                     queue.MarkEnd();
                 }
-                state = queue.RemoveFirst();
-                if (state.value != null)
+                var state = queue.RemoveFirst();
+                if (state?.value is not null)
                 {
                     match.Update(pos, state.value);
                 }
-                if (peekChar >= 0)
+                if (peekChar >= 0 && state is not null) //state is not null was added. Is throw a better option? When can peekChar >= 0 be true while state is null
                 {
                     state.MatchTransitions((char)peekChar, queue, false);
                 }
@@ -212,12 +210,12 @@ namespace Yale.Parser
         /**
         * The incoming transitions to this state.
         */
-        internal NFATransition[]? incoming = Array.Empty<NFATransition>();
+        internal NFATransition[] incoming = Array.Empty<NFATransition>();
 
         /**
         * The outgoing transitions from this state.
         */
-        internal NFATransition[]? outgoing = Array.Empty<NFATransition>();
+        internal NFATransition[] outgoing = Array.Empty<NFATransition>();
 
         /**
         * The outgoing epsilon transitions flag.
@@ -247,7 +245,7 @@ namespace Yale.Parser
         {
             for (int i = 0; i < outgoing.Length; i++)
             {
-                if (!outgoing[i].IsAscii())
+                if (outgoing[i].IsAscii() == false)
                 {
                     return false;
                 }
@@ -282,8 +280,12 @@ namespace Yale.Parser
             if (ignoreCase)
             {
                 state ??= new NFAState();
-                AddOut(new NFACharTransition(char.ToLower(ch), state));
-                AddOut(new NFACharTransition(char.ToUpper(ch), state));
+                AddOut(
+                    new NFACharTransition(char.ToLower(ch, CultureInfo.InvariantCulture), state)
+                );
+                AddOut(
+                    new NFACharTransition(char.ToUpper(ch, CultureInfo.InvariantCulture), state)
+                );
                 return state;
             }
             else
@@ -327,17 +329,17 @@ namespace Yale.Parser
          */
         public void MergeInto(NFAState state)
         {
-            for (int i = 0; i < incoming.Length; i++)
+            for (var i = 0; i < incoming.Length; i++)
             {
                 state.AddIn(incoming[i]);
                 incoming[i].state = state;
             }
-            incoming = null;
-            for (int i = 0; i < outgoing.Length; i++)
+            incoming = Array.Empty<NFATransition>();
+            for (var i = 0; i < outgoing.Length; i++)
             {
                 state.AddOut(outgoing[i]);
             }
-            outgoing = null;
+            outgoing = Array.Empty<NFATransition>();
         }
 
         /**
@@ -351,9 +353,9 @@ namespace Yale.Parser
          * @return the unique transition state found, or
          *         null if not found
          */
-        private NFAState FindUniqueCharTransition(char ch)
+        private NFAState? FindUniqueCharTransition(char ch)
         {
-            NFATransition res = null;
+            NFATransition? res = null;
             NFATransition trans;
 
             for (int i = 0; i < outgoing.Length; i++)
@@ -376,7 +378,7 @@ namespace Yale.Parser
                     return null;
                 }
             }
-            return res == null ? null : res.state;
+            return res?.state;
         }
 
         /**
@@ -694,7 +696,7 @@ namespace Yale.Parser
         {
             if (ignoreCase)
             {
-                c = char.ToLower(c);
+                c = char.ToLower(c, CultureInfo.InvariantCulture);
             }
             AddContent(c);
         }
@@ -709,8 +711,8 @@ namespace Yale.Parser
         {
             if (ignoreCase)
             {
-                min = char.ToLower(min);
-                max = char.ToLower(max);
+                min = char.ToLower(min, CultureInfo.InvariantCulture);
+                max = char.ToLower(max, CultureInfo.InvariantCulture);
             }
             AddContent(new Range(min, max));
         }
@@ -742,7 +744,7 @@ namespace Yale.Parser
 
             if (ignoreCase)
             {
-                ch = char.ToLower(ch);
+                ch = char.ToLower(ch, CultureInfo.InvariantCulture);
             }
             for (int i = 0; i < contents.Length; i++)
             {

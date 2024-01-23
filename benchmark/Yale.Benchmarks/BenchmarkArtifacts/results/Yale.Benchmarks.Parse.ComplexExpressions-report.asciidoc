@@ -1,7 +1,7 @@
 ....
-BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.2861/23H2/2023Update/SunValley3)
+BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.3007/23H2/2023Update/SunValley3)
 12th Gen Intel Core i9-12900KF, 1 CPU, 24 logical and 16 physical cores
-.NET SDK 8.0.100
+.NET SDK 8.0.200-preview.23624.5
   [Host]     : .NET 6.0.25 (6.0.2523.51912), X64 RyuJIT AVX2
   DefaultJob : .NET 6.0.25 (6.0.2523.51912), X64 RyuJIT AVX2
 
@@ -9,9 +9,9 @@ BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.2861/23H2/2023Update/SunValley3
 [options="header"]
 |===
 |Method                           |Mean      |StdErr     |StdDev     |Min       |Q1        |Median    |Q3        |Max       |Op/s   |Rank  
-|Flee_Recalculate_Off             |  1.285 ms|  0.0023 ms|  0.0084 ms|  1.271 ms|  1.280 ms|  1.287 ms|  1.290 ms|  1.298 ms|  778.0|     1
-|Flee_Recalculate_Manual          |  1.320 ms|  0.0040 ms|  0.0143 ms|  1.302 ms|  1.312 ms|  1.318 ms|  1.327 ms|  1.346 ms|  757.4|     2
-|AddExpression_Recalculate_True   |  1.774 ms|  0.0060 ms|  0.0225 ms|  1.742 ms|  1.759 ms|  1.770 ms|  1.781 ms|  1.824 ms|  563.8|     3
-|AddExpression_Recalculate_Lazy   |  1.783 ms|  0.0046 ms|  0.0173 ms|  1.768 ms|  1.771 ms|  1.775 ms|  1.790 ms|  1.822 ms|  560.9|     3
-|AddExpression_Recalculate_False  |  1.804 ms|  0.0039 ms|  0.0140 ms|  1.791 ms|  1.794 ms|  1.799 ms|  1.807 ms|  1.836 ms|  554.4|     3
+|Flee_Recalculate_Off             |  1.389 ms|  0.0064 ms|  0.0250 ms|  1.356 ms|  1.371 ms|  1.384 ms|  1.401 ms|  1.447 ms|  720.0|     1
+|Flee_Recalculate_Manual          |  1.406 ms|  0.0072 ms|  0.0340 ms|  1.345 ms|  1.382 ms|  1.394 ms|  1.437 ms|  1.487 ms|  711.0|     1
+|AddExpression_Recalculate_Never  |  1.968 ms|  0.0103 ms|  0.0504 ms|  1.878 ms|  1.923 ms|  1.965 ms|  2.020 ms|  2.041 ms|  508.2|     2
+|AddExpression_Recalculate_Lazy   |  1.983 ms|  0.0073 ms|  0.0284 ms|  1.949 ms|  1.959 ms|  1.979 ms|  2.008 ms|  2.025 ms|  504.4|     2
+|AddExpression_Recalculate_Auto   |  2.018 ms|  0.0102 ms|  0.0477 ms|  1.929 ms|  1.980 ms|  2.008 ms|  2.056 ms|  2.138 ms|  495.5|     2
 |===

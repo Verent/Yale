@@ -715,14 +715,9 @@ namespace Yale.Parser
              */
             public override bool Equals(object? obj)
             {
-                if (obj is Sequence sequence)
-                {
-                    return Equals(sequence);
-                }
-                else
-                {
+                if (obj is not Sequence sequence)
                     return false;
-                }
+                return Equals(sequence);
             }
 
             /**
@@ -743,14 +738,11 @@ namespace Yale.Parser
 
             ///**
             // * Returns a hash code for this object.
-            // *
-            // * @return a hash code for this object
             // */
-            //public override int GetHashCode()
-            //{
-            //    return tokens.Count.GetHashCode();
-            //}
-
+            public override int GetHashCode()
+            {
+                return tokens.Count.GetHashCode();
+            }
 
             /**
              * Checks if this token sequence starts with the tokens from
@@ -801,12 +793,10 @@ namespace Yale.Parser
              */
             public bool IsNext(Parser parser)
             {
-                Token token;
-
-                for (int i = 0; i < tokens.Count; i++)
+                for (var i = 0; i < tokens.Count; i++)
                 {
                     var id = tokens[i];
-                    token = parser.PeekToken(i);
+                    var token = parser.PeekToken(i);
                     if (token is null || token.TypeId != id)
                     {
                         return false;
@@ -846,14 +836,13 @@ namespace Yale.Parser
             public override string ToString()
             {
                 Debugger.Break();
-                //Todo: What is the point of this?
                 return ToString(null);
             }
 
             /**
              * Returns a string representation of this object.
              *
-             * @param tokenizer      the tokenizer containing the tokens
+             * @param tokenizer the tokenizer containing the tokens
              *
              * @return a string representation of this object
              */
@@ -912,7 +901,7 @@ namespace Yale.Parser
                 }
                 else
                 {
-                    for (int i = 0; i < length; i++)
+                    for (var i = 0; i < length; i++)
                     {
                         res.tokens.Add(seq.tokens[i]);
                     }

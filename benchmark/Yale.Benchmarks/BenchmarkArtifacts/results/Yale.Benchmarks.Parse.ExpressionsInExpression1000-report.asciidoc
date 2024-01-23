@@ -1,17 +1,17 @@
 ....
-BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.2861/23H2/2023Update/SunValley3)
+BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.3007/23H2/2023Update/SunValley3)
 12th Gen Intel Core i9-12900KF, 1 CPU, 24 logical and 16 physical cores
-.NET SDK 8.0.100
+.NET SDK 8.0.200-preview.23624.5
   [Host]     : .NET 6.0.25 (6.0.2523.51912), X64 RyuJIT AVX2
   DefaultJob : .NET 6.0.25 (6.0.2523.51912), X64 RyuJIT AVX2
 
 ....
 [options="header"]
 |===
-|Method                          |Mean       |StdErr    |StdDev    |Min        |Q1         |Median     |Q3         |Max        |Op/s    |Rank  
-|Flee_Recalculate_Off            |   94.02 ms|  0.345 ms|  1.292 ms|   91.93 ms|   93.08 ms|   93.69 ms|   95.03 ms|   96.26 ms|  10.637|     1
-|Flee_Recalculate_Manual         |   94.88 ms|  0.320 ms|  1.154 ms|   93.15 ms|   94.04 ms|   94.78 ms|   95.34 ms|   97.05 ms|  10.539|     1
-|AddExpression_Recalculate_Lazy  |  225.98 ms|  0.604 ms|  2.258 ms|  223.73 ms|  224.71 ms|  225.30 ms|  226.12 ms|  231.79 ms|   4.425|     2
-|AddExpression_Recalculate_Auto  |  229.10 ms|  0.433 ms|  1.620 ms|  225.47 ms|  227.86 ms|  229.59 ms|  230.28 ms|  230.98 ms|   4.365|     2
-|AddExpression_Recalculate_Off   |  230.46 ms|  0.416 ms|  1.498 ms|  228.64 ms|  229.13 ms|  230.11 ms|  231.42 ms|  233.12 ms|   4.339|     2
+|Method                           |Mean      |StdErr   |StdDev   |Min        |Q1         |Median    |Q3        |Max       |Op/s   |Rank  
+|Flee_Recalculate_Manual          |  102.1 ms|  0.58 ms|  4.62 ms|   93.62 ms|   98.39 ms|  102.7 ms|  105.8 ms|  110.4 ms|  9.793|     1
+|Flee_Recalculate_Off             |  102.6 ms|  0.59 ms|  4.76 ms|   93.92 ms|   98.55 ms|  101.6 ms|  106.6 ms|  111.7 ms|  9.750|     1
+|AddExpression_Recalculate_Auto   |  228.8 ms|  1.21 ms|  6.31 ms|  219.26 ms|  224.00 ms|  227.2 ms|  233.8 ms|  241.0 ms|  4.371|     2
+|AddExpression_Recalculate_Lazy   |  231.1 ms|  0.98 ms|  3.79 ms|  222.24 ms|  229.18 ms|  231.7 ms|  234.0 ms|  236.3 ms|  4.328|     2
+|AddExpression_Recalculate_Never  |  232.6 ms|  1.07 ms|  4.00 ms|  226.05 ms|  230.20 ms|  231.7 ms|  235.6 ms|  239.3 ms|  4.300|     2
 |===

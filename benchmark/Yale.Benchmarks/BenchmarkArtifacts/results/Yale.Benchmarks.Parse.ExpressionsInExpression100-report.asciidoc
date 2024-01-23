@@ -1,17 +1,17 @@
 ....
-BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.2861/23H2/2023Update/SunValley3)
+BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.3007/23H2/2023Update/SunValley3)
 12th Gen Intel Core i9-12900KF, 1 CPU, 24 logical and 16 physical cores
-.NET SDK 8.0.100
+.NET SDK 8.0.200-preview.23624.5
   [Host]     : .NET 6.0.25 (6.0.2523.51912), X64 RyuJIT AVX2
   DefaultJob : .NET 6.0.25 (6.0.2523.51912), X64 RyuJIT AVX2
 
 ....
 [options="header"]
 |===
-|Method                          |Mean       |StdErr     |StdDev     |Min        |Q1         |Median     |Q3         |Max        |Op/s    |Rank  
-|Flee_Recalculate_Off            |   8.383 ms|  0.0258 ms|  0.0894 ms|   8.174 ms|   8.359 ms|   8.393 ms|   8.418 ms|   8.556 ms|  119.29|     1
-|Flee_Recalculate_Manual         |   8.488 ms|  0.0206 ms|  0.0770 ms|   8.403 ms|   8.426 ms|   8.484 ms|   8.531 ms|   8.683 ms|  117.81|     1
-|AddExpression_Recalculate_Off   |  22.384 ms|  0.0805 ms|  0.2903 ms|  22.105 ms|  22.173 ms|  22.313 ms|  22.474 ms|  23.119 ms|   44.68|     2
-|AddExpression_Recalculate_Auto  |  23.151 ms|  0.1219 ms|  0.6094 ms|  22.033 ms|  22.722 ms|  23.273 ms|  23.476 ms|  24.464 ms|   43.19|     3
-|AddExpression_Recalculate_Lazy  |  23.249 ms|  0.0751 ms|  0.2810 ms|  22.832 ms|  22.974 ms|  23.268 ms|  23.453 ms|  23.681 ms|   43.01|     3
+|Method                           |Mean       |StdErr     |StdDev     |Min        |Q1         |Median     |Q3         |Max        |Op/s    |Rank  
+|Flee_Recalculate_Manual          |   8.699 ms|  0.0450 ms|  0.3214 ms|   8.190 ms|   8.459 ms|   8.632 ms|   8.868 ms|   9.621 ms|  114.95|     1
+|Flee_Recalculate_Off             |   8.979 ms|  0.0518 ms|  0.4452 ms|   8.183 ms|   8.780 ms|   8.967 ms|   9.213 ms|   9.949 ms|  111.37|     2
+|AddExpression_Recalculate_Never  |  23.765 ms|  0.1252 ms|  0.6261 ms|  22.537 ms|  23.430 ms|  23.768 ms|  24.256 ms|  25.008 ms|   42.08|     3
+|AddExpression_Recalculate_Lazy   |  23.838 ms|  0.1221 ms|  0.5459 ms|  22.845 ms|  23.655 ms|  23.888 ms|  24.135 ms|  25.071 ms|   41.95|     3
+|AddExpression_Recalculate_Auto   |  24.162 ms|  0.0735 ms|  0.2846 ms|  23.710 ms|  23.914 ms|  24.209 ms|  24.343 ms|  24.700 ms|   41.39|     3
 |===

@@ -89,7 +89,7 @@ namespace Yale.Parser.RE
                 }
                 if (m.IsCaseInsensitive())
                 {
-                    c = char.ToLower((char)c);
+                    c = char.ToLower((char)c, CultureInfo.InvariantCulture);
                 }
                 if (c != value[i])
                 {

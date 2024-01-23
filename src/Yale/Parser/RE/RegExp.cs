@@ -553,7 +553,7 @@ namespace Yale.Parser.RE
          */
         private char FixChar(char c)
         {
-            return ignoreCase ? char.ToLower(c) : c;
+            return ignoreCase ? char.ToLower(c, CultureInfo.InvariantCulture) : c;
         }
 
         /**
