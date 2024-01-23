@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
+﻿using System.Diagnostics;
 using Yale.Expression.Elements.Base;
 using Yale.Expression.Elements.Base.Literals;
 using Yale.Parser.Internal;
@@ -35,20 +30,20 @@ internal sealed class FunctionCallElement : MemberElement
     protected override void ResolveInternal()
     {
         // Get the types of our arguments
-        Type[] argTypes = arguments.GetArgumentTypes();
+        var argTypes = arguments.GetArgumentTypes();
         // Find all methods with our name on the type
         ICollection<MethodInfo>? methods = this.methods;
 
         if (methods is null)
         {
             // Convert member info to method info
-            MemberInfo[] arr = GetMembers(MemberTypes.Method);
-            MethodInfo[] arr2 = new MethodInfo[arr.Length];
+            var arr = GetMembers(MemberTypes.Method);
+            var arr2 = new MethodInfo[arr.Length];
             Array.Copy(arr, arr2, arr.Length);
             methods = arr2;
         }
 
-        if (methods.Any())
+        if (methods.Count > 0)
         {
             // More than one method exists with this name
             BindToMethod(methods, Previous, argTypes);
@@ -113,7 +108,7 @@ internal sealed class FunctionCallElement : MemberElement
     private void ThrowAmbiguousMethodCallException()
     {
         throw CreateCompileException(
-            CompileErrors.AmbiguousCallOfFunction,
+            "Ambiguous call of function '{0}({1})'",
             CompileExceptionReason.AmbiguousMatch,
             MemberName,
             arguments
@@ -142,10 +137,10 @@ internal sealed class FunctionCallElement : MemberElement
         }
 
         // Discard any methods that cannot qualify as overloads
-        CustomMethodInfo[] infoArray = customInfoList.ToArray();
+        var infoArray = customInfoList.ToArray();
         customInfoList.Clear();
 
-        foreach (CustomMethodInfo methodInfo in infoArray)
+        foreach (var methodInfo in infoArray)
         {
             if (methodInfo.IsMatch(argTypes))
             {
@@ -178,7 +173,7 @@ internal sealed class FunctionCallElement : MemberElement
     )
     {
         // Compute a score for each candidate
-        foreach (CustomMethodInfo customMethodInfo in customInfoArray)
+        foreach (var customMethodInfo in customInfoArray)
         {
             customMethodInfo.ComputeScore(argTypes);
         }
@@ -206,7 +201,7 @@ internal sealed class FunctionCallElement : MemberElement
     {
         List<CustomMethodInfo> accessible = new();
 
-        foreach (CustomMethodInfo customMethodInfo in infos)
+        foreach (var customMethodInfo in infos)
         {
             if (customMethodInfo.IsAccessible(this))
             {
@@ -227,7 +222,7 @@ internal sealed class FunctionCallElement : MemberElement
         CustomMethodInfo first = infos[0];
 
         // Find all matches with the same score as the best match
-        foreach (CustomMethodInfo customMethodInfo in infos)
+        foreach (var customMethodInfo in infos)
         {
             if (((IEquatable<CustomMethodInfo>)customMethodInfo).Equals(first))
             {
@@ -296,22 +291,18 @@ internal sealed class FunctionCallElement : MemberElement
     )
     {
         // Get the fixed parameters
-        ParameterInfo[] fixedParameters = new ParameterInfo[targetMethodInfo.FixedArgTypes.Length];
+        var fixedParameters = new ParameterInfo[targetMethodInfo.FixedArgTypes.Length];
         Array.Copy(parameters, fixedParameters, fixedParameters.Length);
 
         // Get the corresponding fixed parameters
-        BaseExpressionElement[] fixedElements = new BaseExpressionElement[
-            targetMethodInfo.FixedArgTypes.Length
-        ];
+        var fixedElements = new BaseExpressionElement[targetMethodInfo.FixedArgTypes.Length];
         Array.Copy(elements, fixedElements, fixedElements.Length);
 
         // Emit the fixed arguments
         EmitRegularFunctionInternal(fixedParameters, fixedElements, ilGenerator, context);
 
         // Get the paramArray arguments
-        BaseExpressionElement[] paramArrayElements = new BaseExpressionElement[
-            elements.Length - fixedElements.Length
-        ];
+        var paramArrayElements = new BaseExpressionElement[elements.Length - fixedElements.Length];
         Array.Copy(
             elements,
             fixedElements.Length,
@@ -374,8 +365,8 @@ internal sealed class FunctionCallElement : MemberElement
         ExpressionContext context
     )
     {
-        ParameterInfo[] parameters = Method.GetParameters();
-        BaseExpressionElement[] elements = arguments.ToArray();
+        var parameters = Method.GetParameters();
+        var elements = arguments.ToArray();
 
         // Emit either a regular or paramArray call
         if (targetMethodInfo.IsParamArray == false)

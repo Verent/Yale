@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection.Emit;
-
-namespace Yale.Parser.Internal;
+﻿namespace Yale.Parser.Internal;
 
 /// <summary>
 /// Manages branch information and allows us to determine if we should emit a short or long branch

@@ -1,19 +1,3 @@
-/*
- * RepeatElement.cs
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the BSD license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * LICENSE.txt file for more details.
- *
- * Copyright (c) 2003-2015 Per Cederberg. All rights reserved.
- */
-
-using System;
-using System.Collections;
 using System.IO;
 
 namespace Yale.Parser.RE
@@ -23,7 +7,7 @@ namespace Yale.Parser.RE
      * matches from a specified element, attempting to reach the
      * maximum repetition count.
      *
-     * @author   Per Cederberg
+
      * @version  1.5
      */
     internal sealed class RepeatElement : Element
@@ -79,7 +63,7 @@ namespace Yale.Parser.RE
          * a specific length is reported by a non-zero bit in the bit
          * array.
          */
-        private BitArray matches;
+        private BitArray? matches;
 
         /**
          * Creats a new element repeater.
@@ -93,14 +77,7 @@ namespace Yale.Parser.RE
         {
             this.elem = elem;
             this.min = min;
-            if (max <= 0)
-            {
-                this.max = int.MaxValue;
-            }
-            else
-            {
-                this.max = max;
-            }
+            this.max = max <= 0 ? int.MaxValue : max;
             this.type = type;
             matchStart = -1;
             matches = null;
@@ -190,7 +167,7 @@ namespace Yale.Parser.RE
             }
 
             // Find first non-skipped match
-            for (int i = matches.Count - 1; i >= 0; i--)
+            for (var i = matches.Count - 1; i >= 0; i--)
             {
                 if (matches[i])
                 {
@@ -230,7 +207,7 @@ namespace Yale.Parser.RE
             }
 
             // Find first non-skipped match
-            for (int i = 0; i < matches.Count; i++)
+            for (var i = 0; i < matches.Count; i++)
             {
                 if (matches[i])
                 {

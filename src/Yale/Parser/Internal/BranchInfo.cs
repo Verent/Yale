@@ -1,7 +1,4 @@
-﻿using System;
-using System.Reflection.Emit;
-
-namespace Yale.Parser.Internal;
+﻿namespace Yale.Parser.Internal;
 
 /// <summary>
 /// Represents a branch from a start location to an end location

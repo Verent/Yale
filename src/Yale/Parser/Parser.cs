@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 
 namespace Yale.Parser
@@ -7,8 +6,6 @@ namespace Yale.Parser
      * A base parser class. This class provides the standard parser
      * interface, as well as token handling.
      *
-     * @author   Per Cederberg
-     * @version  1.6
      */
     internal abstract class Parser
     {

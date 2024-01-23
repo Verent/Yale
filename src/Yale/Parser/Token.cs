@@ -6,8 +6,6 @@ namespace Yale.Parser
      * that groups characters together into tokens according to a set of
      * token patterns.
      *
-     * @author   Per Cederberg
-     * @version  1.5
      */
     internal sealed class Token : Node
     {
@@ -46,7 +44,6 @@ namespace Yale.Parser
          * a unique identifier for each type of node, in order to
          * simplify later identification.
          *
-         * @since 1.5
          */
         public override TokenId TypeId
         {
@@ -56,7 +53,6 @@ namespace Yale.Parser
         /**
          * The node name property (read-only).
          *
-         * @since 1.5
          */
         public override string Name
         {
@@ -68,7 +64,6 @@ namespace Yale.Parser
          * node (read-only). If the node has child elements, this
          * value will be fetched from the first child.
          *
-         * @since 1.5
          */
         public override int StartLine { get; }
 
@@ -77,7 +72,6 @@ namespace Yale.Parser
          * node (read-only). If the node has child elements, this
          * value will be fetched from the first child.
          *
-         * @since 1.5
          */
         public override int StartColumn { get; }
 
@@ -86,7 +80,6 @@ namespace Yale.Parser
          * (read-only). If the node has child elements, this value
          * will be fetched from the last child.
          *
-         * @since 1.5
          */
         public override int EndLine { get; }
 
@@ -95,7 +88,6 @@ namespace Yale.Parser
          * node (read-only). If the node has child elements, this
          * value will be fetched from the last child.
          *
-         * @since 1.5
          */
         public override int EndColumn { get; }
 
@@ -104,7 +96,6 @@ namespace Yale.Parser
          * consists of the input characters matched to form this
          * token.
          *
-         * @since 1.5
          */
         public string Image { get; }
 
@@ -128,7 +119,6 @@ namespace Yale.Parser
          * @see #Next
          * @see Tokenizer#UseTokenList
          *
-         * @since 1.5
          */
         public Token? Previous
         {
@@ -159,7 +149,6 @@ namespace Yale.Parser
          * @see #Previous
          * @see Tokenizer#UseTokenList
          *
-         * @since 1.5
          */
         public Token? Next
         {

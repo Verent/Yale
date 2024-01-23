@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Diagnostics;
-using System.Reflection;
-using System.Reflection.Emit;
+﻿using System.Diagnostics;
 using Yale.Parser.Internal;
 using Yale.Resources;
 
@@ -13,8 +9,8 @@ namespace Yale.Expression.Elements.Base;
 /// </summary>
 internal abstract class BinaryExpressionElement : BaseExpressionElement
 {
-    protected BaseExpressionElement LeftChild;
-    protected BaseExpressionElement RightChild;
+    protected BaseExpressionElement? LeftChild;
+    protected BaseExpressionElement? RightChild;
     private Type? resultType;
 
     /// <summary>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection.Emit;
+﻿using System.Diagnostics.CodeAnalysis;
 using Yale.Expression.Elements.Base;
 using Yale.Parser.Internal;
 using Yale.Resources;

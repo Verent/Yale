@@ -8,8 +8,6 @@ namespace Yale.Parser
      * referencing the production pattern from production pattern
      * elements.
      *
-     * @author   Per Cederberg
-     * @version  1.5
      */
     internal sealed class ProductionPattern
     {
@@ -45,14 +43,12 @@ namespace Yale.Parser
          * The production pattern identity property (read-only). This
          * property contains the unique identity value.
          *
-         * @since 1.5
          */
         public TokenId Id { get; }
 
         /**
          * The production pattern name property (read-only).
          *
-         * @since 1.5
          */
         public string Name { get; }
 

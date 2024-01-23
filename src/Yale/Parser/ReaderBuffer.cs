@@ -13,9 +13,6 @@ namespace Yale.Parser
      * content. A few characters before the current position are always
      * kept to enable boundary condition checks.
      *
-     * @author   Per Cederberg
-     * @version  1.5
-     * @since    1.5
      */
     internal sealed class ReaderBuffer
     {

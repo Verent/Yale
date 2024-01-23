@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Yale.Expression;
+﻿namespace Yale.Expression;
 
 /// <summary>
 /// This class contains information about an expression and the delegate used to evaluate it.

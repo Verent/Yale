@@ -1,5 +1,4 @@
-﻿using System;
-using Yale.Expression;
+﻿using Yale.Expression;
 using Yale.Expression.Elements.Base;
 
 namespace Yale.Parser.Internal;

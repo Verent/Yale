@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
 using Yale.Core.Interfaces;
 
 namespace Yale.Core;
@@ -69,7 +64,7 @@ public sealed class VariableCollection
         {
             ArgumentNullException.ThrowIfNull(value);
 
-            if (values.ContainsKey(key) && values[key].Equals(value))
+            if (values.TryGetValue(key, out IVariable? v) && v.Equals(value))
                 return;
 
             values[key] = new Variable(value);

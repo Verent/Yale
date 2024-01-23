@@ -1,4 +1,3 @@
-using System.Reflection.Emit;
 using Yale.Expression.Elements.Base.Literals;
 using Yale.Parser.Internal;
 using Yale.Resources;

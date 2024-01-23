@@ -1,23 +1,4 @@
-/*
- * RegExp.cs
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the BSD license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * LICENSE.txt file for more details.
- *
- * Copyright (c) 2003-2015 Per Cederberg. All rights reserved.
- */
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Text;
 
 namespace Yale.Parser.RE
 {
@@ -28,7 +9,7 @@ namespace Yale.Parser.RE
      * matchers may operate simultanously on the same regular
      * expression.
      *
-     * @author   Per Cederberg
+
      * @version  1.5
      */
     internal sealed class RegExp
@@ -181,10 +162,7 @@ namespace Yale.Parser.RE
          */
         private Element ParseTerm()
         {
-            List<Element> list = new()
-            {
-                ParseFact()
-            };
+            List<Element> list = new() { ParseFact() };
             while (true)
             {
                 switch (PeekChar(0))
@@ -705,7 +683,10 @@ namespace Yale.Parser.RE
             for (i = 1; i < list.Count; i++)
             {
                 currentElement = list[i];
-                if (prevElement is StringElement prevAsStringElement && currentElement is StringElement elementAsStringElement)
+                if (
+                    prevElement is StringElement prevAsStringElement
+                    && currentElement is StringElement elementAsStringElement
+                )
                 {
                     str = prevAsStringElement.GetString() + elementAsStringElement.GetString();
                     currentElement = new StringElement(str);

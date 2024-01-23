@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-using System.Reflection.Emit;
+﻿using System.Diagnostics;
 using Yale.Core;
 using Yale.Parser.Internal;
 using Yale.Resources;
@@ -123,14 +119,13 @@ internal abstract class MemberElement : BaseExpressionElement
         }
     }
 
-    protected static bool IsGetTypeMethod(MethodInfo mi)
-    {
-        MethodInfo miGetType = typeof(object).GetMethod(
-            "gettype",
-            BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase
-        );
-        return mi.MethodHandle.Equals(miGetType.MethodHandle);
-    }
+    private static readonly MethodInfo miGetType = typeof(object).GetMethod(
+        nameof(GetType),
+        BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase
+    )!;
+
+    protected static bool IsGetTypeMethod(MethodInfo mi) =>
+        mi.MethodHandle.Equals(miGetType.MethodHandle);
 
     /// <summary>
     /// Emit a function call for a value type
@@ -223,7 +218,7 @@ internal abstract class MemberElement : BaseExpressionElement
             return methodInfo.IsPublic;
         }
 
-        //Todo: handle error case propperly
+        //Todo: handle error case properly
         Debug.Assert(false, "Unknown member type");
         return false;
     }

@@ -1,30 +1,8 @@
-/*
- * ParserLogException.cs
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the BSD license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * LICENSE.txt file for more details.
- *
- * Copyright (c) 2003-2015 Per Cederberg. All rights reserved.
- */
-
-using System;
-using System.Collections;
-using System.Text;
-
 namespace Yale.Parser
 {
     /**
      * A parser log exception. This class contains a list of all the
      * parse errors encountered while parsing.
-     *
-     * @author   Per Cederberg
-     * @version  1.5
-     * @since    1.1
      */
     public class ParserLogException : Exception
     {

@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Reflection.Emit;
 using Yale.Parser.Internal;
 using Yale.Resources;
 

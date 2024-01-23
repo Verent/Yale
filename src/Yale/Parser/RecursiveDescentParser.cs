@@ -77,7 +77,7 @@ namespace Yale.Parser
          * @throws ParseException if the input couldn't be parsed
          *             correctly
          */
-        private Node ParsePattern(ProductionPattern pattern)
+        private Production ParsePattern(ProductionPattern pattern)
         {
             var defaultAlt = pattern.DefaultAlternative;
             for (var i = 0; i < pattern.Count; i++)
@@ -107,7 +107,7 @@ namespace Yale.Parser
          * @throws ParseException if the input couldn't be parsed
          *             correctly
          */
-        private Node ParseAlternative(ProductionPatternAlternative alt)
+        private Production ParseAlternative(ProductionPatternAlternative alt)
         {
             var production = NewProduction(alt.Pattern);
             EnterNode(production);
@@ -287,7 +287,7 @@ namespace Yale.Parser
                     }
                     if (alternatives[i].Intersects(conflicts))
                     {
-                        if (pattern.DefaultAlternative == null)
+                        if (pattern.DefaultAlternative is null)
                         {
                             pattern.DefaultAlternative = alt;
                         }
@@ -748,7 +748,7 @@ namespace Yale.Parser
          *
          * @throws ParserCreationException always thrown by this method
          */
-        private void ThrowAmbiguityException(string pattern, string location, LookAheadSet set)
+        private void ThrowAmbiguityException(string pattern, string? location, LookAheadSet set)
         {
             List<string> list = new();
 

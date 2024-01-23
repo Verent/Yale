@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Yale.Engine.Internal;
+﻿namespace Yale.Engine.Internal;
 
 /// <summary>
 /// Dependency Graph Vertex

@@ -10,9 +10,9 @@
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<RepositoryUrl>https://github.com/Verent/Yale</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<!-- <TreatWarningsAsErrors>true</TreatWarningsAsErrors> -->
 		
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<!-- <TreatWarningsAsErrors>true</TreatWarningsAsErrors> -->
+		<!-- <GenerateDocumentationFile>true</GenerateDocumentationFile> -->
 
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<AnalysisLevel>latest-Recommended</AnalysisLevel>

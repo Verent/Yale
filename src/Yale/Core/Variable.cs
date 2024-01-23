@@ -1,5 +1,4 @@
-﻿using System;
-using Yale.Core.Interfaces;
+﻿using Yale.Core.Interfaces;
 
 namespace Yale.Core;
 

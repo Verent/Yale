@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace Yale.Parser.Internal;
+﻿namespace Yale.Parser.Internal;
 
 internal sealed class ShortCircuitInfo
 {

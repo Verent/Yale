@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using Yale.Expression.Elements.Base.Literals;
+﻿using Yale.Expression.Elements.Base.Literals;
 using Yale.Parser.Internal;
 
 namespace Yale.Expression.Elements.Literals.Integral;

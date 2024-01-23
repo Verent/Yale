@@ -1,25 +1,5 @@
-using Yale.Expression.Elements.Base;
-
 namespace Yale.Parser
 {
-    /**
-     * A parse tree analyzer. This class provides callback methods that
-     * may be used either during parsing, or for a parse tree traversal.
-     * This class should be subclassed to provide adequate handling of the
-     * parse tree nodes.
-     *
-     * The general contract for the analyzer class does not guarantee a
-     * strict call order for the callback methods. Depending on the type
-     * of parser, the enter() and exit() methods for production nodes can
-     * be called either in a top-down or a bottom-up fashion. The only
-     * guarantee provided by this API, is that the calls for any given
-     * node will always be in the order enter(), child(), and exit(). If
-     * various child() calls are made, they will be made from left to
-     * right as child nodes are added (to the right).
-     *
-     * @author   Per Cederberg
-     * @version  1.5
-     */
     internal class Analyzer
     {
         /**

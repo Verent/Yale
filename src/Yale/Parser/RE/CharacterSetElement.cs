@@ -1,21 +1,4 @@
-/*
- * CharacterSetElement.cs
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the BSD license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * LICENSE.txt file for more details.
- *
- * Copyright (c) 2003-2015 Per Cederberg. All rights reserved.
- */
-
-using System;
-using System.Collections;
 using System.IO;
-using System.Text;
 
 namespace Yale.Parser.RE
 {
@@ -26,7 +9,7 @@ namespace Yale.Parser.RE
      * characters. The set may also be inverted, meaning that only
      * characters not inside the set will be considered to match.
      *
-     * @author   Per Cederberg
+
      * @version  1.5
      */
     internal sealed class CharacterSetElement : Element
@@ -195,7 +178,7 @@ namespace Yale.Parser.RE
             }
             if (m.IsCaseInsensitive())
             {
-                c = char.ToLower((char)c);
+                c = char.ToLower((char)c, CultureInfo.InvariantCulture);
             }
             return InSet((char)c) ? 1 : -1;
         }

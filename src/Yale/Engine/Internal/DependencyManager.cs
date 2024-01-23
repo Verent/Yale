@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Yale.Engine.Internal;
+﻿namespace Yale.Engine.Internal;
 
 /// <summary>
 /// Keeps track of expression dependencies
@@ -67,9 +64,9 @@ internal sealed class DependencyManager
 
     public void RemovePrecedents(string nodeKey)
     {
-        if (Nodes.ContainsKey(nodeKey))
+        if (Nodes.TryGetValue(nodeKey, out DependencyNode? value))
         {
-            Nodes[nodeKey].ClearPredecessors();
+            value.ClearPredecessors();
         }
     }
 

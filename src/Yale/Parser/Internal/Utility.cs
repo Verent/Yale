@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Diagnostics;
-using System.Globalization;
-using System.Reflection;
-using System.Reflection.Emit;
-
-// ReSharper disable MethodTooLong
+﻿using System.Diagnostics;
 
 namespace Yale.Parser.Internal;
 
@@ -356,7 +349,7 @@ internal static class Utility
 
     public static string FormatList(string[] items)
     {
-        var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ";
+        var separator = CultureInfo.InvariantCulture.TextInfo.ListSeparator + " ";
         return string.Join(separator, items);
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Yale.Parser.Internal;
+﻿namespace Yale.Parser.Internal;
 
 /// <summary>
 /// Represents a location in an IL stream

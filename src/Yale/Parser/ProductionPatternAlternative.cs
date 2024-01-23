@@ -8,8 +8,6 @@ namespace Yale.Parser
      * pattern. A production pattern alternative is always contained
      * within a production pattern.
      *
-     * @author   Per Cederberg
-     * @version  1.5
      */
     internal sealed class ProductionPatternAlternative
     {

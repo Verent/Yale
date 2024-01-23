@@ -1,21 +1,4 @@
-/*
- * Tokenizer.cs
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the BSD license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * LICENSE.txt file for more details.
- *
- * Copyright (c) 2003-2015 Per Cederberg. All rights reserved.
- */
-
-using System;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
 using Yale.Parser.RE;
 
 namespace Yale.Parser
@@ -27,7 +10,7 @@ namespace Yale.Parser
      * search for, or a regular expression. If the stream of characters
      * don't match any of the token patterns, a parse exception is thrown.
      *
-     * @author   Per Cederberg
+
      * @version  1.5
      */
     internal class Tokenizer
@@ -126,7 +109,8 @@ namespace Yale.Parser
          */
         public string? GetPatternDescription(TokenId id)
         {
-            var pattern = stringDfaMatcher.GetPattern(id)
+            var pattern =
+                stringDfaMatcher.GetPattern(id)
                 ?? nfaMatcher.GetPattern(id)
                 ?? regExpMatcher.GetPattern(id);
 

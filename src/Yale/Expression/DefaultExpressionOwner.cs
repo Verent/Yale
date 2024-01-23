@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Yale.Expression;
+﻿namespace Yale.Expression;
 
 /// <summary>
 ///  The dynamic method inherits its security from the type to which it's attached.
