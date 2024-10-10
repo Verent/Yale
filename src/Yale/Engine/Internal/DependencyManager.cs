@@ -35,14 +35,19 @@ internal sealed class DependencyManager
         expressionNode.AddPredecessor(dependsOnNode);
     }
 
-    public string[] GetDirectDependents(string nodeKey) => Nodes[nodeKey].Dependents;
+    public string[] GetDirectDependents(string key)
+    {
+        if (Nodes.ContainsKey(key) is false)
+            return Array.Empty<string>();
+        return Nodes[key].Dependents;
+    }
 
     public string[] GetDependents(string key)
     {
-        List<string> dependents = new();
-        if (Nodes.ContainsKey(key) == false)
-            return dependents.ToArray();
+        if (Nodes.ContainsKey(key) is false)
+            return Array.Empty<string>();
 
+        List<string> dependents = new();
         foreach (var pair in Nodes[key].Dependents)
         {
             GetDependentsRecursive(pair, dependents);
@@ -64,7 +69,7 @@ internal sealed class DependencyManager
 
     public void RemovePrecedents(string nodeKey)
     {
-        if (Nodes.TryGetValue(nodeKey, out DependencyNode? value))
+        if (Nodes.TryGetValue(nodeKey, out var value))
         {
             value.ClearPredecessors();
         }

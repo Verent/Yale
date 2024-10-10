@@ -68,6 +68,9 @@ public sealed class VariableCollection
                 return;
 
             values[key] = new Variable(value);
+
+            //Todo: What is the point of this? The value has not been changed,
+            //is has only been added to the variables collection
             if (value is INotifyPropertyChanged nValue)
             {
                 nValue.PropertyChanged += (sender, args) =>
