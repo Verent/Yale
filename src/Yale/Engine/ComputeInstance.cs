@@ -68,7 +68,7 @@ public class ComputeInstance
 
     private void TagResultsAsDirty(object? sender, PropertyChangedEventArgs e)
     {
-        foreach (string dependent in dependencies.GetDependents(e.PropertyName!))
+        foreach (var dependent in dependencies.GetDirectDependents(e.PropertyName!))
         {
             TagNodeAndDependentsAsDirty(dependent);
         }
@@ -76,7 +76,11 @@ public class ComputeInstance
 
     private void TagNodeAndDependentsAsDirty(string key)
     {
-        IExpressionResult node = nameNodeMap[key];
+        var node = nameNodeMap[key];
+
+        if (node.Dirty)
+            return;
+
         node.Dirty = true;
 
         foreach (var dependent in dependencies.GetDependents(key))
@@ -111,7 +115,7 @@ public class ComputeInstance
 
     private void RecalculateIfNeeded(string key)
     {
-        if (nameNodeMap.TryGetValue(key, out IExpressionResult? node) && node.Dirty)
+        if (nameNodeMap.TryGetValue(key, out var node) && node.Dirty)
         {
             foreach (var dependent in dependencies.GetDirectPrecedents(key))
             {
@@ -141,7 +145,7 @@ public class ComputeInstance
 
         AddExpression<T>(key, expression);
 
-        foreach (string dependent in dependencies.GetDependents(key))
+        foreach (var dependent in dependencies.GetDependents(key))
         {
             if (options.Recalculate == ComputeInstanceOptions.RecalculateMode.Auto)
             {
@@ -164,7 +168,7 @@ public class ComputeInstance
         ArgumentNullException.ThrowIfNull(key);
         ArgumentNullException.ThrowIfNull(expression);
 
-        Expression<object> result = Builder.BuildExpression<object>(key, expression);
+        var result = Builder.BuildExpression<object>(key, expression);
         nameNodeMap.Add(key, new ExpressionResult<object>(key, result));
     }
 
@@ -178,7 +182,7 @@ public class ComputeInstance
         ArgumentNullException.ThrowIfNull(key);
         ArgumentNullException.ThrowIfNull(expression);
 
-        Expression<T> result = Builder.BuildExpression<T>(key, expression);
+        var result = Builder.BuildExpression<T>(key, expression);
         nameNodeMap.Add(key, new ExpressionResult<T>(key, result));
     }
 

@@ -6,7 +6,13 @@ namespace Yale.InteractiveConsole;
 
 internal class Program
 {
-    private readonly ComputeInstance instance = new();
+    private readonly ComputeInstance instance =
+        new(
+            options: new ComputeInstanceOptions
+            {
+                Recalculate = ComputeInstanceOptions.RecalculateMode.Lazy
+            }
+        );
     private readonly Regex isValue = new("^[a-zA-Z]+[=][\\w]+$");
     private readonly Regex isExpression = new("[a-zA-Z]+[:].+$");
     private readonly Regex isEvaluate = new("[a-zA-Z]+");
