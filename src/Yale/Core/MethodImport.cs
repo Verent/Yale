@@ -43,12 +43,10 @@ internal sealed class MethodImport : ImportBase
     internal override bool IsMatch(string name) =>
         string.Equals(Target.Name, name, Options.MemberStringComparison);
 
-    internal override Type? FindType(string typeName)
-    {
+    internal override Type? FindType(string typeName) =>
         //Todo: Look at inheritance. If one of two implementaions FindType is not relevant, does it belong on the base class
         //or should there be a different solution for handeling this?
-        return null;
-    }
+        null;
 
     protected override bool EqualsInternal(ImportBase? import)
     {

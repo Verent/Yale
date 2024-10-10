@@ -80,7 +80,7 @@ internal sealed class DependencyManager
         get
         {
             var lines = new string[Nodes.Count];
-            int index = 0;
+            var index = 0;
             foreach (var node in Nodes)
             {
                 var key = node.Key;

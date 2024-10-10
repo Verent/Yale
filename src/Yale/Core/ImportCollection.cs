@@ -90,7 +90,7 @@ public sealed class ImportCollection
     }
 
     internal static Type? GetBuiltinType(string name) =>
-        OurBuiltinTypeMap.TryGetValue(name, out Type? type) ? type : null;
+        OurBuiltinTypeMap.TryGetValue(name, out var type) ? type : null;
 
     public void AddType(Type type, string @namespace)
     {

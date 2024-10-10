@@ -9,10 +9,7 @@ internal sealed class DoubleLiteralElement : RealLiteralElement
 
     private DoubleLiteralElement() { }
 
-    public DoubleLiteralElement(double value)
-    {
-        this.value = value;
-    }
+    public DoubleLiteralElement(double value) => this.value = value;
 
     public static DoubleLiteralElement? Parse(string image)
     {
@@ -20,7 +17,7 @@ internal sealed class DoubleLiteralElement : RealLiteralElement
 
         try
         {
-            double value = double.Parse(image, CultureInfo.InvariantCulture);
+            var value = double.Parse(image, CultureInfo.InvariantCulture);
             return new DoubleLiteralElement(value);
         }
         catch (OverflowException)
@@ -30,10 +27,8 @@ internal sealed class DoubleLiteralElement : RealLiteralElement
         }
     }
 
-    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
-    {
+    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context) =>
         ilGenerator.Emit(OpCodes.Ldc_R8, value);
-    }
 
     public override Type ResultType => typeof(double);
 }

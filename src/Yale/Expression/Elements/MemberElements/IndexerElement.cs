@@ -26,14 +26,11 @@ internal sealed class IndexerElement : MemberElement
 
     public override bool IsStatic => false;
 
-    public IndexerElement(ArgumentList indexer)
-    {
-        _indexerElements = indexer;
-    }
+    public IndexerElement(ArgumentList indexer) => _indexerElements = indexer;
 
     protected override void ResolveInternal()
     {
-        Type target = Previous.TargetType;
+        var target = Previous.TargetType;
 
         // Are we are indexing on an array?
         if (target.IsArray)
@@ -74,7 +71,7 @@ internal sealed class IndexerElement : MemberElement
             throw CreateCompileException(
                 CompileErrors.ArrayIndexersMustBeOfType,
                 CompileExceptionReason.TypeMismatch,
-                typeof(Int32).Name
+                nameof(Int32)
             );
         }
     }
@@ -82,12 +79,12 @@ internal sealed class IndexerElement : MemberElement
     private bool FindIndexer(Type targetType)
     {
         // Get the default members
-        MemberInfo[] members = targetType.GetDefaultMembers();
+        var members = targetType.GetDefaultMembers();
 
         List<MethodInfo> methods = new();
 
         // Use the first one that's valid for our indexer type
-        foreach (MemberInfo? memberInfo in members)
+        foreach (var memberInfo in members)
         {
             PropertyInfo? propertyInfo = memberInfo as PropertyInfo;
             if (propertyInfo != null)
@@ -123,7 +120,7 @@ internal sealed class IndexerElement : MemberElement
         _indexerElement.Emit(ilg, context);
         ImplicitConverter.EmitImplicitConvert(_indexerElement.ResultType, typeof(Int32), ilg);
 
-        Type elementType = ResultType;
+        var elementType = ResultType;
 
         if (elementType.IsValueType == false)
         {

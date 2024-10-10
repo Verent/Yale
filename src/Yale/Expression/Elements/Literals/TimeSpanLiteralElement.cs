@@ -15,20 +15,20 @@ internal sealed class TimeSpanLiteralElement : LiteralElement
             throw CreateCompileException(
                 CompileErrors.CannotParseType,
                 CompileExceptionReason.InvalidFormat,
-                typeof(TimeSpan).Name
+                nameof(TimeSpan)
             );
         }
     }
 
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
     {
-        int index = ilGenerator.GetTempLocalIndex(typeof(TimeSpan));
+        var index = ilGenerator.GetTempLocalIndex(typeof(TimeSpan));
 
         Utility.EmitLoadLocalAddress(ilGenerator, index);
 
         EmitLoad(_value.Ticks, ilGenerator);
 
-        ConstructorInfo constructorInfo = typeof(TimeSpan).GetConstructor(new[] { typeof(long) })!;
+        var constructorInfo = typeof(TimeSpan).GetConstructor(new[] { typeof(long) })!;
 
         ilGenerator.Emit(OpCodes.Call, constructorInfo);
 

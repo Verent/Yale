@@ -11,10 +11,7 @@ internal sealed class TypeImport : ImportBase
     private readonly bool useTypeNameAsNamespace;
 
     public TypeImport(Type importType, ExpressionBuilderOptions options)
-        : this(importType, false, options)
-    {
-        Options.AssertTypeIsAccessible(Target);
-    }
+        : this(importType, false, options) => Options.AssertTypeIsAccessible(Target);
 
     public TypeImport(Type importType, bool useTypeNameAsNamespace, IExpressionOptions options)
         : this(
@@ -66,15 +63,11 @@ internal sealed class TypeImport : ImportBase
             && string.Equals(Target.Name, name, Options.MemberStringComparison);
     }
 
-    internal override Type? FindType(string typeName)
-    {
-        return string.Equals(typeName, Target.Name, Options.MemberStringComparison) ? Target : null;
-    }
+    internal override Type? FindType(string typeName) =>
+        string.Equals(typeName, Target.Name, Options.MemberStringComparison) ? Target : null;
 
-    protected override bool EqualsInternal(ImportBase? import)
-    {
-        return import is TypeImport otherSameType && ReferenceEquals(Target, otherSameType.Target);
-    }
+    protected override bool EqualsInternal(ImportBase? import) =>
+        import is TypeImport otherSameType && ReferenceEquals(Target, otherSameType.Target);
 
     public override IEnumerator<ImportBase> GetEnumerator()
     {

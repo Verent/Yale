@@ -7,15 +7,10 @@ internal sealed class BooleanLiteralElement : LiteralElement
 {
     private readonly bool _value;
 
-    public BooleanLiteralElement(bool value)
-    {
-        _value = value;
-    }
+    public BooleanLiteralElement(bool value) => _value = value;
 
-    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
-    {
+    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context) =>
         EmitLoad(_value, ilGenerator);
-    }
 
     public override Type ResultType => typeof(bool);
 }

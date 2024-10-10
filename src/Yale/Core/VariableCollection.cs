@@ -44,7 +44,7 @@ public sealed class VariableCollection
 
     public bool TryGetValue(string key, out object? value)
     {
-        bool success = values.TryGetValue(key, out IVariable? result);
+        var success = values.TryGetValue(key, out var result);
         value = result?.ValueAsObject;
         return success && value is not null;
     }
@@ -52,7 +52,7 @@ public sealed class VariableCollection
     public bool TryGetValue<T>(string key, [NotNullWhen(true)] out T? value)
         where T : class
     {
-        bool success = values.TryGetValue(key, out IVariable? result);
+        var success = values.TryGetValue(key, out var result);
         value = result as T;
         return success && value is not null;
     }
@@ -64,7 +64,7 @@ public sealed class VariableCollection
         {
             ArgumentNullException.ThrowIfNull(value);
 
-            if (values.TryGetValue(key, out IVariable? v) && v.Equals(value))
+            if (values.TryGetValue(key, out var v) && v.Equals(value))
                 return;
 
             values[key] = new Variable(value);

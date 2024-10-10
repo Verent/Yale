@@ -22,7 +22,7 @@ internal sealed class ShiftElement : BinaryExpressionElement
             return null;
         }
 
-        TypeCode typeCode = Type.GetTypeCode(leftType);
+        var typeCode = Type.GetTypeCode(leftType);
 
         switch (typeCode)
         {
@@ -63,7 +63,7 @@ internal sealed class ShiftElement : BinaryExpressionElement
     private void EmitShiftCount(YaleIlGenerator ilg, ExpressionContext context)
     {
         RightChild.Emit(ilg, context);
-        TypeCode typeCode = Type.GetTypeCode(LeftChild.ResultType);
+        var typeCode = Type.GetTypeCode(LeftChild.ResultType);
         switch (typeCode)
         {
             case TypeCode.Byte:
@@ -90,7 +90,7 @@ internal sealed class ShiftElement : BinaryExpressionElement
 
     private void EmitShift(YaleIlGenerator ilg)
     {
-        TypeCode typeCode = Type.GetTypeCode(LeftChild.ResultType);
+        var typeCode = Type.GetTypeCode(LeftChild.ResultType);
         OpCode opCode = default;
 
         switch (typeCode)

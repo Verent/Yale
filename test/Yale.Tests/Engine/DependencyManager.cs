@@ -30,7 +30,7 @@ public class DependencyManager
         instance.AddExpression<int>("e", "c + d");
         instance.AddExpression<int>("f", "e + 1");
 
-        object result = instance.GetResult("f");
+        var result = instance.GetResult("f");
         Assert.AreEqual(26, result);
 
         instance.SetExpression<int>("d", "a + a");
@@ -45,7 +45,7 @@ public class DependencyManager
     [TestMethod]
     public void ComplexDependency()
     {
-        ParallelLoopResult result = Parallel.ForEach(_instances, Test1);
+        var result = Parallel.ForEach(_instances, Test1);
         Assert.IsTrue(result.IsCompleted);
 
         result = Parallel.ForEach(_instances, Test2);
@@ -68,7 +68,7 @@ public class DependencyManager
         instance.AddExpression("e", "c + d");
         instance.AddExpression("f", "e + 1");
 
-        object result = instance.GetResult("f");
+        var result = instance.GetResult("f");
         Assert.AreEqual(26, result);
 
         instance.Variables["b"] = 1;
@@ -97,7 +97,7 @@ public class DependencyManager
         instance.AddExpression<int>("h", "e + d"); // 17   23
         instance.AddExpression<int>("i", "g + f + h"); // 50   66
 
-        object result = instance.GetResult("i");
+        var result = instance.GetResult("i");
         Assert.AreEqual(50, result);
 
         instance.Variables["b"] = 7;
@@ -117,7 +117,7 @@ public class DependencyManager
 
         instance.Variables.Add("a", 3);
         instance.AddExpression("square", "a^2");
-        object result = instance.GetResult("square");
+        var result = instance.GetResult("square");
         Assert.AreEqual(9, result);
 
         instance.Variables["a"] = 2;

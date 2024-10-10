@@ -9,10 +9,7 @@ internal sealed class SingleLiteralElement : RealLiteralElement
 
     private SingleLiteralElement() { }
 
-    public SingleLiteralElement(float value)
-    {
-        _value = value;
-    }
+    public SingleLiteralElement(float value) => _value = value;
 
     public static SingleLiteralElement Parse(string image)
     {
@@ -20,7 +17,7 @@ internal sealed class SingleLiteralElement : RealLiteralElement
 
         try
         {
-            float value = float.Parse(image, CultureInfo.InvariantCulture);
+            var value = float.Parse(image, CultureInfo.InvariantCulture);
             return new SingleLiteralElement(value);
         }
         catch (OverflowException)
@@ -30,10 +27,8 @@ internal sealed class SingleLiteralElement : RealLiteralElement
         }
     }
 
-    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
-    {
+    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context) =>
         ilGenerator.Emit(OpCodes.Ldc_R4, _value);
-    }
 
     public override Type ResultType => typeof(float);
 }

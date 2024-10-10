@@ -10,7 +10,7 @@ internal sealed class DateTimeLiteralElement : LiteralElement
 
     public DateTimeLiteralElement(string image, ExpressionContext context)
     {
-        ExpressionBuilderOptions options = context.BuilderOptions;
+        var options = context.BuilderOptions;
 
         if (
             DateTime.TryParseExact(
@@ -25,22 +25,20 @@ internal sealed class DateTimeLiteralElement : LiteralElement
             throw CreateCompileException(
                 CompileErrors.CannotParseType,
                 CompileExceptionReason.InvalidFormat,
-                typeof(DateTime).Name
+                nameof(DateTime)
             );
         }
     }
 
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
     {
-        int index = ilGenerator.GetTempLocalIndex(typeof(DateTime));
+        var index = ilGenerator.GetTempLocalIndex(typeof(DateTime));
 
         Utility.EmitLoadLocalAddress(ilGenerator, index);
 
         EmitLoad(_value.Ticks, ilGenerator);
 
-        System.Reflection.ConstructorInfo constructor = typeof(DateTime).GetConstructor(
-            new[] { typeof(long) }
-        )!;
+        var constructor = typeof(DateTime).GetConstructor(new[] { typeof(long) })!;
 
         ilGenerator.Emit(OpCodes.Call, constructor);
 

@@ -29,8 +29,5 @@ internal sealed class Expression<T>
 
     public Type ResultType { get; }
 
-    internal T Evaluate()
-    {
-        return evaluator(context.Owner, context, context.Variables);
-    }
+    internal T Evaluate() => evaluator(context.Owner, context, context.Variables);
 }

@@ -38,8 +38,9 @@ internal sealed class ILLocation : IEquatable<ILLocation>, IComparable<ILLocatio
     /// <returns></returns>
     /// <remarks></remarks>
     public bool IsLongBranch(ILLocation target) =>
-        // The branch offset is relative to the instruction *after* the branch so we add 2 (length of a br_s) to our position
         Utility.IsLongBranch(position + BrSLength, target.position);
+
+    // The branch offset is relative to the instruction *after* the branch so we add 2 (length of a br_s) to our position
 
     public bool Equals1(ILLocation other) => position == other.position;
 

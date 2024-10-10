@@ -18,10 +18,8 @@ internal sealed class LocalBasedElement : BaseExpressionElement
         _index = index;
     }
 
-    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
-    {
+    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context) =>
         Utility.EmitLoadLocal(ilGenerator, _index);
-    }
 
     public override Type ResultType => _target.ResultType;
 }

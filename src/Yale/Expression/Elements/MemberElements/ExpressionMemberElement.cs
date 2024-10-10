@@ -7,10 +7,7 @@ internal sealed class ExpressionMemberElement : MemberElement
 {
     private readonly BaseExpressionElement _myElement;
 
-    public ExpressionMemberElement(BaseExpressionElement element)
-    {
-        _myElement = element;
-    }
+    public ExpressionMemberElement(BaseExpressionElement element) => _myElement = element;
 
     protected override void ResolveInternal() { }
 

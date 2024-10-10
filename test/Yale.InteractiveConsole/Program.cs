@@ -25,7 +25,7 @@ internal class Program
 
         while (true)
         {
-            string input = Console.ReadLine().Trim();
+            var input = Console.ReadLine().Trim();
 
             if (input == "exit")
                 break;
@@ -43,7 +43,7 @@ internal class Program
     {
         if (instance.ContainsExpression(input))
         {
-            object result = instance.GetResult(input);
+            var result = instance.GetResult(input);
             Console.WriteLine($"Result: {result}");
         }
         else
@@ -60,19 +60,19 @@ internal class Program
 
     private void AddValue(string input)
     {
-        string[] values = input.Split('=');
-        string key = values[0];
-        string value = values[1];
+        var values = input.Split('=');
+        var key = values[0];
+        var value = values[1];
 
-        if (bool.TryParse(value, out bool boolean))
+        if (bool.TryParse(value, out var boolean))
         {
             instance.Variables[key] = boolean;
         }
-        else if (int.TryParse(value, out int integer))
+        else if (int.TryParse(value, out var integer))
         {
             instance.Variables[key] = integer;
         }
-        else if (double.TryParse(value, out double number))
+        else if (double.TryParse(value, out var number))
         {
             instance.Variables[key] = number;
         }

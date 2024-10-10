@@ -166,7 +166,7 @@ internal abstract class MemberElement : BaseExpressionElement
 
     protected static void EmitValueTypeLoadAddress(YaleIlGenerator ilg, Type targetType)
     {
-        int index = ilg.GetTempLocalIndex(targetType);
+        var index = ilg.GetTempLocalIndex(targetType);
         Utility.EmitStoreLocal(ilg, index);
         ilg.Emit(OpCodes.Ldloca_S, Convert.ToByte(index));
     }
@@ -175,7 +175,7 @@ internal abstract class MemberElement : BaseExpressionElement
     {
         ilg.Emit(OpCodes.Ldarg_0);
 
-        Type? ownerType = Context.OwnerType;
+        var ownerType = Context.OwnerType;
 
         if (ownerType.IsValueType == false)
         {
@@ -277,7 +277,7 @@ internal abstract class MemberElement : BaseExpressionElement
     protected MemberInfo[] GetDefaultNamespaceMembers(string name, MemberTypes memberType)
     {
         // Search the owner first
-        MemberInfo[] members = Imports.FindOwnerMembers(name, memberType);
+        var members = Imports.FindOwnerMembers(name, memberType);
 
         // Keep only the accessible members
         members = GetAccessibleMembers(members);

@@ -32,7 +32,7 @@ internal sealed class FunctionCallElement : MemberElement
         // Get the types of our arguments
         var argTypes = arguments.GetArgumentTypes();
         // Find all methods with our name on the type
-        ICollection<MethodInfo>? methods = this.methods;
+        var methods = this.methods;
 
         if (methods is null)
         {
@@ -130,7 +130,7 @@ internal sealed class FunctionCallElement : MemberElement
         List<CustomMethodInfo> customInfoList = new();
 
         // Wrap the MethodInfo in our custom class
-        foreach (MethodInfo methodInfo in methods)
+        foreach (var methodInfo in methods)
         {
             CustomMethodInfo customMethodInfo = new(methodInfo);
             customInfoList.Add(customMethodInfo);
@@ -219,7 +219,7 @@ internal sealed class FunctionCallElement : MemberElement
     private void DetectAmbiguousMatches(CustomMethodInfo[] infos)
     {
         List<CustomMethodInfo> sameScores = new();
-        CustomMethodInfo first = infos[0];
+        var first = infos[0];
 
         // Find all matches with the same score as the best match
         foreach (var customMethodInfo in infos)
@@ -271,7 +271,7 @@ internal sealed class FunctionCallElement : MemberElement
         //    return;
         //}
 
-        bool isOwnerMember = Context.OwnerType.IsAssignableFrom(Method.ReflectedType);
+        var isOwnerMember = Context.OwnerType.IsAssignableFrom(Method.ReflectedType);
 
         // Load the owner if required
         if (Previous is null && isOwnerMember && IsStatic == false)
@@ -337,18 +337,18 @@ internal sealed class FunctionCallElement : MemberElement
         ilg.Emit(OpCodes.Newarr, arrayElementType);
 
         // Store the new array in a unique local and remember the index
-        LocalBuilder local = ilg.DeclareLocal(arrayElementType.MakeArrayType());
-        int arrayLocalIndex = local.LocalIndex;
+        var local = ilg.DeclareLocal(arrayElementType.MakeArrayType());
+        var arrayLocalIndex = local.LocalIndex;
         Utility.EmitStoreLocal(ilg, arrayLocalIndex);
 
-        for (int i = 0; i <= elements.Length - 1; i++)
+        for (var i = 0; i <= elements.Length - 1; i++)
         {
             // Load the array
             Utility.EmitLoadLocal(ilg, arrayLocalIndex);
             // Load the index
             LiteralElement.EmitLoad(i, ilg);
             // Emit the element (with any required conversions)
-            BaseExpressionElement element = elements[i];
+            var element = elements[i];
             element.Emit(ilg, context);
             ImplicitConverter.EmitImplicitConvert(element.ResultType, arrayElementType, ilg);
             // Store it into the array
@@ -394,12 +394,12 @@ internal sealed class FunctionCallElement : MemberElement
         Debug.Assert(parameters.Length == elements.Length, "argument count mismatch");
 
         // Emit each element and any required conversions to the actual parameter type
-        for (int i = 0; i <= parameters.Length - 1; i++)
+        for (var i = 0; i <= parameters.Length - 1; i++)
         {
-            BaseExpressionElement element = elements[i];
-            ParameterInfo pi = parameters[i];
+            var element = elements[i];
+            var pi = parameters[i];
             element.Emit(ilg, context);
-            bool success = ImplicitConverter.EmitImplicitConvert(
+            var success = ImplicitConverter.EmitImplicitConvert(
                 element.ResultType,
                 pi.ParameterType,
                 ilg

@@ -24,7 +24,7 @@ internal sealed class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatab
 
     public void ComputeScore(Type[] argTypes)
     {
-        ParameterInfo[] parameters = Target.GetParameters();
+        var parameters = Target.GetParameters();
 
         if (parameters.Length == 0)
         {
@@ -49,7 +49,7 @@ internal sealed class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatab
     private static float ComputeScoreInternal(ParameterInfo[] parameters, Type[] argTypes)
     {
         // Our score is the average of the scores of each parameter.  The lower the score, the better the match.
-        int sum = ComputeSum(parameters, argTypes);
+        var sum = ComputeSum(parameters, argTypes);
 
         return sum / argTypes.Length;
     }
@@ -73,7 +73,7 @@ internal sealed class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatab
     private float ComputeScoreForParamArray(ParameterInfo[] parameters, Type[] argTypes)
     {
         var paramArrayParameter = parameters[^1];
-        int fixedParameterCount = paramArrayParameter.Position;
+        var fixedParameterCount = paramArrayParameter.Position;
         var fixedParameters = new ParameterInfo[fixedParameterCount];
 
         Array.Copy(parameters, fixedParameters, fixedParameterCount);
@@ -82,7 +82,7 @@ internal sealed class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatab
         var paramArrayElementType = paramArrayParameter.ParameterType.GetElementType();
         var paramArraySum = 0;
 
-        foreach (Type argType in ParamArrayArgTypes)
+        foreach (var argType in ParamArrayArgTypes)
         {
             paramArraySum += ImplicitConverter.GetImplicitConvertScore(
                 argType,
@@ -90,7 +90,7 @@ internal sealed class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatab
             );
         }
 
-        float score = argTypes.Length > 0 ? (fixedSum + paramArraySum) / argTypes.Length : (float)0;
+        var score = argTypes.Length > 0 ? (fixedSum + paramArraySum) / argTypes.Length : (float)0;
 
         // The param array score gets a slight penalty so that it scores worse than direct matches
         return score + 1;
@@ -183,7 +183,7 @@ internal sealed class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatab
         Array.Copy(argTypes, fixedParameterCount, paramArrayArgTypes, 0, paramArrayArgTypes.Length);
 
         // Check each argument
-        foreach (Type argType in paramArrayArgTypes)
+        foreach (var argType in paramArrayArgTypes)
         {
             if (
                 ImplicitConverter.EmitImplicitConvert(argType, ParamArrayElementType, null) == false
@@ -204,7 +204,7 @@ internal sealed class CustomMethodInfo : IComparable<CustomMethodInfo>, IEquatab
     {
         Debug.Assert(argTypes.Length == parameters.Length);
         // Match if every given argument is implicitly convertible to the method's corresponding parameter
-        for (int i = 0; i <= argTypes.Length - 1; i++)
+        for (var i = 0; i <= argTypes.Length - 1; i++)
         {
             if (
                 ImplicitConverter.EmitImplicitConvert(

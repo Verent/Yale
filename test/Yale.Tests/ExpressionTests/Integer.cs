@@ -13,12 +13,12 @@ public class Integer
     public void IntegerEqualsInteger_IsInteger()
     {
         _instance.AddExpression("a", "1");
-        object result = _instance.GetResult("a");
+        var result = _instance.GetResult("a");
         Assert.AreEqual(typeof(int), result.GetType());
         Assert.AreEqual(1, result);
 
         _instance.AddExpression<int>("b", "2");
-        int result2 = _instance.GetResult<int>("b");
+        var result2 = _instance.GetResult<int>("b");
         Assert.AreEqual(typeof(int), result2.GetType());
         Assert.AreEqual(2, result2);
     }
@@ -45,7 +45,7 @@ public class Integer
     )
     {
         _instance.AddExpression("a", $"{a}{symbol}{b}");
-        object result = _instance.GetResult("a");
+        var result = _instance.GetResult("a");
         Assert.AreEqual(expectedResult.GetType(), result.GetType());
         Assert.AreEqual(expectedResult, result);
     }
@@ -54,12 +54,12 @@ public class Integer
     public void IntegerPowerInteger_IsInteger()
     {
         _instance.AddExpression("a", "2^2");
-        object result = _instance.GetResult("a");
+        var result = _instance.GetResult("a");
         Assert.AreEqual(typeof(int), result.GetType());
         Assert.AreEqual(4, result);
 
         _instance.AddExpression<int>("b", "3^2");
-        int result2 = _instance.GetResult<int>("b");
+        var result2 = _instance.GetResult<int>("b");
         Assert.AreEqual(typeof(int), result2.GetType());
         Assert.AreEqual(9, result2);
     }
@@ -77,12 +77,12 @@ public class Integer
     public void IntegerAdditionInteger_IsInteger()
     {
         _instance.AddExpression("a", "2+2");
-        object result = _instance.GetResult("a");
+        var result = _instance.GetResult("a");
         Assert.AreEqual(typeof(int), result.GetType());
         Assert.AreEqual(4, result);
 
         _instance.AddExpression<int>("b", "3+3");
-        int result2 = _instance.GetResult<int>("b");
+        var result2 = _instance.GetResult<int>("b");
         Assert.AreEqual(typeof(int), result2.GetType());
         Assert.AreEqual(6, result2);
     }
@@ -102,12 +102,12 @@ public class Integer
     public void IntegerSubtractionInteger_IsInteger()
     {
         _instance.AddExpression("a", "2-2");
-        object result = _instance.GetResult("a");
+        var result = _instance.GetResult("a");
         Assert.AreEqual(typeof(int), result.GetType());
         Assert.AreEqual(0, result);
 
         _instance.AddExpression<int>("b", "3-3");
-        int result2 = _instance.GetResult<int>("b");
+        var result2 = _instance.GetResult<int>("b");
         Assert.AreEqual(typeof(int), result2.GetType());
         Assert.AreEqual(0, result2);
     }
@@ -127,12 +127,12 @@ public class Integer
     public void IntegerMultiplicationInteger_IsInteger()
     {
         _instance.AddExpression("a", "2*2");
-        object result = _instance.GetResult("a");
+        var result = _instance.GetResult("a");
         Assert.AreEqual(typeof(int), result.GetType());
         Assert.AreEqual(4, result);
 
         _instance.AddExpression<int>("b", "3*3");
-        int result2 = _instance.GetResult<int>("b");
+        var result2 = _instance.GetResult<int>("b");
         Assert.AreEqual(typeof(int), result2.GetType());
         Assert.AreEqual(9, result2);
     }
@@ -141,12 +141,12 @@ public class Integer
     public void IntegerDivisionInteger_IsInteger()
     {
         _instance.AddExpression("a", "4/2");
-        object result = _instance.GetResult("a");
+        var result = _instance.GetResult("a");
         Assert.AreEqual(typeof(int), result.GetType());
         Assert.AreEqual(2, result);
 
         _instance.AddExpression<int>("b", "7/3");
-        int result2 = _instance.GetResult<int>("b");
+        var result2 = _instance.GetResult<int>("b");
         Assert.AreEqual(typeof(int), result2.GetType());
         Assert.AreEqual(2, result2);
     }
@@ -155,7 +155,7 @@ public class Integer
     public void IntegerNegation()
     {
         _instance.AddExpression("a", "-6 + 10");
-        object result = _instance.GetResult("a");
+        var result = _instance.GetResult("a");
 
         Assert.AreEqual(4, result);
     }
@@ -165,7 +165,7 @@ public class Integer
     {
         //Unsigned 32/64 bit
         _instance.AddExpression("e1", "100U + 100LU");
-        object result = _instance.GetResult("e1");
+        var result = _instance.GetResult("e1");
         Assert.AreEqual(typeof(UInt64), result.GetType());
         Assert.AreEqual((ulong)200, (UInt64)result);
         //Signed 32/64 bit

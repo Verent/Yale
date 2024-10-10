@@ -7,7 +7,7 @@ internal sealed class XorElement : BinaryExpressionElement
 {
     protected override Type? GetResultType(Type leftType, Type rightType)
     {
-        Type bitwiseType = Utility.GetBitwiseOpType(leftType, rightType);
+        var bitwiseType = Utility.GetBitwiseOpType(leftType, rightType);
 
         if (bitwiseType != null)
         {
@@ -19,7 +19,7 @@ internal sealed class XorElement : BinaryExpressionElement
 
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
     {
-        Type resultType = ResultType;
+        var resultType = ResultType;
 
         LeftChild.Emit(ilGenerator, context);
         ImplicitConverter.EmitImplicitConvert(LeftChild.ResultType, resultType, ilGenerator);

@@ -17,7 +17,7 @@ internal sealed class YaleIlGenerator
 
     public int GetTempLocalIndex(Type localType)
     {
-        if (_localBuilderTemp.TryGetValue(localType, out LocalBuilder? local) == false)
+        if (_localBuilderTemp.TryGetValue(localType, out var local) == false)
         {
             local = _ilGenerator.DeclareLocal(localType);
             _localBuilderTemp.Add(localType, local);
@@ -122,7 +122,7 @@ internal sealed class YaleIlGenerator
 
     private void RecordOpcode(OpCode op)
     {
-        int operandLength = GetOpcodeOperandSize(op.OperandType);
+        var operandLength = GetOpcodeOperandSize(op.OperandType);
         Length += op.Size + operandLength;
     }
 
@@ -166,7 +166,7 @@ internal sealed class YaleIlGenerator
     [Conditional("DEBUG")]
     public void ValidateLength()
     {
-        int ilGen = IlGeneratorLength;
+        var ilGen = IlGeneratorLength;
         Debug.Assert(Length == ilGen || ilGen == -1, "YaleIlGenerator length mismatch");
     }
 

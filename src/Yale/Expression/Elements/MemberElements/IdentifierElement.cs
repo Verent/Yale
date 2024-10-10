@@ -35,7 +35,7 @@ internal sealed class IdentifierElement : MemberElement
             return;
         }
 
-        Engine.ComputeInstance computeInstance = Context.ComputeInstance;
+        var computeInstance = Context.ComputeInstance;
         // Variable lookup
         if (Context.Variables.TryGetValue(MemberName, out IVariable? value))
         {
@@ -172,7 +172,7 @@ internal sealed class IdentifierElement : MemberElement
             return;
         }
 
-        bool isVariable = valueType is not null;
+        var isVariable = valueType is not null;
         if (isVariable)
         {
             EmitLoadVariables(ilg);
@@ -462,7 +462,7 @@ internal sealed class IdentifierElement : MemberElement
                 return false;
             }
 
-            MethodInfo methodInfo = property.GetGetMethod(true);
+            var methodInfo = property.GetGetMethod(true);
             return methodInfo.IsStatic;
         }
     }

@@ -15,7 +15,7 @@ internal sealed class AndOrElement : BinaryExpressionElement
 
     protected override Type? GetResultType(Type leftType, Type rightType)
     {
-        Type bitwiseOpType = Utility.GetBitwiseOpType(leftType, rightType);
+        var bitwiseOpType = Utility.GetBitwiseOpType(leftType, rightType);
         if (bitwiseOpType != null)
         {
             return bitwiseOpType;
@@ -31,7 +31,7 @@ internal sealed class AndOrElement : BinaryExpressionElement
 
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
     {
-        Type resultType = ResultType;
+        var resultType = ResultType;
 
         if (ReferenceEquals(resultType, typeof(bool)))
         {
@@ -69,7 +69,7 @@ internal sealed class AndOrElement : BinaryExpressionElement
         // We have to do a 'fake' emit so we can get the positions of the labels
         ShortCircuitInfo info = new();
         // Create a temporary IL generator
-        YaleIlGenerator ilgTemp = CreateTempIlGenerator(ilGenerator);
+        var ilgTemp = CreateTempIlGenerator(ilGenerator);
 
         // We have to make sure that the label count for the temp YaleIlGenerator matches our real YaleIlGenerator
         Utility.SyncFleeIlGeneratorLabels(ilGenerator, ilgTemp);
@@ -110,7 +110,7 @@ internal sealed class AndOrElement : BinaryExpressionElement
         // Emit it
         EmitOperand(terminalOperand, info, ilg, context);
         // And jump to the end
-        Label endLabel = info.Branches.FindLabel(OurEndLabelKey);
+        var endLabel = info.Branches.FindLabel(OurEndLabelKey);
         ilg.Emit(OpCodes.Br_S, endLabel);
 
         // Emit our true/false terminals
@@ -143,7 +143,7 @@ internal sealed class AndOrElement : BinaryExpressionElement
             EmitOperand(leftOperand, info, ilg, context);
 
             // Get the label for the short-circuit case
-            Label label = GetShortCircuitLabel(op, info, ilg);
+            var label = GetShortCircuitLabel(op, info, ilg);
             // Emit the branch
             EmitBranch(op, ilg, label, info);
         }
@@ -161,7 +161,7 @@ internal sealed class AndOrElement : BinaryExpressionElement
             info.Branches.AddBranch(ilg, target);
 
             // Temp mode; just emit a short branch and return
-            OpCode shortBranch = GetBranchOpcode(op, false);
+            var shortBranch = GetBranchOpcode(op, false);
             ilg.Emit(shortBranch, target);
 
             return;
@@ -170,10 +170,10 @@ internal sealed class AndOrElement : BinaryExpressionElement
         // Emit the proper branch opcode
 
         // Determine if it is a long branch
-        bool longBranch = info.Branches.IsLongBranch(ilg, target);
+        var longBranch = info.Branches.IsLongBranch(ilg, target);
 
         // Get the branch opcode
-        OpCode brOpcode = GetBranchOpcode(op, longBranch);
+        var brOpcode = GetBranchOpcode(op, longBranch);
 
         // Emit the branch
         ilg.Emit(brOpcode, target);
@@ -218,7 +218,7 @@ internal sealed class AndOrElement : BinaryExpressionElement
             if (top.myOperation != current.myOperation)
             {
                 // Yes, so return a label to its right operand
-                object nextOperand = cloneOperands.Pop();
+                var nextOperand = cloneOperands.Pop();
                 return GetLabel(nextOperand, ilg, info);
             }
 
@@ -291,7 +291,7 @@ internal sealed class AndOrElement : BinaryExpressionElement
         if (info.Branches.HasLabel(operand))
         {
             // Yes, so mark it
-            Label leftLabel = info.Branches.FindLabel(operand);
+            var leftLabel = info.Branches.FindLabel(operand);
             ilg.MarkLabel(leftLabel);
 
             // Note the label's position
@@ -313,7 +313,7 @@ internal sealed class AndOrElement : BinaryExpressionElement
         // Emit the false case if it was used
         if (info.Branches.HasLabel(OurFalseTerminalKey))
         {
-            Label falseLabel = info.Branches.FindLabel(OurFalseTerminalKey);
+            var falseLabel = info.Branches.FindLabel(OurFalseTerminalKey);
 
             // Mark the label and note its position
             ilg.MarkLabel(falseLabel);
@@ -331,7 +331,7 @@ internal sealed class AndOrElement : BinaryExpressionElement
         // Emit the true case if it was used
         if (info.Branches.HasLabel(OurTrueTerminalKey))
         {
-            Label trueLabel = info.Branches.FindLabel(OurTrueTerminalKey);
+            var trueLabel = info.Branches.FindLabel(OurTrueTerminalKey);
 
             // Mark the label and note its position
             ilg.MarkLabel(trueLabel);

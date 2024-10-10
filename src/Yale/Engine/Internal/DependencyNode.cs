@@ -5,10 +5,7 @@
 /// </summary>
 internal sealed class DependencyNode
 {
-    public DependencyNode(string key)
-    {
-        Key = key;
-    }
+    public DependencyNode(string key) => Key = key;
 
     private string Key { get; }
 
@@ -41,8 +38,5 @@ internal sealed class DependencyNode
     /// <summary>
     /// Removes predecessors. Used when expression is changed.
     /// </summary>
-    public void ClearPredecessors()
-    {
-        predecessor.Clear();
-    }
+    public void ClearPredecessors() => predecessor.Clear();
 }
