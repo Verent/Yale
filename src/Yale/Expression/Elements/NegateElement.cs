@@ -17,20 +17,13 @@ internal sealed class NegateElement : UnaryElement
     public override Type ResultType { get; }
 
     public NegateElement(BaseExpressionElement child)
-        : base(child)
-    {
-        ResultType = GetResultType(child.ResultType);
-    }
+        : base(child) => ResultType = GetResultType(child.ResultType);
 
     protected override Type GetResultType(Type childType)
     {
-        TypeCode typeCode = Type.GetTypeCode(childType);
+        var typeCode = Type.GetTypeCode(childType);
 
-        System.Reflection.MethodInfo methodInfo = Utility.GetSimpleOverloadedOperator(
-            UnaryNegation,
-            childType,
-            childType
-        );
+        var methodInfo = Utility.GetSimpleOverloadedOperator(UnaryNegation, childType, childType);
         if (methodInfo != null)
         {
             return methodInfo.ReturnType;
@@ -58,15 +51,11 @@ internal sealed class NegateElement : UnaryElement
 
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
     {
-        Type resultType = ResultType;
+        var resultType = ResultType;
         MyChild.Emit(ilGenerator, context);
         ImplicitConverter.EmitImplicitConvert(MyChild.ResultType, resultType, ilGenerator);
 
-        System.Reflection.MethodInfo methodInfo = Utility.GetSimpleOverloadedOperator(
-            UnaryNegation,
-            resultType,
-            resultType
-        );
+        var methodInfo = Utility.GetSimpleOverloadedOperator(UnaryNegation, resultType, resultType);
 
         if (methodInfo is null)
         {

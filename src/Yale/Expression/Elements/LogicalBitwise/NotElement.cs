@@ -12,10 +12,7 @@ internal sealed class NotElement : UnaryElement
     public override Type ResultType { get; }
 
     public NotElement(BaseExpressionElement child)
-        : base(child)
-    {
-        ResultType = GetResultType(child.ResultType);
-    }
+        : base(child) => ResultType = GetResultType(child.ResultType);
 
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
     {
@@ -43,7 +40,7 @@ internal sealed class NotElement : UnaryElement
         {
             return typeof(bool);
         }
-        Type result = Utility.IsIntegralType(childType)
+        var result = Utility.IsIntegralType(childType)
             ? childType
             : throw CreateCompileException(
                 CompileErrors.OperationNotDefinedForType,

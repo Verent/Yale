@@ -18,7 +18,7 @@ public class Import
         const string key = "math_constant";
 
         _instance.AddExpression(key, "E");
-        object result = _instance.GetResult(key);
+        var result = _instance.GetResult(key);
 
         Assert.AreEqual(Math.E, result);
     }
@@ -31,7 +31,7 @@ public class Import
         const string key = "math_function";
 
         _instance.AddExpression(key, "Sqrt(16)");
-        object result = _instance.GetResult(key);
+        var result = _instance.GetResult(key);
 
         Assert.AreEqual(4.0, result);
     }
@@ -44,7 +44,7 @@ public class Import
         const string key = "math_function";
 
         _instance.AddExpression(key, "Test.Sqrt(16)");
-        object result = _instance.GetResult(key);
+        var result = _instance.GetResult(key);
 
         Assert.AreEqual(4.0, result);
     }
@@ -57,7 +57,7 @@ public class Import
         const string key = "math_function";
 
         _instance.AddExpression(key, "Test.Sqrt(16)");
-        object result = _instance.GetResult(key);
+        var result = _instance.GetResult(key);
 
         Assert.AreEqual(4.0, result);
     }

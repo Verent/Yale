@@ -9,15 +9,9 @@ internal sealed class Int64LiteralElement : IntegralLiteralElement
     private const string MinValue = "9223372036854775808";
     private readonly bool _isMinValue;
 
-    public Int64LiteralElement(Int64 value)
-    {
-        _value = value;
-    }
+    public Int64LiteralElement(Int64 value) => _value = value;
 
-    private Int64LiteralElement()
-    {
-        _isMinValue = true;
-    }
+    private Int64LiteralElement() => _isMinValue = true;
 
     public static Int64LiteralElement TryCreate(string image, bool isHex, bool negated)
     {
@@ -28,9 +22,7 @@ internal sealed class Int64LiteralElement : IntegralLiteralElement
 
         if (isHex)
         {
-            if (
-                Int64.TryParse(image, NumberStyles.AllowHexSpecifier, null, out long value) == false
-            )
+            if (Int64.TryParse(image, NumberStyles.AllowHexSpecifier, null, out var value) == false)
             {
                 return null;
             }
@@ -45,7 +37,7 @@ internal sealed class Int64LiteralElement : IntegralLiteralElement
         }
         else
         {
-            if (Int64.TryParse(image, out long value))
+            if (Int64.TryParse(image, out var value))
             {
                 return new Int64LiteralElement(value);
             }
@@ -56,10 +48,8 @@ internal sealed class Int64LiteralElement : IntegralLiteralElement
         }
     }
 
-    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
-    {
+    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context) =>
         EmitLoad(_value, ilGenerator);
-    }
 
     public void Negate()
     {

@@ -7,22 +7,13 @@ namespace Yale.Expression;
 public sealed class ExpressionCompileException : Exception
 {
     internal ExpressionCompileException(string message, CompileExceptionReason reason)
-        : base(message)
-    {
-        Reason = reason;
-    }
+        : base(message) => Reason = reason;
 
     internal ExpressionCompileException(ParserLogException parseException)
-        : base(string.Empty, parseException)
-    {
-        Reason = CompileExceptionReason.SyntaxError;
-    }
+        : base(string.Empty, parseException) => Reason = CompileExceptionReason.SyntaxError;
 
     private ExpressionCompileException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
-    {
-        Reason = (CompileExceptionReason)info.GetInt32("Reason");
-    }
+        : base(info, context) => Reason = (CompileExceptionReason)info.GetInt32("Reason");
 
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {

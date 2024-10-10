@@ -59,7 +59,7 @@ internal abstract class RealLiteralElement : LiteralElement
         ExpressionBuilderOptions options
     )
     {
-        RealLiteralDataType realType = options.RealLiteralDataType;
+        var realType = options.RealLiteralDataType;
 
         switch (realType)
         {

@@ -230,8 +230,8 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
     public override Production ExitCastExpression(Production production)
     {
         var childValues = GetChildValues(production);
-        string[] destTypeParts = childValues[1] as string[];
-        bool isArray = (bool)childValues[2];
+        var destTypeParts = childValues[1] as string[];
+        var isArray = (bool)childValues[2];
 
         CastElement op =
             new(
@@ -256,7 +256,7 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
             parts.Add(part);
         }
 
-        bool isArray = false;
+        var isArray = false;
 
         if (parts[^1] == "[]")
         {
@@ -449,7 +449,7 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
 
     private static string RegularEscapeMatcher(Match match)
     {
-        string matchValue = match.Value;
+        var matchValue = match.Value;
         // Remove leading \
         matchValue = matchValue.Remove(0, 1);
 

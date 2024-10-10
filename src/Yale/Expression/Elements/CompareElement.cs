@@ -27,9 +27,9 @@ internal sealed class CompareElement : BinaryExpressionElement
 
     protected override Type? GetResultType(Type leftType, Type rightType)
     {
-        Type binaryResultType = ImplicitConverter.GetBinaryResultType(leftType, rightType);
-        MethodInfo overloadedOperator = GetOverloadedCompareOperator();
-        bool isEqualityOp = IsOpTypeEqualOrNotEqual(operation);
+        var binaryResultType = ImplicitConverter.GetBinaryResultType(leftType, rightType);
+        var overloadedOperator = GetOverloadedCompareOperator();
+        var isEqualityOp = IsOpTypeEqualOrNotEqual(operation);
 
         // Use our string equality instead of overloaded operator
         if (
@@ -80,7 +80,7 @@ internal sealed class CompareElement : BinaryExpressionElement
 
     private MethodInfo GetOverloadedCompareOperator()
     {
-        string name = GetCompareOperatorName(operation);
+        var name = GetCompareOperatorName(operation);
         return GetOverloadedBinaryOperator(name, operation);
     }
 
@@ -114,11 +114,11 @@ internal sealed class CompareElement : BinaryExpressionElement
 
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
     {
-        Type binaryResultType = ImplicitConverter.GetBinaryResultType(
+        var binaryResultType = ImplicitConverter.GetBinaryResultType(
             LeftChild.ResultType,
             RightChild.ResultType
         );
-        MethodInfo overloadedOperator = GetOverloadedCompareOperator();
+        var overloadedOperator = GetOverloadedCompareOperator();
 
         if (AreBothChildrenOfType(typeof(string)))
         {
@@ -172,7 +172,7 @@ internal sealed class CompareElement : BinaryExpressionElement
     )
     {
         // Get the StringComparison from the options
-        ExpressionBuilderOptions options = context.BuilderOptions;
+        var options = context.BuilderOptions;
         Int32LiteralElement int32LiteralElement = new((int)options.StringComparison);
 
         int32LiteralElement.Emit(ilg, context);
@@ -208,8 +208,8 @@ internal sealed class CompareElement : BinaryExpressionElement
     /// <param name="op"></param>
     private void EmitCompareOperation(YaleIlGenerator ilg, LogicalCompareOperation op)
     {
-        OpCode ltOpcode = GetCompareGTLTOpcode(false);
-        OpCode gtOpcode = GetCompareGTLTOpcode(true);
+        var ltOpcode = GetCompareGTLTOpcode(false);
+        var gtOpcode = GetCompareGTLTOpcode(true);
 
         switch (op)
         {
@@ -256,7 +256,7 @@ internal sealed class CompareElement : BinaryExpressionElement
     /// <returns></returns>
     private OpCode GetCompareGTLTOpcode(bool greaterThan)
     {
-        Type leftType = LeftChild.ResultType;
+        var leftType = LeftChild.ResultType;
 
         if (ReferenceEquals(leftType, RightChild.ResultType))
         {

@@ -15,11 +15,11 @@ public class ComputeInstanceTests
     {
         const int a = 1;
         instance.Variables.Add("a", a);
-        int aResult = instance.Variables.Get<int>("a");
+        var aResult = instance.Variables.Get<int>("a");
         Assert.AreEqual(a, aResult);
 
         instance.AddExpression("ea", "a");
-        object aeResult = instance.GetResult("ea");
+        var aeResult = instance.GetResult("ea");
 
         Assert.AreEqual(aResult, aeResult);
     }
@@ -80,7 +80,7 @@ public class ComputeInstanceTests
     {
         instance.Variables.Add("a", 10);
         instance.AddExpression<int>("b", "a");
-        int result = instance.GetResult<int>("b");
+        var result = instance.GetResult<int>("b");
         Assert.AreEqual(typeof(int), result.GetType());
         Assert.AreEqual(10, result);
     }
@@ -90,7 +90,7 @@ public class ComputeInstanceTests
     {
         instance.Variables.Add("a", 10);
         instance.AddExpression("b", "a");
-        object result = instance.GetResult("b");
+        var result = instance.GetResult("b");
         Assert.AreEqual(10, result);
     }
 
@@ -114,7 +114,7 @@ public class ComputeInstanceTests
     public void Generic_GetExpression_ExpressionExists_ReturnsExpression()
     {
         instance.AddExpression<bool>("a", "true");
-        string expression = instance.GetExpression<bool>("a");
+        var expression = instance.GetExpression<bool>("a");
 
         Assert.AreEqual("true", expression);
     }
@@ -129,7 +129,7 @@ public class ComputeInstanceTests
     [TestMethod]
     public void ContainsExpression_False()
     {
-        bool result = instance.ContainsExpression("a");
+        var result = instance.ContainsExpression("a");
         Assert.IsFalse(result);
     }
 
@@ -137,7 +137,7 @@ public class ComputeInstanceTests
     public void ContainsExpression_True()
     {
         instance.AddExpression<int>("a", "10");
-        bool result = instance.ContainsExpression("a");
+        var result = instance.ContainsExpression("a");
         Assert.IsTrue(result);
 
         instance.AddExpression("b", "10");

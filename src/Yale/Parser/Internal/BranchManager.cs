@@ -25,13 +25,13 @@ internal sealed class BranchManager
             FindBetweenBranches(branchInfo, betweenBranches);
 
             // Count the number of long branches in the above set
-            int longBranchesBetween = CountLongBranches(betweenBranches);
+            var longBranchesBetween = CountLongBranches(betweenBranches);
 
             // Adjust the branch as necessary
             branchInfo.AdjustForLongBranchesBetween(longBranchesBetween);
         }
 
-        int longBranchCount = 0;
+        var longBranchCount = 0;
 
         // Adjust the start location of each branch
         foreach (var branchInfo in branchInfos)
@@ -57,7 +57,7 @@ internal sealed class BranchManager
     {
         var count = 0;
 
-        foreach (BranchInfo branchInfo in dest)
+        foreach (var branchInfo in dest)
         {
             count += Convert.ToInt32(branchInfo.ComputeIsLongBranch());
         }
@@ -94,7 +94,7 @@ internal sealed class BranchManager
         ILLocation startLoc = new(ilg.Length);
         BranchInfo branchInfo = new(startLoc, target);
 
-        int index = branchInfos.IndexOf(branchInfo);
+        var index = branchInfos.IndexOf(branchInfo);
         branchInfo = branchInfos[index];
 
         return branchInfo.IsLongBranch;
@@ -131,7 +131,7 @@ internal sealed class BranchManager
     /// <remarks></remarks>
     public Label GetLabel(object key, YaleIlGenerator ilg)
     {
-        if (keyLabelMap.TryGetValue(key, out Label lbl) == false)
+        if (keyLabelMap.TryGetValue(key, out var lbl) == false)
         {
             lbl = ilg.DefineLabel();
             keyLabelMap.Add(key, lbl);
@@ -155,7 +155,7 @@ internal sealed class BranchManager
     /// <remarks></remarks>
     public void MarkLabel(YaleIlGenerator ilg, Label target)
     {
-        int pos = ilg.Length;
+        var pos = ilg.Length;
 
         foreach (var branchInfo in branchInfos)
         {
@@ -167,7 +167,7 @@ internal sealed class BranchManager
     {
         var arr = new string[branchInfos.Count];
 
-        for (int i = 0; i <= branchInfos.Count - 1; i++)
+        for (var i = 0; i <= branchInfos.Count - 1; i++)
         {
             arr[i] = branchInfos[i].ToString();
         }

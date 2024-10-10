@@ -50,10 +50,8 @@ internal abstract class LiteralElement : BaseExpressionElement
         }
     }
 
-    protected static void EmitLoad(bool value, YaleIlGenerator ilGenerator)
-    {
+    protected static void EmitLoad(bool value, YaleIlGenerator ilGenerator) =>
         ilGenerator.Emit(value ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
-    }
 
     private static void EmitSuperShort(int value, YaleIlGenerator ilGenerator)
     {

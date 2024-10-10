@@ -8,15 +8,9 @@ internal sealed class Int32LiteralElement : IntegralLiteralElement
     private const string MinValue = "2147483648";
     private readonly bool isMinValue;
 
-    public Int32LiteralElement(int value)
-    {
-        Value = value;
-    }
+    public Int32LiteralElement(int value) => Value = value;
 
-    private Int32LiteralElement()
-    {
-        isMinValue = true;
-    }
+    private Int32LiteralElement() => isMinValue = true;
 
     /// <summary>
     /// Todo: Add description
@@ -35,7 +29,7 @@ internal sealed class Int32LiteralElement : IntegralLiteralElement
         if (isHex)
         {
             // Since Int32.TryParse will succeed for a string like 0xFFFFFFFF we have to do some special handling
-            if (int.TryParse(image, NumberStyles.AllowHexSpecifier, null, out int value) == false)
+            if (int.TryParse(image, NumberStyles.AllowHexSpecifier, null, out var value) == false)
             {
                 return null;
             }
@@ -49,7 +43,7 @@ internal sealed class Int32LiteralElement : IntegralLiteralElement
         }
         else
         {
-            return int.TryParse(image, out int value) ? new Int32LiteralElement(value) : null;
+            return int.TryParse(image, out var value) ? new Int32LiteralElement(value) : null;
         }
     }
 
@@ -65,10 +59,8 @@ internal sealed class Int32LiteralElement : IntegralLiteralElement
         }
     }
 
-    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
-    {
+    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context) =>
         EmitLoad(Value, ilGenerator);
-    }
 
     public override Type ResultType => typeof(int);
 

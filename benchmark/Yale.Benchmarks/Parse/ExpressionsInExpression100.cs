@@ -107,6 +107,10 @@ public class ExpressionsInExpression100
         instance.AddExpression<int>(key, $"1");
         for (var i = 1; i < Runs; i++)
         {
+            if (i % 20 == 0)
+            {
+                instance.Variables["x"] = i / 20;
+            }
             var newKey = $"key{i}";
             var op = i % 2 == 0 ? "+" : "-";
 

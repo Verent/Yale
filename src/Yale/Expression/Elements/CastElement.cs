@@ -138,18 +138,13 @@ internal sealed class CastElement : BaseExpressionElement
         ExplicitOperatorMethodBinder methodBinder = new(destType, sourceType);
 
         // Look for an operator on the source type and dest types
-        MethodInfo? miSource = Utility.GetOverloadedOperator(
+        var miSource = Utility.GetOverloadedOperator(
             "Explicit",
             sourceType,
             methodBinder,
             sourceType
         );
-        MethodInfo? miDest = Utility.GetOverloadedOperator(
-            "Explicit",
-            destType,
-            methodBinder,
-            sourceType
-        );
+        var miDest = Utility.GetOverloadedOperator("Explicit", destType, methodBinder, sourceType);
 
         if (miSource is null & miDest is null)
         {
@@ -251,7 +246,7 @@ internal sealed class CastElement : BaseExpressionElement
 
     private static bool IsBaseType(Type target, Type potentialBase)
     {
-        Type? current = target;
+        var current = target;
         while (current is not null)
         {
             if (ReferenceEquals(current, potentialBase))
@@ -265,7 +260,7 @@ internal sealed class CastElement : BaseExpressionElement
 
     private static bool ImplementsInterface(Type target, Type interfaceType)
     {
-        Type[] interfaces = target.GetInterfaces();
+        var interfaces = target.GetInterfaces();
         return Array.IndexOf(interfaces, interfaceType) != -1;
     }
 
@@ -279,22 +274,17 @@ internal sealed class CastElement : BaseExpressionElement
         );
     }
 
-    private static bool IsCastableNumericType(Type t)
-    {
-        return t.IsPrimitive & (!ReferenceEquals(t, typeof(bool)));
-    }
+    private static bool IsCastableNumericType(Type t) =>
+        t.IsPrimitive & (!ReferenceEquals(t, typeof(bool)));
 
-    private static Type GetUnderlyingEnumType(Type t)
-    {
-        return t.IsEnum ? Enum.GetUnderlyingType(t) : t;
-    }
+    private static Type GetUnderlyingEnumType(Type t) => t.IsEnum ? Enum.GetUnderlyingType(t) : t;
 
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
     {
         castExpression.Emit(ilGenerator, context);
 
-        Type sourceType = castExpression.ResultType;
-        Type? destType = this.destType;
+        var sourceType = castExpression.ResultType;
+        var destType = this.destType;
 
         EmitCast(ilGenerator, sourceType, destType, context);
     }
@@ -306,7 +296,7 @@ internal sealed class CastElement : BaseExpressionElement
         ExpressionContext context
     )
     {
-        MethodInfo? explicitOperator = GetExplicitOverloadedOperator(sourceType, destType);
+        var explicitOperator = GetExplicitOverloadedOperator(sourceType, destType);
         if (ReferenceEquals(sourceType, destType))
         {
             // Identity cast; do nothing
@@ -385,13 +375,13 @@ internal sealed class CastElement : BaseExpressionElement
         ExpressionContext context
     )
     {
-        TypeCode desttc = Type.GetTypeCode(destType);
-        TypeCode sourcetc = Type.GetTypeCode(sourceType);
-        bool unsigned = IsUnsignedType(sourceType);
-        ExpressionBuilderOptions options = context.BuilderOptions;
-        bool overflowCheck = options.OverflowChecked;
-        OpCode opCode = OpCodes.Nop;
-        bool unsignedAndChecked = unsigned & overflowCheck;
+        var desttc = Type.GetTypeCode(destType);
+        var sourcetc = Type.GetTypeCode(sourceType);
+        var unsigned = IsUnsignedType(sourceType);
+        var options = context.BuilderOptions;
+        var overflowCheck = options.OverflowChecked;
+        var opCode = OpCodes.Nop;
+        var unsignedAndChecked = unsigned & overflowCheck;
 
         switch (desttc)
         {
@@ -534,7 +524,7 @@ internal sealed class CastElement : BaseExpressionElement
 
     private static bool IsUnsignedType(Type t)
     {
-        TypeCode tc = Type.GetTypeCode(t);
+        var tc = Type.GetTypeCode(t);
         switch (tc)
         {
             case TypeCode.Byte:

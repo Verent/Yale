@@ -4,10 +4,7 @@ internal sealed class Production : Node
 {
     private readonly List<Node> children = new();
 
-    public Production(ProductionPattern pattern)
-    {
-        Pattern = pattern;
-    }
+    public Production(ProductionPattern pattern) => Pattern = pattern;
 
     public override TokenId TypeId
     {
@@ -108,16 +105,10 @@ internal sealed class Production : Node
      * @return true if the node should be hidden, or
      *         false otherwise
      */
-    internal override bool IsHidden()
-    {
-        return Pattern.Synthetic;
-    }
+    internal override bool IsHidden() => Pattern.Synthetic;
 
     /**
      * Returns a string representation of this production.
      */
-    public override string ToString()
-    {
-        return Pattern.Name + '(' + Pattern.Id + ')';
-    }
+    public override string ToString() => Pattern.Name + '(' + Pattern.Id + ')';
 }

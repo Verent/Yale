@@ -32,7 +32,7 @@ public class Recalculate
         autoInstance.AddExpression<int>("b", "a");
 
         autoInstance.Variables["a"] = 20;
-        object result = autoInstance.GetResult("b");
+        var result = autoInstance.GetResult("b");
 
         Assert.AreEqual(20, result);
     }
@@ -45,7 +45,7 @@ public class Recalculate
         autoInstance.AddExpression<int>("c", "b");
 
         autoInstance.Variables["a"] = 20;
-        object result = autoInstance.GetResult("c");
+        var result = autoInstance.GetResult("c");
 
         Assert.AreEqual(20, result);
     }
@@ -55,7 +55,7 @@ public class Recalculate
     {
         TestClass<string> testObject =
             new(nameof(AutoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
-        string expected = "a string";
+        var expected = "a string";
 
         testObject.Value = expected;
 
@@ -79,7 +79,7 @@ public class Recalculate
                     AutoRecalculate_Int_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue
                 )
             );
-        int expected = 1;
+        var expected = 1;
 
         testObject.Value = expected;
 
@@ -101,7 +101,7 @@ public class Recalculate
         lazyInstance.AddExpression<int>("b", "a");
 
         lazyInstance.Variables["a"] = 20;
-        object result = lazyInstance.GetResult("b");
+        var result = lazyInstance.GetResult("b");
 
         Assert.AreEqual(20, result);
     }
@@ -114,7 +114,7 @@ public class Recalculate
         lazyInstance.AddExpression<int>("c", "b");
 
         lazyInstance.Variables["a"] = 20;
-        object result = lazyInstance.GetResult("c");
+        var result = lazyInstance.GetResult("c");
 
         Assert.AreEqual(20, result);
     }
@@ -124,7 +124,7 @@ public class Recalculate
     {
         TestClass<string> testObject =
             new(nameof(LazyRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
-        string expected = "a string";
+        var expected = "a string";
 
         testObject.Value = expected;
 
@@ -146,7 +146,7 @@ public class Recalculate
         noRecalculateInstance.AddExpression<int>("b", "a");
 
         noRecalculateInstance.Variables["a"] = 20;
-        object result = noRecalculateInstance.GetResult("b");
+        var result = noRecalculateInstance.GetResult("b");
 
         Assert.AreEqual(10, result);
     }
@@ -159,7 +159,7 @@ public class Recalculate
         noRecalculateInstance.AddExpression<int>("c", "b");
 
         noRecalculateInstance.Variables["a"] = 20;
-        object result = noRecalculateInstance.GetResult("c");
+        var result = noRecalculateInstance.GetResult("c");
 
         Assert.AreEqual(10, result);
     }
@@ -169,7 +169,7 @@ public class Recalculate
     {
         TestClass<string> testObject =
             new(nameof(NoRecalculate_InstanceValueUpdatedDependentExpression_ReturnUpdatedValue));
-        string expected = "a string";
+        var expected = "a string";
 
         testObject.Value = expected;
 

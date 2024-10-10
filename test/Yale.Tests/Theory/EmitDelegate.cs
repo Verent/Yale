@@ -17,12 +17,12 @@ public class Emit
     [TestMethod]
     public void CreateBasicDynamicMethod()
     {
-        string value = "Hello world!";
+        var value = "Hello world!";
         DynamicMethod dynamicMethod = new("my_method", typeof(string), null);
-        ILGenerator ilGenerator = dynamicMethod.GetILGenerator();
+        var ilGenerator = dynamicMethod.GetILGenerator();
         ilGenerator.Emit(OpCodes.Ldstr, value);
         ilGenerator.Emit(OpCodes.Ret);
-        object result = dynamicMethod.Invoke(null, null);
+        var result = dynamicMethod.Invoke(null, null);
 
         Assert.AreEqual(value, result);
     }
@@ -31,47 +31,41 @@ public class Emit
     public void CreateDynamicMethodThatCallsAStaticMethodNoArguments()
     {
         DynamicMethod dynamicMethod = new("my_method", typeof(int), null);
-        ILGenerator ilGenerator = dynamicMethod.GetILGenerator();
+        var ilGenerator = dynamicMethod.GetILGenerator();
 
-        MethodInfo staticMethodInfo = typeof(Emit).GetMethod(
+        var staticMethodInfo = typeof(Emit).GetMethod(
             "StaticMethodNoParamsThatReturnInt",
             BindingFlags.Public | BindingFlags.Static
         );
         ilGenerator.Emit(OpCodes.Call, staticMethodInfo);
         ilGenerator.Emit(OpCodes.Ret);
-        object result = dynamicMethod.Invoke(null, null);
+        var result = dynamicMethod.Invoke(null, null);
 
         Assert.AreEqual(5, result);
     }
 
-    public static int StaticMethodNoParamsThatReturnInt()
-    {
-        return 5;
-    }
+    public static int StaticMethodNoParamsThatReturnInt() => 5;
 
     [TestMethod]
     public void CreateDynamicMethodThatCallsAStaticMethod()
     {
         const int value = 2;
         DynamicMethod dynamicMethod = new("my_method", typeof(int), null);
-        ILGenerator ilGenerator = dynamicMethod.GetILGenerator();
+        var ilGenerator = dynamicMethod.GetILGenerator();
 
-        MethodInfo staticMethodInfo = typeof(Emit).GetMethod(
+        var staticMethodInfo = typeof(Emit).GetMethod(
             "StaticMethodThatReturnInt",
             BindingFlags.Public | BindingFlags.Static
         );
         ilGenerator.Emit(OpCodes.Ldc_I4, value);
         ilGenerator.Emit(OpCodes.Call, staticMethodInfo ?? throw new InvalidOperationException());
         ilGenerator.Emit(OpCodes.Ret);
-        object result = dynamicMethod.Invoke(null, null);
+        var result = dynamicMethod.Invoke(null, null);
 
         Assert.AreEqual(value * 2, result);
     }
 
-    public static int StaticMethodThatReturnInt(int value)
-    {
-        return value * value;
-    }
+    public static int StaticMethodThatReturnInt(int value) => value * value;
 
     [TestMethod]
     public void CreateDynamicMethodThatCallsAnInstanceMethod()
@@ -79,9 +73,9 @@ public class Emit
         DynamicMethod dynamicMethod =
             new("my_method", typeof(object), new Type[] { typeof(InternalClassForTest) });
 
-        ILGenerator ilGenerator = dynamicMethod.GetILGenerator();
+        var ilGenerator = dynamicMethod.GetILGenerator();
 
-        MethodInfo methodInfo = typeof(InternalClassForTest).GetMethod(
+        var methodInfo = typeof(InternalClassForTest).GetMethod(
             "GetValue",
             BindingFlags.Public | BindingFlags.Instance
         );
@@ -92,29 +86,20 @@ public class Emit
         ilGenerator.Emit(OpCodes.Callvirt, methodInfo); //Call method
         ilGenerator.Emit(OpCodes.Ret); //Return value
 
-        object result = dynamicMethod.Invoke(null, new object[] { new InternalClassForTest() });
+        var result = dynamicMethod.Invoke(null, new object[] { new InternalClassForTest() });
 
         Assert.AreEqual(Value, result);
     }
 
     public class InternalClassForTest
     {
-        public InternalClassForTest()
-        {
-            _values.Add(Key, Value);
-        }
+        public InternalClassForTest() => _values.Add(Key, Value);
 
         private readonly Dictionary<string, object> _values = new();
 
-        public object GetValue(string key)
-        {
-            return _values[key];
-        }
+        public object GetValue(string key) => _values[key];
 
-        public T DynamicGetVariableValueInternal<T>(string key)
-        {
-            return (T)_values[key];
-        }
+        public T DynamicGetVariableValueInternal<T>(string key) => (T)_values[key];
     }
 
     private DynamicMethod CreateDynamicMethod(Type ownerType)

@@ -43,7 +43,7 @@ internal sealed class InElement : BaseExpressionElement
         CompareElement compareElement = new();
 
         // Validate that our operand is comparable to all elements in the list
-        foreach (BaseExpressionElement argumentElement in arguments)
+        foreach (var argumentElement in arguments)
         {
             compareElement.Initialize(operand, argumentElement, LogicalCompareOperation.Equal);
             compareElement.Validate();
@@ -65,8 +65,8 @@ internal sealed class InElement : BaseExpressionElement
         }
 
         // Validate that the operand type is compatible with the collection
-        MethodInfo methodInfo = GetCollectionContainsMethod();
-        ParameterInfo firstParameter = methodInfo.GetParameters()[0];
+        var methodInfo = GetCollectionContainsMethod();
+        var firstParameter = methodInfo.GetParameters()[0];
 
         if (
             ImplicitConverter.EmitImplicitConvert(
@@ -87,19 +87,19 @@ internal sealed class InElement : BaseExpressionElement
 
     private Type GetTargetCollectionType()
     {
-        Type collType = targetCollectionElement.ResultType;
+        var collType = targetCollectionElement.ResultType;
 
         // Try to see if the collection is a generic ICollection or IDictionary
-        Type[] interfaces = collType.GetInterfaces();
+        var interfaces = collType.GetInterfaces();
 
-        foreach (Type? interfaceType in interfaces)
+        foreach (var interfaceType in interfaces)
         {
             if (interfaceType.IsGenericType == false)
             {
                 continue;
             }
 
-            Type genericTypeDef = interfaceType.GetGenericTypeDefinition();
+            var genericTypeDef = interfaceType.GetGenericTypeDefinition();
 
             if (
                 ReferenceEquals(genericTypeDef, typeof(ICollection<>))
@@ -127,7 +127,7 @@ internal sealed class InElement : BaseExpressionElement
 
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
     {
-        if ((targetCollectionType != null))
+        if (targetCollectionType != null)
         {
             EmitCollectionIn(ilGenerator, context);
         }
@@ -138,7 +138,7 @@ internal sealed class InElement : BaseExpressionElement
             branchManager.GetLabel("trueTerminal", ilGenerator);
 
             // Do a fake emit to get branch positions
-            YaleIlGenerator ilgTemp = CreateTempIlGenerator(ilGenerator);
+            var ilgTemp = CreateTempIlGenerator(ilGenerator);
             Utility.SyncFleeIlGeneratorLabels(ilGenerator, ilgTemp);
 
             EmitListIn(ilgTemp, context, branchManager);
@@ -153,8 +153,8 @@ internal sealed class InElement : BaseExpressionElement
     private void EmitCollectionIn(YaleIlGenerator ilg, ExpressionContext context)
     {
         // Get the contains method
-        MethodInfo methodInfo = GetCollectionContainsMethod();
-        ParameterInfo firstParameter = methodInfo.GetParameters()[0];
+        var methodInfo = GetCollectionContainsMethod();
+        var firstParameter = methodInfo.GetParameters()[0];
 
         // Load the collection
         targetCollectionElement.Emit(ilg, context);
@@ -172,7 +172,7 @@ internal sealed class InElement : BaseExpressionElement
 
     private MethodInfo GetCollectionContainsMethod()
     {
-        string methodName = "Contains";
+        var methodName = "Contains";
 
         if (
             targetCollectionType.IsGenericType
@@ -198,12 +198,12 @@ internal sealed class InElement : BaseExpressionElement
     )
     {
         CompareElement compareElement = new();
-        Label endLabel = branchManager.FindLabel("endLabel");
-        Label trueTerminal = branchManager.FindLabel("trueTerminal");
+        var endLabel = branchManager.FindLabel("endLabel");
+        var trueTerminal = branchManager.FindLabel("trueTerminal");
 
         // Cache the operand since we will be comparing against it a lot
-        LocalBuilder lb = ilg.DeclareLocal(operand.ResultType);
-        int targetIndex = lb.LocalIndex;
+        var lb = ilg.DeclareLocal(operand.ResultType);
+        var targetIndex = lb.LocalIndex;
 
         operand.Emit(ilg, context);
         Utility.EmitStoreLocal(ilg, targetIndex);
@@ -212,7 +212,7 @@ internal sealed class InElement : BaseExpressionElement
         LocalBasedElement targetShim = new(operand, targetIndex);
 
         // Emit the compares
-        foreach (BaseExpressionElement argumentElement in arguments)
+        foreach (var argumentElement in arguments)
         {
             compareElement.Initialize(targetShim, argumentElement, LogicalCompareOperation.Equal);
             compareElement.Emit(ilg, context);

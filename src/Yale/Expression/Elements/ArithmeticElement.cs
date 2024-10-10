@@ -73,7 +73,7 @@ internal sealed class ArithmeticElement : BinaryExpressionElement
     private MethodInfo? GetOverloadedArithmeticOperator()
     {
         //Get the name of the operator
-        string name = GetOverloadedOperatorFunctionName(operation);
+        var name = GetOverloadedOperatorFunctionName(operation);
         return GetOverloadedBinaryOperator(name, operation);
     }
 

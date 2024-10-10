@@ -75,10 +75,8 @@ internal sealed class NamespaceImport : ImportBase, ICollection<ImportBase>
         return null;
     }
 
-    internal override bool IsMatch(string name)
-    {
-        return string.Equals(@namespace, name, Options.MemberStringComparison);
-    }
+    internal override bool IsMatch(string name) =>
+        string.Equals(@namespace, name, Options.MemberStringComparison);
 
     private ICollection<ImportBase> NonContainerImports
     {
@@ -111,23 +109,11 @@ internal sealed class NamespaceImport : ImportBase, ICollection<ImportBase>
 
     public void Clear() => imports.Clear();
 
-    public bool Contains(ImportBase item)
-    {
-        return imports.Contains(item);
-    }
+    public bool Contains(ImportBase item) => imports.Contains(item);
 
-    public void CopyTo(ImportBase[] array, int arrayIndex)
-    {
-        imports.CopyTo(array, arrayIndex);
-    }
+    public void CopyTo(ImportBase[] array, int arrayIndex) => imports.CopyTo(array, arrayIndex);
 
-    public bool Remove(ImportBase item)
-    {
-        return imports.Remove(item);
-    }
+    public bool Remove(ImportBase item) => imports.Remove(item);
 
-    public override IEnumerator<ImportBase> GetEnumerator()
-    {
-        return imports.GetEnumerator();
-    }
+    public override IEnumerator<ImportBase> GetEnumerator() => imports.GetEnumerator();
 }

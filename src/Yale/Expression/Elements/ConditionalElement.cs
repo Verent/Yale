@@ -74,7 +74,7 @@ internal sealed class ConditionalElement : BaseExpressionElement
             return;
         }
 
-        YaleIlGenerator ilgTemp = CreateTempIlGenerator(ilGenerator);
+        var ilgTemp = CreateTempIlGenerator(ilGenerator);
         Utility.SyncFleeIlGeneratorLabels(ilGenerator, ilgTemp);
 
         // Emit fake conditional to get branch target positions
@@ -92,8 +92,8 @@ internal sealed class ConditionalElement : BaseExpressionElement
         BranchManager branchManager
     )
     {
-        Label falseLabel = branchManager.FindLabel("falseLabel");
-        Label endLabel = branchManager.FindLabel("endLabel");
+        var falseLabel = branchManager.FindLabel("falseLabel");
+        var endLabel = branchManager.FindLabel("endLabel");
 
         // Emit the condition
         condition.Emit(ilg, context);

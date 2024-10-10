@@ -26,7 +26,7 @@ public class Double
     )
     {
         _instance.AddExpression("a", $"{a}{symbol}{b}");
-        object result = _instance.GetResult("a");
+        var result = _instance.GetResult("a");
         Assert.AreEqual(expectedResult.GetType(), result.GetType());
         Assert.AreEqual(expectedResult, result);
     }
@@ -35,12 +35,12 @@ public class Double
     public void DoublePowerDouble_IsDouble()
     {
         _instance.AddExpression("a", "2.0^2.1");
-        object result = _instance.GetResult("a");
+        var result = _instance.GetResult("a");
         Assert.AreEqual(typeof(double), result.GetType());
         Assert.AreEqual(Math.Pow(2, 2.1), result);
 
         _instance.AddExpression<double>("b", "3.0^2.1");
-        double result2 = _instance.GetResult<double>("b");
+        var result2 = _instance.GetResult<double>("b");
         Assert.AreEqual(typeof(double), result2.GetType());
         Assert.AreEqual(Math.Pow(3, 2.1), result2);
     }
@@ -50,7 +50,7 @@ public class Double
     {
         //Double and single
         _instance.AddExpression("expression", "100.25 + 100.25f");
-        object result = _instance.GetResult("expression");
+        var result = _instance.GetResult("expression");
         Assert.AreEqual(typeof(double), result.GetType());
         Assert.AreEqual(200.5, (double)result);
     }

@@ -82,7 +82,7 @@ internal static class Utility
 
     public static void EmitArrayLoad(YaleIlGenerator ilg, Type elementType)
     {
-        TypeCode typeCode = Type.GetTypeCode(elementType);
+        var typeCode = Type.GetTypeCode(elementType);
 
         switch (typeCode)
         {
@@ -139,7 +139,7 @@ internal static class Utility
 
     public static void EmitArrayStore(YaleIlGenerator ilg, Type elementType)
     {
-        TypeCode typeCode = Type.GetTypeCode(elementType);
+        var typeCode = Type.GetTypeCode(elementType);
 
         switch (typeCode)
         {
@@ -194,7 +194,7 @@ internal static class Utility
 
     public static bool IsIntegralType(Type t)
     {
-        TypeCode typeCode = Type.GetTypeCode(t);
+        var typeCode = Type.GetTypeCode(t);
         switch (typeCode)
         {
             case TypeCode.Byte:
@@ -287,7 +287,7 @@ internal static class Utility
         IDictionary data = (IDictionary)value;
         MethodInfo methodInfo = (MethodInfo)member;
 
-        bool nameMatch =
+        var nameMatch =
             methodInfo.IsSpecialName
             && methodInfo.Name.Equals((string)data["Name"], StringComparison.OrdinalIgnoreCase);
 
@@ -296,14 +296,14 @@ internal static class Utility
             return false;
         }
 
-        bool returnTypeMatch = ReferenceEquals(methodInfo.ReturnType, (Type)data["destType"]);
+        var returnTypeMatch = ReferenceEquals(methodInfo.ReturnType, (Type)data["destType"]);
 
         if (returnTypeMatch == false)
         {
             return false;
         }
 
-        ParameterInfo[] parameters = methodInfo.GetParameters();
+        var parameters = methodInfo.GetParameters();
         var argumentMatch =
             parameters.Length > 0
             && ReferenceEquals(parameters[0].ParameterType, (Type)data["sourceType"]);
@@ -342,10 +342,8 @@ internal static class Utility
         return fi != null ? (int)fi.GetValue(ilg) : -1;
     }
 
-    public static bool IsLongBranch(int startPosition, int endPosition)
-    {
-        return (endPosition - startPosition) > sbyte.MaxValue;
-    }
+    public static bool IsLongBranch(int startPosition, int endPosition) =>
+        (endPosition - startPosition) > sbyte.MaxValue;
 
     public static string FormatList(string[] items)
     {

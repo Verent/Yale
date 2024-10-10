@@ -19,15 +19,10 @@ internal sealed class UInt64LiteralElement : IntegralLiteralElement
         }
     }
 
-    public UInt64LiteralElement(UInt64 value)
-    {
-        _value = value;
-    }
+    public UInt64LiteralElement(UInt64 value) => _value = value;
 
-    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
-    {
+    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context) =>
         EmitLoad(Convert.ToInt64(_value), ilGenerator);
-    }
 
     public override Type ResultType => typeof(UInt64);
 }

@@ -29,7 +29,7 @@ internal sealed class InvocationListElement : BaseExpressionElement
     /// <param name="elements"></param>
     private static void LinkElements(IList elements)
     {
-        for (int i = 0; i <= elements.Count - 1; i++)
+        for (var i = 0; i <= elements.Count - 1; i++)
         {
             MemberElement currentElement = (MemberElement)elements[i];
             MemberElement nextElement = null;
@@ -64,13 +64,13 @@ internal sealed class InvocationListElement : BaseExpressionElement
 
         while (true)
         {
-            string name = GetName(elements);
+            var name = GetName(elements);
             if (name is null)
             {
                 break; // TODO: might not be correct. Was : Exit While
             }
 
-            ImportBase? import = currentImport.FindImport(name);
+            var import = currentImport.FindImport(name);
             if (import is null)
             {
                 break; // TODO: might not be correct. Was : Exit While
@@ -119,10 +119,8 @@ internal sealed class InvocationListElement : BaseExpressionElement
     /// </summary>
     /// <param name="ilGenerator"></param>
     /// <param name="context"></param>
-    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
-    {
+    public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context) =>
         _tail.Emit(ilGenerator, context);
-    }
 
     public override Type ResultType => _tail.ResultType;
 }

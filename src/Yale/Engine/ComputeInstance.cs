@@ -99,8 +99,8 @@ public class ComputeInstance
 
     private void RecalculateNodeAndDependents(string key)
     {
-        IExpressionResult node = nameNodeMap[key];
-        object result = node.ResultAsObject;
+        var node = nameNodeMap[key];
+        var result = node.ResultAsObject;
         node.Recalculate();
 
         //No need to recalculate dependents if value is the same.

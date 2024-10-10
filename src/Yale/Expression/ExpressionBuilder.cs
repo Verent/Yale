@@ -42,7 +42,7 @@ internal sealed class ExpressionBuilder
 
     internal Expression<T> BuildExpression<T>(string expressionName, string expression)
     {
-        object owner = DefaultExpressionOwner.Instance;
+        var owner = DefaultExpressionOwner.Instance;
         var ownerType = DefaultExpressionOwner.Type;
 
         Imports.ImportOwner(ownerType);
@@ -60,7 +60,7 @@ internal sealed class ExpressionBuilder
         var topElement = Parse(expression, context);
 
         RootExpressionElement rootElement = new(topElement, typeof(T));
-        DynamicMethod dynamicMethod = CreateDynamicMethod<T>(ownerType);
+        var dynamicMethod = CreateDynamicMethod<T>(ownerType);
 
         YaleIlGenerator ilGenerator = new(dynamicMethod.GetILGenerator());
         rootElement.Emit(ilGenerator, context);

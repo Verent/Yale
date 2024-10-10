@@ -41,7 +41,7 @@ public class ExpressionBuilderOptions : IExpressionOptions
 
     public void AssertTypeIsAccessible(Type type)
     {
-        ArgumentNullException.ThrowIfNull(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
         if (type.IsNested)
         {
@@ -56,7 +56,7 @@ public class ExpressionBuilderOptions : IExpressionOptions
     //Todo:Verify
     private static void AssertNestedTypeIsAccessible(Type type)
     {
-        Type? typeInternal = type;
+        var typeInternal = type;
         do
         {
             AssertTypeIsAccessibleInternal(typeInternal);
@@ -66,7 +66,7 @@ public class ExpressionBuilderOptions : IExpressionOptions
 
     private static void AssertTypeIsAccessibleInternal(Type type)
     {
-        bool isPublic = type.IsNested ? type.IsNestedPublic : type.IsPublic;
+        var isPublic = type.IsNested ? type.IsNestedPublic : type.IsPublic;
 
         if (isPublic is false)
         {

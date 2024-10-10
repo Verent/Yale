@@ -5,10 +5,7 @@
 /// </summary>
 internal abstract class UnaryElement : BaseExpressionElement
 {
-    public UnaryElement(BaseExpressionElement child)
-    {
-        MyChild = child;
-    }
+    public UnaryElement(BaseExpressionElement child) => MyChild = child;
 
     protected BaseExpressionElement MyChild;
 

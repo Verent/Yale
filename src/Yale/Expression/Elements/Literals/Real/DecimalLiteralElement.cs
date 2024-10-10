@@ -10,10 +10,7 @@ internal sealed class DecimalLiteralElement : RealLiteralElement
 
     private DecimalLiteralElement() { }
 
-    public DecimalLiteralElement(decimal value)
-    {
-        _value = value;
-    }
+    public DecimalLiteralElement(decimal value) => _value = value;
 
     private static ConstructorInfo GetConstructor()
     {
@@ -33,7 +30,7 @@ internal sealed class DecimalLiteralElement : RealLiteralElement
 
         try
         {
-            decimal value = decimal.Parse(image, CultureInfo.InvariantCulture);
+            var value = decimal.Parse(image, CultureInfo.InvariantCulture);
             return new DecimalLiteralElement(value);
         }
         catch (OverflowException)
@@ -45,15 +42,15 @@ internal sealed class DecimalLiteralElement : RealLiteralElement
 
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
     {
-        int index = ilGenerator.GetTempLocalIndex(typeof(decimal));
+        var index = ilGenerator.GetTempLocalIndex(typeof(decimal));
         Utility.EmitLoadLocalAddress(ilGenerator, index);
 
-        int[] bits = decimal.GetBits(_value);
+        var bits = decimal.GetBits(_value);
         EmitLoad(bits[0], ilGenerator);
         EmitLoad(bits[1], ilGenerator);
         EmitLoad(bits[2], ilGenerator);
 
-        int flags = bits[3];
+        var flags = bits[3];
 
         EmitLoad((flags >> 31) == -1, ilGenerator);
 

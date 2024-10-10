@@ -29,19 +29,13 @@ internal abstract class ImportBase : IEnumerable<ImportBase>, IEquatable<ImportB
         string memberName,
         MemberTypes memberType,
         ICollection<MemberInfo> destination
-    )
-    {
-        import.AddMembers(memberName, memberType, destination);
-    }
+    ) => import.AddMembers(memberName, memberType, destination);
 
     protected static void AddImportMembers(
         ImportBase import,
         MemberTypes memberType,
         ICollection<MemberInfo> destination
-    )
-    {
-        import.AddMembers(memberType, destination);
-    }
+    ) => import.AddMembers(memberType, destination);
 
     protected static void AddMemberRange(
         ICollection<MemberInfo> members,
@@ -62,10 +56,7 @@ internal abstract class ImportBase : IEnumerable<ImportBase>, IEquatable<ImportB
     internal abstract Type? FindType(string typeName);
 
     //Todo: Make this abstract
-    internal virtual ImportBase? FindImport(string name)
-    {
-        return null;
-    }
+    internal virtual ImportBase? FindImport(string name) => null;
 
     internal MemberInfo[] FindMembers(string memberName, MemberTypes memberType)
     {
@@ -87,15 +78,9 @@ internal abstract class ImportBase : IEnumerable<ImportBase>, IEquatable<ImportB
         return imports.GetEnumerator();
     }
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    public bool Equals(ImportBase? other)
-    {
-        return EqualsInternal(other);
-    }
+    public bool Equals(ImportBase? other) => EqualsInternal(other);
 
     protected abstract bool EqualsInternal(ImportBase? import);
 

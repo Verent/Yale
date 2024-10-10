@@ -470,8 +470,8 @@ internal sealed class ImplicitConverter
             if (destinationType.IsValueType)
             {
                 // Value type -> value type
-                int sourceScore = GetValueTypeImplicitConvertScore(sourceType);
-                int destinationScore = GetValueTypeImplicitConvertScore(destinationType);
+                var sourceScore = GetValueTypeImplicitConvertScore(sourceType);
+                var destinationScore = GetValueTypeImplicitConvertScore(destinationType);
 
                 return destinationScore - sourceScore;
             }
@@ -496,7 +496,7 @@ internal sealed class ImplicitConverter
 
     private static int GetValueTypeImplicitConvertScore(Type type)
     {
-        TypeCode typeCode = Type.GetTypeCode(type);
+        var typeCode = Type.GetTypeCode(type);
 
         return typeCode switch
         {
@@ -528,7 +528,7 @@ internal sealed class ImplicitConverter
     private static int GetInheritanceDistance(Type sourceType, Type destinationType)
     {
         var count = 0;
-        Type? current = sourceType;
+        var current = sourceType;
 
         while (current is not null && (ReferenceEquals(current, destinationType) == false))
         {
@@ -542,7 +542,7 @@ internal sealed class ImplicitConverter
     private static int GetInverseDistanceToObject(Type t)
     {
         var score = 1000;
-        Type? current = t.BaseType;
+        var current = t.BaseType;
 
         while (current is not null)
         {

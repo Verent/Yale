@@ -10,10 +10,7 @@ namespace Yale.Parser;
 internal sealed class ExpressionTokenizer : Tokenizer
 {
     public ExpressionTokenizer(TextReader input)
-        : base(input, true)
-    {
-        CreatePatterns();
-    }
+        : base(input, true) => CreatePatterns();
 
     private void CreatePatterns()
     {
