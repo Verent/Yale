@@ -7,7 +7,7 @@ internal sealed class UInt64LiteralElement : IntegralLiteralElement
 {
     private readonly UInt64 _value;
 
-    public UInt64LiteralElement(string image, System.Globalization.NumberStyles ns)
+    public UInt64LiteralElement(string image, NumberStyles ns)
     {
         try
         {

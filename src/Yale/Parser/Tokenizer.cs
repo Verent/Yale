@@ -10,8 +10,6 @@ namespace Yale.Parser;
  * search for, or a regular expression. If the stream of characters
  * don't match any of the token patterns, a parse exception is thrown.
  *
-
- * @version  1.5
  */
 internal class Tokenizer
 {
@@ -75,7 +73,6 @@ internal class Tokenizer
      * @param input          the input stream to read
      * @param ignoreCase     the character case ignore flag
      *
-     * @since 1.5
      */
     public Tokenizer(TextReader input, bool ignoreCase)
     {
@@ -93,8 +90,6 @@ internal class Tokenizer
      *
      * @see Token#Previous
      * @see Token#Next
-     *
-     * @since 1.5
      */
     public bool UseTokenList { get; set; }
 
@@ -202,8 +197,6 @@ internal class Tokenizer
      * @param input          the new input stream to read
      *
      * @see Parser#reset(Reader)
-     *
-     * @since 1.5
      */
     public void Reset(TextReader input)
     {
@@ -325,7 +318,6 @@ internal class Tokenizer
      *
      * @return the token created
      *
-     * @since 1.5
      */
     protected virtual Token NewToken(TokenPattern pattern, string image, int line, int column) =>
         new(pattern, image, line, column);
@@ -416,7 +408,7 @@ internal abstract class TokenMatcher
     public virtual void AddPattern(TokenPattern pattern)
     {
         Array.Resize(ref patterns, patterns.Length + 1);
-        patterns[patterns.Length - 1] = pattern;
+        patterns[^1] = pattern;
     }
 
     /**
@@ -450,7 +442,7 @@ internal sealed class StringDFAMatcher : TokenMatcher
      * The deterministic finite state automaton used for
      * matching.
      */
-    private TokenStringDFA automaton = new();
+    private readonly TokenStringDFA automaton = new();
 
     /**
      * Creates a new string token matcher.

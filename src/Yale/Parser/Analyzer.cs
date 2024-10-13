@@ -39,12 +39,7 @@ internal class Analyzer
     {
         ParserLogException log = new();
 
-        node = Analyze(node, log);
-        if (log.Count > 0)
-        {
-            throw log;
-        }
-        return node;
+        return Analyze(node, log);
     }
 
     /**
@@ -61,7 +56,7 @@ internal class Analyzer
      *
      * @return the resulting parse tree node
      */
-    private Node? Analyze(Node node, ParserLogException log)
+    private Node Analyze(Node node, ParserLogException log)
     {
         var errorCount = log.Count;
 
@@ -122,7 +117,7 @@ internal class Analyzer
                 }
             }
         }
-        return null;
+        throw log;
     }
 
     /**

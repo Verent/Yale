@@ -19,14 +19,11 @@ internal abstract class Node
      * The node type id property (read-only). This value is set as
      * a unique identifier for each type of node, in order to
      * simplify later identification.
-     *
      */
     public abstract TokenId TypeId { get; }
 
     /**
      * The node name property (read-only).
-     *
-     * @since 1.5
      */
     public abstract string Name { get; }
 
@@ -34,8 +31,6 @@ internal abstract class Node
      * The line number property of the first character in this
      * node (read-only). If the node has child elements, this
      * value will be fetched from the first child.
-     *
-     * @since 1.5
      */
     public abstract int StartLine { get; }
 
@@ -43,8 +38,6 @@ internal abstract class Node
      * The column number property of the first character in this
      * node (read-only). If the node has child elements, this
      * value will be fetched from the first child.
-     *
-     * @since 1.5
      */
     public abstract int StartColumn { get; }
 
@@ -52,8 +45,6 @@ internal abstract class Node
      * The line number property of the last character in this node
      * (read-only). If the node has child elements, this value
      * will be fetched from the last child.
-     *
-     * @since 1.5
      */
     public abstract int EndLine { get; }
 
@@ -61,25 +52,16 @@ internal abstract class Node
      * The column number property of the last character in this
      * node (read-only). If the node has child elements, this
      * value will be fetched from the last child.
-     *
-     * @since 1.5
      */
     public abstract int EndColumn { get; }
 
     public Node? Parent { get; set; }
 
-    public virtual int Count
-    {
-        get { return 0; }
-    }
+    public virtual int Count => 0;
 
-    ///**
-    // * Returns the number of descendant nodes.
-    // *
-    // * @return the number of descendant nodes
-    // *
-    // * @since 1.2
-    // */
+    /**
+    * Returns the number of descendant nodes.
+    */
     public int GetDescendantCount()
     {
         var count = 0;
@@ -99,10 +81,7 @@ internal abstract class Node
     // * @return the child node found, or null if index out of bounds
     // *
     // */
-    public virtual Node? this[int index]
-    {
-        get { return null; }
-    }
+    public virtual Node this[int index] => throw new NotImplementedException();
 
     ///**
     // * The node values property. This property provides direct
@@ -114,6 +93,7 @@ internal abstract class Node
     // *
     // * @since 1.5
     // */
+
     private List<object>? values;
     public List<object> Values
     {
@@ -122,7 +102,7 @@ internal abstract class Node
             values ??= new List<object>();
             return values;
         }
-        set { values = value; }
+        set => values = value;
     }
 
     /**
