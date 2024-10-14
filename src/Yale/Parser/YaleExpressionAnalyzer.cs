@@ -194,7 +194,7 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
             return production;
         }
 
-        BaseExpressionElement operand = (BaseExpressionElement)childValues[0];
+        var operand = (BaseExpressionElement)childValues[0];
         childValues.RemoveAt(0);
 
         var second = childValues[0];
@@ -468,7 +468,11 @@ internal sealed class YaleExpressionAnalyzer : ExpressionAnalyzer
         var value = m.Value;
         // Remove \u
         value = value.Remove(0, 2);
-        var code = int.Parse(value, NumberStyles.AllowHexSpecifier);
+        var code = int.Parse(
+            value,
+            NumberStyles.AllowHexSpecifier,
+            provider: CultureInfo.InvariantCulture
+        );
         var c = Convert.ToChar(code);
         return c.ToString();
     }

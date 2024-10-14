@@ -240,7 +240,7 @@ internal static class Utility
             {
                 { "Name", string.Concat("op_", name) },
                 { "sourceType", sourceType },
-                { "destType", destinationType }
+                { "destType", destinationType },
             };
 
         const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
@@ -284,8 +284,8 @@ internal static class Utility
     /// <remarks></remarks>
     private static bool SimpleOverloadedOperatorFilter(MemberInfo member, object? value)
     {
-        IDictionary data = (IDictionary)value;
-        MethodInfo methodInfo = (MethodInfo)member;
+        var data = (IDictionary)value;
+        var methodInfo = (MethodInfo)member;
 
         var nameMatch =
             methodInfo.IsSpecialName
@@ -339,7 +339,7 @@ internal static class Utility
                 "code_len",
                 BindingFlags.Instance | BindingFlags.NonPublic
             );
-        return fi != null ? (int)fi.GetValue(ilg) : -1;
+        return fi is not null ? (int)fi.GetValue(ilg) : -1;
     }
 
     public static bool IsLongBranch(int startPosition, int endPosition) =>

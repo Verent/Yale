@@ -11,7 +11,7 @@ namespace Yale.Expression.Elements.MemberElements;
 internal sealed class InvocationListElement : BaseExpressionElement
 {
     //Todo: Some description would be nice
-    private readonly MemberElement _tail;
+    private readonly MemberElement tail;
 
     public InvocationListElement(IList elements, ExpressionContext context)
     {
@@ -20,7 +20,7 @@ internal sealed class InvocationListElement : BaseExpressionElement
         Resolve(elements, context);
 
         //Todo: What is the _tail reference?
-        _tail = (MemberElement)elements[elements.Count - 1];
+        tail = (MemberElement)elements[elements.Count - 1];
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ internal sealed class InvocationListElement : BaseExpressionElement
     {
         for (var i = 0; i <= elements.Count - 1; i++)
         {
-            MemberElement currentElement = (MemberElement)elements[i];
+            var currentElement = (MemberElement)elements[i];
             MemberElement nextElement = null;
             if (i + 1 < elements.Count)
             {
@@ -43,7 +43,7 @@ internal sealed class InvocationListElement : BaseExpressionElement
 
     private void HandleFirstElement(IList elements, ExpressionContext context)
     {
-        BaseExpressionElement firstElement = (BaseExpressionElement)elements[0];
+        var firstElement = (BaseExpressionElement)elements[0];
 
         // If the first element is not a member element, then we assume it
         //is an expression and replace it with the correct member element
@@ -81,7 +81,7 @@ internal sealed class InvocationListElement : BaseExpressionElement
 
             if (elements.Count > 0)
             {
-                MemberElement newFirst = (MemberElement)elements[0];
+                var newFirst = (MemberElement)elements[0];
                 newFirst.SetImport(currentImport);
             }
         }
@@ -120,7 +120,7 @@ internal sealed class InvocationListElement : BaseExpressionElement
     /// <param name="ilGenerator"></param>
     /// <param name="context"></param>
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context) =>
-        _tail.Emit(ilGenerator, context);
+        tail.Emit(ilGenerator, context);
 
-    public override Type ResultType => _tail.ResultType;
+    public override Type ResultType => tail.ResultType;
 }

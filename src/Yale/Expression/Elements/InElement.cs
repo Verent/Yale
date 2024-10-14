@@ -16,7 +16,7 @@ internal sealed class InElement : BaseExpressionElement
     private readonly BaseExpressionElement targetCollectionElement;
 
     // Type of the collection
-    private Type targetCollectionType;
+    private Type? targetCollectionType;
 
     // Initialize for searching a list of values
     public InElement(BaseExpressionElement operand, IList listElements)
@@ -85,7 +85,7 @@ internal sealed class InElement : BaseExpressionElement
         }
     }
 
-    private Type GetTargetCollectionType()
+    private Type? GetTargetCollectionType()
     {
         var collType = targetCollectionElement.ResultType;
 
@@ -127,7 +127,7 @@ internal sealed class InElement : BaseExpressionElement
 
     public override void Emit(YaleIlGenerator ilGenerator, ExpressionContext context)
     {
-        if (targetCollectionType != null)
+        if (targetCollectionType is not null)
         {
             EmitCollectionIn(ilGenerator, context);
         }
@@ -145,7 +145,6 @@ internal sealed class InElement : BaseExpressionElement
 
             branchManager.ComputeBranches();
 
-            // Do the real emit
             EmitListIn(ilGenerator, context, branchManager);
         }
     }

@@ -9,9 +9,8 @@ namespace Yale.Expression.Elements.MemberElements;
 internal sealed class FunctionCallElement : MemberElement
 {
     private readonly ArgumentList arguments;
-    private readonly ICollection<MethodInfo> methods;
-
-    private CustomMethodInfo targetMethodInfo;
+    private readonly ICollection<MethodInfo>? methods;
+    private CustomMethodInfo? targetMethodInfo;
 
     public FunctionCallElement(string name, ArgumentList arguments)
         : base(name) => this.arguments = arguments;

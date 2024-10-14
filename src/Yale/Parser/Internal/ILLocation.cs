@@ -46,7 +46,8 @@ internal sealed class ILLocation : IEquatable<ILLocation>, IComparable<ILLocatio
 
     bool IEquatable<ILLocation>.Equals(ILLocation? other) => other is not null && Equals1(other);
 
-    public override string ToString() => position.ToString("x");
+    public override string ToString() =>
+        position.ToString("x", provider: CultureInfo.InvariantCulture);
 
     public int CompareTo(ILLocation? other) =>
         other is null ? 1 : position.CompareTo(other.position);

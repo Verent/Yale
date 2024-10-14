@@ -180,7 +180,7 @@ internal sealed class CastElement : BaseExpressionElement
     private static bool IsValidExplicitReferenceCast(Type sourceType, Type destType)
     {
         Debug.Assert(
-            sourceType.IsValueType == false & destType.IsValueType == false,
+            condition: sourceType.IsValueType is false && destType.IsValueType is false,
             "expecting reference types"
         );
 
@@ -190,7 +190,7 @@ internal sealed class CastElement : BaseExpressionElement
             return true;
         }
 
-        if (sourceType.IsArray & destType.IsArray)
+        if (sourceType.IsArray && destType.IsArray)
         {
             // From an array-type S with an element type SE to an array-type T with an element type TE,
             // provided all of the following are true:
@@ -201,11 +201,11 @@ internal sealed class CastElement : BaseExpressionElement
                 return false;
             }
 
-            var sourceElementType = sourceType.GetElementType();
-            var destElementType = destType.GetElementType();
+            var sourceElementType = sourceType.GetElementType()!; // Array type so element type is guaranteed to exist
+            var destElementType = destType.GetElementType()!; // Array type so element type is guaranteed to exist
 
             // Both SE and TE are reference-types
-            if (sourceElementType.IsValueType | destElementType.IsValueType)
+            if (sourceElementType.IsValueType || destElementType.IsValueType)
             {
                 return false;
             }

@@ -32,8 +32,8 @@ internal abstract class IntegralLiteralElement : LiteralElement
             }
         }
 
-        var hasUSuffix = image.EndsWith('u') & !image.EndsWith("lu", comparison);
-        var hasLSuffix = image.EndsWith('l') & !image.EndsWith("ul", comparison);
+        var hasUSuffix = image.EndsWith("u", comparison) && !image.EndsWith("lu", comparison);
+        var hasLSuffix = image.EndsWith("l", comparison) && !image.EndsWith("ul", comparison);
         var hasUlSuffix = image.EndsWith("ul", comparison) | image.EndsWith("lu", comparison);
         var hasSuffix = hasUSuffix | hasLSuffix | hasUlSuffix;
 

@@ -70,7 +70,11 @@ public class ExpressionBuilderOptions : IExpressionOptions
 
         if (isPublic is false)
         {
-            var msg = string.Format(GeneralErrors.TypeNotAccessibleToExpression, type.Name);
+            var msg = string.Format(
+                provider: CultureInfo.InvariantCulture,
+                GeneralErrors.TypeNotAccessibleToExpression,
+                type.Name
+            );
             throw new ArgumentException(msg);
         }
     }

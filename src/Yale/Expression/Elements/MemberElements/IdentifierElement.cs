@@ -252,7 +252,9 @@ internal sealed class IdentifierElement : MemberElement
             case TypeCode.Int16:
             case TypeCode.UInt16:
             case TypeCode.Int32:
-                elem = new Int32LiteralElement(Convert.ToInt32(value));
+                elem = new Int32LiteralElement(
+                    Convert.ToInt32(value, provider: CultureInfo.InvariantCulture)
+                );
                 break;
 
             case TypeCode.UInt32:
