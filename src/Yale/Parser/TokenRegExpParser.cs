@@ -591,7 +591,11 @@ internal sealed class TokenRegExpParser
                 str = ReadChar().ToString() + ReadChar().ToString();
                 try
                 {
-                    value = int.Parse(str, NumberStyles.AllowHexSpecifier);
+                    value = int.Parse(
+                        str,
+                        NumberStyles.AllowHexSpecifier,
+                        provider: CultureInfo.InvariantCulture
+                    );
                     return (char)value;
                 }
                 catch (FormatException)
@@ -610,7 +614,11 @@ internal sealed class TokenRegExpParser
                     + ReadChar().ToString();
                 try
                 {
-                    value = int.Parse(str, NumberStyles.AllowHexSpecifier);
+                    value = int.Parse(
+                        str,
+                        NumberStyles.AllowHexSpecifier,
+                        provider: CultureInfo.InvariantCulture
+                    );
                     return (char)value;
                 }
                 catch (FormatException)
@@ -634,7 +642,7 @@ internal sealed class TokenRegExpParser
             case 'e':
                 return '\u001B';
             default:
-                if ('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z')
+                if (c is >= 'A' and <= 'Z' or >= 'a' and <= 'z')
                 {
                     throw new RegExpException(
                         RegExpException.ErrorType.UnsupportedEscapeCharacter,

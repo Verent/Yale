@@ -17,17 +17,17 @@ internal sealed class RegExp
     /**
      * The base regular expression element.
      */
-    private Element element;
+    private readonly Element element;
 
     /**
      * The regular expression pattern.
      */
-    private string pattern;
+    private readonly string pattern;
 
     /**
      * The character case ignore flag.
      */
-    private bool ignoreCase;
+    private readonly bool ignoreCase;
 
     /**
      * The current position in the pattern. This variable is used by
@@ -56,7 +56,6 @@ internal sealed class RegExp
      * @throws RegExpException if the regular expression couldn't be
      *             parsed correctly
      *
-     * @since 1.5
      */
     public RegExp(string pattern, bool ignoreCase)
     {
@@ -87,7 +86,6 @@ internal sealed class RegExp
      *
      * @return the regular expresion matcher
      *
-     * @since 1.5
      */
     public Matcher Matcher(ReaderBuffer buffer) =>
         new((Element)element.Clone(), buffer, ignoreCase);
@@ -440,7 +438,7 @@ internal sealed class RegExp
         {
             case '0':
                 c = ReadChar();
-                if (c < '0' || c > '3')
+                if (c is < '0' or > '3')
                 {
                     throw new RegExpException(
                         RegExpException.ErrorType.UnsupportedEscapeCharacter,
@@ -450,12 +448,12 @@ internal sealed class RegExp
                 }
                 value = c - '0';
                 c = (char)PeekChar(0);
-                if ('0' <= c && c <= '7')
+                if (c is >= '0' and <= '7')
                 {
                     value *= 8;
                     value += ReadChar() - '0';
                     c = (char)PeekChar(0);
-                    if ('0' <= c && c <= '7')
+                    if (c is >= '0' and <= '7')
                     {
                         value *= 8;
                         value += ReadChar() - '0';
@@ -466,7 +464,11 @@ internal sealed class RegExp
                 str = ReadChar().ToString() + ReadChar().ToString();
                 try
                 {
-                    value = int.Parse(str, NumberStyles.AllowHexSpecifier);
+                    value = int.Parse(
+                        str,
+                        NumberStyles.AllowHexSpecifier,
+                        provider: CultureInfo.InvariantCulture
+                    );
                     return new StringElement(FixChar((char)value));
                 }
                 catch (FormatException)
@@ -485,7 +487,11 @@ internal sealed class RegExp
                     + ReadChar().ToString();
                 try
                 {
-                    value = int.Parse(str, NumberStyles.AllowHexSpecifier);
+                    value = int.Parse(
+                        str,
+                        NumberStyles.AllowHexSpecifier,
+                        provider: CultureInfo.InvariantCulture
+                    );
                     return new StringElement(FixChar((char)value));
                 }
                 catch (FormatException)
@@ -521,7 +527,7 @@ internal sealed class RegExp
             case 'W':
                 return CharacterSetElement.NON_WORD;
             default:
-                if ('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z')
+                if (c is >= 'A' and <= 'Z' or >= 'a' and <= 'z')
                 {
                     throw new RegExpException(
                         RegExpException.ErrorType.UnsupportedEscapeCharacter,
@@ -560,7 +566,7 @@ internal sealed class RegExp
         int c;
 
         c = PeekChar(0);
-        while ('0' <= c && c <= '9')
+        while (c is >= '0' and <= '9')
         {
             buf.Append(ReadChar());
             c = PeekChar(0);
@@ -569,7 +575,7 @@ internal sealed class RegExp
         {
             throw new RegExpException(RegExpException.ErrorType.UnexpectedCharacter, pos, pattern);
         }
-        return int.Parse(buf.ToString());
+        return int.Parse(buf.ToString(), provider: CultureInfo.InvariantCulture);
     }
 
     /**
@@ -637,10 +643,8 @@ internal sealed class RegExp
         {
             return pattern[pos + count];
         }
-        else
-        {
-            return -1;
-        }
+
+        return -1;
     }
 
     /**

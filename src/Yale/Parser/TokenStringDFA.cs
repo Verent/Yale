@@ -18,14 +18,14 @@ internal sealed class TokenStringDFA
      * character. This array is used to for speed optimizing the
      * first step in the match.
      */
-    private DFAState[] ascii = new DFAState[128];
+    private readonly DFAState[] ascii = new DFAState[128];
 
     /**
      * The automaton state transition tree for non-ASCII characters.
      * Each transition from one state to another is added to the tree
      * with the corresponding character.
      */
-    private DFAState nonAscii = new();
+    private readonly DFAState nonAscii = new();
 
     /**
      * Creates a new empty string automaton.
@@ -105,7 +105,7 @@ internal sealed class TokenStringDFA
         }
         if (caseInsensitive)
         {
-            c = char.ToLower((char)c);
+            c = char.ToLower((char)c, culture: CultureInfo.InvariantCulture);
         }
         if (c < 128)
         {
@@ -245,7 +245,7 @@ internal sealed class TransitionTree
     {
         if (lowerCase)
         {
-            c = char.ToLower(c);
+            c = char.ToLower(c, culture: CultureInfo.InvariantCulture);
         }
         if (_value == '\0' || _value == c)
         {
@@ -274,7 +274,7 @@ internal sealed class TransitionTree
     {
         if (lowerCase)
         {
-            c = char.ToLower(c);
+            c = char.ToLower(c, culture: CultureInfo.InvariantCulture);
         }
 
         //Initial value \0, initialize _left, _right and _state

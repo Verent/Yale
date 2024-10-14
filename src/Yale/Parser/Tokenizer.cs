@@ -265,7 +265,7 @@ internal class Tokenizer
      * @throws ParseException if the input stream couldn't be read or
      *             parsed correctly
      */
-    private Token NextToken()
+    private Token? NextToken()
     {
         string str;
         int line;
@@ -703,17 +703,8 @@ internal sealed class SystemRE : REHandler
      * @throws Exception if the regular expression contained
      *             invalid syntax
      */
-    public SystemRE(string regex, bool ignoreCase)
-    {
-        if (ignoreCase)
-        {
-            reg = new Regex(regex, RegexOptions.IgnoreCase);
-        }
-        else
-        {
-            reg = new Regex(regex);
-        }
-    }
+    public SystemRE(string regex, bool ignoreCase) =>
+        reg = ignoreCase ? new Regex(regex, RegexOptions.IgnoreCase) : new Regex(regex);
 
     /**
      * Checks if the start of the input stream matches this

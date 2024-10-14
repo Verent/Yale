@@ -23,7 +23,7 @@ internal abstract class BinaryExpressionElement : BaseExpressionElement
         where T : BinaryExpressionElement, new()
     {
         //Todo: replace IList with strong typed object
-        var firstElement = (BinaryExpressionElement)Activator.CreateInstance(typeof(T))!;
+        var firstElement = (BinaryExpressionElement)Activator.CreateInstance<T>()!;
 
         firstElement.Configure(
             leftChild: (BaseExpressionElement)childValues[0],
@@ -35,7 +35,7 @@ internal abstract class BinaryExpressionElement : BaseExpressionElement
 
         for (var i = 3; i <= childValues.Count - 1; i += 2)
         {
-            var element = (BinaryExpressionElement)Activator.CreateInstance(typeof(T))!;
+            var element = (BinaryExpressionElement)Activator.CreateInstance<T>()!;
             element.Configure(
                 leftChild: lastElement,
                 rightChild: (BaseExpressionElement)childValues[i + 1],
@@ -82,7 +82,7 @@ internal abstract class BinaryExpressionElement : BaseExpressionElement
         );
 
         // Pick the right one
-        if (leftMethod is null & rightMethod is null)
+        if (leftMethod is null && rightMethod is null)
         {
             // No operator defined for either
             return null;
